@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import NewRobotForm from "../components/Forms/NewRobotForm";
 
 import TableHeaderGenerator from "../components/Table";
 
@@ -45,10 +46,11 @@ const RobotPage = () => {
     const robotDataRow = robotData.map((data) =>
         <RobotTableRow key={data['id']} data={data}></RobotTableRow>);
 
-    return (
 
+    return (
         <div>
             <h2>Robot Page</h2>
+            <NewRobotForm/>
             <Table>
                 <TableHeaderGenerator list={robotTableHeaderData}/>
                 <tbody>

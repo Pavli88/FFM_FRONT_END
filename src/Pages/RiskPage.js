@@ -6,51 +6,71 @@ import Form from "react-bootstrap/Form";
 import Table from 'react-bootstrap/Table'
 
 import RiskEntryModal from "../components/Modals";
+import Dropdown from "react-bootstrap/Dropdown";
+import Row from "react-bootstrap/Row";
 
-const RiskTableRow = (props) => {
-
-    const OpenUpdateRiskModal = () => {
-        console.log("Button Clicked")
-    };
-
-    return (
-        <tr>
-            <td>{props.data['robot']}</td>
-            <td>{props.data['daily_risk_perc']}</td>
-            <td>{props.data['daily_trade_limit']}</td>
-            <td>{props.data['risk_per_trade']}</td>
-            <td>{props.data['pyramiding_level']}</td>
-            <td>{props.data['quantity_type']}</td>
-            <td>{props.data['quantity']}</td>
-            <td><Button onClick={OpenUpdateRiskModal}>Update</Button></td>
-        </tr>
-    );
-};
-
-const RiskPage = () => {
-
+const RiskTableData = (props) => {
     const [riskData, setRiskData] = useState([])
 
     // Fetching robot risk data from database
     useEffect(() => {
-            fetch('http://127.0.0.1:8000/risk/get_robot_risk/')
+            fetch('http://127.0.0.1:8000/risk/get_robot_risk/' + props.env)
                 .then(response => response.json())
                 .then(data => setRiskData(data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        }, []
+        }, [props]
     );
 
-    console.log(riskData)
+    const OpenModal = () => {
+
+    };
 
     const riskDataRow = riskData.map((data) =>
-        <RiskTableRow key={data['id']} data={data}></RiskTableRow>);
+        <tr key={data['id']}>
+            <td>{data['robot']}</td>
+            <td>{data['daily_risk']}</td>
+            <td>{data['daily_trade_limit']}</td>
+            <td>{data['risk_per_trade']}</td>
+            <td>{data['pyramiding_level']}</td>
+            <td>{data['quantity_type']}</td>
+            <td>{data['quantity']}</td>
+            <td><Button onClick={OpenModal}>Update</Button></td>
+        </tr>
+    );
+
+    return (
+        <tbody>
+        {riskDataRow}
+        </tbody>
+    );
+};
+
+const RiskPage = () => {
+
+    const [robotEnvData, setRobotEnvData] = useState('live')
+
+    const envChange = (envValue) => {
+        setRobotEnvData(envValue);
+    };
 
     return (
         <div>
             <h2>Risk Page</h2>
-            <RiskEntryModal></RiskEntryModal>
+            <Row>
+                <h2>{robotEnvData}</h2>
+                <Dropdown onSelect={envChange}>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        Environment
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu>
+                        <Dropdown.Item eventKey="live">Live</Dropdown.Item>
+                        <Dropdown.Item eventKey="demo">Demo</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            </Row>
             <div>
                 <Table>
                     <thead>
@@ -65,9 +85,7 @@ const RiskPage = () => {
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {riskDataRow}
-                    </tbody>
+                    <RiskTableData env={robotEnvData}/>
                 </Table>
             </div>
         </div>
