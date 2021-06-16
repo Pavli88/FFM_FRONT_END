@@ -12,6 +12,15 @@ const ApexChart = (props) => {
                 categories: props.xdata,
                 labels: {show: false}
             },
+            yaxis: [
+                {
+                    labels: {
+                        formatter: function (val) {
+                            return val.toFixed(0);
+                        }
+                    }
+                }
+            ],
             dataLabels: {
                 enabled: false
             },
@@ -27,7 +36,6 @@ const ApexChart = (props) => {
     };
 
     return (
-
             <Chart
                 options={state.options}
                 series={state.series}
@@ -35,7 +43,6 @@ const ApexChart = (props) => {
                 width="100%"
                 height="100%"
             />
-
         );
 }
 

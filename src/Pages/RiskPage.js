@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
 
 import Button from "react-bootstrap/Button";
 import Container from 'react-bootstrap/Container'
@@ -6,15 +6,18 @@ import Form from "react-bootstrap/Form";
 import Table from 'react-bootstrap/Table'
 
 import RiskEntryModal from "../components/Modals";
-import Dropdown from "react-bootstrap/Dropdown";
-import Row from "react-bootstrap/Row";
+
+import EnvContext from "../context/env-context";
 
 const RiskTableData = (props) => {
+
+    const env = useContext(EnvContext)['environment'];
+
     const [riskData, setRiskData] = useState([])
 
     // Fetching robot risk data from database
     useEffect(() => {
-            fetch('http://127.0.0.1:8000/risk/get_robot_risk/' + props.env)
+            fetch('http://127.0.0.1:8000/risk/get_robot_risk/' + env)
                 .then(response => response.json())
                 .then(data => setRiskData(data))
                 .catch((error) => {
@@ -49,28 +52,9 @@ const RiskTableData = (props) => {
 
 const RiskPage = () => {
 
-    const [robotEnvData, setRobotEnvData] = useState('live')
-
-    const envChange = (envValue) => {
-        setRobotEnvData(envValue);
-    };
-
     return (
         <div>
             <h2>Risk Page</h2>
-            <Row>
-                <h2>{robotEnvData}</h2>
-                <Dropdown onSelect={envChange}>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Environment
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="live">Live</Dropdown.Item>
-                        <Dropdown.Item eventKey="demo">Demo</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-            </Row>
             <div>
                 <Table>
                     <thead>
@@ -85,7 +69,7 @@ const RiskPage = () => {
                             <th></th>
                         </tr>
                     </thead>
-                    <RiskTableData env={robotEnvData}/>
+                    <RiskTableData/>
                 </Table>
             </div>
         </div>

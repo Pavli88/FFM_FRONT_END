@@ -6,7 +6,7 @@ const CardWidget = (props) => {
     const width = props.width
 
     return (
-        <Card style={{height: height, width: width, margin: '5px'}}>
+        <Card style={props.style}>
             <Card.Header as="h5">{props.name}</Card.Header>
             <Card.Body>
                 {props.children}

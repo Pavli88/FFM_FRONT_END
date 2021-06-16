@@ -5,7 +5,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import Card from 'react-bootstrap/Card';
 import SliderWidget from "../components/SliderWidget";
 
-import {useEffect, useState} from "react";
+import {useEffect, useState, useContext} from "react";
 
 import RobotStatCards from "./HomePage/RobotStatCards";
 
@@ -14,15 +14,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './HomePage.css';
 import axios from "axios";
 
+// Contexts
+import EnvContext from "../context/env-context";
+import ServerContext from "../context/server-context";
 
-const HomePage = () => {
+const HomePage = (props) => {
+    // Context variables
+    const env = useContext(EnvContext)['environment'];
+    const server = useContext(ServerContext)['server'];
 
-    const [robotEnvData, setRobotEnvData] = useState('live')
-    const [robotRiskData, setRobotRiskData] = useState([])
+    // const [robotEnvData, setRobotEnvData] = useState('live')
 
-    const envChange = (envValue) => {
-        setRobotEnvData(envValue);
-    };
 
     const balanceRequestData = {
         'env': 'live',
@@ -30,47 +32,56 @@ const HomePage = () => {
         'end_date': 34,
     };
 
-    console.log(balanceRequestData)
-    console.log(robotRiskData)
-    useEffect(() => {
-            axios.get('http://127.0.0.1:8000/risk/get_robot_risk/' + robotEnvData)
-                .then(response => response['data'])
-                .then(data => setRobotRiskData(data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, []
-    );
+    // console.log(balanceRequestData)
+    // console.log(robotRiskData)
+
 
     return (
-        <Container style={{background: 'red', width: "90%", height: '100%'}} fluid>
-            <Row>
-                <h2>{robotEnvData}</h2>
-                <Dropdown onSelect={envChange}>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Environment
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="live">Live</Dropdown.Item>
-                        <Dropdown.Item eventKey="demo">Demo</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-            </Row>
-            <Row style={{background: 'green', height: "100%"}}>
-                <Col style={{background: 'blue', height: "100%"}}>
-                    <Row>
+            <Container style={{background: 'red', width: "100%", height: window.innerHeight}} fluid>
+            <Row style={{background: 'green', height: window.innerHeight}}>
+                <Col style={{background: 'blue', height: '100%'}}>
+                    <Row style={{background:'red'}}>
                         <h2>Robots</h2>
                     </Row>
-                    <Row style={{background:'orange', width:'100%', height:'500px', margin:'0px'}}>
-                        <RobotStatCards environment={robotEnvData}/>
-                    </Row>
+                    <Container style={{background:'orange', width:'100%', height:window.innerHeight, overflow: 'scroll'}}>
+                        <RobotStatCards env={env} server={server}/>
+                    </Container>
 
                 </Col>
-                <Col>
-                    <Card style={{height: '300px', width: '100%', margin: '5px'}}>
-                        <SliderWidget name={'Risk on Trade'}/>
-                    </Card>
+                <Col style={{}}>
+                    <Row style={{background:'yellow'}}>
+                        <h2>Dashboard</h2>
+                    </Row>
+                    <Container style={{width:'100%'}}>
+                        <Row style={{height: '300px', paddingTop: '5px', paddingBottom: '5px'}}>
+                            <Col style={{paddingLeft: '5px', paddingRight: '5px'}}>
+                                <Card style={{height: '100%', width: '100%', margin: '0px'}}/>
+                            </Col>
+                            <Col style={{paddingLeft: '5px', paddingRight: '5px'}}>
+                                <Card style={{height: '100%', width: '100%', margin: '0px'}}/>
+                            </Col>
+                            <Col style={{paddingLeft: '5px', paddingRight: '5px'}}>
+                                <Card style={{height: '100%', width: '100%', margin: '0px'}}/>
+                            </Col>
+                        </Row>
+                        <Row style={{height: '50px', paddingTop: '5px', paddingBottom: '5px'}}>
+                            <Col style={{paddingLeft: '5px', paddingRight: '5px'}}>
+                                <Card style={{height: '100%', width: '100%', margin: '0px'}}/>
+                            </Col>
+                            <Col style={{paddingLeft: '5px', paddingRight: '5px'}}>
+                                <Card style={{height: '100%', width: '100%', margin: '0px'}}/>
+                            </Col>
+                            <Col style={{paddingLeft: '5px', paddingRight: '5px'}}>
+                                <Card style={{height: '100%', width: '100%', margin: '0px'}}/>
+                            </Col>
+                        </Row>
+                        <Row style={{height: '300px', paddingTop: '5px', paddingBottom: '5px'}}>
+                            <Col style={{paddingLeft: '5px', paddingRight: '5px'}}>
+                                <Card style={{height: '100%', width: '100%', margin: '0px'}}/>
+                            </Col>
+                        </Row>
+                    </Container>
+
                 </Col>
             </Row>
         </Container>

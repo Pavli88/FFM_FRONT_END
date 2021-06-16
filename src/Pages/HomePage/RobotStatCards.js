@@ -7,7 +7,6 @@ import ApexChart from "../../components/Charts";
 import SliderWidget from "../../components/SliderWidget";
 
 const RobotStatCards = (props) => {
-    const [robotBalanceData, setRobotBalanceData] = useState([]);
 
     const balanceRequestData = {
         'env': props.environment,
@@ -15,9 +14,11 @@ const RobotStatCards = (props) => {
         'end_date': 34,
     };
 
-    console.log(balanceRequestData)
+    // Fetching Robot balance data
+    const [robotBalanceData, setRobotBalanceData] = useState([]);
+
     useEffect(() => {
-            axios.get('http://127.0.0.1:8000/robots/get_robot_balance/all', {params:balanceRequestData})
+            axios.get(props.server + 'robots/get_robot_balance/' + props.env, {params:balanceRequestData})
                 .then(response => response['data'])
                 .then(data => setRobotBalanceData(data))
                 .catch((error) => {
@@ -26,22 +27,40 @@ const RobotStatCards = (props) => {
         }, [props]
     );
 
+    // Fetching robot risk data
+    const [robotRiskData, setRobotRiskData] = useState([]);
 
-    const chartData = robotBalanceData.map((record) =>
-        <CardWidget key={record['id']} height={'300px'} width={'95%'} name={record['robot']} button={'Test'} >
+    useEffect(() => {
+            axios.get(props.server + 'risk/get_robot_risk/' + props.env)
+                .then(response => response['data'])
+                .then(data => setRobotRiskData(data))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, [props]
+    );
+
+    const widgetData = {
+        balance: robotBalanceData,
+        risk: robotRiskData,
+    };
+    console.log(widgetData)
+
+    const chartData = robotBalanceData.map((record, index) =>
+        <CardWidget key={record['id']} style={{height: '300px', width: '95%', margin: '5px', padding:'0px'}} name={record['robot']} button={'Test'} >
             <Row style={{height: '100%'}}>
                 <Col>
-                    <ApexChart  chartType="line" xdata={record['date']} ydata={record['balance']}/>
+                    <ApexChart chartType="line" xdata={record['date']} ydata={record['balance']}/>
                 </Col>
                 <Col>
-                    <SliderWidget/>
+                    <SliderWidget defaultValue={0.01}/>
                 </Col>
             </Row>
         </CardWidget>
     );
 
     return (
-        <div style={{width:'100%', overflow: 'scroll', margin:'0px'}}>
+        <div>
             {chartData}
         </div>
     );

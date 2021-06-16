@@ -1,11 +1,18 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import NewRobotForm from "../components/Forms/NewRobotForm";
 
 import TableHeaderGenerator from "../components/Table";
+import axios from "axios";
+
+// Context
+import ServerContext from "../context/server-context";
+import EnvContext from "../context/env-context";
 
 const RobotTableRow = (props) => {
+
+    const env = useContext(EnvContext)['environment'];
 
     const OpenUpdateRiskModal = () => {
         console.log("Button Clicked")
@@ -27,12 +34,13 @@ const RobotTableRow = (props) => {
 
 
 const RobotPage = () => {
+    const server = useContext(ServerContext)['server'];
 
     const [robotData, setRobotData] = useState([])
 
     // Fetching robot risk data from database
     useEffect(() => {
-            fetch('http://127.0.0.1:8000/robots/get_robots/')
+            axios.get(server + 'robots/get_robots/')
                 .then(response => response.json())
                 .then(data => setRobotData(data))
                 .catch((error) => {
