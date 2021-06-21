@@ -1,32 +1,32 @@
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {useContext, useEffect, useState} from "react";
+import {useState} from "react";
 import axios from "axios";
-import ServerContext from "../../context/server-context";
+import OptionLoader from "../Options";
+import Modal from "react-bootstrap/Modal";
 
 const NewRobotForm = (props) => {
-
 
     const [robotName, setRobotName] = useState('');
     const [strategy, setStrategy] = useState('');
     const [broker, setBroker] = useState('oanda');
     const [env, setEnv] = useState('live');
+    const [account, setAccount] = useState('');
+    const [instrument, setInstrument] = useState('');
 
-    const [accountData, setAccountData] = useState('');
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     const accountParams = {
         'broker': broker,
         'env': env,
     };
 
-    useEffect(() => {
-            axios.get(props.server + 'accounts/get_account_data/', {params: accountParams})
-                .then(response => response['data'])
-                .then(data => setAccountData(data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [props]
-    );
+    const instrumentParams = {
+        'broker': broker,
+    };
 
     const robotNameChangeHandler = (event) => {
         setRobotName(event.target.value)
@@ -39,66 +39,103 @@ const NewRobotForm = (props) => {
     const envHandler = (event) => {
         setEnv(event.target.value);
     };
-    console.log(env)
+
+    const instHandler = (event) => {
+        setInstrument(event.target.value);
+    };
+
+    const brokerHandler = (event) => {
+        setBroker(event.target.value);
+    };
+
+    const accountHandler = (event) => {
+        setAccount(event.target.value);
+    };
+
     const submitHandler = (event) => {
         event.preventDefault();
 
-        axios.post(props.server + '/robots/new_robot/', {
+        axios.post(props.server + 'robots/new_robot/', {
             robot_name: robotName,
             strategy: strategy,
-            security: 'test',
+            security: instrument,
             broker: broker,
             env: env,
-            account: ' 1234244'
+            account: account,
         })
                 .then(response => console.log(response))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
+        setShow(false)
     };
 
     return (
-        <Form onSubmit={submitHandler} style={{width: '50%'}}>
-            <Form.Group controlId="robotName">
-                <Form.Label>Robot Name</Form.Label>
-                <Form.Control onChange={robotNameChangeHandler} type="text" placeholder="Robot Name"/>
-            </Form.Group>
-            <Form.Group controlId="strategy">
-                <Form.Label>Strategy</Form.Label>
-                <Form.Control onChange={robotStrategyHandler} type="text"/>
-            </Form.Group>
-            <Form.Group controlId="broker">
-                <Form.Label>Broker</Form.Label>
-                <Form.Control as="select">
-                    <option>oanda</option>
-                    <option>Fix</option>
-                </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="env">
-                <Form.Label>Environment</Form.Label>
-                <Form.Control onChange={envHandler} as="select">
-                    <option  value={'live'}>Live</option>
-                    <option value={'demo'}>Demo</option>
-                </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="security">
-                <Form.Label>Security</Form.Label>
-                <Form.Control as="select">
-                    <option>Live</option>
-                    <option>Demo</option>
-                </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="accountNumber">
-                <Form.Label>Account Number</Form.Label>
-                <Form.Control as="select">
-                    <option>Live</option>
-                    <option>Demo</option>
-                </Form.Control>
-            </Form.Group>
-            <Button variant="primary" type="submit">
-                Submit
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                New Robot
             </Button>
-        </Form>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>New Robot</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={submitHandler} style={{width: '100%'}}>
+                        <Form.Group>
+                            <Form.Label>Robot Name</Form.Label>
+                            <Form.Control onChange={robotNameChangeHandler} type="text" placeholder="Robot Name"/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Strategy</Form.Label>
+                            <Form.Control onChange={robotStrategyHandler} type="text"/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Broker</Form.Label>
+                            <Form.Control onChange={brokerHandler} as="select">
+                                <option>oanda</option>
+                                <option>Fix</option>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Environment</Form.Label>
+                            <Form.Control onChange={envHandler} as="select">
+                                <option value={'live'}>Live</option>
+                                <option value={'demo'}>Demo</option>
+                            </Form.Control>
+                        </Form.Group>
+                        <OptionLoader
+                        />
+                        <Form.Group>
+                            <Form.Label>Instruments</Form.Label>
+                            <Form.Control onChange={instHandler} as="select">
+                                <OptionLoader
+                                    url={props.server + 'instruments/get_instruments/'}
+                                    params={instrumentParams}
+                                    value={'instrument_name'}/>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Account Number</Form.Label>
+                            <Form.Control onChange={accountHandler} as="select">
+                                <OptionLoader
+                                    url={props.server + 'accounts/get_account_data/'}
+                                    params={accountParams}
+                                    value={'account_number'}/>
+                            </Form.Control>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={submitHandler}>
+                        Save
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
     );
 };
 

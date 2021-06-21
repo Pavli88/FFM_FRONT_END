@@ -1,20 +1,18 @@
 import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col'
-import Dropdown from 'react-bootstrap/Dropdown'
+
 import Card from 'react-bootstrap/Card';
-import Table from 'react-bootstrap/Table'
-import SliderWidget from "../components/SliderWidget";
 
 import PerfDashBoard from "./HomePage/PerfDashBoard";
-import {useEffect, useState, useContext} from "react";
+import {useContext} from "react";
 
 import RobotStatCards from "./HomePage/RobotStatCards";
 
 //CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './HomePage.css';
-import axios from "axios";
+
 
 // Contexts
 import EnvContext from "../context/env-context";
@@ -26,18 +24,11 @@ const HomePage = (props) => {
     const env = useContext(EnvContext)['environment'];
     const server = useContext(ServerContext)['server'];
 
-    // const [robotEnvData, setRobotEnvData] = useState('live')
-
-
     const balanceRequestData = {
         'env': 'live',
         'start_date': 21,
         'end_date': 34,
     };
-
-    // console.log(balanceRequestData)
-    // console.log(robotRiskData)
-
 
     return (
             <Container style={{background:'#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
@@ -68,8 +59,6 @@ const HomePage = (props) => {
                             </Col>
                         </Row>
                     </Container>
-
-
                 </Col>
             </Row>
         </Container>

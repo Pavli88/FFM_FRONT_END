@@ -14,6 +14,9 @@ import Row from 'react-bootstrap/Row';
 // Context
 import ServerContext from "../context/server-context";
 import EnvContext from "../context/env-context";
+import {Card} from "react-bootstrap";
+
+import RiskEntryModal from "../components/Modals";
 
 const RobotTableRow = (props) => {
 
@@ -38,43 +41,40 @@ const RobotTableRow = (props) => {
 };
 
 
-const RobotPage = () => {
+const RobotPage = (props) => {
     const server = useContext(ServerContext)['server'];
+    const env = useContext(EnvContext)['environment'];
 
     const [robotData, setRobotData] = useState([])
 
     // Fetching robot risk data from database
     useEffect(() => {
-            axios.get(server + 'robots/get_robots/')
-                .then(response => response.json())
+            axios.get(server + 'robots/get_robots/' + env)
+                .then(response => response['data'].map((data) =>
+                    <RobotTableRow key={data['id']} data={data}></RobotTableRow>))
                 .then(data => setRobotData(data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        }, []
+        }, [props]
     );
 
     // Robot table header data
     const robotTableHeaderData = ['Name', 'Strategy', 'Security', 'Broker', 'Env', 'Status', 'Account Number', '']
-    const robotDataRow = robotData.map((data) =>
-        <RobotTableRow key={data['id']} data={data}></RobotTableRow>);
-
 
     return (
-        <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
-            <Row>
-                <Col xs={12} md={8}>
-                    <Table>
-                        <TableHeaderGenerator list={robotTableHeaderData}/>
-                        <tbody>
-                        {robotDataRow}
-                        </tbody>
-                    </Table>
-                </Col>
-                <Col xs={6} md={4}>
-                    <NewRobotForm server={server}/>
-                </Col>
-            </Row>
+        <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
+            <Card>
+                <Card.Header as="h5">
+                    <NewRobotForm server={server} style={{height: '400px'}}/>
+                </Card.Header>
+                <Table>
+                    <TableHeaderGenerator list={robotTableHeaderData}/>
+                    <tbody>
+                    {robotData}
+                    </tbody>
+                </Table>
+            </Card>
         </Container>
     );
 };

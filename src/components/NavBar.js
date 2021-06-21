@@ -5,7 +5,6 @@ import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import Dropdown from "react-bootstrap/Dropdown";
 import { Link } from 'react-router-dom'
-import {useState} from "react";
 
 const Navigation = (props) => {
 
@@ -21,6 +20,7 @@ const Navigation = (props) => {
                     <Nav.Link as={Link} to={'/portfolio'}>Portfolio</Nav.Link>
                     <Nav.Link as={Link} to={'/robot'}>Robot</Nav.Link>
                     <Nav.Link as={Link} to={'/risk'}>Risk</Nav.Link>
+                    <Nav.Link as={Link} to={'/instruments'}>Instrument</Nav.Link>
                     <Nav.Link as={Link} to={'/trade'}>Trade</Nav.Link>
                 </Nav>
                 <Form inline>

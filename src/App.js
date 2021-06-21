@@ -7,6 +7,7 @@ import PortfolioPage from "./Pages/PortfolioPage";
 import TradePage from "./Pages/TradePage";
 import Navigation from "./components/NavBar";
 import RobotPage from "./Pages/RobotPage";
+import InstrumentPage from "./Pages/InstrumentPage";
 
 // Contexts
 import ServerContext from "./context/server-context";
@@ -42,6 +43,9 @@ function App() {
                         </Route>
                         <Route path="/portfolio">
                             <PortfolioPage/>
+                        </Route>
+                        <Route path="/instruments">
+                            <InstrumentPage/>
                         </Route>
                         <Route path="/robot">
                             <RobotPage/>
