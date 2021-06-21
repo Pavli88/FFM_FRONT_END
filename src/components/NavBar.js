@@ -27,7 +27,7 @@ const Navigation = (props) => {
                     <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
                     <Button variant="outline-info">Search</Button>
                 </Form>
-                <Dropdown onSelect={envChange}>
+                <Dropdown onSelect={envChange} style={{marginLeft:'10px'}}>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                         Environment
                     </Dropdown.Toggle>

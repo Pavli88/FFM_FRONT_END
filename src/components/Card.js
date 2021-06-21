@@ -8,7 +8,7 @@ const CardWidget = (props) => {
     return (
         <Card style={props.style}>
             <Card.Header as="h5">{props.name}</Card.Header>
-            <Card.Body>
+            <Card.Body style={{padding: '0px'}}>
                 {props.children}
             </Card.Body>
         </Card>

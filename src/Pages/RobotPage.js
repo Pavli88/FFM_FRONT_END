@@ -1,10 +1,15 @@
 import {useState, useEffect, useContext} from "react";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
-import NewRobotForm from "../components/Forms/NewRobotForm";
 
+import NewRobotForm from "../components/Forms/NewRobotForm";
 import TableHeaderGenerator from "../components/Table";
 import axios from "axios";
+
+// Bootstrap
+import Container from "react-bootstrap/Container";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row';
 
 // Context
 import ServerContext from "../context/server-context";
@@ -56,16 +61,21 @@ const RobotPage = () => {
 
 
     return (
-        <div>
-            <h2>Robot Page</h2>
-            <NewRobotForm/>
-            <Table>
-                <TableHeaderGenerator list={robotTableHeaderData}/>
-                <tbody>
-                    {robotDataRow}
-                </tbody>
-            </Table>
-        </div>
+        <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
+            <Row>
+                <Col xs={12} md={8}>
+                    <Table>
+                        <TableHeaderGenerator list={robotTableHeaderData}/>
+                        <tbody>
+                        {robotDataRow}
+                        </tbody>
+                    </Table>
+                </Col>
+                <Col xs={6} md={4}>
+                    <NewRobotForm server={server}/>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

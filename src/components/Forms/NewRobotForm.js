@@ -1,16 +1,32 @@
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import ServerContext from "../../context/server-context";
 
-const NewRobotForm = () => {
-    const server = useContext(ServerContext);
+const NewRobotForm = (props) => {
+
 
     const [robotName, setRobotName] = useState('');
     const [strategy, setStrategy] = useState('');
     const [broker, setBroker] = useState('oanda');
     const [env, setEnv] = useState('live');
+
+    const [accountData, setAccountData] = useState('');
+    const accountParams = {
+        'broker': broker,
+        'env': env,
+    };
+
+    useEffect(() => {
+            axios.get(props.server + 'accounts/get_account_data/', {params: accountParams})
+                .then(response => response['data'])
+                .then(data => setAccountData(data))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, [props]
+    );
 
     const robotNameChangeHandler = (event) => {
         setRobotName(event.target.value)
@@ -27,7 +43,7 @@ const NewRobotForm = () => {
     const submitHandler = (event) => {
         event.preventDefault();
 
-        axios.post(server + '/robots/new_robot/', {
+        axios.post(props.server + '/robots/new_robot/', {
             robot_name: robotName,
             strategy: strategy,
             security: 'test',
