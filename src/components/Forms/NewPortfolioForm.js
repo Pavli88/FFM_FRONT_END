@@ -1,0 +1,96 @@
+// Bootstrap
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+
+import {useState} from "react";
+import axios from "axios";
+
+const NewPortfolioForm = (props) => {
+
+    const [portfolioName, setPortfolioName] = useState('');
+    const [portType, setPortType] = useState('Trade');
+    const [currency, setCurrency] = useState('USD');
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    const portfolioNameChangeHandler = (event) => {
+        setPortfolioName(event.target.value)
+    };
+
+    const portTypeHandler = (event) => {
+        setPortType(event.target.value)
+    };
+
+    const currencyHandler = (event) => {
+        setCurrency(event.target.value);
+    };
+
+    console.log(portfolioName, portType, currency)
+
+    const submitHandler = (event) => {
+        event.preventDefault();
+
+        axios.post(props.server + 'portfolios/new/', {
+            port_name: portfolioName,
+            port_type: portType,
+            port_currency: currency,
+        })
+                .then(response => console.log(response))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        setShow(false)
+    };
+
+    return (
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                New Portfolio
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>New Portfolio</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={submitHandler} style={{width: '100%'}}>
+                        <Form.Group>
+                            <Form.Label>Portfolio Name</Form.Label>
+                            <Form.Control onChange={portfolioNameChangeHandler} type="text" placeholder="Portfolio Name"/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Portfolio Type</Form.Label>
+                            <Form.Control onChange={portTypeHandler} as="select">
+                                <option value={'Trade'}>Trade</option>
+                                <option value={'Savings'}>Savings</option>
+                                <option value={'Investment'}>Investment</option>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Currency</Form.Label>
+                            <Form.Control onChange={currencyHandler} as="select">
+                                <option value={'USD'}>USD</option>
+                                <option value={'HUF'}>HUF</option>
+                                <option value={'EUR'}>EUR</option>
+                            </Form.Control>
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={submitHandler}>
+                        Save
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    );
+};
+
+export default NewPortfolioForm;

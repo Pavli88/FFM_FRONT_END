@@ -19,20 +19,17 @@ const PerformanceDashboard = (props) => {
         }, [props]
     );
 
-    console.log(perfData)
-
     const perfRespData = perfData.map((record) =>
     <tr key={record['robot']['id']}>
-        <td className="table-row-robot-name">{record['robot']['name']}</td>
-        <td className="table-row-other">{record['balance']}</td>
-        <td className="table-row-other">{record['dtd_ret']} %</td>
-        <td className="table-row-other">{record['mtd_ret']} %</td>
-        <td className="table-row-other">{record['ytd_ret']} %</td>
+        <td style={{fontSize: 12, verticalAlign:"middle"}} className="table-row-robot-name">{record['robot']['name']}</td>
+        <td style={{fontSize: 12, verticalAlign:"middle"}} className="table-row-other">{record['balance']}</td>
+        <td style={{fontSize: 12, verticalAlign:"middle"}} className="table-row-other">{record['dtd_ret']} %</td>
+        <td style={{fontSize: 12, verticalAlign:"middle"}} className="table-row-other">{record['mtd_ret']} %</td>
+        <td style={{fontSize: 12, verticalAlign:"middle"}} className="table-row-other">{record['ytd_ret']} %</td>
     </tr>);
 
     return (
         <Card className={'shadow-sm'} style={{borderRadius:'0px'}}>
-            {/*<Card.Header className="table-row-robot-name" as="h6">Performance</Card.Header>*/}
             <Card.Body style={{padding: '0px'}}>
                 <Table size="sm">
                     <thead>
