@@ -4,7 +4,11 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import Dropdown from "react-bootstrap/Dropdown";
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom'
+
+import RiskEntryModal from "./Modals";
+import {useState} from "react";
 
 const Navigation = (props) => {
 
@@ -22,6 +26,12 @@ const Navigation = (props) => {
                     <Nav.Link as={Link} to={'/risk'}>Risk</Nav.Link>
                     <Nav.Link as={Link} to={'/instruments'}>Instrument</Nav.Link>
                     <Nav.Link as={Link} to={'/trade'}>Trade</Nav.Link>
+                    <NavDropdown title="Calculations">
+                        <NavDropdown.Item>Robot Balance</NavDropdown.Item>
+                        <NavDropdown.Item></NavDropdown.Item>
+                        <NavDropdown.Divider/>
+                        <NavDropdown.Item>Portfolio Holdings</NavDropdown.Item>
+                    </NavDropdown>
                 </Nav>
                 <Form inline>
                     <FormControl type="text" placeholder="Search" className="mr-sm-2"/>

@@ -2,6 +2,7 @@ import {useState, useEffect, useContext} from "react";
 
 import NewRobotForm from "../components/Forms/NewRobotForm";
 import TableHeaderGenerator from "../components/Table";
+import BalanceCalculation from "./Robot/BalanceCalculation";
 import axios from "axios";
 
 // Bootstrap
@@ -15,8 +16,6 @@ import Row from 'react-bootstrap/Row';
 import ServerContext from "../context/server-context";
 import EnvContext from "../context/env-context";
 import {Card} from "react-bootstrap";
-
-import RiskEntryModal from "../components/Modals";
 
 const RobotTableRow = (props) => {
 
@@ -64,17 +63,24 @@ const RobotPage = (props) => {
 
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
-            <Card>
-                <Card.Header as="h5">
-                    <NewRobotForm server={server} style={{height: '400px'}}/>
-                </Card.Header>
-                <Table>
-                    <TableHeaderGenerator list={robotTableHeaderData}/>
-                    <tbody>
-                    {robotData}
-                    </tbody>
-                </Table>
-            </Card>
+            <Row>
+                <Col>
+                    <Card>
+                        <Card.Header as="h5">
+                            <NewRobotForm server={server} style={{height: '400px'}}/>
+                        </Card.Header>
+                        <Table>
+                            <TableHeaderGenerator list={robotTableHeaderData}/>
+                            <tbody>
+                            {robotData}
+                            </tbody>
+                        </Table>
+                    </Card>
+                </Col>
+                <Col>
+                    <BalanceCalculation server={server}/>
+                </Col>
+            </Row>
         </Container>
     );
 };

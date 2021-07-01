@@ -10,7 +10,7 @@ const TradeTableRow = (props) => {
             robot: props.robot,
             trd_id: props.id,
         })
-            .then(response => console.log(response))
+            .then(response => alert(response['data']))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
