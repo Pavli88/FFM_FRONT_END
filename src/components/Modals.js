@@ -1,50 +1,25 @@
 import {useState} from "react";
 import Button from "react-bootstrap/Button";
 import Modal from 'react-bootstrap/Modal'
-import Form from "react-bootstrap/Form";
 
-const RiskEntryModal = (props) => {
+const ModalForm = (props) => {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(props.show);
+    const handleShow = () => setShow(true);
 
     return (
         <>
             <Button variant="primary" onClick={handleShow}>
-                Launch demo modal
+                {props.button}
             </Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Risk Entry</Modal.Title>
+                    <Modal.Title>{props.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
-                        <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Daily Loss Limit %</Form.Label>
-                            <Form.Control type="number"/>
-                        </Form.Group>
-                        <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Daily Max Number of Trades</Form.Label>
-                            <Form.Control type="number"/>
-                        </Form.Group>
-                        <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Risk per Trade %</Form.Label>
-                            <Form.Control type="number"/>
-                        </Form.Group>
-                        <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Pyramiding Level</Form.Label>
-                            <Form.Control type="number"/>
-                        </Form.Group>
-                        <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Quantity Type</Form.Label>
-                            <Form.Control as="select">
-                                <option>Stop Based</option>
-                                <option>Fix</option>
-                            </Form.Control>
-                        </Form.Group>
-                    </Form>
+                    {props.children}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
@@ -59,8 +34,4 @@ const RiskEntryModal = (props) => {
     );
 };
 
-const PortfolioEntryModal = () => {
-
-};
-
-export default RiskEntryModal;
+export default ModalForm;

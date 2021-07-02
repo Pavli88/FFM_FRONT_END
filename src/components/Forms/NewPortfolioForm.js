@@ -9,6 +9,7 @@ import axios from "axios";
 const NewPortfolioForm = (props) => {
 
     const [portfolioName, setPortfolioName] = useState('');
+    const [portfolioCode, setPortfolioCode] = useState('');
     const [portType, setPortType] = useState('Trade');
     const [currency, setCurrency] = useState('USD');
 
@@ -19,6 +20,10 @@ const NewPortfolioForm = (props) => {
 
     const portfolioNameChangeHandler = (event) => {
         setPortfolioName(event.target.value)
+    };
+
+    const portfolioCodeChangeHandler = (event) => {
+        setPortfolioCode(event.target.value);
     };
 
     const portTypeHandler = (event) => {
@@ -38,12 +43,19 @@ const NewPortfolioForm = (props) => {
             port_name: portfolioName,
             port_type: portType,
             port_currency: currency,
+            port_code: portfolioCode,
         })
-                .then(response => console.log(response))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        setShow(false)
+            .then(function (response) {
+                if (response['data'] == 'New Portfolio was created!') {
+                    window.location.reload();
+                } else {
+                    alert(response['data']);
+                }
+            })
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+        setShow(false);
     };
 
     return (
@@ -60,7 +72,11 @@ const NewPortfolioForm = (props) => {
                     <Form onSubmit={submitHandler} style={{width: '100%'}}>
                         <Form.Group>
                             <Form.Label>Portfolio Name</Form.Label>
-                            <Form.Control onChange={portfolioNameChangeHandler} type="text" placeholder="Portfolio Name"/>
+                            <Form.Control onChange={portfolioNameChangeHandler} type="text" placeholder="Portfolio Name" required/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Portfolio Code</Form.Label>
+                            <Form.Control onChange={portfolioCodeChangeHandler} type="text" placeholder="Portfolio Code" required/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Portfolio Type</Form.Label>

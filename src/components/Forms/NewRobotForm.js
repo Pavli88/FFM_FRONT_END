@@ -112,6 +112,7 @@ const NewRobotForm = (props) => {
                                 <OptionLoader
                                     url={props.server + 'instruments/get_instruments/'}
                                     params={instrumentParams}
+                                    code={'instrument_name'}
                                     value={'instrument_name'}/>
                             </Form.Control>
                         </Form.Group>
@@ -121,6 +122,7 @@ const NewRobotForm = (props) => {
                                 <OptionLoader
                                     url={props.server + 'accounts/get_account_data/'}
                                     params={accountParams}
+                                    code={'account_number'}
                                     value={'account_number'}/>
                             </Form.Control>
                         </Form.Group>

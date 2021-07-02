@@ -8,7 +8,7 @@ const OptionLoader = (props) => {
     useEffect(() => {
             axios.get(props.url, {params: props.params})
                 .then(response => response['data'].map((record) =>
-                    <option key={record['id']} value={record[props.value]}>{record[props.value]}</option>))
+                    <option key={record['id']} value={record[props.code]}>{record[props.value]}</option>))
                 .then(data => setRawData(data))
                 .catch((error) => {
                     console.error('Error Message:', error);
