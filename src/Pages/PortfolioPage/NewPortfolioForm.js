@@ -87,7 +87,7 @@ const NewPortfolioForm = (props) => {
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Currency</Form.Label>
+                            <Form.Label>Portfolio Currency</Form.Label>
                             <Form.Control onChange={currencyHandler} as="select">
                                 <option value={'USD'}>USD</option>
                                 <option value={'HUF'}>HUF</option>

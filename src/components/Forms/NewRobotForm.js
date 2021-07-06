@@ -1,11 +1,14 @@
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {useState} from "react";
+import {useEffect, useState, useRef} from "react";
 import axios from "axios";
 import OptionLoader from "../Options";
 import Modal from "react-bootstrap/Modal";
 
 const NewRobotForm = (props) => {
+
+    const myRef = useRef();
+    console.log(myRef.current)
 
     const [robotName, setRobotName] = useState('');
     const [strategy, setStrategy] = useState('');
@@ -118,12 +121,13 @@ const NewRobotForm = (props) => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Account Number</Form.Label>
-                            <Form.Control onChange={accountHandler} as="select">
+                            <Form.Control ref={myRef} onChange={accountHandler} as="select">
                                 <OptionLoader
-                                    url={props.server + 'accounts/get_account_data/'}
+                                    url={props.server + 'accounts/get_accounts_data/'}
                                     params={accountParams}
                                     code={'account_number'}
-                                    value={'account_number'}/>
+                                    value={'account_number'}
+                                />
                             </Form.Control>
                         </Form.Group>
                     </Form>

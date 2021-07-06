@@ -2,13 +2,15 @@ import {useContext, useEffect, useState} from "react";
 
 import ServerContext from "../context/server-context";
 import EnvContext from "../context/env-context";
+import PortfolioContext from "../context/portfolio-context";
 import axios from "axios";
 
-import NewPortfolioForm from "../components/Forms/NewPortfolioForm";
+import NewPortfolioForm from "./PortfolioPage/NewPortfolioForm";
 import PortfolioTable from "../components/Tables/PortfolioTable";
-import Modals from "../components/Modals";
-import NewPortCashFlow from "../components/Forms/NewPortCashFlow";
-import Options from "../components/Options";
+import PortfolioBuy from "./PortfolioPage/PortfolioBuy";
+import NewPortCashFlow from "./PortfolioPage/NewPortCashFlow";
+import PortfolioSettings from "./PortfolioPage/PortfolioSettings";
+import Holdings from "./PortfolioPage/Holdings";
 
 // Bootstrap
 import Col from 'react-bootstrap/Col';
@@ -40,6 +42,7 @@ const PortfolioPage = (props) => {
                             <div style={{display: "flex", width: '50%'}}>
                                 <Card.Title>Portfolio</Card.Title>
                                 <Form.Control onChange={portSelectHandler} as="select" id={'portSelector'}>
+                                    <option></option>
                                     <OptionLoader
                                     url={server + 'portfolios/get_portfolio_data/'}
                                     code={'portfolio_code'}
@@ -50,7 +53,10 @@ const PortfolioPage = (props) => {
                         </Card>
                         <Card style={{height: '200px'}}>
                             <NewPortCashFlow portfolio={portfolio} server={server}/>
+                            <PortfolioBuy portfolio={portfolio} server={server}/>
                         </Card>
+
+                        <Holdings/>
                     </Container>
                 </Col>
                 <Col>
@@ -63,6 +69,8 @@ const PortfolioPage = (props) => {
                         </Card.Header>
                         <PortfolioTable server={server}/>
                     </Card>
+
+                    <PortfolioSettings/>
                 </Col>
             </Row>
         </Container>

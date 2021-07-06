@@ -13,6 +13,7 @@ const NewPortCashFlow = (props) => {
 
     const [value, setValue] = useState(0.0);
     const [type, setType] = useState('TRADE');
+    const [currency, setCurrency] = useState('USD');
 
     const valueHandler = (event) => {
         setValue(event.target.value);
@@ -22,6 +23,10 @@ const NewPortCashFlow = (props) => {
         setType(event.target.value);
     };
 
+    const currencyHandler = (event) => {
+        setCurrency(event.target.value);
+    }
+
     const submitHandler = (event) => {
         event.preventDefault();
         console.log('form submited')
@@ -29,6 +34,7 @@ const NewPortCashFlow = (props) => {
             port_name: props.portfolio,
             amount: value,
             type: type,
+            currency: currency,
         })
                 .then(response => alert(response['data']))
                 .catch((error) => {
@@ -40,7 +46,7 @@ const NewPortCashFlow = (props) => {
     return (
         <>
             <Button variant="primary" onClick={handleShow}>
-                New Cash Flow
+                Add Cash
             </Button>
 
             <Modal show={show} onHide={handleClose}>
@@ -58,10 +64,16 @@ const NewPortCashFlow = (props) => {
                             <Form.Control onChange={valueHandler} type="number" placeholder="Value"/>
                         </Form.Group>
                         <Form.Group>
+                            <Form.Label>Currency</Form.Label>
+                            <Form.Control onChange={currencyHandler} as="select">
+                                <option value={'USD'}>USD</option>
+                                <option value={'EUR'}>EUR</option>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group>
                             <Form.Label>Type</Form.Label>
                             <Form.Control onChange={cashTypeHandler} as="select">
-                                <option value={'FUNDING'}>Funding</option>
-                                <option value={'TRADE'}>Trade</option>
+                                <option value={'INFLOW'}>Inflow</option>
                             </Form.Control>
                         </Form.Group>
                     </Form>
