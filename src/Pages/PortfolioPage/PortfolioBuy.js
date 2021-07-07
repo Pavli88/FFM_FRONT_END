@@ -54,12 +54,12 @@ const PortfolioBuy = (props) => {
     return (
         <>
             <Button variant="primary" onClick={handleShow}>
-                BUY
+                Buy Robot
             </Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Buy</Modal.Title>
+                    <Modal.Title>Buy Robot</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={submitHandler} style={{width: '100%'}}>
@@ -71,10 +71,10 @@ const PortfolioBuy = (props) => {
                             <Form.Label>Robot</Form.Label>
                             <Form.Control onChange={securityHandler} as="select">
                                 <OptionLoader
-                                    url={props.server + 'instruments/get_instruments/'}
+                                    url={props.server + 'robots/get_robots/all'}
                                     params={instrumentParams}
                                     code={'id'}
-                                    value={'instrument_name'}/>
+                                    value={'name'}/>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>

@@ -29,7 +29,7 @@ const BalanceCalculation = (props) => {
 
         setLoadState(true);
 
-        axios.post(props.server + 'robots/process_hub/', {
+        axios.post(props.server + 'robots/calculate_robot_balance/', {
             process: 'Balance',
             robot: robot,
             start_date: dateBegin,
