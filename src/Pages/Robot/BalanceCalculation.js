@@ -12,9 +12,6 @@ const BalanceCalculation = (props) => {
     const [robot, setRobot] = useState('ALL');
     const [loadState, setLoadState] = useState(false);
 
-    console.log(dateBegin)
-    console.log(dateEnd)
-
     const startDateHandler = (event) => {
         setDateBegin(event.target.value);
     };

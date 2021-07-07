@@ -16,7 +16,7 @@ import PortfolioContext from "./context/portfolio-context";
 import axios from "axios";
 
 function App() {
-
+    // 'https://127.0.0.1:8000/' 'https://pavliati.pythonanywhere.com/'
     const [robotEnvData, setRobotEnvData] = useState('live');
     const server = 'http://127.0.0.1:8000/'
 

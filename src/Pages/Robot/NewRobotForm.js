@@ -2,7 +2,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState, useRef} from "react";
 import axios from "axios";
-import OptionLoader from "../Options";
+import OptionLoader from "../../components/Options";
 import Modal from "react-bootstrap/Modal";
 
 const NewRobotForm = (props) => {
@@ -72,18 +72,13 @@ const NewRobotForm = (props) => {
         // setShow(false)
     };
 
-    useEffect(() => {
-
-        }, []
-    );
-
     return (
         <>
             <Button variant="primary" onClick={handleShow}>
                 New Robot
             </Button>
 
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={handleClose} animation={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>New Robot</Modal.Title>
                 </Modal.Header>
@@ -95,7 +90,11 @@ const NewRobotForm = (props) => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Strategy</Form.Label>
-                            <Form.Control onChange={robotStrategyHandler} type="text"/>
+                            <Form.Control onChange={robotStrategyHandler} as="select">
+                                <option value={'Initiative'}>Initiative</option>
+                                <option value={'Responsive'}>Responsive</option>
+                                <option value={'Correction'}>Correction</option>
+                            </Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Broker</Form.Label>
@@ -111,8 +110,6 @@ const NewRobotForm = (props) => {
                                 <option value={'demo'}>Demo</option>
                             </Form.Control>
                         </Form.Group>
-                        <OptionLoader
-                        />
                         <Form.Group>
                             <Form.Label>Instruments</Form.Label>
                             <Form.Control onChange={instHandler} as="select">
@@ -126,7 +123,7 @@ const NewRobotForm = (props) => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Account Number</Form.Label>
-                            <Form.Control onChange={accountHandler} as="select" value={account}>
+                            <Form.Control onChange={accountHandler} as="select">
                                 <OptionLoader
                                     url={props.server + 'accounts/get_accounts_data/'}
                                     params={accountParams}

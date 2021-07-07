@@ -7,13 +7,30 @@ import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom'
 
-import RiskEntryModal from "./Modals";
-import {useState} from "react";
+import {useContext, useState} from "react";
+
+import BalanceCalculation from "../Pages/Robot/BalanceCalculation";
+
+import NewBrokerAccount from "./NewBrokerAccount";
+import ServerContext from "../context/server-context";
 
 const Navigation = (props) => {
 
+    const server = useContext(ServerContext)['server'];
+
+    const [showNewAccount, setShowNewAccount] = useState(false);
+
     const envChange = (envValue) => {
         props.onEnvChange(envValue);
+    };
+
+    // New account handlers
+    const newAccountHandler = () => {
+        setShowNewAccount(true);
+    };
+
+    const hideNewAccount = () => {
+        setShowNewAccount(false);
     };
 
     return (
@@ -32,6 +49,11 @@ const Navigation = (props) => {
                         <NavDropdown.Divider/>
                         <NavDropdown.Item>Portfolio Holdings</NavDropdown.Item>
                     </NavDropdown>
+                    <NavDropdown title="Broker Accounts">
+                        <NavDropdown.Item onSelect={newAccountHandler}>New</NavDropdown.Item>
+                        <NavDropdown.Item>Update</NavDropdown.Item>
+                        <NavDropdown.Item>Delete</NavDropdown.Item>
+                    </NavDropdown>
                 </Nav>
                 <Form inline>
                     <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
@@ -47,6 +69,8 @@ const Navigation = (props) => {
                         <Dropdown.Item eventKey="demo">Demo</Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
+
+                <NewBrokerAccount show={showNewAccount} hide={hideNewAccount} server={server}/>
             </Navbar>
 
     );
