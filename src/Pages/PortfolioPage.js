@@ -25,8 +25,12 @@ import OptionLoader from "../components/Options";
 const PortfolioPage = (props) => {
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
+    const portfolios = useContext(PortfolioContext)['portfolioData'];
+    const [portfolio, setPortfolio] = useState(portfolios[0]['portfolio_code']);
 
-    const [portfolio, setPortfolio] = useState();
+    console.log(portfolios)
+    const portfolioOptions = portfolios.map((record) =>
+        <option key={record['id']} value={record['portfolio_code']}>{record['portfolio_name']}</option>)
 
     const portSelectHandler = (event) => {
         setPortfolio(event.target.value);
@@ -41,15 +45,10 @@ const PortfolioPage = (props) => {
                         <Card style={{height: '200px'}}>
                             <div style={{display: "flex", width: '50%'}}>
                                 <Card.Title>Portfolio</Card.Title>
-                                <Form.Control onChange={portSelectHandler} as="select" id={'portSelector'}>
-                                    <option></option>
-                                    <OptionLoader
-                                    url={server + 'portfolios/get_portfolio_data/'}
-                                    code={'portfolio_code'}
-                                    value={'portfolio_name'}/>
+                                <Form.Control onChange={portSelectHandler} as="select">
+                                    {portfolioOptions}
                                 </Form.Control>
                             </div>
-
                         </Card>
                         <Card style={{height: '200px'}}>
                             <NewPortCashFlow portfolio={portfolio} server={server}/>

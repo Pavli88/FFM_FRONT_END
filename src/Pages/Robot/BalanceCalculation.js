@@ -1,17 +1,16 @@
 import {Card} from "react-bootstrap";
-import NewRobotForm from "../../components/Forms/NewRobotForm";
-import Table from "react-bootstrap/Table";
-import TableHeaderGenerator from "../../components/Table";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import {useState} from "react";
 import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
 
 const BalanceCalculation = (props) => {
 
     const [dateBegin, setDateBegin] = useState(new Date());
     const [dateEnd, setDateEnd] = useState(new Date());
     const [robot, setRobot] = useState('ALL');
+    const [loadState, setLoadState] = useState(false);
 
     console.log(dateBegin)
     console.log(dateEnd)
@@ -31,13 +30,15 @@ const BalanceCalculation = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
 
+        setLoadState(true);
+
         axios.post(props.server + 'robots/process_hub/', {
             process: 'Balance',
             robot: robot,
             start_date: dateBegin,
             end_date: dateEnd,
         })
-            .then(response => console.log(response))
+            .then(response => setLoadState(false))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
@@ -69,6 +70,11 @@ const BalanceCalculation = (props) => {
                     </Button>
                 </Form>
             </Card.Body>
+            <Modal show={loadState} >
+                <Modal.Body style={{width: '200px', height:'300px'}}>
+                    <h2>Calculating ...</h2>
+                </Modal.Body>
+            </Modal>
         </Card>
     );
 };

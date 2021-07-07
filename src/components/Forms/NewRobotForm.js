@@ -6,16 +6,15 @@ import OptionLoader from "../Options";
 import Modal from "react-bootstrap/Modal";
 
 const NewRobotForm = (props) => {
-
-    const myRef = useRef();
-    console.log(myRef.current)
-
     const [robotName, setRobotName] = useState('');
     const [strategy, setStrategy] = useState('');
     const [broker, setBroker] = useState('oanda');
     const [env, setEnv] = useState('live');
     const [account, setAccount] = useState('');
     const [instrument, setInstrument] = useState('');
+
+    console.log(account);
+    console.log(instrument)
 
     const [show, setShow] = useState(false);
 
@@ -58,20 +57,25 @@ const NewRobotForm = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
 
-        axios.post(props.server + 'robots/new_robot/', {
-            robot_name: robotName,
-            strategy: strategy,
-            security: instrument,
-            broker: broker,
-            env: env,
-            account: account,
-        })
-                .then(response => console.log(response))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        setShow(false)
+        // axios.post(props.server + 'robots/new_robot/', {
+        //     robot_name: robotName,
+        //     strategy: strategy,
+        //     security: instrument,
+        //     broker: broker,
+        //     env: env,
+        //     account: account,
+        // })
+        //         .then(response => console.log(response))
+        //         .catch((error) => {
+        //             console.error('Error Message:', error);
+        //         });
+        // setShow(false)
     };
+
+    useEffect(() => {
+
+        }, []
+    );
 
     return (
         <>
@@ -116,12 +120,13 @@ const NewRobotForm = (props) => {
                                     url={props.server + 'instruments/get_instruments/'}
                                     params={instrumentParams}
                                     code={'instrument_name'}
-                                    value={'instrument_name'}/>
+                                    value={'instrument_name'}
+                                />
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Account Number</Form.Label>
-                            <Form.Control ref={myRef} onChange={accountHandler} as="select">
+                            <Form.Control onChange={accountHandler} as="select" value={account}>
                                 <OptionLoader
                                     url={props.server + 'accounts/get_accounts_data/'}
                                     params={accountParams}
