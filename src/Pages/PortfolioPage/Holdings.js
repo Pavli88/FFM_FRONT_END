@@ -1,13 +1,10 @@
 import Card from "react-bootstrap/Card";
+import "./PortfolioPage.css"
 
 const Holdings = () => {
     return (
-        <Card style={{height: '200px'}}>
-            <div style={{display: "flex", width: '50%'}}>
-                <Card.Title>Holdings</Card.Title>
-
-            </div>
-
+        <Card className="card">
+            <Card.Title className="card-header-first">Holdings</Card.Title>
         </Card>
     );
 };

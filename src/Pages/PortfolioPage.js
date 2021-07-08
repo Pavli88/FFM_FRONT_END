@@ -11,6 +11,7 @@ import Holdings from "./PortfolioPage/Holdings";
 import PortfolioTransactions from "./PortfolioPage/PortfolioTransactions";
 import PortfolioNav from "./PortfolioPage/PortfolioNav";
 import PortfolioDetails from "./PortfolioPage/PortfolioDetails";
+import PortfolioGroup from "./PortfolioPage/PortfolioGroup";
 
 // Bootstrap
 import Col from 'react-bootstrap/Col';
@@ -21,6 +22,10 @@ import Form from "react-bootstrap/Form";
 import Row from 'react-bootstrap/Row';
 import OptionLoader from "../components/Options";
 
+// CSS
+import "./PortfolioPage.css"
+import PortfolioBuy from "./PortfolioPage/PortfolioBuy";
+import NewPortCashFlow from "./PortfolioPage/NewPortCashFlow";
 
 const PortfolioPage = (props) => {
     const server = useContext(ServerContext)['server'];
@@ -44,19 +49,59 @@ const PortfolioPage = (props) => {
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
             <Row>
                 <Col>
-                    <Container className="border" style={{width: "100%", height: window.innerHeight}}>
-                        <PortfolioDetails portOptions={portfolioOptions} portChange={portSelect}/>
-                        <Holdings/>
-                        <PortfolioNav portfolio={portfolio} server={server}/>
-                    </Container>
+                    <Form.Group as={Row} controlId="formHorizontalEmail">
+                        <Form.Label className="form-label-first">
+                            Portfolio
+                        </Form.Label>
+                        <Col sm={10}>
+                            <Form.Control size="sm" onChange={portSelectHandler} as="select">
+                                {portfolioOptions}
+                            </Form.Control>
+                        </Col>
+                    </Form.Group>
                 </Col>
                 <Col>
-                    <Container className="border" style={{height: '50%'}}>
-                        <NewPortfolioForm server={server}/>
-                    </Container>
-                    <PortfolioTransactions portfolio={portfolio} server={server}/>
-                    <PortfolioSettings/>
+                    <NewPortfolioForm server={server}/>
+                </Col>
+                <Col>
+                    <NewPortCashFlow portfolio={portfolio} server={server}/>
+                </Col>
+                <Col>
+                    <PortfolioBuy portfolio={portfolio} server={server}/>
+                </Col>
+            </Row>
 
+            <Row>
+                <Col>
+                    <Row style={{height: '300px', padding: '5px'}}>
+                        <Col style={{height: '100%'}}>
+                            <PortfolioDetails portOptions={portfolioOptions} portChange={portSelect}/>
+                        </Col>
+                        <Col>
+                            <PortfolioNav portfolio={portfolio} server={server}/>
+                        </Col>
+                    </Row>
+                    <Row style={{height: '500px', padding: '5px'}}>
+                        <Col>
+                            <Holdings/>
+                        </Col>
+                    </Row>
+                </Col>
+                <Col>
+                    <Row style={{height: '300px', padding: '5px'}}>
+                        <Col style={{height: '100%'}}>
+                            <PortfolioGroup/>
+
+                        </Col>
+                        <Col>
+                            <PortfolioSettings/>
+                        </Col>
+                    </Row>
+                    <Row style={{height: '500px', padding: '5px'}}>
+                        <Col>
+                            <PortfolioTransactions portfolio={portfolio} server={server}/>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </Container>

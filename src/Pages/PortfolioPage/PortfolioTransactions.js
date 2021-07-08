@@ -8,6 +8,8 @@ import Form from "react-bootstrap/Form";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import "./PortfolioPage.css"
+
 const PortfolioTransactions = (props) => {
 
     const today = new Date();
@@ -47,17 +49,12 @@ const PortfolioTransactions = (props) => {
     );
 
     return (
-        <Card style={{height: '400px'}}>
-            <Row>
-                <Card.Title>Transactions</Card.Title>
-                <PortfolioBuy portfolio={props.portfolio} server={props.server}/>
-            </Row>
-
-
+        <Card className="card">
+            <Card.Title className="card-header-first">Transactions</Card.Title>
             <Row style={{width:'100%', margin:'0px'}}>
                 <Col>
                     <Form.Group as={Row} controlId="formHorizontalEmail">
-                    <Form.Label style={{fontSize: 12, verticalAlign:"middle"}} column sm={2}>
+                    <Form.Label className="form-label-first" column sm={2}>
                         From
                     </Form.Label>
                     <Col sm={10}>
@@ -67,7 +64,7 @@ const PortfolioTransactions = (props) => {
                 </Col>
                 <Col>
                     <Form.Group as={Row} controlId="formHorizontalEmail">
-                    <Form.Label style={{fontSize: 12, verticalAlign:"middle"}} column sm={2}>
+                    <Form.Label className="form-label-first" column sm={2}>
                         To
                     </Form.Label>
                     <Col sm={10}>
@@ -75,22 +72,20 @@ const PortfolioTransactions = (props) => {
                     </Col>
                 </Form.Group>
                 </Col>
-
             </Row>
 
-
             <div style={{height:'100%',overflowY: 'scroll', overflowX: 'hidden'}}>
-                <Table >
-                <thead>
+                <Table>
+                <thead className="table-header-first">
                 <tr>
-                    <td style={{fontSize: 12, verticalAlign:"middle"}}>Portfolio</td>
-                    <td style={{fontSize: 12, verticalAlign:"middle"}}>Quantity</td>
-                    <td style={{fontSize: 12, verticalAlign:"middle"}}>Price</td>
-                    <td style={{fontSize: 12, verticalAlign:"middle"}}>Market Value</td>
-                    <td style={{fontSize: 12, verticalAlign:"middle"}}>Trade Date</td>
-                    <td style={{fontSize: 12, verticalAlign:"middle"}}>Instrument</td>
-                    <td style={{fontSize: 12, verticalAlign:"middle"}}>Instrument Type</td>
-                    <td style={{fontSize: 12, verticalAlign:"middle"}}>Source</td>
+                    <td className="table-header-row">Portfolio</td>
+                    <td className="table-header-row">Quantity</td>
+                    <td className="table-header-row">Price</td>
+                    <td className="table-header-row">Market Value</td>
+                    <td className="table-header-row">Trade Date</td>
+                    <td className="table-header-row">Instrument</td>
+                    <td className="table-header-row">Instrument Type</td>
+                    <td className="table-header-row">Source</td>
                 </tr>
                 </thead>
                 <tbody >
