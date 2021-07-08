@@ -6,11 +6,11 @@ import PortfolioContext from "../context/portfolio-context";
 import axios from "axios";
 
 import NewPortfolioForm from "./PortfolioPage/NewPortfolioForm";
-import PortfolioTable from "../components/Tables/PortfolioTable";
-import PortfolioBuy from "./PortfolioPage/PortfolioBuy";
-import NewPortCashFlow from "./PortfolioPage/NewPortCashFlow";
 import PortfolioSettings from "./PortfolioPage/PortfolioSettings";
 import Holdings from "./PortfolioPage/Holdings";
+import PortfolioTransactions from "./PortfolioPage/PortfolioTransactions";
+import PortfolioNav from "./PortfolioPage/PortfolioNav";
+import PortfolioDetails from "./PortfolioPage/PortfolioDetails";
 
 // Bootstrap
 import Col from 'react-bootstrap/Col';
@@ -36,40 +36,27 @@ const PortfolioPage = (props) => {
         setPortfolio(event.target.value);
     };
 
+    const portSelect = (port) => {
+        setPortfolio(port);
+    };
+
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
             <Row>
                 <Col>
                     <Container className="border" style={{width: "100%", height: window.innerHeight}}>
-
-                        <Card style={{height: '200px'}}>
-                            <div style={{display: "flex", width: '50%'}}>
-                                <Card.Title>Portfolio</Card.Title>
-                                <Form.Control onChange={portSelectHandler} as="select">
-                                    {portfolioOptions}
-                                </Form.Control>
-                            </div>
-                        </Card>
-                        <Card style={{height: '200px'}}>
-                            <NewPortCashFlow portfolio={portfolio} server={server}/>
-                            <PortfolioBuy portfolio={portfolio} server={server}/>
-                        </Card>
-
+                        <PortfolioDetails portOptions={portfolioOptions} portChange={portSelect}/>
                         <Holdings/>
+                        <PortfolioNav portfolio={portfolio} server={server}/>
                     </Container>
                 </Col>
                 <Col>
                     <Container className="border" style={{height: '50%'}}>
                         <NewPortfolioForm server={server}/>
                     </Container>
-                    <Card>
-                        <Card.Header as="h5">
-
-                        </Card.Header>
-                        <PortfolioTable server={server}/>
-                    </Card>
-
+                    <PortfolioTransactions portfolio={portfolio} server={server}/>
                     <PortfolioSettings/>
+
                 </Col>
             </Row>
         </Container>
