@@ -5,6 +5,9 @@ import RiskTableRow from "./RiskTableRow";
 // Bootstrap
 import Table from "react-bootstrap/Table";
 
+// CSS
+import "../MainCSS.css"
+
 const RiskTableData = (props) => {
 
     const env = useContext(EnvContext)['environment'];
@@ -38,14 +41,14 @@ const RiskTableData = (props) => {
         <Table>
             <thead style={{fontSize: 12}}>
             <tr>
-                <th style={{ verticalAlign: "middle"}}>Robot</th>
-                <th style={{ verticalAlign: "middle"}}>Daily Loss Limit %</th>
-                <th style={{ verticalAlign: "middle"}}>Max Number of Trades (Daily)</th>
-                <th style={{ verticalAlign: "middle"}}>Risk per Trade %</th>
-                <th style={{ verticalAlign: "middle"}}>Pyramiding Level</th>
-                <th style={{ verticalAlign: "middle"}}>Quantity Type</th>
-                <th style={{ verticalAlign: "middle"}}>Quantity</th>
-                <th style={{ verticalAlign: "middle"}}></th>
+                <th style={{verticalAlign: "middle"}}>Robot</th>
+                <th style={{verticalAlign: "middle"}}>Daily Loss Limit %</th>
+                <th style={{verticalAlign: "middle"}}>Max Number of Trades (Daily)</th>
+                <th style={{verticalAlign: "middle"}}>Risk per Trade %</th>
+                <th style={{verticalAlign: "middle"}}>Pyramiding Level</th>
+                <th style={{verticalAlign: "middle"}}>Quantity Type</th>
+                <th style={{verticalAlign: "middle"}}>Quantity</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>

@@ -44,7 +44,7 @@ function App() {
                 <PortfolioContext.Provider value={{portfolioData}}>
                     <div className="App">
 
-                        <Navigation onEnvChange={getEnvData}/>
+                        <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
                         <Switch>
                             <Route path="/risk">
                                 <RiskPage/>

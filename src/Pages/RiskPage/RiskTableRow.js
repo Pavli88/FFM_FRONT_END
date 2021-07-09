@@ -3,6 +3,10 @@ import SliderWidget from "../../components/SliderWidget";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 
+
+// CSS
+import "../MainCSS.css"
+
 const RiskTableRow = (props) => {
 
     const [robot, setRobot] = useState(props.robot);
@@ -46,23 +50,23 @@ const RiskTableRow = (props) => {
 
     return (
         <tr>
-            <td style={{fontSize: 12, verticalAlign:"middle" }}>{robot}</td>
-            <td style={{fontSize: 12, verticalAlign:"middle"}} onChange={dailyRiskHandler}><SliderWidget defaultValue={dailyRisk}
+            <td style={{verticalAlign: "middle"}}>{robot}</td>
+            <td style={{verticalAlign: "middle"}} onChange={dailyRiskHandler}><SliderWidget defaultValue={dailyRisk}
                               min={0.00}
                               max={0.20}
                               step={0.005}/></td>
-            <td style={{fontSize: 12, verticalAlign:"middle"}} onChange={tradeLimitHandler}><SliderWidget defaultValue={tradeLimit}
+            <td style={{verticalAlign: "middle"}} className="table-row" onChange={tradeLimitHandler}><SliderWidget defaultValue={tradeLimit}
                               min={0}
                               max={20}
                               step={1}/></td>
-            <td style={{fontSize: 12, verticalAlign:"middle"}} onChange={tradeRiskHandler}><SliderWidget defaultValue={riskOnTrade}
+            <td style={{verticalAlign: "middle"}} className="table-row" onChange={tradeRiskHandler}><SliderWidget defaultValue={riskOnTrade}
                               min={0.00}
                               max={0.1}
                               step={0.0025}/></td>
-            <td style={{fontSize: 12, verticalAlign:"middle"}}>{pLevel}</td>
-            <td style={{fontSize: 12, verticalAlign:"middle"}}>{qType}</td>
-            <td style={{fontSize: 12, verticalAlign:"middle"}}>{quantity}</td>
-            <td><Button onClick={UpdateRisk}>Update</Button></td>
+            <td style={{verticalAlign: "middle"}}>{pLevel}</td>
+            <td style={{verticalAlign: "middle"}}>{qType}</td>
+            <td style={{verticalAlign: "middle"}}>{quantity}</td>
+            <td style={{verticalAlign: "middle"}}><Button onClick={UpdateRisk}>Update</Button></td>
         </tr>
     );
 };

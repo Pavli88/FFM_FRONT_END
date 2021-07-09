@@ -1,7 +1,8 @@
 import Card from "react-bootstrap/Card";
 import NewPortCashFlow from "./NewPortCashFlow";
 
-import "./PortfolioPage.css"
+import "../PortfolioPage.css"
+import "../MainCSS.css"
 
 const PortfolioNav = (props) => {
     return (

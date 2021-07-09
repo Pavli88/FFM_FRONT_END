@@ -1,5 +1,7 @@
 import Card from "react-bootstrap/Card";
-import "./PortfolioPage.css"
+
+import "../PortfolioPage.css"
+import "../MainCSS.css"
 
 const PortfolioSettings = () => {
     return (

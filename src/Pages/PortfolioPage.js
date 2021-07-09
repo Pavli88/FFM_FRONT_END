@@ -12,10 +12,11 @@ import PortfolioTransactions from "./PortfolioPage/PortfolioTransactions";
 import PortfolioNav from "./PortfolioPage/PortfolioNav";
 import PortfolioDetails from "./PortfolioPage/PortfolioDetails";
 import PortfolioGroup from "./PortfolioPage/PortfolioGroup";
+import PortfolioRisk from "./PortfolioPage/PortfolioRisk";
+import PortfolioReturn from "./PortfolioPage/PortfolioReturn";
 
 // Bootstrap
 import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
 import Container from 'react-bootstrap/Container'
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -24,6 +25,7 @@ import OptionLoader from "../components/Options";
 
 // CSS
 import "./PortfolioPage.css"
+
 import PortfolioBuy from "./PortfolioPage/PortfolioBuy";
 import NewPortCashFlow from "./PortfolioPage/NewPortCashFlow";
 
@@ -32,6 +34,8 @@ const PortfolioPage = (props) => {
     const env = useContext(EnvContext)['environment'];
     const portfolios = useContext(PortfolioContext)['portfolioData'];
     const [portfolio, setPortfolio] = useState(portfolios[0]['portfolio_code']);
+    const [startDate, setStartDate] = useState([]);
+    const [endDate, setEndDate] = useState([]);
 
     console.log(portfolios)
     const portfolioOptions = portfolios.map((record) =>
@@ -45,32 +49,68 @@ const PortfolioPage = (props) => {
         setPortfolio(port);
     };
 
+    const startDateHandler = (event) => {
+        setStartDate(event.target.value);
+    };
+
+    const endDateHandler = (event) => {
+        setEndDate(event.target.value);
+    };
+
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
             <Row>
-                <Col>
-                    <Form.Group as={Row} controlId="formHorizontalEmail">
-                        <Form.Label className="form-label-first">
-                            Portfolio
-                        </Form.Label>
-                        <Col sm={10}>
-                            <Form.Control size="sm" onChange={portSelectHandler} as="select">
-                                {portfolioOptions}
-                            </Form.Control>
+                <Col style={{display: 'flex'}}>
+                    <Row>
+                        <Col>
+                            <Form.Group as={Row}>
+                                <Form.Label className="form-label-first" column sm={2}>
+                                    Portfolio
+                                </Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control onChange={portSelectHandler} as="select">
+                                        {portfolioOptions}
+                                    </Form.Control>
+
+                                </Col>
+                            </Form.Group>
                         </Col>
-                    </Form.Group>
+                        <Col>
+                            <Form.Group as={Row}>
+                                <Form.Label className="form-label-first" column sm={2}>
+                                    From
+                                </Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control type="date" onChange={startDateHandler}/>
+                                </Col>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group as={Row}>
+                                <Form.Label className="form-label-first" column sm={2}>
+                                    To
+                                </Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control type="date" onChange={endDateHandler}/>
+                                </Col>
+                            </Form.Group>
+                        </Col>
+                    </Row>
                 </Col>
                 <Col>
-                    <NewPortfolioForm server={server}/>
-                </Col>
-                <Col>
-                    <NewPortCashFlow portfolio={portfolio} server={server}/>
-                </Col>
-                <Col>
-                    <PortfolioBuy portfolio={portfolio} server={server}/>
+                    <Row>
+                        <Col>
+                            <NewPortfolioForm server={server}/>
+                        </Col>
+                        <Col>
+                            <NewPortCashFlow portfolio={portfolio} server={server}/>
+                        </Col>
+                        <Col>
+                            <PortfolioBuy portfolio={portfolio} server={server}/>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
-
             <Row>
                 <Col>
                     <Row style={{height: '300px', padding: '5px'}}>
@@ -83,7 +123,12 @@ const PortfolioPage = (props) => {
                     </Row>
                     <Row style={{height: '500px', padding: '5px'}}>
                         <Col>
-                            <Holdings/>
+                            <PortfolioRisk/>
+                        </Col>
+                    </Row>
+                    <Row style={{height: '500px', padding: '5px'}}>
+                        <Col>
+                            <PortfolioReturn/>
                         </Col>
                     </Row>
                 </Col>
@@ -91,10 +136,14 @@ const PortfolioPage = (props) => {
                     <Row style={{height: '300px', padding: '5px'}}>
                         <Col style={{height: '100%'}}>
                             <PortfolioGroup/>
-
                         </Col>
                         <Col>
                             <PortfolioSettings/>
+                        </Col>
+                    </Row>
+                    <Row style={{height: '500px', padding: '5px'}}>
+                        <Col>
+                            <Holdings/>
                         </Col>
                     </Row>
                     <Row style={{height: '500px', padding: '5px'}}>

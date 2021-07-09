@@ -3,12 +3,14 @@ import Card from "react-bootstrap/Card";
 import "../PortfolioPage.css"
 import "../MainCSS.css"
 
-const PortfolioGroup = () => {
+const PortfolioRisk = () => {
     return (
         <Card className="card">
-            <Card.Title className="card-header-first">Portfolio Group</Card.Title>
+            <Card.Title className="card-header-first">Risk</Card.Title>
+
+
         </Card>
     );
 };
 
-export default PortfolioGroup;
+export default PortfolioRisk;

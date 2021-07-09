@@ -61,7 +61,7 @@ const Navigation = (props) => {
                 </Form>
                 <Dropdown onSelect={envChange} style={{marginLeft:'10px'}}>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Environment
+                        {props.env}
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
