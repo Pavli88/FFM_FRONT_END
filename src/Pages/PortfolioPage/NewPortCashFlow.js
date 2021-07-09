@@ -12,7 +12,7 @@ const NewPortCashFlow = (props) => {
     const handleShow = () => setShow(true);
 
     const [value, setValue] = useState(0.0);
-    const [type, setType] = useState('TRADE');
+    const [type, setType] = useState('INFLOW');
     const [currency, setCurrency] = useState('USD');
 
     const valueHandler = (event) => {
@@ -40,18 +40,19 @@ const NewPortCashFlow = (props) => {
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
+        setCurrency('USD');
         setShow(false);
     };
 
     return (
         <>
             <Button variant="primary" onClick={handleShow}>
-                Add Cash
+                Funding
             </Button>
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>New Cash Flow</Modal.Title>
+                    <Modal.Title>Funding</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={submitHandler} style={{width: '100%'}}>
