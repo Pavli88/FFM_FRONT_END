@@ -13,23 +13,34 @@ import InstrumentPage from "./Pages/InstrumentPage";
 import ServerContext from "./context/server-context";
 import EnvContext from "./context/env-context";
 import PortfolioContext from "./context/portfolio-context";
+import RobotContext from "./context/robot-context";
 import axios from "axios";
+import Button from "react-bootstrap/Button";
 
 function App() {
-    // 'https://127.0.0.1:8000/' 'https://pavliati.pythonanywhere.com/'
+    // 'http://127.0.0.1:8000/' 'https://pavliati.pythonanywhere.com/'
     const [robotEnvData, setRobotEnvData] = useState('live');
+    const [portfolioData, setPortfolioData] = useState([]);
+    const [robotsData, setRobotsData] = useState([]);
+
     const server = 'http://127.0.0.1:8000/'
 
     const getEnvData = (env) => {
         setRobotEnvData(env);
     };
 
-    const [portfolioData, setPortfolioData] = useState([]);
-
     useEffect(() => {
             axios.get(server + 'portfolios/get_portfolio_data/')
                 .then(response => setPortfolioData(response['data']))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, []
+    );
 
+    useEffect(() => {
+            axios.get(server + 'robots/get_robots/' + robotEnvData)
+                .then(response => setRobotsData(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
@@ -38,10 +49,9 @@ function App() {
 
     return (
         <ServerContext.Provider value={{server: server}}>
-            <EnvContext.Provider value={{
-                environment: robotEnvData
-            }}>
-                <PortfolioContext.Provider value={{portfolioData}}>
+            <EnvContext.Provider value={{environment: robotEnvData}}>
+                <RobotContext.Provider value={{robots: robotsData}}>
+                    <PortfolioContext.Provider value={{portfolioData}}>
                     <div className="App">
 
                         <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
@@ -68,6 +78,7 @@ function App() {
 
                     </div>
                 </PortfolioContext.Provider>
+                </RobotContext.Provider>
             </EnvContext.Provider>
         </ServerContext.Provider>
     );

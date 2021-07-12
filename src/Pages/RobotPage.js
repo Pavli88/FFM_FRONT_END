@@ -1,10 +1,15 @@
 import {useState, useEffect, useContext} from "react";
 
-import RobotDetails from "./Robot/RobotDetails";
-
 import NewRobotForm from "./Robot/NewRobotForm";
 import RobotTable from "./Robot/RobotTable";
 import BalanceCalculation from "./Robot/BalanceCalculation";
+import RobotReturn from "./Robot/RobotReturn";
+import RobotRisk from "./Robot/RobotRisk";
+import RobotDetails from "./Robot/RobotDetails";
+import RobotBalance from "./Robot/RobotBalance";
+import RobotCashFlow from "./Robot/RobotCashFlow";
+import RobotNav from "./Robot/RobotNav";
+
 import axios from "axios";
 
 // Bootstrap
@@ -17,76 +22,46 @@ import Row from 'react-bootstrap/Row';
 // Context
 import ServerContext from "../context/server-context";
 import EnvContext from "../context/env-context";
+import RobotContext from "../context/robot-context";
 import {Card} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
-import NewPortfolioForm from "./PortfolioPage/NewPortfolioForm";
-import NewPortCashFlow from "./PortfolioPage/NewPortCashFlow";
-import PortfolioBuy from "./PortfolioPage/PortfolioBuy";
 
 const RobotPage = (props) => {
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
-    const [robot, setRobot] = useState('robot');
-    const [startDate, setStartDate] = useState([]);
-    const [endDate, setEndDate] = useState([]);
+    const defaultRobots = useContext(RobotContext)['robots'];
 
-    const robotSelectHandler = (event) => {
-        setRobot(event.target.value);
-    };
+    const [robot, setRobot] = useState(defaultRobots[0]['name']);
 
-    const startDateHandler = (event) => {
-        setStartDate(event.target.value);
-    };
-
-    const endDateHandler = (event) => {
-        setEndDate(event.target.value);
-    };
+    console.log(robot)
 
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
-            <Row>
-                <Col style={{display: 'flex'}}>
-                    <Row>
-                        <Col>
-                            <Form.Group as={Row}>
-                                <Form.Label className="form-label-first" column sm={2}>
-                                    Robot
-                                </Form.Label>
-                                <Col sm={10}>
-                                    <Form.Control onChange={robotSelectHandler} as="select">
-                                        {}
-                                    </Form.Control>
+            <RobotNav robots={defaultRobots} server={server} env={env}/>
 
-                                </Col>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group as={Row}>
-                                <Form.Label className="form-label-first" column sm={2}>
-                                    From
-                                </Form.Label>
-                                <Col sm={10}>
-                                    <Form.Control type="date" onChange={startDateHandler}/>
-                                </Col>
-                            </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group as={Row}>
-                                <Form.Label className="form-label-first" column sm={2}>
-                                    To
-                                </Form.Label>
-                                <Col sm={10}>
-                                    <Form.Control type="date" onChange={endDateHandler}/>
-                                </Col>
-                            </Form.Group>
-                        </Col>
-                    </Row>
+            {/*// General Info*/}
+            <Row style={{height: '300px', margin: '5px'}}>
+                <Col>
+                    <RobotDetails server={server} env={env}/>
                 </Col>
                 <Col>
-
+                    <RobotBalance/>
+                </Col>
+                <Col>
+                    <RobotCashFlow/>
                 </Col>
             </Row>
-            <Row>
+
+            {/*// Risk and Return*/}
+            <Row style={{height:'500px', margin: '5px'}}>
+                <Col>
+                    <RobotReturn/>
+                </Col>
+                <Col>
+                    <RobotRisk/>
+                </Col>
+            </Row>
+            <Row style={{height:'500px', margin: '5px'}}>
                 <Col>
                     <Card>
                         <Card.Header as="h5">
