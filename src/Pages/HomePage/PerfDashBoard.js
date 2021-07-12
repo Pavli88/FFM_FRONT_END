@@ -28,6 +28,8 @@ const PerformanceDashboard = (props) => {
         <td style={{fontSize: 12, verticalAlign:"middle"}} className="table-row-other">{record['ytd_ret']} %</td>
     </tr>);
 
+
+
     return (
         <Card className={'shadow-sm'} style={{borderRadius:'0px'}}>
             <Card.Body style={{padding: '0px'}}>

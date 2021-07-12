@@ -32,28 +32,90 @@ const RobotPage = (props) => {
     const defaultRobots = useContext(RobotContext)['robots'];
 
     const [robot, setRobot] = useState(defaultRobots[0]['name']);
+    const [startDate, setStartDate] = useState([]);
+    const [endDate, setEndDate] = useState([]);
 
     console.log(robot)
 
+    const changeRobot = (rob) => {
+        setRobot(rob);
+    };
+
+    const startDateHandler = (event) => {
+        setStartDate(event.target.value);
+    };
+
+    const endDateHandler = (event) => {
+        setEndDate(event.target.value);
+    };
+
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
-            <RobotNav robots={defaultRobots} server={server} env={env}/>
+            <Row style={{height: '60px', padding:'5px'}}>
+                <Col style={{height:'100%'}}>
+                    <RobotNav robots={defaultRobots}
+                          server={server}
+                          env={env}
+                          robotChange={changeRobot}
+                />
+                </Col>
+
+                <Col style={{height:'100%'}}>
+                    <Form.Group as={Row}>
+                        <Form.Label className="form-label-first" column sm={2}>
+                            From
+                        </Form.Label>
+                        <Col sm={10}>
+                            <Form.Control type="date" onChange={startDateHandler}/>
+                        </Col>
+                    </Form.Group>
+                </Col>
+                <Col style={{height:'100%'}}>
+                    <Form.Group as={Row}>
+                        <Form.Label className="form-label-first" column sm={2}>
+                            To
+                        </Form.Label>
+                        <Col sm={10}>
+                            <Form.Control type="date" onChange={endDateHandler}/>
+                        </Col>
+                    </Form.Group>
+                </Col>
+                <Col style={{height:'100%'}}>
+                    <Form.Group as={Row}>
+                        <Form.Label className="form-label-first" column sm={2}>
+                            Balance
+                        </Form.Label>
+                        <Col sm={10}>
+                            <BalanceCalculation server={server} robot={robot} start_date={startDate} end_date={endDate}/>
+                        </Col>
+                    </Form.Group>
+                </Col>
+                <Col style={{height:'100%'}}>
+                    <NewRobotForm server={server} style={{height: '400px'}}/>
+                </Col>
+                <Col style={{height:'100%'}}>
+
+                </Col>
+            </Row>
 
             {/*// General Info*/}
-            <Row style={{height: '300px', margin: '5px'}}>
-                <Col>
+            <Row style={{height: '200px', padding:'5px'}}>
+                <Col style={{height:'100%'}}>
                     <RobotDetails server={server} env={env}/>
                 </Col>
                 <Col>
                     <RobotBalance/>
                 </Col>
+                <Col style={{height:'100%'}}>
+                    <RobotCashFlow robot={robot} server={server}/>
+                </Col>
                 <Col>
-                    <RobotCashFlow/>
+
                 </Col>
             </Row>
 
             {/*// Risk and Return*/}
-            <Row style={{height:'500px', margin: '5px'}}>
+            <Row style={{height:'500px', padding:'5px'}}>
                 <Col>
                     <RobotReturn/>
                 </Col>
@@ -61,17 +123,14 @@ const RobotPage = (props) => {
                     <RobotRisk/>
                 </Col>
             </Row>
-            <Row style={{height:'500px', margin: '5px'}}>
+            <Row style={{height:'500px', padding:'5px'}}>
                 <Col>
                     <Card>
                         <Card.Header as="h5">
-                            <NewRobotForm server={server} style={{height: '400px'}}/>
+
                         </Card.Header>
                         <RobotTable server={server} env={env}/>
                     </Card>
-                </Col>
-                <Col>
-                    <BalanceCalculation server={server}/>
                 </Col>
             </Row>
         </Container>

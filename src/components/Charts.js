@@ -1,6 +1,5 @@
 import Chart from "react-apexcharts";
 
-
 const ApexChart = (props) => {
     const state = {
         options: {
@@ -41,7 +40,7 @@ const ApexChart = (props) => {
                 series={state.series}
                 type={props.chartType}
                 width="100%"
-                height="100%"
+                height="80%"
             />
         );
 }
