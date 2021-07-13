@@ -8,11 +8,13 @@ import axios from "axios";
 
 const RobotCashFlow = (props) => {
 
-    const [cashFlow, setCashFlow] = useState([]);
-    console.log(cashFlow)
+    const [chartData, setChartData] = useState([]);
+
+    console.log(chartData[0])
     useEffect(() => {
             axios.get(props.server + 'robots/robot_cash_flow/'+props.robot)
-                .then(response => setCashFlow(response['data']))
+                .then(response => response['data'].map(data=>data['cash_flow']))
+                .then(data=>setChartData(data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
@@ -48,7 +50,7 @@ const RobotCashFlow = (props) => {
         series: [
             {
                 name: "series-1",
-                data: [],
+                data: chartData,
             }
         ]
     };
@@ -57,16 +59,19 @@ const RobotCashFlow = (props) => {
     // console.log(a)
 
     return (
-            <Card className="card">
+        <Card className="card">
             <Card.Title className="card-header-first">Cash Flow</Card.Title>
-
-                <Chart
-                options={chartOptions.options}
-                series={chartOptions.series}
-                type={'bar'}
-                width="100%"
-                height="100%"/>
-
+            <Card.Body style={{padding: '0px'}}>
+                <div style={{padding:'0px'}}>
+                    <Chart
+                    options={chartOptions.options}
+                    series={chartOptions.series}
+                    type={'bar'}
+                    width="100%"
+                    height="100%"
+                />
+                </div>
+            </Card.Body>
         </Card>
     );
 };

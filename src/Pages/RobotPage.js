@@ -16,7 +16,7 @@ import axios from "axios";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import Col from 'react-bootstrap/Col'
+import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 // Context
@@ -103,8 +103,8 @@ const RobotPage = (props) => {
                 <Col style={{height:'100%'}}>
                     <RobotDetails server={server} env={env}/>
                 </Col>
-                <Col>
-                    <RobotBalance/>
+                <Col style={{height:'100%'}}>
+                    <RobotBalance robot={robot} start_date={startDate} end_date={endDate} server={server}/>
                 </Col>
                 <Col style={{height:'100%'}}>
                     <RobotCashFlow robot={robot} server={server}/>
@@ -116,11 +116,11 @@ const RobotPage = (props) => {
 
             {/*// Risk and Return*/}
             <Row style={{height:'500px', padding:'5px'}}>
-                <Col>
-                    <RobotReturn/>
+                <Col style={{height:'100%', width:'50%'}}>
+                    <RobotReturn robot={robot} start_date={startDate} end_date={endDate} server={server}/>
                 </Col>
-                <Col>
-                    <RobotRisk/>
+                <Col style={{height:'100%', width:'50%'}}>
+                    <RobotRisk robot={robot} start_date={startDate} end_date={endDate} server={server}/>
                 </Col>
             </Row>
             <Row style={{height:'500px', padding:'5px'}}>
