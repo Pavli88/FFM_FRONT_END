@@ -10,7 +10,6 @@ const RobotCashFlow = (props) => {
 
     const [chartData, setChartData] = useState([]);
 
-    console.log(chartData[0])
     useEffect(() => {
             axios.get(props.server + 'robots/robot_cash_flow/'+props.robot)
                 .then(response => response['data'].map(data=>data['cash_flow']))

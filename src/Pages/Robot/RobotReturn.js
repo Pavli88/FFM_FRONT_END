@@ -8,7 +8,6 @@ import axios from "axios";
 const RobotReturn = (props) => {
     const [chartData, setChartData] = useState([]);
 
-    console.log(chartData[0])
     useEffect(() => {
             axios.get(props.server + 'robots/cumulative_ret/'+props.robot)
                 .then(response => response['data'].map(data=>data))
