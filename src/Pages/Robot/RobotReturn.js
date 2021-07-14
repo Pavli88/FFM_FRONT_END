@@ -4,6 +4,11 @@ import "../MainCSS.css"
 import Chart from "react-apexcharts";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+
+// Charts
+import CumulativeReturnChart from "./Charts/CumulativeReturn";
 
 const RobotReturn = (props) => {
     const [chartData, setChartData] = useState([]);
@@ -18,51 +23,27 @@ const RobotReturn = (props) => {
         }, [props]
     );
 
-
-    const chartOptions = {
-        options: {
-            chart: {
-                toolbar: false,
-                id: "basic-bar"
-            },
-            xaxis: {
-                categories: [],
-                labels: {show: false}
-            },
-            yaxis: [
-                {
-                    labels: {
-                        formatter: function (val) {
-                            return val.toFixed(0);
-                        }
-                    }
-                }
-            ],
-            dataLabels: {
-                enabled: false
-            },
-
-        },
-
-        series: [
-            {
-                name: "series-1",
-                data: chartData,
-            }
-        ]
-    };
-
     return (
         <Card className="card">
             <Card.Title className="card-header-first">Return</Card.Title>
             <Card.Body style={{padding: '0px'}}>
-                <Chart
-                    options={chartOptions.options}
-                    series={chartOptions.series}
-                    type={'line'}
-                    width="100%"
-                    height="100%"
-                />
+                <Row style={{height: '100%'}}>
+                    <Col style={{height:'100%'}}>
+                        <div style={{padding: '0px', height: '100%'}}>
+                            <CumulativeReturnChart data={chartData}/>
+                        </div>
+                    </Col>
+                    <Col>
+
+                    </Col>
+                    <Col>
+                        <p>Average winning day %</p>
+                        <p>Average loosing day %</p>
+                        <p>Payoff</p>
+                        <p>Profit factor</p>
+                    </Col>
+                </Row>
+
             </Card.Body>
         </Card>
     );

@@ -9,10 +9,7 @@ import axios from "axios";
 
 const RobotDetails = (props) => {
 
-    const [robotData, setRobotData] = useState([]);
-
-    console.log(robotData)
-    console.log(props.robot)
+    const [robotData, setRobotData] = useState([props.default]);
 
     useEffect(() => {
             axios.get(props.server + 'robots/get_robot/'+props.robot)
@@ -31,20 +28,28 @@ const RobotDetails = (props) => {
                 <Row>
                     <Col>
                         <div style={{ display:'flex', width:'100%'}}>
-                            <p>Name</p>
-                            <p style={{position: 'absolute', right:'0px'}}>Test</p>
-                        </div>
-                        <div style={{ display:'flex', width:'100%'}}>
                             <p>Strategy</p>
-                            <p style={{position: 'absolute', right:'0px'}}>Test</p>
+                            <p style={{position: 'absolute', right:'0px'}}>{robotData[0]['strategy']}</p>
                         </div>
                         <div style={{ display:'flex', width:'100%'}}>
                             <p>Security</p>
-                            <p style={{position: 'absolute', right:'0px'}}>Test</p>
+                            <p style={{position: 'absolute', right:'0px'}}>{robotData[0]['security']}</p>
+                        </div>
+                        <div style={{ display:'flex', width:'100%'}}>
+                            <p>Inception Date</p>
+                            <p style={{position: 'absolute', right:'0px'}}>{robotData[0]['inception_date']}</p>
                         </div>
                     </Col>
                     <Col>
+                        <div style={{ display:'flex', width:'100%'}}>
+                            <p>Broker</p>
+                            <p style={{position: 'absolute', right:'0px'}}>{robotData[0]['broker']}</p>
+                        </div>
+                        <div style={{ display:'flex', width:'100%'}}>
+                            <p>Account Number</p>
 
+                        </div>
+                         <p style={{position: 'absolute', left:'15px'}}>{robotData[0]['account_number']}</p>
                     </Col>
                 </Row>
             </Card.Body>

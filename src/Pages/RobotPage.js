@@ -36,7 +36,7 @@ const RobotPage = (props) => {
     const [startDate, setStartDate] = useState([]);
     const [endDate, setEndDate] = useState([]);
 
-    console.log(robot)
+    console.log(defaultRobots[0])
 
     const changeRobot = (rob) => {
         setRobot(rob);
@@ -102,7 +102,7 @@ const RobotPage = (props) => {
             {/*// General Info*/}
             <Row style={{height: '200px', padding:'5px'}}>
                 <Col style={{height:'100%'}}>
-                    <RobotDetails server={server} robot={robot}/>
+                    <RobotDetails server={server} robot={robot} default={defaultRobots[0]}/>
                 </Col>
                 <Col style={{height:'100%'}}>
                     <RobotBalance robot={robot} start_date={startDate} end_date={endDate} server={server}/>
