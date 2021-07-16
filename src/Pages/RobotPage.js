@@ -28,13 +28,17 @@ import {Card} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 
 const RobotPage = (props) => {
+    // Date variables
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
     const defaultRobots = useContext(RobotContext)['robots'];
 
     const [robot, setRobot] = useState(defaultRobots[0]['name']);
-    const [startDate, setStartDate] = useState([]);
-    const [endDate, setEndDate] = useState([]);
+    const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
+    const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
 
     console.log(defaultRobots[0])
 
@@ -60,14 +64,13 @@ const RobotPage = (props) => {
                           robotChange={changeRobot}
                 />
                 </Col>
-
                 <Col style={{height:'100%'}}>
                     <Form.Group as={Row}>
                         <Form.Label className="form-label-first" column sm={2}>
                             From
                         </Form.Label>
                         <Col sm={10}>
-                            <Form.Control type="date" onChange={startDateHandler}/>
+                            <Form.Control type="date" onChange={startDateHandler} defaultValue={startDate}/>
                         </Col>
                     </Form.Group>
                 </Col>
@@ -77,7 +80,7 @@ const RobotPage = (props) => {
                             To
                         </Form.Label>
                         <Col sm={10}>
-                            <Form.Control type="date" onChange={endDateHandler}/>
+                            <Form.Control type="date" onChange={endDateHandler} defaultValue={endDate}/>
                         </Col>
                     </Form.Group>
                 </Col>

@@ -30,7 +30,7 @@ function App() {
     };
 
     useEffect(() => {
-            axios.get(server + 'portfolios/get_portfolio_data/')
+            axios.get(server + 'portfolios/get_portfolio_data/all')
                 .then(response => setPortfolioData(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);

@@ -198,10 +198,17 @@ const RobotTrades = (props) => {
                                     <p style={{fontWeight:'bold'}}>Profit Factor</p>
                                     <p style={{
                                         position: 'absolute',
-                                        right: '45px',
+                                        right: '15px',
                                         fontWeight:'bold'
                                     }}>{Math.round((winPerc * avgWinner) / (lossPerc / avgLoser) * 100) / 100}</p>
-
+                            </Col>
+                            <Col>
+                                 <p style={{fontWeight:'bold', position:'absolute', left:'0px'}}>Total Profit</p>
+                                    <p style={{
+                                        position: 'absolute',
+                                        right: '45px',
+                                        fontWeight:'bold'
+                                    }}>{Math.round((totalWinner+totalLoser) * 100) / 100}</p>
                             </Col>
                         </Row>
                     </Col>

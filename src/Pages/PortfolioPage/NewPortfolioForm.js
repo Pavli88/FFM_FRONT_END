@@ -47,7 +47,7 @@ const NewPortfolioForm = (props) => {
         })
             .then(function (response) {
                 if (response['data'] == 'New Portfolio was created!') {
-                    window.location.reload();
+                    // window.location.reload();
                 } else {
                     alert(response['data']);
                 }

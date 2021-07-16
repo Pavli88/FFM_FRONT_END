@@ -14,6 +14,12 @@ import PortfolioDetails from "./PortfolioPage/PortfolioDetails";
 import PortfolioGroup from "./PortfolioPage/PortfolioGroup";
 import PortfolioRisk from "./PortfolioPage/PortfolioRisk";
 import PortfolioReturn from "./PortfolioPage/PortfolioReturn";
+import PortfolioCashFlow from "./PortfolioPage/PortfolioCashFlow";
+import CashHolding from "./PortfolioPage/CashHolding";
+
+// Calculations
+import PositionCalculation from "./PortfolioPage/PositionCalculation";
+import CashHoldingCalculation from "./PortfolioPage/CashHoldingCalc";
 
 // Bootstrap
 import Col from 'react-bootstrap/Col';
@@ -30,14 +36,19 @@ import PortfolioBuy from "./PortfolioPage/PortfolioBuy";
 import NewPortCashFlow from "./PortfolioPage/NewPortCashFlow";
 
 const PortfolioPage = (props) => {
+    // Date variables
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
     const portfolios = useContext(PortfolioContext)['portfolioData'];
     const [portfolio, setPortfolio] = useState(portfolios[0]['portfolio_code']);
-    const [startDate, setStartDate] = useState([]);
-    const [endDate, setEndDate] = useState([]);
+    const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
+    const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
 
-    console.log(portfolios)
+    console.log(startDate)
+    console.log(endDate)
     const portfolioOptions = portfolios.map((record) =>
         <option key={record['id']} value={record['portfolio_code']}>{record['portfolio_name']}</option>)
 
@@ -59,7 +70,7 @@ const PortfolioPage = (props) => {
 
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
-            <Row>
+            <Row style={{height: '60px', padding:'5px'}}>
                 <Col style={{display: 'flex'}}>
                     <Row>
                         <Col>
@@ -81,7 +92,7 @@ const PortfolioPage = (props) => {
                                     From
                                 </Form.Label>
                                 <Col sm={10}>
-                                    <Form.Control type="date" onChange={startDateHandler}/>
+                                    <Form.Control type="date" onChange={startDateHandler} defaultValue={firstDay.toISOString().substr(0,10)}/>
                                 </Col>
                             </Form.Group>
                         </Col>
@@ -91,7 +102,7 @@ const PortfolioPage = (props) => {
                                     To
                                 </Form.Label>
                                 <Col sm={10}>
-                                    <Form.Control type="date" onChange={endDateHandler}/>
+                                    <Form.Control type="date" onChange={endDateHandler} defaultValue={date.toISOString().substr(0,10)}/>
                                 </Col>
                             </Form.Group>
                         </Col>
@@ -100,13 +111,30 @@ const PortfolioPage = (props) => {
                 <Col>
                     <Row>
                         <Col>
-                            <NewPortfolioForm server={server}/>
+                            <Row>
+                                <Col>
+                                    <NewPortfolioForm server={server}/>
+                                </Col>
+                                <Col>
+                                    <NewPortCashFlow portfolio={portfolio} server={server}/>
+                                </Col>
+                                <Col>
+                                    <PortfolioBuy portfolio={portfolio} server={server}/>
+                                </Col>
+                            </Row>
                         </Col>
                         <Col>
-                            <NewPortCashFlow portfolio={portfolio} server={server}/>
-                        </Col>
-                        <Col>
-                            <PortfolioBuy portfolio={portfolio} server={server}/>
+                            <Row>
+                                <Col>
+                                    Calculations
+                                </Col>
+                                <Col>
+                                    <PositionCalculation server={server} start_date={startDate} end_date={endDate}/>
+                                </Col>
+                                <Col>
+                                    <CashHoldingCalculation server={server} start_date={startDate} end_date={endDate}/>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                 </Col>
@@ -115,7 +143,7 @@ const PortfolioPage = (props) => {
                 <Col>
                     <Row style={{height: '300px', padding: '5px'}}>
                         <Col style={{height: '100%'}}>
-                            <PortfolioDetails portOptions={portfolioOptions} portChange={portSelect}/>
+                            <PortfolioDetails portfolio={portfolio} server={server} default={portfolios[0]}/>
                         </Col>
                         <Col>
                             <PortfolioNav portfolio={portfolio} server={server}/>
@@ -142,13 +170,19 @@ const PortfolioPage = (props) => {
                         </Col>
                     </Row>
                     <Row style={{height: '500px', padding: '5px'}}>
-                        <Col>
+                        <Col style={{height:'100%'}} sm={8}>
                             <Holdings/>
+                        </Col>
+                        <Col style={{height:'100%'}} sm={4}>
+                            <CashHolding portfolio={portfolio} server={server} end_date={endDate}/>
                         </Col>
                     </Row>
                     <Row style={{height: '500px', padding: '5px'}}>
-                        <Col>
+                        <Col style={{height:'100%'}} sm={8}>
                             <PortfolioTransactions portfolio={portfolio} server={server}/>
+                        </Col>
+                        <Col style={{height:'100%'}} sm={4}>
+                            <PortfolioCashFlow portfolio={portfolio} server={server} start_date={startDate} end_date={endDate}/>
                         </Col>
                     </Row>
                 </Col>
