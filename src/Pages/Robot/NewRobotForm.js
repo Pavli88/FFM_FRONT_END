@@ -57,19 +57,19 @@ const NewRobotForm = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
 
-        // axios.post(props.server + 'robots/new_robot/', {
-        //     robot_name: robotName,
-        //     strategy: strategy,
-        //     security: instrument,
-        //     broker: broker,
-        //     env: env,
-        //     account: account,
-        // })
-        //         .then(response => console.log(response))
-        //         .catch((error) => {
-        //             console.error('Error Message:', error);
-        //         });
-        // setShow(false)
+        axios.post(props.server + 'robots/new_robot/', {
+            robot_name: robotName,
+            strategy: strategy,
+            security: instrument,
+            broker: broker,
+            env: env,
+            account: account,
+        })
+                .then(response => console.log(response))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        setShow(false)
     };
 
     return (
@@ -86,7 +86,7 @@ const NewRobotForm = (props) => {
                     <Form onSubmit={submitHandler} style={{width: '100%'}}>
                         <Form.Group>
                             <Form.Label>Robot Name</Form.Label>
-                            <Form.Control onChange={robotNameChangeHandler} type="text" placeholder="Robot Name"/>
+                            <Form.Control onChange={robotNameChangeHandler} type="text" placeholder="Robot Name" maxLength={20}/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Strategy</Form.Label>

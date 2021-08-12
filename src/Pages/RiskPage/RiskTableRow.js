@@ -6,6 +6,7 @@ import axios from "axios";
 
 // CSS
 import "../MainCSS.css"
+import Form from "react-bootstrap/Form";
 
 const RiskTableRow = (props) => {
 
@@ -27,7 +28,7 @@ const RiskTableRow = (props) => {
             quantity_type: qType,
             quantity: quantity
         })
-            .then(response => console.log(response))
+            .then(response => alert('Risk is updated for ' + robot))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
@@ -48,6 +49,16 @@ const RiskTableRow = (props) => {
         setDailyRisk(event.target.value)
     };
 
+    const quantityTypeHandler = (event) => {
+        setQType(event.target.value)
+    };
+
+    const quantityHandler = (event) => {
+        setQuantity(event.target.value)
+    };
+
+    console.log(qType, robot)
+
     return (
         <tr>
             <td style={{verticalAlign: "middle"}}>{robot}</td>
@@ -63,9 +74,15 @@ const RiskTableRow = (props) => {
                               min={0.00}
                               max={0.1}
                               step={0.0025}/></td>
-            <td style={{verticalAlign: "middle"}}>{pLevel}</td>
-            <td style={{verticalAlign: "middle"}}>{qType}</td>
-            <td style={{verticalAlign: "middle"}}>{quantity}</td>
+            <td style={{verticalAlign: "middle"}}>
+                <Form.Control onChange={quantityTypeHandler} defaultValue={qType} as="select">
+                    <option value={'Stop Based'}>Stop Based</option>
+                    <option value={'Fix'}>Fix</option>
+                </Form.Control>
+            </td>
+            <td style={{verticalAlign: "middle"}}>
+                <Form.Control onChange={quantityHandler} type="number" placeholder={quantity}/>
+            </td>
             <td style={{verticalAlign: "middle"}}><Button onClick={UpdateRisk}>Update</Button></td>
         </tr>
     );

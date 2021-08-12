@@ -45,7 +45,6 @@ const RiskTableData = (props) => {
                 <th style={{verticalAlign: "middle"}}>Daily Loss Limit %</th>
                 <th style={{verticalAlign: "middle"}}>Max Number of Trades (Daily)</th>
                 <th style={{verticalAlign: "middle"}}>Risk per Trade %</th>
-                <th style={{verticalAlign: "middle"}}>Pyramiding Level</th>
                 <th style={{verticalAlign: "middle"}}>Quantity Type</th>
                 <th style={{verticalAlign: "middle"}}>Quantity</th>
                 <th></th>

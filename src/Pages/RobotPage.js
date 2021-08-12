@@ -51,7 +51,12 @@ const RobotPage = (props) => {
     };
 
     const endDateHandler = (event) => {
-        setEndDate(event.target.value);
+
+        if (event.target.value < startDate) {
+            alert('End date can not be less then start date!');
+        }else {
+            setEndDate(event.target.value);
+        };
     };
 
     return (
@@ -132,13 +137,13 @@ const RobotPage = (props) => {
                     <RobotTrades robot={robot} start_date={startDate} end_date={endDate} server={server}/>
                 </Col>
             </Row>
-            <Row style={{height:'500px', padding:'5px'}}>
-                <Col>
-                    <Card>
-                        <RobotTable server={server} env={env}/>
-                    </Card>
-                </Col>
-            </Row>
+            {/*<Row style={{height:'500px', padding:'5px'}}>*/}
+            {/*    <Col>*/}
+            {/*        <Card>*/}
+            {/*            <RobotTable server={server} env={env}/>*/}
+            {/*        </Card>*/}
+            {/*    </Col>*/}
+            {/*</Row>*/}
         </Container>
     );
 };

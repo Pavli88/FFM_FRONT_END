@@ -13,7 +13,13 @@ const RobotRisk = (props) => {
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
-            axios.get(props.server + 'robots/drawdown/'+props.robot)
+            axios.get(props.server + 'robots/drawdown/', {
+                params: {
+                    robot: props.robot,
+                    start_date: props.start_date,
+                    end_date: props.end_date
+                }
+            })
                 .then(response => response['data'].map(data=>data))
                 .then(data=>setChartData(data))
                 .catch((error) => {
@@ -60,18 +66,15 @@ const RobotRisk = (props) => {
         <Card className="card">
             <Card.Title className="card-header-first">Risk</Card.Title>
             <Card.Body style={{padding: '0px'}}>
-                <Row style={{height:'100%'}}>
-                    <Col style={{height:'100%'}}>
+                <Row style={{height: '100%'}}>
+                    <Col style={{height: '100%'}}>
                         <Chart
-                    options={chartOptions.options}
-                    series={chartOptions.series}
-                    type={'bar'}
-                    width="100%"
-                    height="100%"
-                />
-                    </Col>
-                    <Col>
-
+                            options={chartOptions.options}
+                            series={chartOptions.series}
+                            type={'bar'}
+                            width="100%"
+                            height="100%"
+                        />
                     </Col>
                 </Row>
 

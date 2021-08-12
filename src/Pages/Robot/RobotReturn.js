@@ -14,9 +14,15 @@ const RobotReturn = (props) => {
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
-            axios.get(props.server + 'robots/cumulative_ret/'+props.robot)
-                .then(response => response['data'].map(data=>data))
-                .then(data=>setChartData(data))
+            axios.get(props.server + 'robots/cumulative_ret/', {
+                params: {
+                    robot: props.robot,
+                    start_date: props.start_date,
+                    end_date: props.end_date
+                }
+            })
+                .then(response => response['data'].map(data => data))
+                .then(data => setChartData(data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
@@ -33,15 +39,15 @@ const RobotReturn = (props) => {
                             <CumulativeReturnChart data={chartData}/>
                         </div>
                     </Col>
-                    <Col>
+                    {/*<Col>*/}
 
-                    </Col>
-                    <Col>
-                        <p>Average winning day %</p>
-                        <p>Average loosing day %</p>
-                        <p>Payoff</p>
-                        <p>Profit factor</p>
-                    </Col>
+                    {/*</Col>*/}
+                    {/*<Col>*/}
+                    {/*    <p>Average winning day %</p>*/}
+                    {/*    <p>Average loosing day %</p>*/}
+                    {/*    <p>Payoff</p>*/}
+                    {/*    <p>Profit factor</p>*/}
+                    {/*</Col>*/}
                 </Row>
 
             </Card.Body>

@@ -46,9 +46,15 @@ const RobotTrades = (props) => {
     console.log(losingTradeNumber)
     console.log(winningTradeNumber)
     useEffect(() => {
-            axios.get(props.server + 'robots/trades/'+props.robot)
-                .then(response => response['data'].map(data=>data['pnl']))
-                .then(data=>setChartData(data))
+            axios.get(props.server + 'robots/trades/', {
+                params: {
+                    robot: props.robot,
+                    start_date: props.start_date,
+                    end_date: props.end_date
+                }
+            })
+                .then(response => response['data'].map(data => data['pnl']))
+                .then(data => setChartData(data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
