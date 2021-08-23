@@ -38,13 +38,13 @@ const RobotTrades = (props) => {
         totalWinner += winningTrades[i];
     };
 
-    let winPerc = Math.round((winningTradeNumber) / (losingTradeNumber + winningTradeNumber)*10000)/100;
-    let lossPerc = Math.round(losingTradeNumber / (losingTradeNumber + winningTradeNumber)*10000)/100;
+    let winPerc = Math.round((winningTradeNumber) / (losingTradeNumber + winningTradeNumber)*100)/100;
+    let lossPerc = Math.round(losingTradeNumber / (losingTradeNumber + winningTradeNumber)*100)/100;
     let avgWinner = Math.round(totalWinner/winningTrades.length*100)/100;
     let avgLoser = Math.round(totalLoser/losingTrades.length*100)/100;
 
-    console.log(losingTradeNumber)
-    console.log(winningTradeNumber)
+    console.log(winPerc)
+    console.log(lossPerc)
     useEffect(() => {
             axios.get(props.server + 'robots/trades/', {
                 params: {
@@ -206,7 +206,7 @@ const RobotTrades = (props) => {
                                         position: 'absolute',
                                         right: '15px',
                                         fontWeight:'bold'
-                                    }}>{Math.round((winPerc * avgWinner) / (lossPerc / avgLoser) * 100) / 100}</p>
+                                    }}>{Math.round((winPerc * avgWinner) / (lossPerc / avgLoser) * -100) / 100}</p>
                             </Col>
                             <Col>
                                  <p style={{fontWeight:'bold', position:'absolute', left:'0px'}}>Total Profit</p>

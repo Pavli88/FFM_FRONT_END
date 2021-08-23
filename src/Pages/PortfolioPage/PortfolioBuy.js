@@ -7,12 +7,17 @@ import OptionLoader from "../../components/Options";
 
 import axios from "axios";
 
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 const PortfolioBuy = (props) => {
 
     const [show, setShow] = useState(false);
     const [securityId, setSecurity] = useState('');
     const [securityName, setSecurityName] = useState('');
     const [unit, setUnit] = useState(0.0);
+    const [robotPrice, setRobotPrice] = useState(1.35);
+    const [robotQuantity, setRobotQuantity] = useState(0.0);
 
     console.log(securityId)
 
@@ -32,6 +37,7 @@ const PortfolioBuy = (props) => {
 
     const unitHandler = (event) => {
         setUnit(event.target.value);
+        setRobotQuantity(unit/robotPrice);
     };
 
     const submitHandler = (event) => {
@@ -39,7 +45,8 @@ const PortfolioBuy = (props) => {
         console.log('form submited')
         axios.post(props.server + 'portfolios/portfolio_trade/', {
             portfolio: props.portfolio,
-            unit: unit,
+            unit: robotQuantity,
+            price: robotPrice,
             sec: securityName,
             sec_type: 'Robot',
             sec_id: securityId,
@@ -67,21 +74,38 @@ const PortfolioBuy = (props) => {
                             <Form.Label>Portfolio</Form.Label>
                             <Form.Control type="text" placeholder={props.portfolio} value={props.portfolio} readOnly/>
                         </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Robot</Form.Label>
-                            <Form.Control onChange={securityHandler} as="select">
-                                <OptionLoader
-                                    url={props.server + 'robots/get_robots/all'}
-                                    params={instrumentParams}
-                                    code={'id'}
-                                    value={'name'}/>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Unit</Form.Label>
-                            <Form.Control onChange={unitHandler} type="number" min={0.0}/>
-                        </Form.Group>
-
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Robot</Form.Label>
+                                    <Form.Control onChange={securityHandler} as="select">
+                                        <OptionLoader
+                                            url={props.server + 'robots/get_robots/all'}
+                                            params={instrumentParams}
+                                            code={'id'}
+                                            value={'name'}/>
+                                    </Form.Control>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Price</Form.Label>
+                                    <h2>{robotPrice}</h2>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Unit to invest</Form.Label>
+                                    <Form.Control onChange={unitHandler} type="number" min={0.0}/>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Label>Portfolio Quantity</Form.Label>
+                                <h2>{Math.round(robotQuantity*100)/100}</h2>
+                            </Col>
+                        </Row>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

@@ -10,6 +10,7 @@ import RobotBalance from "./Robot/RobotBalance";
 import RobotCashFlow from "./Robot/RobotCashFlow";
 import RobotNav from "./Robot/RobotNav";
 import RobotTrades from "./Robot/RobotTrades";
+import RobotPricing from "./Robot/RobotPricing";
 
 import axios from "axios";
 
@@ -99,7 +100,10 @@ const RobotPage = (props) => {
                         </Col>
                     </Form.Group>
                 </Col>
-                <Col style={{height:'100%'}}>
+                <Col style={{height: '100%'}}>
+                    <RobotPricing server={server} robot={robot} start_date={startDate} end_date={endDate}/>
+                </Col>
+                <Col style={{height: '100%'}}>
                     <NewRobotForm server={server} style={{height: '400px'}}/>
                 </Col>
                 <Col style={{height:'100%'}}>
