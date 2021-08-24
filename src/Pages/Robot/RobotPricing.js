@@ -17,12 +17,12 @@ const RobotPricing = (props) => {
         setLoadState(true);
 
         axios.post(props.server + 'robots/pricing/', {
-            process: 'Balance',
-            robot: 'ALL',
+            robot: props.robot,
             start_date: props.start_date,
             end_date: props.end_date,
         })
-            .then(response => setLoadState(false))
+            .then(response => console.log(response['data'][0]))
+            .then(data => setLoadState(false))
             .catch((error) => {
                 console.error('Error Message:', error);
             });

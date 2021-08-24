@@ -172,14 +172,14 @@ const RobotTrades = (props) => {
                                     }}>{Math.round(totalLoser*100)/100}</p>
                                 </div>
                                 <div style={{display: 'flex', width: '100%'}}>
-                                    <p>Average Winning Trade</p>
+                                    <p>Avg Winning Trade</p>
                                     <p style={{
                                         position: 'absolute',
                                         right: '0px'
                                     }}>{avgWinner}</p>
                                 </div>
                                 <div style={{display: 'flex', width: '100%'}}>
-                                    <p>Average Losing Trade</p>
+                                    <p>Avg Losing Trade</p>
                                     <p style={{
                                         position: 'absolute',
                                         right: '0px'
@@ -189,7 +189,7 @@ const RobotTrades = (props) => {
                                     <p>Payoff Ratio</p>
                                     <p style={{
                                         position: 'absolute',
-                                        right: '0px'
+                                        right: '0px',
                                     }}>{Math.round(Math.abs(avgWinner/avgLoser)*100)/100}</p>
                                 </div>
                             </Col>

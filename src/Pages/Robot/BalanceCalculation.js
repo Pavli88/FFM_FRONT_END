@@ -19,7 +19,7 @@ const BalanceCalculation = (props) => {
 
         axios.post(props.server + 'robots/calculate_robot_balance/', {
             process: 'Balance',
-            robot: 'ALL',
+            robot: props.robot,
             start_date: props.start_date,
             end_date: props.end_date,
         })
@@ -34,7 +34,7 @@ const BalanceCalculation = (props) => {
             <Form onSubmit={submitHandler} style={{width: '100%'}}>
                 <Form.Group>
                     <Button variant="primary" onClick={submitHandler}>
-                        Calculate
+                        Balance
                     </Button>
                 </Form.Group>
             </Form>

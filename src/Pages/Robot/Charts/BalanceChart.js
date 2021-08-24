@@ -1,4 +1,7 @@
 import Chart from "react-apexcharts";
+import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const BalanceChart = (props) => {
 
@@ -97,15 +100,25 @@ const BalanceChart = (props) => {
     };
 
     return (
-        <Chart
-            options={chartOptions.options}
-            series={chartOptions.series}
-            type={'line'}
-            width="100%"
-            height="100%"
-        />
+        <Card className="card">
+            <Card.Title className="card-header-first">{props.title}</Card.Title>
+            <Card.Body style={{padding: '0px'}}>
+                <Row style={{height: '100%'}}>
+                    <Col style={{height: '100%'}}>
+                        <div style={{padding: '0px', height: '100%'}}>
+                            <Chart
+                                options={chartOptions.options}
+                                series={chartOptions.series}
+                                type={'line'}
+                                width="100%"
+                                height="100%"
+                            />
+                        </div>
+                    </Col>
+                </Row>
+            </Card.Body>
+        </Card>
     );
-
 };
 
 export default BalanceChart;

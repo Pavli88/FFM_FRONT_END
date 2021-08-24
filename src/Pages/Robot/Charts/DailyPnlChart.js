@@ -1,9 +1,9 @@
 import Chart from "react-apexcharts";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
+import Row from 'react-bootstrap/Row';
 import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
 
-const CumulativeReturnChart = (props) => {
+const DailyPnlChart = (props) => {
 
     const chartOptions = {
         options: {
@@ -11,6 +11,7 @@ const CumulativeReturnChart = (props) => {
                 toolbar: false,
                 id: "basic-bar"
             },
+
             xaxis: {
                 categories: [],
                 labels: {show: false},
@@ -40,6 +41,36 @@ const CumulativeReturnChart = (props) => {
                     }
                 }
             ],
+            grid: {
+                show: false,
+                borderColor: '#90A4AE',
+                strokeDashArray: 0,
+                position: 'back',
+                xaxis: {
+                    lines: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    lines: {
+                        show: false
+                    }
+                },
+                row: {
+                    colors: undefined,
+                    opacity: 0.5
+                },
+                column: {
+                    colors: undefined,
+                    opacity: 0.5
+                },
+                padding: {
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0
+                },
+            },
             dataLabels: {
                 enabled: false
             },
@@ -49,9 +80,9 @@ const CumulativeReturnChart = (props) => {
         title: {
             text: 'Cumulative Return',
             align: 'left',
-            margin: 10,
-            offsetX: 0,
-            offsetY: 0,
+            margin: 0,
+            offsetX: 100,
+            offsetY: 100,
             floating: false,
             style: {
                 fontSize: '14px',
@@ -71,7 +102,7 @@ const CumulativeReturnChart = (props) => {
 
     return (
         <Card className="card">
-            <Card.Title className="card-header-first">Return</Card.Title>
+            <Card.Title className="card-header-first">Daily P&L</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%'}}>
                     <Col style={{height: '100%'}}>
@@ -79,7 +110,7 @@ const CumulativeReturnChart = (props) => {
                             <Chart
                                 options={chartOptions.options}
                                 series={chartOptions.series}
-                                type={'line'}
+                                type={'bar'}
                                 width="100%"
                                 height="100%"
                             />
@@ -89,7 +120,6 @@ const CumulativeReturnChart = (props) => {
             </Card.Body>
         </Card>
     );
-
 };
 
-export default CumulativeReturnChart;
+export default DailyPnlChart;

@@ -30,28 +30,7 @@ const RobotReturn = (props) => {
     );
 
     return (
-        <Card className="card">
-            <Card.Title className="card-header-first">Return</Card.Title>
-            <Card.Body style={{padding: '0px'}}>
-                <Row style={{height: '100%'}}>
-                    <Col style={{height:'100%'}}>
-                        <div style={{padding: '0px', height: '100%'}}>
-                            <CumulativeReturnChart data={chartData}/>
-                        </div>
-                    </Col>
-                    {/*<Col>*/}
-
-                    {/*</Col>*/}
-                    {/*<Col>*/}
-                    {/*    <p>Average winning day %</p>*/}
-                    {/*    <p>Average loosing day %</p>*/}
-                    {/*    <p>Payoff</p>*/}
-                    {/*    <p>Profit factor</p>*/}
-                    {/*</Col>*/}
-                </Row>
-
-            </Card.Body>
-        </Card>
+        <CumulativeReturnChart data={chartData}/>
     );
 };
 
