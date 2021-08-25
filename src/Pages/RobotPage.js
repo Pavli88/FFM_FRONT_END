@@ -42,8 +42,6 @@ const RobotPage = (props) => {
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
 
-    console.log(defaultRobots[0])
-
     const changeRobot = (rob) => {
         setRobot(rob);
     };

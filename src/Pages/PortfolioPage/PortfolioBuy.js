@@ -1,14 +1,16 @@
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 import OptionLoader from "../../components/Options";
+import GetRobotPrice from "../Robot/GetRobotPrice";
 
 import axios from "axios";
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+
 
 const PortfolioBuy = (props) => {
 
@@ -16,13 +18,11 @@ const PortfolioBuy = (props) => {
     const [securityId, setSecurity] = useState('');
     const [securityName, setSecurityName] = useState('');
     const [unit, setUnit] = useState(0.0);
-    const [robotPrice, setRobotPrice] = useState(1.35);
+    const [robotPrice, setRobotPrice] = useState(0.0);
     const [robotQuantity, setRobotQuantity] = useState(0.0);
 
-    console.log(securityId)
-
     const instrumentParams = {
-        'type': 'Robot',
+        'env': props.env,
     };
 
     const handleClose = () => setShow(false);
@@ -33,17 +33,29 @@ const PortfolioBuy = (props) => {
 
         setSecurity(event.target.value);
         setSecurityName(event.nativeEvent.target[selectIndex].text);
+        document.getElementById('unitInput').value = 0;
+        setRobotQuantity(0);
+        setUnit(0);
     };
 
     const unitHandler = (event) => {
+        setRobotQuantity(unit/robotPrice);
         setUnit(event.target.value);
+
+    };
+
+    const getRobotPrice = (price) => {
+        setRobotPrice(price);
         setRobotQuantity(unit/robotPrice);
     };
 
     const submitHandler = (event) => {
         event.preventDefault();
-        console.log('form submited')
-        axios.post(props.server + 'portfolios/portfolio_trade/', {
+
+        if (robotQuantity===0.0){
+            alert('Quantity can not be 0 !')
+        }else{
+            axios.post(props.server + 'portfolios/portfolio_trade/', {
             portfolio: props.portfolio,
             unit: robotQuantity,
             price: robotPrice,
@@ -56,6 +68,7 @@ const PortfolioBuy = (props) => {
                     console.error('Error Message:', error);
                 });
         setShow(false);
+        };
     };
 
     return (
@@ -79,26 +92,25 @@ const PortfolioBuy = (props) => {
                                 <Form.Group>
                                     <Form.Label>Robot</Form.Label>
                                     <Form.Control onChange={securityHandler} as="select">
+                                        <option></option>
                                         <OptionLoader
-                                            url={props.server + 'robots/get_robots/all'}
+                                            url={props.server + 'robots/get_robots_with_instrument/'}
                                             params={instrumentParams}
-                                            code={'id'}
-                                            value={'name'}/>
+                                            code={1}
+                                            value={2}/>
                                     </Form.Control>
                                 </Form.Group>
                             </Col>
                             <Col>
-                                <Form.Group>
-                                    <Form.Label>Price</Form.Label>
-                                    <h2>{robotPrice}</h2>
-                                </Form.Group>
+                                <GetRobotPrice server={props.server} robot={securityName} getPrice={getRobotPrice}/>
                             </Col>
                         </Row>
                         <Row>
                             <Col>
                                 <Form.Group>
                                     <Form.Label>Unit to invest</Form.Label>
-                                    <Form.Control onChange={unitHandler} type="number" min={0.0}/>
+                                    <Form.Control onChange={unitHandler} type="number" min={0.0}
+                                                  defaultValue={0} id={'unitInput'}/>
                                 </Form.Group>
                             </Col>
                             <Col>

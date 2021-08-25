@@ -35,11 +35,14 @@ import "./PortfolioPage.css"
 import PortfolioBuy from "./PortfolioPage/PortfolioBuy";
 import NewPortCashFlow from "./PortfolioPage/NewPortCashFlow";
 
+// Contexts
+import RobotContext from "../context/robot-context";
+
 const PortfolioPage = (props) => {
     // Date variables
     const date = new Date();
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-
+    const defaultRobots = useContext(RobotContext)['robots'];
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
     const portfolios = useContext(PortfolioContext)['portfolioData'];
@@ -47,8 +50,8 @@ const PortfolioPage = (props) => {
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
 
-    console.log(startDate)
-    console.log(endDate)
+    console.log(defaultRobots)
+
     const portfolioOptions = portfolios.map((record) =>
         <option key={record['id']} value={record['portfolio_code']}>{record['portfolio_name']}</option>)
 
@@ -119,7 +122,8 @@ const PortfolioPage = (props) => {
                                     <NewPortCashFlow portfolio={portfolio} server={server}/>
                                 </Col>
                                 <Col>
-                                    <PortfolioBuy portfolio={portfolio} server={server}/>
+                                    <PortfolioBuy portfolio={portfolio} server={server}
+                                                  env={env}/>
                                 </Col>
                             </Row>
                         </Col>

@@ -10,7 +10,7 @@ import axios from "axios";
 const PortfolioDetails = (props) => {
 
     const [portData, setPortData] = useState([props.default]);
-    console.log(portData)
+
     useEffect(() => {
             axios.get(props.server + 'portfolios/get_portfolio_data/'+ props.portfolio)
                 .then(response => response['data'].map(data=>data))
