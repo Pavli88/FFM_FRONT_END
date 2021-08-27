@@ -40,6 +40,7 @@ const TradeTableData = (props) => {
                     <th style={{verticalAlign: "middle"}}>Security</th>
                     <th style={{verticalAlign: "middle"}}>Robot</th>
                     <th style={{verticalAlign: "middle"}}>Quantity</th>
+                    <th style={{verticalAlign: "middle"}}>Price</th>
                     <th style={{verticalAlign: "middle"}}></th>
                 </tr>
                 </thead>

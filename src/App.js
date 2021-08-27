@@ -25,6 +25,8 @@ function App() {
 
     const server = 'http://127.0.0.1:8000/'
 
+    console.log(server)
+
     const getEnvData = (env) => {
         setRobotEnvData(env);
     };

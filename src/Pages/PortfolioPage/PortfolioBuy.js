@@ -73,6 +73,7 @@ const PortfolioBuy = (props) => {
 
     return (
         <>
+
             <Button variant="primary" onClick={handleShow}>
                 Buy Robot
             </Button>
