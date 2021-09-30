@@ -11,30 +11,43 @@ import {useContext, useState} from "react";
 // Contexts
 import EnvContext from "../context/env-context";
 import ServerContext from "../context/server-context";
+import axios from "axios";
 
 const TradePage = () => {
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
 
-    const newWebSocket = new WebSocket('ws://127.0.0.1:8000/trade/price_stream/')
+    // This part connects a websocket with the back end from the front end
+    // const newWebSocket = new WebSocket('http://127.0.0.1:8000/trade/price_stream/')
+    //
+    // console.log(newWebSocket)
+    //
+    // const testSocket = () => {
+    //     // This code sends data to the websocket form front end
+    //     newWebSocket.send("start")
+    //     console.log('Streaming request is sent from front end to back end.')
+    // };
+    //
+    // const closeSocket = () => {
+    //     // This code closes the websocket connection with the back end
+    //     newWebSocket.send("stop")
+    //     // newWebSocket.close()
+    //     console.log('Streaming is stopped')
+    // };
 
-    console.log(newWebSocket)
-
-    const testSocket = () => {
-        newWebSocket.send("XAG_USD")
-    };
-
-    const closeSocket = () => {
-        newWebSocket.close()
-        console.log('websocket is closed')
+    const testSocket2 = () => {
+        axios.get(server + 'new_process/',)
+                .then()
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
     };
 
     return (
         <Container className={'border'} style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
             <Row style={{height: '60%'}}>
-                <Button variant="primary" onClick={testSocket}>WS</Button>
-                <Button variant="primary" onClick={closeSocket}>WS Close</Button>
-                <PriceParagraph socketConnection={newWebSocket}/>
+                <Button variant="primary" onClick={testSocket2}>TEST SOCKET</Button>
+                {/*<PriceParagraph socketConnection={newWebSocket}/>*/}
             </Row>
             <Row style={{height: '40%', background: 'blue'}}>
                 <TradeTableData env={env} server={server}/>

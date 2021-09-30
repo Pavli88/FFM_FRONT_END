@@ -23,11 +23,6 @@ const RiskPage = () => {
         <Container className={"border"} style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
             <Row>
                 <Col>
-                    <Container className={"border"} style={{height: '100%'}}>
-
-                    </Container>
-                </Col>
-                <Col>
                     <Container>
                         <Card className="card">
                             <Card.Title className="card-header-first"> Robot Risk Parameters</Card.Title>

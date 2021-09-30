@@ -28,26 +28,25 @@ const PerformanceDashboard = (props) => {
         <td style={{fontSize: 12, verticalAlign:"middle"}} className="table-row-other">{record['ytd_ret']} %</td>
     </tr>);
 
-
-
     return (
-        <Card className={'shadow-sm'} style={{borderRadius:'0px'}}>
-            <Card.Body style={{padding: '0px'}}>
+        <Card className="card">
+            <Card.Title className="card-header-first">Performance</Card.Title>
+            <div style={{height:'500px',overflowY: 'scroll', overflowX: 'hidden'}}>
                 <Table size="sm">
-                    <thead>
-                    <tr>
-                        <th className="table-row-robot-name">Robot</th>
-                        <th>Balance</th>
-                        <th>DTD</th>
-                        <th>MTD</th>
-                        <th>YTD</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {perfRespData}
-                    </tbody>
-                </Table>
-            </Card.Body>
+                <thead>
+                <tr>
+                    <th className="table-row-robot-name">Robot</th>
+                    <th>Balance</th>
+                    <th>DTD</th>
+                    <th>MTD</th>
+                    <th>YTD</th>
+                </tr>
+                </thead>
+                <tbody>
+                {perfRespData}
+                </tbody>
+            </Table>
+            </div>
         </Card>
     );
 

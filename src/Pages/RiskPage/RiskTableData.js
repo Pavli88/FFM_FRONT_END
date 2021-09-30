@@ -24,7 +24,7 @@ const RiskTableData = (props) => {
                 });
         }, [props]
     );
-
+    console.log(riskData)
     const riskDataRow = riskData.map((data) =>
         <RiskTableRow key={data['id']}
                       robot={data['robot']}
@@ -34,6 +34,8 @@ const RiskTableData = (props) => {
                       pLevel={data['pyramiding_level']}
                       qType={data['quantity_type']}
                       quantity={data['quantity']}
+                      sl={data['sl']}
+                      winExp={data['win_exp']}
                       server={props.server}/>
     );
 
@@ -44,9 +46,11 @@ const RiskTableData = (props) => {
                 <th style={{verticalAlign: "middle"}}>Robot</th>
                 <th style={{verticalAlign: "middle"}}>Daily Loss Limit %</th>
                 <th style={{verticalAlign: "middle"}}>Max Number of Trades (Daily)</th>
-                <th style={{verticalAlign: "middle"}}>Risk per Trade %</th>
+                <th style={{verticalAlign: "middle"}}>Risk Exposure %</th>
                 <th style={{verticalAlign: "middle"}}>Quantity Type</th>
                 <th style={{verticalAlign: "middle"}}>Quantity</th>
+                <th style={{verticalAlign: "middle"}}>SL</th>
+                <th style={{verticalAlign: "middle"}}>Win Exp %</th>
                 <th></th>
             </tr>
             </thead>
