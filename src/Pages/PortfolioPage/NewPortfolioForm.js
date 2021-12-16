@@ -13,10 +13,9 @@ const NewPortfolioForm = (props) => {
     const [portType, setPortType] = useState('Trade');
     const [currency, setCurrency] = useState('USD');
 
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => {
+        props.hide();
+    };
 
     const portfolioNameChangeHandler = (event) => {
         setPortfolioName(event.target.value)
@@ -55,16 +54,11 @@ const NewPortfolioForm = (props) => {
             .catch((error) => {
                 console.error('Error Message:', error);
             });
-        setShow(false);
     };
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
-                New Portfolio
-            </Button>
-
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={props.show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>New Portfolio</Modal.Title>
                 </Modal.Header>

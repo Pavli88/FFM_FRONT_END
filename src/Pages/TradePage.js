@@ -1,10 +1,12 @@
 // React Bootstrap
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button'
 
 import TradeTableData from "./TradePage/TradeTableData";
 import PriceParagraph from "./TradePage/PriceParagraph";
+import TradeExecutor from "./TradePage/TradeExecutor";
 
 import {useContext, useState} from "react";
 
@@ -12,6 +14,8 @@ import {useContext, useState} from "react";
 import EnvContext from "../context/env-context";
 import ServerContext from "../context/server-context";
 import axios from "axios";
+import Card from "react-bootstrap/Card";
+import Table from "react-bootstrap/Table";
 
 const TradePage = () => {
     const server = useContext(ServerContext)['server'];
@@ -35,21 +39,29 @@ const TradePage = () => {
     //     console.log('Streaming is stopped')
     // };
 
-    const testSocket2 = () => {
-        axios.get(server + 'new_process/',)
-                .then()
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-    };
-
     return (
-        <Container className={'border'} style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
-            <Row style={{height: '60%'}}>
-                <Button variant="primary" onClick={testSocket2}>TEST SOCKET</Button>
-                {/*<PriceParagraph socketConnection={newWebSocket}/>*/}
+        <Container className={'border'}
+                   style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
+            <Row style={{height: '400px'}}>
+                <Col style={{height: '100%'}}>
+                    <Card style={{height: '100%'}} className="card">
+                        <Card.Title className="card-header-first">Portfolio Trade</Card.Title>
+                        <div style={{height: '500px', overflowY: 'scroll', overflowX: 'hidden'}}>
+
+                        </div>
+                    </Card>
+                </Col>
+                <Col style={{height: '100%'}}>
+                    <Card style={{height: '100%'}} className="card">
+                        <Card.Title className="card-header-first">Robot Trade</Card.Title>
+                        <div style={{height: '500px', overflowY: 'scroll', overflowX: 'hidden'}}>
+                            <TradeExecutor/>
+                        </div>
+                    </Card>
+                </Col>
             </Row>
-            <Row style={{height: '40%', background: 'blue'}}>
+            <br/>
+            <Row style={{height: '500px'}}>
                 <TradeTableData env={env} server={server}/>
             </Row>
         </Container>

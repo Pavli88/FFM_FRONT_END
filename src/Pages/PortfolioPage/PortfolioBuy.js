@@ -25,8 +25,9 @@ const PortfolioBuy = (props) => {
         'env': props.env,
     };
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => {
+        props.hide();
+    };
 
     const securityHandler = (event) => {
         const selectIndex = event.nativeEvent.target.selectedIndex;
@@ -73,12 +74,7 @@ const PortfolioBuy = (props) => {
 
     return (
         <>
-
-            <Button variant="primary" onClick={handleShow}>
-                Buy Robot
-            </Button>
-
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={props.show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Buy Robot</Modal.Title>
                 </Modal.Header>

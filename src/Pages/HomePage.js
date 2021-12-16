@@ -1,11 +1,13 @@
 import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
 import Card from 'react-bootstrap/Card';
+import Button from "react-bootstrap/Button";
 
 import PerfDashBoard from "./HomePage/PerfDashBoard";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 
 import RobotStatCards from "./HomePage/RobotStatCards";
 import RobotExecution from "./HomePage/RobotExecution/RobotExecution";
@@ -21,6 +23,7 @@ import EnvContext from "../context/env-context";
 import ServerContext from "../context/server-context";
 import {yellow} from "@material-ui/core/colors";
 import Form from "react-bootstrap/Form";
+import axios from "axios";
 
 const HomePage = (props) => {
     // Context variables
@@ -29,6 +32,7 @@ const HomePage = (props) => {
 
     const startDate = new Date().toISOString().substr(0,10);
     const [date, setDate] = useState(startDate);
+
 
     const dateHandler = (event) => {
         setDate(event.target.value);
@@ -46,7 +50,15 @@ const HomePage = (props) => {
                 <Col style={{height: '100%'}}>
                     <br/>
                     <Container>
-                        <RobotExecution server={server} env={env}/>
+                        <h4>Robot Execution</h4>
+                        <Tabs defaultActiveKey="active" id="uncontrolled-tab-example" className="mb-3">
+                            <Tab eventKey="active" title="Active">
+                                <RobotExecution server={server} env={env} status={'active'}/>
+                            </Tab>
+                            <Tab eventKey="inactive" title="Inactive">
+                                <RobotExecution server={server} env={env} status={'inactive'}/>
+                            </Tab>
+                        </Tabs>
 
                         <br/>
                         <Card className="card">
@@ -56,8 +68,8 @@ const HomePage = (props) => {
                             </Form.Group>
                         </Card>
 
-                        <br/>
-                        <SystemMessages server={server} date={date}/>
+                        {/*<br/>*/}
+                        {/*<SystemMessages server={server} date={date}/>*/}
                     </Container>
                 </Col>
                 <Col style={{height: '100%'}}>

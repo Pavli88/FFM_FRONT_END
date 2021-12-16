@@ -10,6 +10,10 @@ import Form from "react-bootstrap/Form";
 const CashHoldingCalculation = (props) => {
     const [loadState, setLoadState] = useState(false);
 
+    const handleClose = () => {
+        props.hide();
+    };
+
     const submitHandler = (event) => {
         event.preventDefault();
 
@@ -28,16 +32,19 @@ const CashHoldingCalculation = (props) => {
 
     return (
         <>
-            <Form onSubmit={submitHandler} style={{width: '100%'}}>
-                <Form.Group>
-                    <Button variant="primary" onClick={submitHandler}>
-                        Cash Holding
-                    </Button>
-                </Form.Group>
-            </Form>
-            <Modal show={loadState}>
+            <Modal show={props.show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Cash Holding Calculation</Modal.Title>
+                </Modal.Header>
                 <Modal.Body style={{width: '100%', height: '300px'}}>
-                    <div style={{width:'100%'}}>
+                    <Form onSubmit={submitHandler} style={{width: '100%'}}>
+                        <Form.Group>
+                            <Button variant="primary" onClick={submitHandler}>
+                                Cash Holding
+                            </Button>
+                        </Form.Group>
+                    </Form>
+                    <div style={{width: '100%'}}>
                         <h5>Portfolio cash holding calculation</h5>
                         <h5>Rundate {props.start_date} and {props.end_date}</h5>
                     </div>

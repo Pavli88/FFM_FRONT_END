@@ -1,6 +1,6 @@
 import Card from "react-bootstrap/Card";
 
-import PortfolioBuy from "./PortfolioBuy";
+import PortfolioBuy from "../../PortfolioBuy";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Table from "react-bootstrap/Table";
@@ -8,8 +8,8 @@ import Form from "react-bootstrap/Form";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import "../PortfolioPage.css"
-import "../MainCSS.css"
+import "../../../PortfolioPage.css"
+import "../../../MainCSS.css"
 
 const PortfolioTransactions = (props) => {
 

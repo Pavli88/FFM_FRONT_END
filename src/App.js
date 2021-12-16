@@ -17,6 +17,10 @@ import RobotContext from "./context/robot-context";
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 
+import ReactNotification from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+
+
 function App() {
     // 'http://127.0.0.1:8000/' 'https://pavliati.pythonanywhere.com/'
     const [robotEnvData, setRobotEnvData] = useState('live');
@@ -54,32 +58,33 @@ function App() {
             <EnvContext.Provider value={{environment: robotEnvData}}>
                 <RobotContext.Provider value={{robots: robotsData}}>
                     <PortfolioContext.Provider value={{portfolioData}}>
-                    <div className="App">
+                        <ReactNotification/>
+                        <div className="App">
 
-                        <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
-                        <Switch>
-                            <Route path="/risk">
-                                <RiskPage/>
-                            </Route>
-                            <Route path="/home">
-                                <HomePage/>
-                            </Route>
-                            <Route path="/trade">
-                                <TradePage/>
-                            </Route>
-                            <Route path="/portfolio">
-                                <PortfolioPage/>
-                            </Route>
-                            <Route path="/instruments">
-                                <InstrumentPage/>
-                            </Route>
-                            <Route path="/robot">
-                                <RobotPage/>
-                            </Route>
-                        </Switch>
+                            <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
+                            <Switch>
+                                <Route path="/risk">
+                                    <RiskPage/>
+                                </Route>
+                                <Route path="/home">
+                                    <HomePage/>
+                                </Route>
+                                <Route path="/trade">
+                                    <TradePage/>
+                                </Route>
+                                <Route path="/portfolio">
+                                    <PortfolioPage/>
+                                </Route>
+                                <Route path="/instruments">
+                                    <InstrumentPage/>
+                                </Route>
+                                <Route path="/robot">
+                                    <RobotPage/>
+                                </Route>
+                            </Switch>
 
-                    </div>
-                </PortfolioContext.Provider>
+                        </div>
+                    </PortfolioContext.Provider>
                 </RobotContext.Provider>
             </EnvContext.Provider>
         </ServerContext.Provider>

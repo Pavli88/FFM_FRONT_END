@@ -5,11 +5,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
 const NewPortCashFlow = (props) => {
-
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => {
+        props.hide();
+    };
 
     const [value, setValue] = useState(0.0);
     const [type, setType] = useState('INFLOW');
@@ -41,16 +39,11 @@ const NewPortCashFlow = (props) => {
                     console.error('Error Message:', error);
                 });
         setCurrency('USD');
-        setShow(false);
     };
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
-                Funding
-            </Button>
-
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={props.show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Funding</Modal.Title>
                 </Modal.Header>

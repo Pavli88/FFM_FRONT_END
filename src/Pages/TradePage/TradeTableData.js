@@ -28,7 +28,8 @@ const TradeTableData = (props) => {
             broker_id={record['broker_id']}
             security={record['security']}
             robot={record['robot']}
-            quantity={record['quantity']}/>)
+            quantity={record['quantity']}
+            price={record['open_price']}/>)
 
     return (
         <Card style={{width: '100%'}}>

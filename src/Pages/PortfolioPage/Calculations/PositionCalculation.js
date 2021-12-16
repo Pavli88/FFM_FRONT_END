@@ -10,11 +10,13 @@ import Form from "react-bootstrap/Form";
 const PositionCalculation = (props) => {
     const [loadState, setLoadState] = useState(false);
 
+    const handleClose = () => {
+        props.hide();
+    };
+
     const submitHandler = (event) => {
         event.preventDefault();
-
         setLoadState(true);
-
         axios.post(props.server + 'portfolios/positions/', {
             portfolio: 'ALL',
             start_date: props.start_date,
@@ -28,16 +30,19 @@ const PositionCalculation = (props) => {
 
     return (
         <>
-            <Form onSubmit={submitHandler} style={{width: '100%'}}>
-                <Form.Group>
-                    <Button variant="primary" onClick={submitHandler}>
-                        Position
-                    </Button>
-                </Form.Group>
-            </Form>
-            <Modal show={loadState}>
+            <Modal show={props.show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Portfolio Position Calculation</Modal.Title>
+                </Modal.Header>
                 <Modal.Body style={{width: '200px', height: '300px'}}>
-                    <div style={{width:'100%'}}>
+                    <Form onSubmit={submitHandler} style={{width: '100%'}}>
+                        <Form.Group>
+                            <Button variant="primary" onClick={submitHandler}>
+                                Position
+                            </Button>
+                        </Form.Group>
+                    </Form>
+                    <div style={{width: '100%'}}>
                         <h5>Portfolio position calculation</h5>
                         <h5>Rundate {props.start_date} and {props.end_date}</h5>
                     </div>

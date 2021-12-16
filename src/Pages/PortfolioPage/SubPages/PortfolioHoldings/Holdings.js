@@ -4,8 +4,8 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 // CSS
-import "../PortfolioPage.css"
-import "../MainCSS.css"
+import "../../../PortfolioPage.css"
+import "../../../MainCSS.css"
 
 const Holdings = () => {
     return (

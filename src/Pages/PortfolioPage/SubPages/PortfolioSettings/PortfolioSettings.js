@@ -1,9 +1,9 @@
 import Card from "react-bootstrap/Card";
 
-import "../PortfolioPage.css"
-import "../MainCSS.css"
+import "../../../PortfolioPage.css"
+import "../../../MainCSS.css"
 
-const PortfolioSettings = () => {
+const PortfolioSettings = (props) => {
     return (
         <Card className="card">
             <Card.Title className="card-header-first">Settings</Card.Title>

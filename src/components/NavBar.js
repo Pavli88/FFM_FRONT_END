@@ -7,17 +7,19 @@ import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom'
 
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 
 import BalanceCalculation from "../Pages/Robot/BalanceCalculation";
 
 import NewBrokerAccount from "./NewBrokerAccount";
+import Notifications from "./Notifications";
 import ServerContext from "../context/server-context";
+import {store} from "react-notifications-component";
+import axios from "axios";
 
 const Navigation = (props) => {
 
     const server = useContext(ServerContext)['server'];
-
     const [showNewAccount, setShowNewAccount] = useState(false);
 
     const envChange = (envValue) => {
@@ -32,6 +34,11 @@ const Navigation = (props) => {
     const hideNewAccount = () => {
         setShowNewAccount(false);
     };
+
+    // if (messages.length > 0){
+    //     console.log(messages.length)
+    //     document.getElementById('notTrades').style.backgroundColor = "red";
+    // };
 
     return (
             <Navbar bg="dark" variant="dark">
@@ -55,11 +62,12 @@ const Navigation = (props) => {
                         <NavDropdown.Item>Delete</NavDropdown.Item>
                     </NavDropdown>
                 </Nav>
-                <Form inline>
+                <Notifications server={server}/>
+                <Form inline style={{margin: '5px'}}>
                     <FormControl type="text" placeholder="Search" className="mr-sm-2"/>
                     <Button variant="outline-info">Search</Button>
                 </Form>
-                <Dropdown onSelect={envChange} style={{marginLeft:'10px'}}>
+                <Dropdown onSelect={envChange} style={{margin: '5px'}}>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                         {props.env}
                     </Dropdown.Toggle>

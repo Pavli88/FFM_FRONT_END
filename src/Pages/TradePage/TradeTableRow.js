@@ -30,6 +30,7 @@ const TradeTableRow = (props) => {
             <td style={{fontSize: 12, verticalAlign:"middle"}}>{props.security}</td>
             <td style={{fontSize: 12, verticalAlign:"middle"}}>{props.robot}</td>
             <td style={{fontSize: 12, verticalAlign:"middle"}}>{props.quantity}</td>
+            <td style={{fontSize: 12, verticalAlign:"middle"}}>{props.price}</td>
             {/*<td><PriceParagraph socketConnection={newWebSocket}/></td>*/}
             <td><Button onClick={CloseTrade}>Close</Button></td>
         </tr>

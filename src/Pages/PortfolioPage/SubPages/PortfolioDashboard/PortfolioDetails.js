@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import "../MainCSS.css"
+import "../../../MainCSS.css"
 import {useEffect, useState} from "react";
 import axios from "axios";
 
