@@ -1,6 +1,6 @@
 import Card from "react-bootstrap/Card";
 
-import "../MainCSS.css"
+import "../../../MainCSS.css"
 import Chart from "react-apexcharts";
 import {useEffect, useState} from "react";
 import axios from "axios";
@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 // Charts
-import CumulativeReturnChart from "./Charts/CumulativeReturn";
+import CumulativeReturnChart from "../../Charts/CumulativeReturn";
 
 const RobotReturn = (props) => {
     const [chartData, setChartData] = useState([]);
@@ -30,7 +30,9 @@ const RobotReturn = (props) => {
     );
 
     return (
-        <CumulativeReturnChart data={chartData}/>
+        <Row style={{}}>
+            <CumulativeReturnChart data={chartData}/>
+        </Row>
     );
 };
 

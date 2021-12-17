@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 
 const PortfolioDescription = () => {
     return (
-        <Card className="card">
+        <Card className="card" style={{margin:'0px'}}>
             <Card.Title className="card-header-first">Description</Card.Title>
             <Card.Body>
                 <Row>

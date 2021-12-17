@@ -70,7 +70,7 @@ const CumulativeReturnChart = (props) => {
     };
 
     return (
-        <Card className="card">
+        <Card className="card" style={{margin: '0px'}}>
             <Card.Title className="card-header-first">Return</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%'}}>

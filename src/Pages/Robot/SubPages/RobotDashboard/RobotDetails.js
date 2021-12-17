@@ -3,7 +3,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
 
-import "../MainCSS.css"
+import "../../../MainCSS.css"
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Container from "react-bootstrap/Container";
@@ -42,8 +42,7 @@ const RobotDetails = (props) => {
     );
 
     return (
-        <Row style={{height: '100px', padding: '5px', margin: '5px'}}>
-            <Card className="card" style={{margin: '0px'}}>
+        <Card className="card" style={{margin: '0px'}}>
                 {/*<Card.Title className="card-header-first">Details</Card.Title>*/}
                 <Card.Body style={{padding: '5px'}}>
                     <Row style={{height: '100%', width: '100%', margin: '0px'}}>
@@ -82,7 +81,6 @@ const RobotDetails = (props) => {
                 </Card.Body>
 
             </Card>
-        </Row>
     );
 };
 

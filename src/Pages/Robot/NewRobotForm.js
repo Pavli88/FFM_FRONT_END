@@ -16,10 +16,9 @@ const NewRobotForm = (props) => {
     console.log(account);
     console.log(instrument)
 
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleClose = () => {
+        props.hide();
+    };
 
     const accountParams = {
         'broker': broker,
@@ -69,16 +68,12 @@ const NewRobotForm = (props) => {
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        setShow(false)
+        props.hide();
     };
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
-                New Robot
-            </Button>
-
-            <Modal show={show} onHide={handleClose} animation={false}>
+            <Modal show={props.show} onHide={handleClose} animation={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>New Robot</Modal.Title>
                 </Modal.Header>
@@ -86,7 +81,8 @@ const NewRobotForm = (props) => {
                     <Form onSubmit={submitHandler} style={{width: '100%'}}>
                         <Form.Group>
                             <Form.Label>Robot Name</Form.Label>
-                            <Form.Control onChange={robotNameChangeHandler} type="text" placeholder="Robot Name" maxLength={20}/>
+                            <Form.Control onChange={robotNameChangeHandler} type="text" placeholder="Robot Name"
+                                          maxLength={20}/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Strategy</Form.Label>

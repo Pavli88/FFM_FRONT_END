@@ -4,7 +4,7 @@ import Chart from "react-apexcharts";
 import Col from 'react-bootstrap/Col';
 
 
-import "../MainCSS.css"
+import "../../../MainCSS.css"
 import {useEffect, useState} from "react";
 import axios from "axios";
 

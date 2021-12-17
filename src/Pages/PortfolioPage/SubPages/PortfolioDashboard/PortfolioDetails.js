@@ -22,7 +22,7 @@ const PortfolioDetails = (props) => {
     );
 
     return (
-        <Card className="card">
+        <Card className="card" style={{margin:'0px'}}>
             <Card.Title className="card-header-first">Portfolio Details</Card.Title>
             <Card.Body>
                 <Row>

@@ -1,6 +1,6 @@
 import Card from "react-bootstrap/Card";
 
-import "../MainCSS.css"
+import "../../../MainCSS.css"
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Chart from "react-apexcharts";
@@ -8,7 +8,7 @@ import Chart from "react-apexcharts";
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-const RobotRisk = (props) => {
+const RobotDrawDown = (props) => {
 
     const [chartData, setChartData] = useState([]);
 
@@ -64,7 +64,7 @@ const RobotRisk = (props) => {
 
     return (
         <Card className="card">
-            <Card.Title className="card-header-first">Risk</Card.Title>
+            <Card.Title className="card-header-first">Drawdown</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%'}}>
                     <Col style={{height: '100%'}}>
@@ -77,10 +77,9 @@ const RobotRisk = (props) => {
                         />
                     </Col>
                 </Row>
-
             </Card.Body>
         </Card>
     );
 };
 
-export default RobotRisk;
+export default RobotDrawDown;

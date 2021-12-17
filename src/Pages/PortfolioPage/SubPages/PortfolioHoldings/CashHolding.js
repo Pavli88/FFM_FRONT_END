@@ -88,7 +88,7 @@ const CashHoldings = (props) => {
     };
 
     return (
-        <Card className="card">
+        <Card className="card" style={{margin:'0px'}}>
             <Card.Title className="card-header-first">Cash Holdings</Card.Title>
             <Card.Body>
                 <Row style={{height:'50%', width:'100%'}}>
@@ -98,19 +98,6 @@ const CashHoldings = (props) => {
                                 options={chartOptions.options}
                                 series={chartOptions.series}
                                 type={'donut'}
-                                width="100%"
-                                height="100%"/>
-
-                        </div>
-                    </Col>
-                </Row>
-                <Row style={{height:'50%', width:'100%'}}>
-                    <Col style={{height:'100%'}}>
-                        <div style={{padding:'20px'}}>
-                            <Chart
-                                options={chartOptions2.options}
-                                series={chartOptions2.series}
-                                type={'bar'}
                                 width="100%"
                                 height="100%"/>
 

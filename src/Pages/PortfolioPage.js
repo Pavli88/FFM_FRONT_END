@@ -130,8 +130,8 @@ const PortfolioPage = (props) => {
 
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
-            <Row style={{height: '100%'}}>
-                <ProSidebar>
+            <Row style={{height:window.innerHeight, margin:'0px'}}>
+                <ProSidebar style={{height:window.innerHeight, margin:'0px'}}>
                     <MenuItem style={{padding:'5px'}} ><Form.Control onChange={portSelectHandler} as="select">
                         {portfolioOptions}
                     </Form.Control>
@@ -141,7 +141,10 @@ const PortfolioPage = (props) => {
                         <MenuItem>Dashboard
                             <Link to="/portfolio/dashboard"/>
                         </MenuItem>
-                        <MenuItem onClick={showNewPortCashFlowForm}>New Cash Flow</MenuItem>
+                        <SubMenu title="Cash Operations">
+                            <MenuItem onClick={showNewPortCashFlowForm}>Funding</MenuItem>
+                            <MenuItem>Withdraw</MenuItem>
+                        </SubMenu>
                         <SubMenu title="Trade">
                             <MenuItem onClick={showNewRobotTradeForm}>Robot</MenuItem>
                             <MenuItem>Security</MenuItem>
@@ -209,7 +212,7 @@ const PortfolioPage = (props) => {
                             </Row>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row style={{padding:'15px', height:window.innerHeight, width:'100%',background:'green', margin:'0px'}}>
                         <Switch>
                             <Route path="/portfolio/dashboard">
                                 <PortfolioDashBoardPage portfolio={portfolio} server={server} default={portfolios[0]}/>
