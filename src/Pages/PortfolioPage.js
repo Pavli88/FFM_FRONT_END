@@ -6,16 +6,6 @@ import PortfolioContext from "../context/portfolio-context";
 import axios from "axios";
 
 import NewPortfolioForm from "./PortfolioPage/NewPortfolioForm";
-import PortfolioSettings from "./PortfolioPage/SubPages/PortfolioSettings/PortfolioSettings";
-import Holdings from "./PortfolioPage/SubPages/PortfolioHoldings/Holdings";
-import PortfolioTransactions from "./PortfolioPage/SubPages/PortfolioTransactions/PortfolioTransactions";
-import PortfolioNav from "./PortfolioPage/SubPages/PortfolioHoldings/PortfolioNav";
-import PortfolioDetails from "./PortfolioPage/SubPages/PortfolioDashboard/PortfolioDetails";
-import PortfolioGroup from "./PortfolioPage/PortfolioGroup";
-import PortfolioRisk from "./PortfolioPage/SubPages/PortfolioRisk/PortfolioRisk";
-import PortfolioReturn from "./PortfolioPage/SubPages/PortfolioReturn/PortfolioReturn";
-import PortfolioCashFlow from "./PortfolioPage/PortfolioCashFlow";
-import CashHolding from "./PortfolioPage/SubPages/PortfolioHoldings/CashHolding";
 
 // Sidebar
 import { ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
@@ -62,7 +52,6 @@ const PortfolioPage = (props) => {
     const [portfolio, setPortfolio] = useState(portfolios[0]['portfolio_code']);
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
-
 
     const portfolioOptions = portfolios.map((record) =>
         <option key={record['id']} value={record['portfolio_code']}>{record['portfolio_name']}</option>)
@@ -130,8 +119,8 @@ const PortfolioPage = (props) => {
 
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
-            <Row style={{height:window.innerHeight, margin:'0px'}}>
-                <ProSidebar style={{height:window.innerHeight, margin:'0px'}}>
+            <Row style={{height: '100%', margin:'0px'}}>
+                <ProSidebar>
                     <MenuItem style={{padding:'5px'}} ><Form.Control onChange={portSelectHandler} as="select">
                         {portfolioOptions}
                     </Form.Control>
@@ -172,50 +161,42 @@ const PortfolioPage = (props) => {
                         </MenuItem>
                     </Menu>
                     </ProSidebar>;
-
-                <Col style={{background: 'yellow', width: '50%'}}>
-                    <Row style={{height: '60px', padding: '5px'}}>
-                        <Col style={{display: 'flex'}}>
-                            <Row>
-                                <Col>
-                                    <Form.Group as={Row}>
-                                        <Form.Label className="form-label-first" column sm={2}>
-                                            Portfolio
-                                        </Form.Label>
-                                        <Col sm={10}>
-
-                                        </Col>
-                                    </Form.Group>
+                <Col style={{width: '50%'}}>
+                    <Row style={{height: '60px', width: '50%', padding: '5px', margin: '5px'}}>
+                        <Col style={{height: '100%'}}>
+                            <Form.Group as={Row}>
+                                <Form.Label className="form-label-first" column sm={2}>
+                                    From
+                                </Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control type="date" onChange={startDateHandler}
+                                                  defaultValue={firstDay.toISOString().substr(0, 10)}/>
                                 </Col>
-                                <Col>
-                                    <Form.Group as={Row}>
-                                        <Form.Label className="form-label-first" column sm={2}>
-                                            From
-                                        </Form.Label>
-                                        <Col sm={10}>
-                                            <Form.Control type="date" onChange={startDateHandler}
-                                                          defaultValue={firstDay.toISOString().substr(0, 10)}/>
-                                        </Col>
-                                    </Form.Group>
+                            </Form.Group>
+                        </Col>
+                        <Col style={{height: '100%'}}>
+                            <Form.Group as={Row}>
+                                <Form.Label className="form-label-first" column sm={2}>
+                                    To
+                                </Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control type="date" onChange={endDateHandler}
+                                                  defaultValue={date.toISOString().substr(0, 10)}/>
                                 </Col>
-                                <Col>
-                                    <Form.Group as={Row}>
-                                        <Form.Label className="form-label-first" column sm={2}>
-                                            To
-                                        </Form.Label>
-                                        <Col sm={10}>
-                                            <Form.Control type="date" onChange={endDateHandler}
-                                                          defaultValue={date.toISOString().substr(0, 10)}/>
-                                        </Col>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
+                            </Form.Group>
                         </Col>
                     </Row>
-                    <Row style={{padding:'15px', height:window.innerHeight, width:'100%',background:'green', margin:'0px'}}>
+                    <Row style={{
+                        padding: '15px',
+                        height: window.innerHeight,
+                        width: '100%',
+                        background: 'green',
+                        margin: '0px'
+                    }}>
                         <Switch>
                             <Route path="/portfolio/dashboard">
-                                <PortfolioDashBoardPage portfolio={portfolio} server={server} default={portfolios[0]}/>
+                                <PortfolioDashBoardPage portfolio={portfolio} server={server} default={portfolios[0]}
+                                                        end_date={endDate}/>
                             </Route>
                             <Route path="/portfolio/holdings">
                                 <PortfolioHoldingsPage portfolio={portfolio} server={server}/>
@@ -253,7 +234,7 @@ const PortfolioPage = (props) => {
             <PortfolioBuy show={showNewRobotTrade} hide={hideNewRobotTrade} portfolio={portfolio} server={server} env={env}/>
             <NewPortCashFlow show={showNewPortCashFlow} hide={hideNewPortCashFlow} portfolio={portfolio} server={server}/>
             <PositionCalculation show={showPosCalc} hide={hidePosCalcForm} server={server} start_date={startDate} end_date={endDate}/>
-            <CashHoldingCalculation show={showCashCalc} hide={hideCashCalcForm} server={server} start_date={startDate} end_date={endDate}/>
+            <CashHoldingCalculation show={showCashCalc} hide={hideCashCalcForm} server={server}/>
         </Container>
     );
 };

@@ -39,30 +39,29 @@ const PortfolioTransactions = (props) => {
     return (
         <Card className="card">
             <Card.Title className="card-header-first">Transactions</Card.Title>
-            <Row style={{width:'100%', margin:'0px'}}>
+            <Row style={{width: '100%', margin: '0px'}}>
 
             </Row>
 
-            <div style={{height:'100%',overflowY: 'scroll', overflowX: 'hidden'}}>
+            <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
                 <Table>
-                <thead className="table-header-first">
-                <tr>
-                    <td className="table-header-row">Portfolio</td>
-                    <td className="table-header-row">Quantity</td>
-                    <td className="table-header-row">Price</td>
-                    <td className="table-header-row">Market Value</td>
-                    <td className="table-header-row">Trade Date</td>
-                    <td className="table-header-row">Instrument</td>
-                    <td className="table-header-row">Instrument Type</td>
-                    <td className="table-header-row">Source</td>
-                </tr>
-                </thead>
-                <tbody >
-                {portTransData}
-                </tbody>
-            </Table>
+                    <thead className="table-header-first">
+                    <tr>
+                        <td className="table-header-row">Portfolio</td>
+                        <td className="table-header-row">Quantity</td>
+                        <td className="table-header-row">Price</td>
+                        <td className="table-header-row">Market Value</td>
+                        <td className="table-header-row">Trade Date</td>
+                        <td className="table-header-row">Instrument</td>
+                        <td className="table-header-row">Instrument Type</td>
+                        <td className="table-header-row">Source</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {portTransData}
+                    </tbody>
+                </Table>
             </div>
-
         </Card>
     );
 };

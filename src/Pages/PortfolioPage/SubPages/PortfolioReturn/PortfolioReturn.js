@@ -7,8 +7,6 @@ const PortfolioRisk = () => {
     return (
         <Card className="card">
             <Card.Title className="card-header-first">Return</Card.Title>
-
-
         </Card>
     );
 };

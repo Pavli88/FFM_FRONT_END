@@ -13,8 +13,6 @@ import Col from 'react-bootstrap/Col';
 
 
 const PortfolioBuy = (props) => {
-
-    const [show, setShow] = useState(false);
     const [securityId, setSecurity] = useState('');
     const [securityName, setSecurityName] = useState('');
     const [unit, setUnit] = useState(0.0);
@@ -52,7 +50,6 @@ const PortfolioBuy = (props) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-
         if (robotQuantity===0.0){
             alert('Quantity can not be 0 !')
         }else{
@@ -68,7 +65,7 @@ const PortfolioBuy = (props) => {
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        setShow(false);
+        props.hide();
         };
     };
 
@@ -80,10 +77,23 @@ const PortfolioBuy = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form onSubmit={submitHandler} style={{width: '100%'}}>
-                        <Form.Group>
-                            <Form.Label>Portfolio</Form.Label>
-                            <Form.Control type="text" placeholder={props.portfolio} value={props.portfolio} readOnly/>
-                        </Form.Group>
+                        <Row>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Portfolio</Form.Label>
+                                    <Form.Control type="text" placeholder={props.portfolio} value={props.portfolio}
+                                                  readOnly/>
+                                </Form.Group>
+                            </Col>
+                            <Col>
+                                <Form.Group>
+                                    <Form.Label>Available Cash (USD)</Form.Label>
+                                    <Form.Control type="text" placeholder={'2000'} value={'2000'}
+                                                  readOnly/>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+
                         <Row>
                             <Col>
                                 <Form.Group>

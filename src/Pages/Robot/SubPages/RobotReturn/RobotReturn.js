@@ -30,9 +30,7 @@ const RobotReturn = (props) => {
     );
 
     return (
-        <Row style={{}}>
-            <CumulativeReturnChart data={chartData}/>
-        </Row>
+        <CumulativeReturnChart data={chartData}/>
     );
 };
 

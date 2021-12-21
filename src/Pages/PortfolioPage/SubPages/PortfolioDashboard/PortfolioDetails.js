@@ -36,7 +36,7 @@ const PortfolioDetails = (props) => {
                             <p style={{position: 'absolute', right:'20px'}}>{portData[0]['portfolio_type']}</p>
                         </div>
                         <div style={{ display:'flex', width:'100%'}}>
-                            <p>Currency</p>
+                            <p>Base Currency</p>
                             <p style={{position: 'absolute', right:'20px'}}>{portData[0]['currency']}</p>
                         </div>
                         <div style={{ display:'flex', width:'100%'}}>

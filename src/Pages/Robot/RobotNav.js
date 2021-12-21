@@ -7,8 +7,6 @@ import Form from "react-bootstrap/Form";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-import BalanceCalculation from "./BalanceCalculation";
-
 const RobotNav = (props) => {
     const [robotsData, setRobotsData] = useState(props.robots);
 

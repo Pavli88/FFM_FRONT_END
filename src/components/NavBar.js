@@ -9,8 +9,6 @@ import { Link } from 'react-router-dom'
 
 import {useContext, useEffect, useState} from "react";
 
-import BalanceCalculation from "../Pages/Robot/BalanceCalculation";
-
 import NewBrokerAccount from "./NewBrokerAccount";
 import Notifications from "./Notifications";
 import ServerContext from "../context/server-context";

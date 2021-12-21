@@ -61,7 +61,7 @@ const RobotDailyReturns = (props) => {
             <Card className="card" style={{margin: '0px'}}>
                 <Card.Title className="card-header-first">Daily Return</Card.Title>
                 <Card.Body style={{padding: '0px'}}>
-                    <Row style={{height: '100%'}}>
+                    <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                         <Col style={{height: '100%'}}>
                             <Chart
                                 options={chartOptions.options}

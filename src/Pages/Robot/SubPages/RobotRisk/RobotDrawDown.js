@@ -53,17 +53,16 @@ const RobotDrawDown = (props) => {
             },
 
         },
-
         series: [
             {
-                name: "series-1",
+                name: "Drawdown",
                 data: chartData,
             }
         ]
     };
 
     return (
-        <Card className="card">
+        <Card className="card" style={{margin:'0px'}}>
             <Card.Title className="card-header-first">Drawdown</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%'}}>

@@ -2,7 +2,7 @@ import {useState, useEffect, useContext} from "react";
 
 import NewRobotForm from "./Robot/NewRobotForm";
 import RobotTable from "./Robot/RobotTable";
-import BalanceCalculation from "./Robot/BalanceCalculation";
+import RobotBalanceCalculation from "./Robot/RobotBalanceCalculation";
 
 
 import RobotBalance from "./Robot/RobotBalance";
@@ -79,6 +79,14 @@ const RobotPage = (props) => {
         setNewRobot(false);
     };
 
+    const [showRobotBalanceCalc, setRobotBalanceCalc] = useState(false);
+    const showRobotCalcForm = () => {
+        setRobotBalanceCalc(true);
+    };
+    const hideRobotBalanceCalcForm = () => {
+        setRobotBalanceCalc(false);
+    };
+
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
             <Row style={{height: '100%', margin:'0px'}}>
@@ -94,15 +102,11 @@ const RobotPage = (props) => {
                         <MenuItem>Dashboard
                             <Link to="/robot/dashboard"/>
                         </MenuItem>
-                        <SubMenu title="Cash Operations">
-                            <MenuItem>Funding</MenuItem>
-                            <MenuItem>Withdraw</MenuItem>
-                        </SubMenu>
                         <SubMenu title="Trade">
                             <MenuItem>Robot</MenuItem>
                         </SubMenu>
                         <SubMenu title="Calculations">
-                            <MenuItem>Balance</MenuItem>
+                            <MenuItem onClick={showRobotCalcForm}>Balance</MenuItem>
                         </SubMenu>
                         <MenuItem>Transactions
                             <Link to="/robot/transactions"/>
@@ -118,61 +122,27 @@ const RobotPage = (props) => {
                         </MenuItem>
                     </Menu>
                 </ProSidebar>
-                <Col>
-                    <Row style={{height: '60px', padding: '5px', display: 'flex', margin: '5px'}}>
-                        <Col style={{padding: '0px', height: '100%', display: 'flex'}}>
-                            <Col style={{height: '100%', display: 'block'}}>
-
-                            </Col>
-                            <Col style={{height: '100%'}}>
-                                <Form.Group as={Row}>
-                                    <Form.Label className="form-label-first" column sm={2}>
-                                        From
-                                    </Form.Label>
-                                    <Col sm={10}>
-                                        <Form.Control type="date" onChange={startDateHandler} defaultValue={startDate}/>
-                                    </Col>
-                                </Form.Group>
-                            </Col>
-                            <Col style={{height: '100%'}}>
-                                <Form.Group as={Row}>
-                                    <Form.Label className="form-label-first" column sm={2}>
-                                        To
-                                    </Form.Label>
-                                    <Col sm={10}>
-                                        <Form.Control type="date" onChange={endDateHandler} defaultValue={endDate}/>
-                                    </Col>
-                                </Form.Group>
-                            </Col>
+                <Col style={{width: '50%'}}>
+                    <Row style={{height: '60px', width:'50%', padding: '5px', margin: '5px'}}>
+                        <Col style={{height: '100%'}}>
+                            <Form.Group as={Row}>
+                                <Form.Label className="form-label-first" column sm={2}>
+                                    From
+                                </Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control type="date" onChange={startDateHandler} defaultValue={startDate}/>
+                                </Col>
+                            </Form.Group>
                         </Col>
-                        <Col style={{padding: '0px', height: '100%', width: '100%', display: 'flex'}}>
-                            <Row style={{width: '100%'}}>
-                                <Col style={{display: 'flex'}}>
-                                    <Col>
-                                        <Form.Group className="mb-2">
-                                            <Form.Check type="checkbox" label="All"/>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col>
-                                        <Form.Group className="mb-3">
-                                            <Form.Check type="checkbox" label="Since Inception"/>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col style={{height: '100%'}}>
-                                        <BalanceCalculation server={server} robot={robot} start_date={startDate}
-                                                            end_date={endDate}/>
-                                    </Col>
-                                    <Col style={{height: '100%'}}>
-                                        <RobotPricing server={server} robot={robot} start_date={startDate}
-                                                      end_date={endDate}/>
-                                    </Col>
+                        <Col style={{height: '100%'}}>
+                            <Form.Group as={Row}>
+                                <Form.Label className="form-label-first" column sm={2}>
+                                    To
+                                </Form.Label>
+                                <Col sm={10}>
+                                    <Form.Control type="date" onChange={endDateHandler} defaultValue={endDate}/>
                                 </Col>
-                                <Col style={{display: 'flex'}}>
-                                    <Col style={{height: '100%'}}>
-
-                                    </Col>
-                                </Col>
-                            </Row>
+                            </Form.Group>
                         </Col>
                     </Row>
                     <Row style={{padding:'15px', height:window.innerHeight, width:'100%',background:'green', margin:'0px'}}>
@@ -213,6 +183,8 @@ const RobotPage = (props) => {
             {/*    </Col>*/}
             {/*</Row>*/}
             <NewRobotForm show={showNewRobot} hide={hideNewRobotForm} server={server} style={{height: '400px'}}/>
+            <RobotBalanceCalculation show={showRobotBalanceCalc} hide={hideRobotBalanceCalcForm} server={server} robot={robot} start_date={startDate}
+                                                                 end_date={endDate}/>
         </Container>
     );
 };

@@ -5,13 +5,8 @@ import Col from 'react-bootstrap/Col';
 
 
 import "../../../MainCSS.css"
-import {useEffect, useState} from "react";
-import axios from "axios";
 
 const RobotTrades = (props) => {
-
-    const [chartData, setChartData] = useState([]);
-
     let losingTradeNumber = 0;
     let winningTradeNumber = 0;
     let losingTrades = [];
@@ -19,7 +14,7 @@ const RobotTrades = (props) => {
     let totalWinner = 0.0;
     let totalLoser= 0.0;
 
-    for (const val of chartData) {
+    for (const val of props.data) {
         if (val < 0) {
             losingTradeNumber=+losingTradeNumber+1;
             losingTrades.push(val);
@@ -43,25 +38,6 @@ const RobotTrades = (props) => {
     let avgWinner = Math.round(totalWinner/winningTrades.length*100)/100;
     let avgLoser = Math.round(totalLoser/losingTrades.length*100)/100;
 
-    console.log(winPerc)
-    console.log(lossPerc)
-    useEffect(() => {
-            axios.get(props.server + 'robots/trades/', {
-                params: {
-                    robot: props.robot,
-                    start_date: props.start_date,
-                    end_date: props.end_date
-                }
-            })
-                .then(response => response['data'].map(data => data['pnl']))
-                .then(data => setChartData(data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [props]
-    );
-
-
     const chartOptions = {
         options: {
             chart: {
@@ -78,7 +54,10 @@ const RobotTrades = (props) => {
                         formatter: function (val) {
                             return val.toFixed(0);
                         }
-                    }
+                    },
+                    title: {
+            text: 'Profit'
+          }
                 }
             ],
             dataLabels: {
@@ -86,20 +65,16 @@ const RobotTrades = (props) => {
             },
 
         },
-
         series: [
             {
                 name: "series-1",
-                data: chartData,
+                data: props.data,
             }
         ]
     };
 
-    // const a = cashFlow.map(data => data['cash_flow']);
-    // console.log(a)
-
     return (
-        <Card className="card">
+        <Card className="card" style={{margin:'0px'}}>
             <Card.Title className="card-header-first">Trades</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height:'100%', width:'100%', margin:'0px'}}>

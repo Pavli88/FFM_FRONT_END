@@ -71,9 +71,9 @@ const CumulativeReturnChart = (props) => {
 
     return (
         <Card className="card" style={{margin: '0px'}}>
-            <Card.Title className="card-header-first">Return</Card.Title>
+            <Card.Title className="card-header-first">Cumulative Return</Card.Title>
             <Card.Body style={{padding: '0px'}}>
-                <Row style={{height: '100%'}}>
+                <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>
                         <div style={{padding: '0px', height: '100%'}}>
                             <Chart

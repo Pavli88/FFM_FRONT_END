@@ -9,8 +9,12 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row';
 import Form from "react-bootstrap/Form";
 
-const BalanceCalculation = (props) => {
+const RobotBalanceCalculation = (props) => {
     const [loadState, setLoadState] = useState(false);
+
+    const handleClose = () => {
+        props.hide();
+    };
 
     const submitHandler = (event) => {
         event.preventDefault();
@@ -31,15 +35,15 @@ const BalanceCalculation = (props) => {
 
     return (
         <>
-            <Form onSubmit={submitHandler} style={{width: '100%'}}>
-                <Form.Group>
-                    <Button variant="primary" onClick={submitHandler}>
-                        Balance
-                    </Button>
-                </Form.Group>
-            </Form>
-            <Modal show={loadState}>
+            <Modal show={props.show} onHide={handleClose} animation={false}>
                 <Modal.Body style={{width: '200px', height: '300px'}}>
+                    <Form onSubmit={submitHandler} style={{width: '100%'}}>
+                        <Form.Group>
+                            <Button variant="primary" onClick={submitHandler}>
+                                Balance
+                            </Button>
+                        </Form.Group>
+                    </Form>
                     <h2>Calculating ...</h2>
                 </Modal.Body>
             </Modal>
@@ -47,4 +51,4 @@ const BalanceCalculation = (props) => {
     );
 };
 
-export default BalanceCalculation;
+export default RobotBalanceCalculation;

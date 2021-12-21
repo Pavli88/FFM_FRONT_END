@@ -6,13 +6,10 @@ import Row from 'react-bootstrap/Row';
 
 const RobotRiskPage = (props) => {
     return (
-            <Row style={{height:'400px', width:'100%', margin:'0px'}}>
-                <Col style={{width:'50%'}}>
+            <Row style={{width: '100%', height:'100%', margin:'0px'}}>
+                <Row style={{width: '100%', height: '400px', margin:'0px'}}>
                     <RobotDrawDown robot={props.robot} start_date={props.start_date} end_date={props.end_date} server={props.server}/>
-                </Col>
-                <Col style={{width:'50%'}}>
-
-                </Col>
+                </Row>
             </Row>
     );
 };

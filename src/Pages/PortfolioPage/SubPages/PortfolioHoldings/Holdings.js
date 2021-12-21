@@ -6,23 +6,34 @@ import Row from 'react-bootstrap/Row';
 // CSS
 import "../../../PortfolioPage.css"
 import "../../../MainCSS.css"
+import Table from "react-bootstrap/Table";
 
 const Holdings = () => {
     return (
         <Card className="card">
-            <Card.Title className="card-header-first">Holdings</Card.Title>
-            <Row style={{height: '100%'}}>
-                <Col sm={8}>
-                    <Container className="border" style={{width:'100%', height: '100%', padding:'5px'}} fluid>
+            <Card.Title className="card-header-first">Transactions</Card.Title>
+            <Row style={{width: '100%', margin: '0px'}}>
 
-                    </Container>
-                </Col>
-                <Col sm={4}>
-                    <Container className="border" style={{width:'100%', height: '100%', padding:'5px'}} fluid>
-
-                    </Container>
-                </Col>
             </Row>
+
+            <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
+                <Table>
+                    <thead className="table-header-first">
+                    <tr>
+                        <td className="table-header-row">Quantity</td>
+                        <td className="table-header-row">Price</td>
+                        <td className="table-header-row">Market Value</td>
+                        <td className="table-header-row">Trade Date</td>
+                        <td className="table-header-row">Instrument</td>
+                        <td className="table-header-row">Instrument Type</td>
+                        <td className="table-header-row">Source</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </Table>
+            </div>
         </Card>
     );
 };
