@@ -38,7 +38,7 @@ const PortfolioDashBoardPage = (props) => {
                     <PortfolioDescription/>
                 </Col>
             </Row>
-            <Row style={{width: '50%', height:'400px', background:'blue', margin:'0px'}}>
+            <Row style={{width: '50%', height:'200px', background:'blue', margin:'0px'}}>
                 <Col>
                     <CashHoldings portfolio={props.portfolio} server={props.server} data={chData}/>
                 </Col>

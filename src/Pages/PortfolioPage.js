@@ -139,8 +139,8 @@ const PortfolioPage = (props) => {
                             <MenuItem>Security</MenuItem>
                         </SubMenu>
                         <SubMenu title="Calculations">
-                            <MenuItem onClick={showPosCalcForm}>Positions</MenuItem>
                             <MenuItem onClick={showCashCalcForm}>Cash Holdings</MenuItem>
+                            <MenuItem onClick={showPosCalcForm}>Positions</MenuItem>
                             <MenuItem>Holdings</MenuItem>
                             <MenuItem>Return</MenuItem>
                         </SubMenu>
@@ -234,7 +234,7 @@ const PortfolioPage = (props) => {
             <PortfolioBuy show={showNewRobotTrade} hide={hideNewRobotTrade} portfolio={portfolio} server={server} env={env}/>
             <NewPortCashFlow show={showNewPortCashFlow} hide={hideNewPortCashFlow} portfolio={portfolio} server={server}/>
             <PositionCalculation show={showPosCalc} hide={hidePosCalcForm} server={server} start_date={startDate} end_date={endDate}/>
-            <CashHoldingCalculation show={showCashCalc} hide={hideCashCalcForm} server={server}/>
+            <CashHoldingCalculation show={showCashCalc} hide={hideCashCalcForm} server={server} portfolio={portfolio}/>
         </Container>
     );
 };

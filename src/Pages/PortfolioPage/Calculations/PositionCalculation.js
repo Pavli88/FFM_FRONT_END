@@ -79,7 +79,6 @@ const PositionCalculation = (props) => {
                                     </Col>
                                 </Form.Group>
                             </Row>
-
                     </Form>
                 </Modal.Body>
             </Modal>

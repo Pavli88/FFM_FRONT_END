@@ -9,61 +9,17 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 
 const CashHoldings = (props) => {
-    // console.log(props.data)
-    const chartData = props.data.map((item)=>({'name':item['currency'], 'data': [0, item['amount'], 0]}));
+    console.log(props.data)
+    // const chartData = props.data.map((item)=>);
 
-    console.log(chartData);
 
-    const chartOptions = {
-        options: {
-            chart: {
-                toolbar: false,
-                id: "basic-bar",
-                type: 'bar',
-            },
-            xaxis: {
-                categories: [],
-                labels: {show: false}
-            },
-            yaxis: [
-                {
-                    labels: {
-                        formatter: function (val) {
-                            return val.toFixed(0);
-                        }
-                    },
-                    title: {
-            text: 'Ammount'
-          }
-                }
-            ],
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '55%',
-                    endingShape: 'rounded'
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-
-        },
-        series: chartData
-    };
     return (
         <Card className="card" style={{margin: '0px'}}>
             <Card.Title className="card-header-first">Cash Holdings</Card.Title>
+            <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
             <Card.Body style={{padding: '0px'}}>
-                <Row style={{height: '100%'}}>
-                    <Col style={{height: '100%'}}>
-                        <Chart
-                            options={chartOptions.options}
-                            series={chartOptions.series}
-                            type="bar"
-                            width="100%"
-                            height="100%"/>
-                    </Col>
+                <Row style={{width:'100%', margin:'0px'}}>
+                    <h5>2000</h5>
                 </Row>
             </Card.Body>
         </Card>

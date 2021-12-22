@@ -12,6 +12,9 @@ import RobotNav from "./Robot/RobotNav";
 import RobotPricing from "./Robot/RobotPricing";
 import RobotProcesses from "./Robot/RobotProcesses";
 
+// Forms
+import RobotPricingForm from "./Robot/Calculations/RobotPricingForm";
+
 import axios from "axios";
 
 // Sidebar
@@ -44,15 +47,13 @@ const RobotPage = (props) => {
     // Date variables
     const date = new Date();
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
     const defaultRobots = useContext(RobotContext)['robots'];
-    console.log(server)
     const [robot, setRobot] = useState(defaultRobots[0]['name']);
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
-
+    console.log(robot)
     const changeRobot = (rob) => {
         setRobot(rob);
     };
@@ -87,6 +88,14 @@ const RobotPage = (props) => {
         setRobotBalanceCalc(false);
     };
 
+    const [showRobotPricingCalc, setRobotPricingCalc] = useState(false);
+    const showRobotPricingForm = () => {
+        setRobotPricingCalc(true);
+    };
+    const hideRobotPricingCalcForm = () => {
+        setRobotPricingCalc(false);
+    };
+
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
             <Row style={{height: '100%', margin:'0px'}}>
@@ -107,6 +116,7 @@ const RobotPage = (props) => {
                         </SubMenu>
                         <SubMenu title="Calculations">
                             <MenuItem onClick={showRobotCalcForm}>Balance</MenuItem>
+                            <MenuItem onClick={showRobotPricingForm}>Pricing</MenuItem>
                         </SubMenu>
                         <MenuItem>Transactions
                             <Link to="/robot/transactions"/>
@@ -183,8 +193,10 @@ const RobotPage = (props) => {
             {/*    </Col>*/}
             {/*</Row>*/}
             <NewRobotForm show={showNewRobot} hide={hideNewRobotForm} server={server} style={{height: '400px'}}/>
-            <RobotBalanceCalculation show={showRobotBalanceCalc} hide={hideRobotBalanceCalcForm} server={server} robot={robot} start_date={startDate}
-                                                                 end_date={endDate}/>
+            <RobotBalanceCalculation show={showRobotBalanceCalc} hide={hideRobotBalanceCalcForm} server={server}
+                                     robot={robot} start_date={startDate}
+                                     end_date={endDate}/>
+            <RobotPricingForm show={showRobotPricingCalc} hide={hideRobotPricingCalcForm} server={server} robot={robot}/>
         </Container>
     );
 };

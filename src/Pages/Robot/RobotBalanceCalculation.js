@@ -34,20 +34,21 @@ const RobotBalanceCalculation = (props) => {
     };
 
     return (
-        <>
-            <Modal show={props.show} onHide={handleClose} animation={false}>
-                <Modal.Body style={{width: '200px', height: '300px'}}>
-                    <Form onSubmit={submitHandler} style={{width: '100%'}}>
-                        <Form.Group>
-                            <Button variant="primary" onClick={submitHandler}>
-                                Balance
-                            </Button>
-                        </Form.Group>
-                    </Form>
-                    <h2>Calculating ...</h2>
-                </Modal.Body>
-            </Modal>
-        </>
+        <Modal show={props.show} onHide={handleClose} animation={false}>
+            <Modal.Header closeButton>
+                <Modal.Title>Balance - {props.robot}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body style={{width: '200px', height: '300px'}}>
+                <Form onSubmit={submitHandler} style={{width: '100%'}}>
+                    <Form.Group>
+                        <Button variant="primary" onClick={submitHandler}>
+                            Balance
+                        </Button>
+                    </Form.Group>
+                </Form>
+                <h2>Calculating ...</h2>
+            </Modal.Body>
+        </Modal>
     );
 };
 
