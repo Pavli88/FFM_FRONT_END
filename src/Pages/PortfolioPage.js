@@ -1,8 +1,6 @@
 import {useContext, useEffect, useState} from "react";
 import {Route, Switch, Link} from "react-router-dom";
-import ServerContext from "../context/server-context";
-import EnvContext from "../context/env-context";
-import PortfolioContext from "../context/portfolio-context";
+
 import axios from "axios";
 
 import NewPortfolioForm from "./PortfolioPage/NewPortfolioForm";
@@ -32,6 +30,9 @@ import NewPortCashFlow from "./PortfolioPage/NewPortCashFlow";
 import RobotContext from "../context/robot-context";
 import NewBrokerAccount from "../components/NewBrokerAccount";
 import RiskPage from "./RiskPage";
+import ServerContext from "../context/server-context";
+import EnvContext from "../context/env-context";
+import PortfolioContext from "../context/portfolio-context";
 
 
 // SubPages
@@ -52,24 +53,13 @@ const PortfolioPage = (props) => {
     const [portfolio, setPortfolio] = useState(portfolios[0]['portfolio_code']);
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
-
     const portfolioOptions = portfolios.map((record) =>
         <option key={record['id']} value={record['portfolio_code']}>{record['portfolio_name']}</option>)
-
     const portSelectHandler = (event) => {
         setPortfolio(event.target.value);
     };
-
     const portSelect = (port) => {
         setPortfolio(port);
-    };
-
-    const startDateHandler = (event) => {
-        setStartDate(event.target.value);
-    };
-
-    const endDateHandler = (event) => {
-        setEndDate(event.target.value);
     };
 
     // New portfolio form
@@ -116,7 +106,6 @@ const PortfolioPage = (props) => {
     const hideCashCalcForm = () => {
         setCashCalc(false);
     };
-
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
             <Row style={{height: '100%', margin:'0px'}}>
@@ -162,30 +151,6 @@ const PortfolioPage = (props) => {
                     </Menu>
                     </ProSidebar>;
                 <Col style={{width: '50%'}}>
-                    <Row style={{height: '60px', width: '50%', padding: '5px', margin: '5px'}}>
-                        <Col style={{height: '100%'}}>
-                            <Form.Group as={Row}>
-                                <Form.Label className="form-label-first" column sm={2}>
-                                    From
-                                </Form.Label>
-                                <Col sm={10}>
-                                    <Form.Control type="date" onChange={startDateHandler}
-                                                  defaultValue={firstDay.toISOString().substr(0, 10)}/>
-                                </Col>
-                            </Form.Group>
-                        </Col>
-                        <Col style={{height: '100%'}}>
-                            <Form.Group as={Row}>
-                                <Form.Label className="form-label-first" column sm={2}>
-                                    To
-                                </Form.Label>
-                                <Col sm={10}>
-                                    <Form.Control type="date" onChange={endDateHandler}
-                                                  defaultValue={date.toISOString().substr(0, 10)}/>
-                                </Col>
-                            </Form.Group>
-                        </Col>
-                    </Row>
                     <Row style={{
                         padding: '15px',
                         height: window.innerHeight,
@@ -196,7 +161,7 @@ const PortfolioPage = (props) => {
                         <Switch>
                             <Route path="/portfolio/dashboard">
                                 <PortfolioDashBoardPage portfolio={portfolio} server={server} default={portfolios[0]}
-                                                        end_date={endDate}/>
+                                />
                             </Route>
                             <Route path="/portfolio/holdings">
                                 <PortfolioHoldingsPage portfolio={portfolio} server={server}/>
@@ -233,7 +198,7 @@ const PortfolioPage = (props) => {
             <NewPortfolioForm show={showNewPortfolio} hide={hideNewPortfolio} server={server}/>
             <PortfolioBuy show={showNewRobotTrade} hide={hideNewRobotTrade} portfolio={portfolio} server={server} env={env}/>
             <NewPortCashFlow show={showNewPortCashFlow} hide={hideNewPortCashFlow} portfolio={portfolio} server={server}/>
-            <PositionCalculation show={showPosCalc} hide={hidePosCalcForm} server={server} start_date={startDate} end_date={endDate}/>
+            <PositionCalculation show={showPosCalc} hide={hidePosCalcForm} server={server} portfolio={portfolio}/>
             <CashHoldingCalculation show={showCashCalc} hide={hideCashCalcForm} server={server} portfolio={portfolio}/>
         </Container>
     );

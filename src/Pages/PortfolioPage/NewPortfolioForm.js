@@ -45,8 +45,9 @@ const NewPortfolioForm = (props) => {
             port_code: portfolioCode,
         })
             .then(function (response) {
-                if (response['data'] == 'New Portfolio was created!') {
-                    // window.location.reload();
+                if (response['data'] == 'New Portfolio is created!') {
+                    alert('New portfolio is created!')
+                    props.hide();
                 } else {
                     alert(response['data']);
                 }

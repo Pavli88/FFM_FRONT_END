@@ -9,17 +9,32 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 
 const CashHoldings = (props) => {
-    console.log(props.data)
-    // const chartData = props.data.map((item)=>);
+    const date = new Date();
 
-
+    // Loading cash holding data
+    const [chData, setChData] = useState([{'amount': 0, 'currency': 'USD'}]);
+    console.log(chData)
+    useEffect(() => {
+            axios.get(props.server + 'portfolios/get_cash_holdings/', {
+                params: {
+                    portfolio: props.portfolio,
+                    date: date.toISOString().substr(0,10),
+                }
+            })
+                .then(response => response['data'].map(data=>data))
+                .then(data=>setChData(data))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, [props]
+    );
     return (
         <Card className="card" style={{margin: '0px'}}>
             <Card.Title className="card-header-first">Cash Holdings</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
+            <Card.Subtitle className="text-muted">on {date.toISOString().substr(0,10)}</Card.Subtitle>
             <Card.Body style={{padding: '0px'}}>
-                <Row style={{width:'100%', margin:'0px'}}>
-                    <h5>2000</h5>
+                <Row style={{margin:'0px', padding: '15px', display:'block'}}>
+                    <h2>{chData[0]['amount']}</h2>
                 </Row>
             </Card.Body>
         </Card>

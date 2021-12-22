@@ -12,8 +12,20 @@ import "../../../PortfolioPage.css"
 import "../../../MainCSS.css"
 
 const PortfolioTransactions = (props) => {
+     // Date variables
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
+    const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
 
     const [portTransData, setPortTransData] = useState([]);
+
+    const startDateHandler = (event) => {
+        setStartDate(event.target.value);
+    };
+    const endDateHandler = (event) => {
+        setEndDate(event.target.value);
+    };
 
     useEffect(() => {
             axios.get(props.server + 'portfolios/get_portfolio_transactions/' + props.portfolio)
@@ -38,11 +50,35 @@ const PortfolioTransactions = (props) => {
 
     return (
         <Card className="card">
-            <Card.Title className="card-header-first">Transactions</Card.Title>
             <Row style={{width: '100%', margin: '0px'}}>
-
+                <Col sm={2}>
+                    <Card.Title className="card-header-first">Transactions</Card.Title>
+                </Col>
+                <Col sm={10} style={{display:'flex'}}>
+                    <Col>
+                        <Form.Group as={Row} style={{margin:'0px', padding:'5px'}}>
+                        <Form.Label className="form-label-first" column sm={2}>
+                            From
+                        </Form.Label>
+                        <Col sm={10}>
+                            <Form.Control type="date" onChange={startDateHandler}
+                                          defaultValue={firstDay.toISOString().substr(0, 10)}/>
+                        </Col>
+                    </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group as={Row} style={{margin:'0px', padding:'5px'}}>
+                        <Form.Label className="form-label-first" column sm={2}>
+                            To
+                        </Form.Label>
+                        <Col sm={10}>
+                            <Form.Control type="date" onChange={endDateHandler}
+                                          defaultValue={date.toISOString().substr(0, 10)}/>
+                        </Col>
+                    </Form.Group>
+                    </Col>
+                </Col>
             </Row>
-
             <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
                 <Table>
                     <thead className="table-header-first">

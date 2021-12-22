@@ -8,23 +8,18 @@ const NewPortCashFlow = (props) => {
     const handleClose = () => {
         props.hide();
     };
-
     const [value, setValue] = useState(0.0);
     const [type, setType] = useState('INFLOW');
     const [currency, setCurrency] = useState('USD');
-
     const valueHandler = (event) => {
         setValue(event.target.value);
     };
-
     const cashTypeHandler = (event) => {
         setType(event.target.value);
     };
-
     const currencyHandler = (event) => {
         setCurrency(event.target.value);
     }
-
     const submitHandler = (event) => {
         event.preventDefault();
         console.log('form submited')
@@ -40,48 +35,45 @@ const NewPortCashFlow = (props) => {
                 });
         setCurrency('USD');
     };
-
     return (
-        <>
-            <Modal show={props.show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Funding</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form onSubmit={submitHandler} style={{width: '100%'}}>
-                        <Form.Group>
-                            <Form.Label>Portfolio</Form.Label>
-                            <Form.Control type="text" placeholder={props.portfolio} value={props.portfolio} readOnly />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Cash Flow</Form.Label>
-                            <Form.Control onChange={valueHandler} type="number" placeholder="Value"/>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Currency</Form.Label>
-                            <Form.Control onChange={currencyHandler} as="select">
-                                <option value={'USD'}>USD</option>
-                                <option value={'EUR'}>EUR</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Type</Form.Label>
-                            <Form.Control onChange={cashTypeHandler} as="select">
-                                <option value={'INFLOW'}>Inflow</option>
-                            </Form.Control>
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={submitHandler}>
-                        Save
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
+        <Modal show={props.show} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Funding</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form onSubmit={submitHandler} style={{width: '100%'}}>
+                    <Form.Group>
+                        <Form.Label>Portfolio</Form.Label>
+                        <Form.Control type="text" placeholder={props.portfolio} value={props.portfolio} readOnly/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Cash Flow</Form.Label>
+                        <Form.Control onChange={valueHandler} type="number" placeholder="Value"/>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Currency</Form.Label>
+                        <Form.Control onChange={currencyHandler} as="select">
+                            <option value={'USD'}>USD</option>
+                            <option value={'EUR'}>EUR</option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Type</Form.Label>
+                        <Form.Control onChange={cashTypeHandler} as="select">
+                            <option value={'INFLOW'}>Inflow</option>
+                        </Form.Control>
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="primary" onClick={submitHandler}>
+                    Save
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 };
 
