@@ -1,13 +1,14 @@
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Chart from "react-apexcharts";
 
 const CardWidget = (props) => {
-    const height = props.height
-    const width = props.width
 
     return (
-        <Card style={props.style}>
-            <Card.Header as="h5">{props.name}</Card.Header>
+        <Card className="card" style={{margin:'0px'}}>
+            <Card.Title className="card-header-first">{props.title}</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 {props.children}
             </Card.Body>

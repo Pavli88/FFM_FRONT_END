@@ -1,32 +1,11 @@
 import Card from "react-bootstrap/Card";
-
-import "../../../MainCSS.css"
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Chart from "react-apexcharts";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import Chart from "react-apexcharts";
 
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-
-const RobotDrawDown = (props) => {
-
-    const [chartData, setChartData] = useState([]);
-
-    useEffect(() => {
-            axios.get(props.server + 'robots/drawdown/', {
-                params: {
-                    robot: props.robot,
-                    start_date: props.start_date,
-                    end_date: props.end_date
-                }
-            })
-                .then(response => response['data'].map(data=>data))
-                .then(data=>setChartData(data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [props]
-    );
+const BarCharting = (props) => {
     const chartOptions = {
         options: {
             chart: {
@@ -49,19 +28,18 @@ const RobotDrawDown = (props) => {
             dataLabels: {
                 enabled: false
             },
-
         },
         series: [
             {
-                name: "Drawdown",
-                data: chartData,
+                name: "Aggregated Robot Profit and Loss",
+                data: props.data,
             }
         ]
     };
 
     return (
         <Card className="card" style={{margin:'0px'}}>
-            <Card.Title className="card-header-first">Drawdown</Card.Title>
+            <Card.Title className="card-header-first">{props.title}</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%'}}>
                     <Col style={{height: '100%'}}>
@@ -79,4 +57,4 @@ const RobotDrawDown = (props) => {
     );
 };
 
-export default RobotDrawDown;
+export default BarCharting;

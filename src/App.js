@@ -26,7 +26,7 @@ function App() {
     const [robotEnvData, setRobotEnvData] = useState('live');
     const [portfolioData, setPortfolioData] = useState([]);
     const [robotsData, setRobotsData] = useState([]);
-    const server = 'http://127.0.0.1:8000/'
+    const server = 'https://pavliati.pythonanywhere.com/'
 
     const getEnvData = (env) => {
         setRobotEnvData(env);

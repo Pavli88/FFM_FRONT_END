@@ -29,7 +29,7 @@ const PerformanceDashboard = (props) => {
     </tr>);
 
     return (
-        <Card className="card">
+        <Card className="card" style={{margin:'0px'}}>
             <Card.Title className="card-header-first">Performance</Card.Title>
             <div style={{height:'500px',overflowY: 'scroll', overflowX: 'hidden'}}>
                 <Table size="sm">
