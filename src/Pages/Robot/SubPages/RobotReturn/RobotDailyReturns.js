@@ -58,22 +58,22 @@ const RobotDailyReturns = (props) => {
     };
 
     return (
-            <Card className="card" style={{margin: '0px'}}>
-                <Card.Title className="card-header-first">Daily Return</Card.Title>
-                <Card.Body style={{padding: '0px'}}>
-                    <Row style={{height: '100%', width: '100%', margin: '0px'}}>
-                        <Col style={{height: '100%'}}>
-                            <Chart
-                                options={chartOptions.options}
-                                series={chartOptions.series}
-                                type={'bar'}
-                                width="100%"
-                                height="100%"
-                            />
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card>
+        <Card className="card" style={{margin: '0px'}}>
+            <Card.Title className="card-header-first">Daily Return</Card.Title>
+            <Card.Body style={{padding: '0px'}}>
+                <Row style={{height: '100%', width: '100%', margin: '0px'}}>
+                    <Col style={{height: '100%'}}>
+                        <Chart
+                            options={chartOptions.options}
+                            series={chartOptions.series}
+                            type={'bar'}
+                            width="100%"
+                            height="100%"
+                        />
+                    </Col>
+                </Row>
+            </Card.Body>
+        </Card>
     );
 };
 

@@ -1,10 +1,9 @@
-import Chart from "react-apexcharts";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Chart from "react-apexcharts";
 
-const CumulativeReturnChart = (props) => {
-
+const LineCharts = (props) => {
     const chartOptions = {
         options: {
             chart: {
@@ -43,9 +42,7 @@ const CumulativeReturnChart = (props) => {
             dataLabels: {
                 enabled: false
             },
-
         },
-
         title: {
             text: 'Cumulative Return',
             align: 'left',
@@ -60,7 +57,6 @@ const CumulativeReturnChart = (props) => {
                 color: '#263238'
             },
         },
-
         series: [
             {
                 name: "series-1",
@@ -68,10 +64,9 @@ const CumulativeReturnChart = (props) => {
             }
         ]
     };
-
     return (
         <Card className="card" style={{margin: '0px'}}>
-            <Card.Title className="card-header-first">Cumulative Return</Card.Title>
+            <Card.Title className="card-header-first">{props.title}</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>
@@ -90,5 +85,4 @@ const CumulativeReturnChart = (props) => {
         </Card>
     );
 };
-
-export default CumulativeReturnChart;
+export default LineCharts;

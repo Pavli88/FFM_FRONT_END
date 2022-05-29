@@ -50,23 +50,35 @@ const PnLPanel = (props) => {
         }, [props]
     );
     return (
-        <>
-            <Col style={{height:'100%'}}>
+        <Row style={{height: '150px', width: '100%', margin: '0px', padding: '10px'}}>
+            <Col style={{height: '100%'}}>
                 <CardWidget title={'DTD'}>
-                    <h1 style={{margin:'0px'}}>{dtdData}</h1>
+                    <h1 style={{
+                        margin: 'auto',
+                        verticalAlign: 'middle',
+                        color: dtdData < 0.0 ? 'red' : 'green'
+                    }}>{dtdData}</h1>
                 </CardWidget>
             </Col>
-            <Col style={{height:'100%'}}>
+            <Col style={{height: '100%'}}>
                 <CardWidget title={'MTD'}>
-                    <h1>{mtdData}</h1>
+                    <h1 style={{
+                        margin: 'auto',
+                        verticalAlign: 'middle',
+                        color: mtdData < 0.0 ? 'red' : 'green'
+                    }}>{mtdData}</h1>
                 </CardWidget>
             </Col>
-            <Col style={{height:'100%'}}>
+            <Col style={{height: '100%'}}>
                 <CardWidget title={'YTD'}>
-                    <h1>{ytdData}</h1>
+                    <h1 style={{
+                        margin: 'auto',
+                        verticalAlign: 'middle',
+                        color: ytdData < 0.0 ? 'red' : 'green'
+                    }}>{ytdData}</h1>
                 </CardWidget>
             </Col>
-        </>
+        </Row>
     );
 };
 

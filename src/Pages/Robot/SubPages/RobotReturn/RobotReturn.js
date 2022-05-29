@@ -28,7 +28,6 @@ const RobotReturn = (props) => {
                 });
         }, [props]
     );
-
     return (
         <CumulativeReturnChart data={chartData}/>
     );

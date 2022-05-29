@@ -1,22 +1,29 @@
 import RobotTrades from "./RobotTrades";
 import RobotTransactionsTable from "./RobotTransactionsTable";
-
+import DateSelectorRobotPage from "../../DateSelectorRobotPage";
+import RobotTradesStatistics from "./RobotTradesStatistics";
+import RobotTradesQuantiy from "./RobotTradesQuantity";
 // Bootstrap
-import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import {useEffect, useState} from "react";
+import Col from 'react-bootstrap/Col'
+import Container from "react-bootstrap/Container";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
+import DateContext from "../../../../context/date-context";
 
 const RobotTransactionsPage = (props) => {
     const [transactionData, setTransactionData] = useState([]);
     const pnlData = transactionData.map(data => data['pnl'])
+    const quantityData = transactionData.map(data => data['quantity'])
+    const startDate = useContext(DateContext)['startDate'];
+    const endDate = useContext(DateContext)['endDate'];
 
     useEffect(() => {
             axios.get(props.server + 'robots/trades/', {
                 params: {
                     robot: props.robot,
-                    start_date: props.start_date,
-                    end_date: props.end_date
+                    start_date: startDate,
+                    end_date: endDate,
                 }
             })
                 .then(data => setTransactionData(data['data']))
@@ -27,14 +34,28 @@ const RobotTransactionsPage = (props) => {
     );
 
     return (
-        <Row style={{width: '100%', height:'100%', margin:'0px'}}>
-            <Row style={{width: '100%', height: '400px', margin:'0px'}}>
-                <RobotTrades data={pnlData}/>
+        <Container fluid>
+            <Row style={{width: '100%', height: '800px', margin: '0px', padding: '0px'}}>
+                <Col style={{margin: '0px', width: '50%', padding: '0px'}}>
+                    <Row style={{height: '100%', width: '100%', margin: '0px'}}>
+                        <Row style={{height: '50%', width: '100%', padding: '5px', margin: '0px'}}>
+                            <RobotTrades data={pnlData}/>
+                        </Row>
+                        <Row style={{height: '50%', width: '100%', padding: '5px', margin: '0px'}}>
+                            <RobotTradesQuantiy data={quantityData}/>
+                        </Row>
+                    </Row>
+                </Col>
+                <Col style={{margin: '0px', width: '50%', height: '100%', padding: '0px'}}>
+                    <Row style={{height: '100%', width: '100%', padding: '5px', margin: '0px'}}>
+                        <RobotTransactionsTable server={props.server} data={transactionData}/>
+                    </Row>
+                </Col>
             </Row>
-            <Row style={{width: '100%', height: '400px', margin:'0px'}}>
-                <RobotTransactionsTable data={transactionData}/>
-            </Row>
-        </Row>
+            {/*<Col style={{margin: '0px', width: '100%', height: '100%', padding: '0px', background: 'green'}}>*/}
+            {/*    <RobotTradesStatistics data={pnlData}/>*/}
+            {/*</Col>*/}
+        </Container>
     );
 };
 

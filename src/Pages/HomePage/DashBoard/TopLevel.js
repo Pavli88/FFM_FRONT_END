@@ -34,11 +34,11 @@ const TopLevel = (props) =>{
     );
     return(
         <Row>
-            <Row style={{height: '400px', width:'100%', margin:'0px', padding:'10px'}}>
-                <BarCharting data={findCumulativeSum(dailyPnlData)} title={'Total Cumulative PnL - YTD'}/>
+            <Row style={{height: '300px', width:'100%', margin:'0px', padding:'10px'}}>
+                <BarCharting data={findCumulativeSum(dailyPnlData)} title={'Total Cumulative PnL - YTD'} horizontal={false}/>
             </Row>
-            <Row style={{height: '400px', width:'100%', margin:'0px', padding:'10px'}}>
-                <BarCharting data={dailyPnlData} title={'Daily Total Robot PnL - YTD'}/>
+            <Row style={{height: '300px', width:'100%', margin:'0px', padding:'10px'}}>
+                <BarCharting data={dailyPnlData} title={'Daily Total Robot PnL - YTD'} horizontal={false}/>
             </Row>
         </Row>
     )

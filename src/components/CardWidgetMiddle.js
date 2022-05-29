@@ -1,10 +1,6 @@
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Chart from "react-apexcharts";
 
-const CardWidget = (props) => {
+const CardWidgetMiddle = (props) => {
     return (
         <Card className="card" style={{margin:'0px'}}>
             <Card.Title style={{margin:'0px'}} className="card-header-first">{props.title}</Card.Title>
@@ -15,4 +11,4 @@ const CardWidget = (props) => {
     );
 };
 
-export default CardWidget
+export default CardWidgetMiddle;

@@ -11,9 +11,12 @@ import SystemMessages from "./HomePage/SystemMessages/SystemMessages";
 
 import TopLevel from "./HomePage/DashBoard/TopLevel";
 import PnLPanel from "./HomePage/DashBoard/PnLPanel";
+import BalanceDashBoard from "./HomePage/DashBoard/BalanceDashboard";
+import ContributionPnl from "./HomePage/DashBoard/ContributionPnl";
 
 // Chart Imports
 import BarCharting from "../components/Charts/BarCharting";
+
 
 //CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -35,24 +38,21 @@ const HomePage = (props) => {
         setDate(event.target.value);
     };
 
-    const balanceRequestData = {
-        'env': 'live',
-        'start_date': 21,
-        'end_date': 34,
-    };
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
             <Row style={{height: window.innerHeight}}>
-                <Col style={{height: '400px', width:'50%', margin:'15px'}}>
+                <Col style={{height: '1000px', width:'50%', margin:'15px'}}>
+                    <h4 style={{textAlign:'left', marginTop:'0px', marginBottom:'15px'}}>Balance</h4>
+                    <BalanceDashBoard server={server} env={env}/>
+                    <h4 style={{textAlign:'left', marginTop:'15px'}}>Total Robot Results</h4>
                     <TopLevel server={server}/>
                 </Col>
-                <Col style={{height: '400px', width:'50%', margin:'15px'}}>
-                    <Row style={{height: '150px', width:'100%', margin:'0px', padding: '10px'}}>
-                        <PnLPanel server={server}/>
-                    </Row>
-                    <Row style={{height: '400px', width:'100%', margin:'0px', padding: '10px'}}>
-                        <PerfDashBoard server={server} env={env}/>
-                    </Row>
+                <Col style={{height: '1000px', width:'50%', margin:'15px'}}>
+                    <h4>Profit</h4>
+                    <PnLPanel server={server}/>
+                    <ContributionPnl server={server}/>
+                    <h4>Performance</h4>
+                    <PerfDashBoard server={server} env={env}/>
                 </Col>
             </Row>
         </Container>

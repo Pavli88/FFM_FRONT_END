@@ -7,6 +7,7 @@ import "../../../MainCSS.css"
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Container from "react-bootstrap/Container";
+import CardWidgetMiddle from "../../../../components/CardWidgetMiddle";
 
 const RobotDetails = (props) => {
 
@@ -42,45 +43,60 @@ const RobotDetails = (props) => {
     );
 
     return (
-        <Card className="card" style={{margin: '0px'}}>
-                {/*<Card.Title className="card-header-first">Details</Card.Title>*/}
-                <Card.Body style={{padding: '5px'}}>
-                    <Row style={{height: '100%', width: '100%', margin: '0px'}}>
-                        <Col style={{height: '100%'}}>
-                            <Col style={{display: 'flex', width: '100%'}}>
-                                <p>Strategy</p>
-                                <p style={{position: 'absolute', right: '0px'}}>{robotData[0]['strategy']}</p>
-                            </Col>
-                            <Col style={{display: 'flex', width: '100%'}}>
-                                <p>Security</p>
-                                <p style={{position: 'absolute', right: '0px'}}>{robotData[0]['security']}</p>
-                            </Col>
-                        </Col>
-                        <Col style={{height: '100%'}}>
-                            <Col style={{display: 'flex', width: '100%'}}>
-                                <p>Inception Date</p>
-                                <p style={{position: 'absolute', right: '0px'}}>{robotData[0]['inception_date']}</p>
-                            </Col>
-                            <Col style={{display: 'flex', width: '100%'}}>
-                                <p>Broker</p>
-                                <p style={{position: 'absolute', right: '0px'}}>{robotData[0]['broker']}</p>
-                            </Col>
-
-                        </Col>
-                        <Col style={{height: '100%'}}>
-                            <Col style={{display: 'flex', width: '100%'}}>
-                                <p>Account Number</p>
-                                <p style={{position: 'absolute', right: '0px'}}>{robotData[0]['account_number']}</p>
-                            </Col>
-                            <Col style={{display: 'flex', width: '100%'}}>
-                                <p>Last Price on {priceData['date']}</p>
-                                <p style={{position: 'absolute', right: '0px'}}>{Math.round(priceData['price'] * 100) / 100}</p>
-                            </Col>
-                        </Col>
-                    </Row>
-                </Card.Body>
-
-            </Card>
+        <Row style={{height: '100px'}}>
+            <Col style={{height: '100%'}}>
+                <CardWidgetMiddle title={'Strategy'}>
+                    <p style={{margin: 'auto', verticalAlign: 'middle', fontSize: 20}}>{robotData[0]['strategy']}</p>
+                </CardWidgetMiddle>
+            </Col>
+            <Col style={{height: '100%'}}>
+                <CardWidgetMiddle title={'Security'}>
+                    <p style={{margin: 'auto', verticalAlign: 'middle', fontSize: 20}}>{robotData[0]['security']}</p>
+                </CardWidgetMiddle>
+            </Col>
+            <Col style={{height: '100%'}}>
+                <CardWidgetMiddle title={'Inception Date'}>
+                    <p style={{
+                        margin: 'auto',
+                        verticalAlign: 'middle',
+                        fontSize: 20
+                    }}>{robotData[0]['inception_date']}</p>
+                </CardWidgetMiddle>
+            </Col>
+            <Col style={{height: '100%'}}>
+                <CardWidgetMiddle title={'Broker'}>
+                    <p style={{margin: 'auto', verticalAlign: 'middle', fontSize: 20}}>{robotData[0]['broker']}</p>
+                </CardWidgetMiddle>
+            </Col>
+            <Col style={{height: '100%'}}>
+                <CardWidgetMiddle title={'Account Number'}>
+                    <p style={{
+                        margin: 'auto',
+                        verticalAlign: 'middle',
+                        fontSize: 20
+                    }}>{robotData[0]['account_number']}</p>
+                </CardWidgetMiddle>
+            </Col>
+            <Col style={{height: '100%'}}>
+                <CardWidgetMiddle title={'Last Price'}>
+                    <p style={{
+                        margin: 'auto',
+                        verticalAlign: 'middle',
+                        fontSize: 20
+                    }}>{Math.round(priceData['price'] * 100) / 100}</p>
+                </CardWidgetMiddle>
+            </Col>
+            <Col style={{height: '100%'}}>
+                <CardWidgetMiddle title={'Last Pricing Date'}>
+                    <p style={{
+                        margin: 'auto',
+                        verticalAlign: 'middle',
+                        fontSize: 20,
+                        color: priceData['date'] < endDate ? 'red' : 'green'
+                    }}>{priceData['date']}</p>
+                </CardWidgetMiddle>
+            </Col>
+        </Row>
     );
 };
 

@@ -2,47 +2,28 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Chart from "react-apexcharts";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
+const PieCharts = (props) => {
 
-const BarCharting = (props) => {
     const chartOptions = {
-
         options: {
             // chart: {
             //     toolbar: false,
             // },
-            plotOptions: {
-                bar: {
-                    horizontal: props.horizontal
-                }
-            },
-            xaxis: {
-                categories: [],
-                labels: {show: false}
-            },
-            yaxis: [
-                {
-                    labels: {
-                        // formatter: function (val) {
-                        //     return val.toFixed(0);
-                        // }
-                    }
-                }
-            ],
+            labels: props.labels,
             dataLabels: {
-                enabled: false
+                enabled: true,
+                formatter: function (val) {
+                    return (Math.round(val * 100) / 100) + '%'
+                },
             },
         },
-        series: [
-            {
-                name: "Aggregated Robot Profit and Loss",
-                data: props.data,
-            }
-        ]
+        series: props.data
     };
-
     return (
-        <Card className="card" style={{margin:'0px'}}>
+         <Card className="card" style={{margin: '0px'}}>
             <Card.Title className="card-header-first">{props.title}</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%'}}>
@@ -50,7 +31,7 @@ const BarCharting = (props) => {
                         <Chart
                             options={chartOptions.options}
                             series={chartOptions.series}
-                            type={'bar'}
+                            type={'donut'}
                             width="100%"
                             height="100%"
                         />
@@ -61,4 +42,9 @@ const BarCharting = (props) => {
     );
 };
 
-export default BarCharting;
+export default PieCharts;
+
+
+
+
+

@@ -14,6 +14,8 @@ import ServerContext from "./context/server-context";
 import EnvContext from "./context/env-context";
 import PortfolioContext from "./context/portfolio-context";
 import RobotContext from "./context/robot-context";
+import DateContext from "./context/date-context";
+
 import axios from "axios";
 import Button from "react-bootstrap/Button";
 
@@ -31,7 +33,12 @@ function App() {
     const getEnvData = (env) => {
         setRobotEnvData(env);
     };
-
+    // Date variables
+    const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
+    const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
+    console.log(startDate)
     useEffect(() => {
             axios.get(server + 'portfolios/get_portfolio_data/all')
                 .then(response => setPortfolioData(response['data']))
@@ -49,38 +56,44 @@ function App() {
                 });
         }, []
     );
-
     return (
         <ServerContext.Provider value={{server: server}}>
             <EnvContext.Provider value={{environment: robotEnvData}}>
                 <RobotContext.Provider value={{robots: robotsData}}>
                     <PortfolioContext.Provider value={{portfolioData}}>
-                        <ReactNotification/>
-                        <div className="App">
+                        <DateContext.Provider value={{
+                            startDate: startDate,
+                            endDate: endDate,
+                            saveStartDate: setStartDate,
+                            saveEndDate: setEndDate,
+                        }}>
+                            <ReactNotification/>
+                            <div className="App">
 
-                            <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
-                            <Switch>
-                                <Route path="/risk">
-                                    <RiskPage/>
-                                </Route>
-                                <Route path="/home">
-                                    <HomePage/>
-                                </Route>
-                                <Route path="/trade">
-                                    <TradePage/>
-                                </Route>
-                                <Route path="/portfolio">
-                                    <PortfolioPage/>
-                                </Route>
-                                <Route path="/instruments">
-                                    <InstrumentPage/>
-                                </Route>
-                                <Route path="/robot">
-                                    <RobotPage/>
-                                </Route>
-                            </Switch>
+                                <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
+                                <Switch>
+                                    <Route path="/risk">
+                                        <RiskPage/>
+                                    </Route>
+                                    <Route path="/home">
+                                        <HomePage/>
+                                    </Route>
+                                    <Route path="/trade">
+                                        <TradePage/>
+                                    </Route>
+                                    <Route path="/portfolio">
+                                        <PortfolioPage/>
+                                    </Route>
+                                    <Route path="/instruments">
+                                        <InstrumentPage/>
+                                    </Route>
+                                    <Route path="/robot">
+                                        <RobotPage/>
+                                    </Route>
+                                </Switch>
 
-                        </div>
+                            </div>
+                        </DateContext.Provider>
                     </PortfolioContext.Provider>
                 </RobotContext.Provider>
             </EnvContext.Provider>

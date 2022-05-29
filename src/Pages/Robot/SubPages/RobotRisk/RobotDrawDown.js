@@ -1,23 +1,25 @@
 import Card from "react-bootstrap/Card";
 
 import "../../../MainCSS.css"
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import Chart from "react-apexcharts";
 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import DateContext from "../../../../context/date-context";
 
 const RobotDrawDown = (props) => {
-
+    const startDate = useContext(DateContext)['startDate'];
+    const endDate = useContext(DateContext)['endDate'];
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
             axios.get(props.server + 'robots/drawdown/', {
                 params: {
                     robot: props.robot,
-                    start_date: props.start_date,
-                    end_date: props.end_date
+                    start_date: startDate,
+                    end_date: endDate,
                 }
             })
                 .then(response => response['data'].map(data=>data))

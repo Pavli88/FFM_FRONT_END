@@ -2,14 +2,11 @@ import {useState, useEffect, useContext} from "react";
 
 import NewRobotForm from "./Robot/NewRobotForm";
 import RobotTable from "./Robot/RobotTable";
-import RobotBalanceCalculation from "./Robot/RobotBalanceCalculation";
+import RobotBalanceCalculation from "./Robot/Calculations/RobotBalanceCalculation";
 
-
-import RobotBalance from "./Robot/RobotBalance";
 import RobotCashFlow from "./Robot/RobotCashFlow";
 import RobotNav from "./Robot/RobotNav";
 
-import RobotPricing from "./Robot/RobotPricing";
 import RobotProcesses from "./Robot/RobotProcesses";
 
 // Forms
@@ -26,6 +23,7 @@ import RobotDashBoardPage from "./Robot/SubPages/RobotDashboard/RobotDashBoardPa
 import RobotTransactionsPage from "./Robot/SubPages/RobotTransactions/RobotTransactionsPage";
 import RobotRiskPage from "./Robot/SubPages/RobotRisk/RobotRiskPage";
 import RobotReturnPage from "./Robot/SubPages/RobotReturn/RobotReturnPage";
+import RobotSettingsPage from "./Robot/SubPages/RobotSettings/RobotSettingsPage";
 
 // Bootstrap
 import Container from "react-bootstrap/Container";
@@ -41,34 +39,17 @@ import RobotContext from "../context/robot-context";
 import {Card} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import {Link, Route, Switch} from "react-router-dom";
+import DateContext from "../context/date-context";
 
 
 const RobotPage = (props) => {
-    // Date variables
-    const date = new Date();
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
     const defaultRobots = useContext(RobotContext)['robots'];
     const [robot, setRobot] = useState(defaultRobots[0]['name']);
-    const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
-    const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
-    console.log(robot)
+
     const changeRobot = (rob) => {
         setRobot(rob);
-    };
-
-    const startDateHandler = (event) => {
-        setStartDate(event.target.value);
-    };
-
-    const endDateHandler = (event) => {
-
-        if (event.target.value < startDate) {
-            alert('End date can not be less then start date!');
-        }else {
-            setEndDate(event.target.value);
-        };
     };
 
     // New robot form
@@ -133,49 +114,27 @@ const RobotPage = (props) => {
                     </Menu>
                 </ProSidebar>
                 <Col style={{width: '50%'}}>
-                    <Row style={{height: '60px', width:'50%', padding: '5px', margin: '5px'}}>
-                        <Col style={{height: '100%'}}>
-                            <Form.Group as={Row}>
-                                <Form.Label className="form-label-first" column sm={2}>
-                                    From
-                                </Form.Label>
-                                <Col sm={10}>
-                                    <Form.Control type="date" onChange={startDateHandler} defaultValue={startDate}/>
-                                </Col>
-                            </Form.Group>
-                        </Col>
-                        <Col style={{height: '100%'}}>
-                            <Form.Group as={Row}>
-                                <Form.Label className="form-label-first" column sm={2}>
-                                    To
-                                </Form.Label>
-                                <Col sm={10}>
-                                    <Form.Control type="date" onChange={endDateHandler} defaultValue={endDate}/>
-                                </Col>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row style={{padding:'15px', height:window.innerHeight, width:'100%',background:'green', margin:'0px'}}>
+                    <Row style={{padding:'15px', height:window.innerHeight, width:'100%', margin:'0px'}}>
                         <Switch>
                             <Route path="/robot/dashboard">
                                 <RobotDashBoardPage server={server} robot={robot} default={defaultRobots[0]}/>
                             </Route>
                             <Route path="/robot/transactions">
-                                <RobotTransactionsPage robot={robot} start_date={startDate} end_date={endDate} server={server}/>
+                                <RobotTransactionsPage robot={robot} server={server}/>
                             </Route>
                             <Route path="/robot/risk">
-                                <RobotRiskPage robot={robot} start_date={startDate} end_date={endDate} server={server}/>
+                                <RobotRiskPage robot={robot} server={server}/>
                             </Route>
                             <Route path="/robot/return">
-                                <RobotReturnPage robot={robot} start_date={startDate} end_date={endDate} server={server}/>
+                                <RobotReturnPage robot={robot} server={server}/>
+                            </Route>
+                            <Route path="/robot/settings">
+                                <RobotSettingsPage robot={robot} server={server}/>
                             </Route>
                         </Switch>
                     </Row>
                 </Col>
             </Row>
-
-            {/*<RobotBalance robot={robot} start_date={startDate} end_date={endDate} server={server}/>*/}
-
             {/*<Row style={{height:'500px', padding:'5px'}}>*/}
             {/*    <Col >*/}
             {/*        <Row style={{height:'100%'}}>*/}
@@ -194,8 +153,7 @@ const RobotPage = (props) => {
             {/*</Row>*/}
             <NewRobotForm show={showNewRobot} hide={hideNewRobotForm} server={server} style={{height: '400px'}}/>
             <RobotBalanceCalculation show={showRobotBalanceCalc} hide={hideRobotBalanceCalcForm} server={server}
-                                     robot={robot} start_date={startDate}
-                                     end_date={endDate}/>
+                                     robot={robot}/>
             <RobotPricingForm show={showRobotPricingCalc} hide={hideRobotPricingCalcForm} server={server} robot={robot}/>
         </Container>
     );
