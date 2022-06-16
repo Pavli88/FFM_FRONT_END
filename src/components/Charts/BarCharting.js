@@ -5,11 +5,12 @@ import Chart from "react-apexcharts";
 
 
 const BarCharting = (props) => {
+    const yMax = Math.max(...props.data);
+    console.log(props.data)
     const chartOptions = {
-
         options: {
             // chart: {
-            //     toolbar: false,
+            //     toolbar: true,
             // },
             plotOptions: {
                 bar: {
@@ -22,15 +23,24 @@ const BarCharting = (props) => {
             },
             yaxis: [
                 {
+                    tickAmount: 10,
                     labels: {
+                        show: true,
+                        style: {
+                            colors: [],
+                            fontSize: '12px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 400,
+                            cssClass: 'apexcharts-yaxis-label',
+                        },
                         // formatter: function (val) {
                         //     return val.toFixed(0);
                         // }
-                    }
+                    },
                 }
             ],
             dataLabels: {
-                enabled: false
+                enabled: true
             },
         },
         series: [

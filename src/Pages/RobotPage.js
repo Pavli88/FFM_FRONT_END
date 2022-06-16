@@ -41,6 +41,9 @@ import Form from "react-bootstrap/Form";
 import {Link, Route, Switch} from "react-router-dom";
 import DateContext from "../context/date-context";
 
+// Icons
+import { BsFillPlusSquareFill, BsCalculator, BsCash, BsGrid3X2Gap, BsExclamationDiamond, BsBarChart, BsGear, BsCaretRight } from 'react-icons/bs';
+import { TiCalculator, TiChartPieOutline } from "react-icons/ti";
 
 const RobotPage = (props) => {
     const server = useContext(ServerContext)['server'];
@@ -81,34 +84,38 @@ const RobotPage = (props) => {
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
             <Row style={{height: '100%', margin:'0px'}}>
                 <ProSidebar>
-                    <MenuItem style={{padding:'5px'}} ><RobotNav robots={defaultRobots}
-                                          server={server}
-                                          env={env}
-                                          robotChange={changeRobot}
-                                />
-                    </MenuItem>
                     <Menu iconShape="square">
-                        <MenuItem onClick={showNewRobotForm}>New Robot</MenuItem>
-                        <MenuItem>Dashboard
+                        <SubMenu title="Robot" icon={<BsCaretRight size={20} className="rounded-circle"/>}>
+                            <MenuItem style={{padding: '5px'}}><RobotNav robots={defaultRobots}
+                                                                         server={server}
+                                                                         env={env}
+                                                                         robotChange={changeRobot}
+                            />
+                            </MenuItem>
+                        </SubMenu>
+                        <MenuItem onClick={showNewRobotForm}
+                                  icon={<BsFillPlusSquareFill size={20} className="rounded-circle"/>}>New
+                            Robot</MenuItem>
+                        <MenuItem icon={<TiChartPieOutline size={20}/>}>Dashboard
                             <Link to="/robot/dashboard"/>
                         </MenuItem>
-                        <SubMenu title="Trade">
+                        <SubMenu title="Trade" icon={<BsCash size={20}/>}>
                             <MenuItem>Robot</MenuItem>
                         </SubMenu>
-                        <SubMenu title="Calculations">
+                        <SubMenu title="Calculations" icon={<BsCalculator size={20} className="rounded-circle"/>}>
                             <MenuItem onClick={showRobotCalcForm}>Balance</MenuItem>
                             <MenuItem onClick={showRobotPricingForm}>Pricing</MenuItem>
                         </SubMenu>
-                        <MenuItem>Transactions
+                        <MenuItem icon={<BsGrid3X2Gap size={20} className="rounded-circle"/>}>Transactions
                             <Link to="/robot/transactions"/>
                         </MenuItem>
-                        <MenuItem>Risk
+                        <MenuItem icon={<BsExclamationDiamond size={20}/>}>Risk
                             <Link to="/robot/risk"/>
                         </MenuItem>
-                        <MenuItem>Return
+                        <MenuItem icon={<BsBarChart size={20}/>}>Return
                             <Link to="/robot/return"/>
                         </MenuItem>
-                        <MenuItem>Settings
+                        <MenuItem icon={<BsGear size={20}/>}>Settings
                             <Link to="/robot/settings"/>
                         </MenuItem>
                     </Menu>

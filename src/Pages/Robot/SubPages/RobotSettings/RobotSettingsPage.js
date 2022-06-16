@@ -16,7 +16,7 @@ const RobotSettingsPage = (props) => {
                 <RobotRiskSettings robot={props.robot} server={props.server}/>
             </Col>
             <Col>
-                <RobotSettings/>
+                <RobotSettings robot={props.robot} server={props.server}/>
             </Col>
         </Row>
     );

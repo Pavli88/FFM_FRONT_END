@@ -27,9 +27,9 @@ const RobotNav = (props) => {
         <option key={record['id']} value={record['name']}>{record['name']}</option>);
 
     return (
-            <Form.Group as={Row} style={{alignItems: 'center'}}>
+            <Form.Group as={Row} >
                 <Col sm={10}>
-                    <Form.Control onChange={robotSelectHandler} as="select" style={{margin:'0px'}}>
+                    <Form.Control onChange={robotSelectHandler} as="select" style={{margin:'0px', width:'100%'}}>
                         {robotsOptions}
                     </Form.Control>
                 </Col>

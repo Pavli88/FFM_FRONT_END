@@ -15,6 +15,7 @@ const ContributionPnl = (props) => {
             axios.get(props.server + 'home/robot_pnl/', {
                 params: {
                     start_date: date,
+                    env: props.env,
                 }
             })
                 .then(response => setDtdData(response['data']))
@@ -28,6 +29,7 @@ const ContributionPnl = (props) => {
             axios.get(props.server + 'home/robot_pnl/', {
                 params: {
                     start_date: date.substr(0,7)+'-01',
+                    env: props.env,
                 }
             })
                 .then(response => setMtdData(response['data']))
@@ -40,6 +42,7 @@ const ContributionPnl = (props) => {
             axios.get(props.server + 'home/robot_pnl/', {
                 params: {
                     start_date: date.substr(0,4)+'-01-01',
+                    env: props.env,
                 }
             })
                 .then(response => setYtdData(response['data']))
@@ -52,13 +55,13 @@ const ContributionPnl = (props) => {
     return (
         <Row style={{height: '300px', width: '100%', margin: '0px', padding: '10px'}}>
             <Col style={{height: '100%'}}>
-                <BarCharting data={dtdData} horizontal={true}/>
+                <BarCharting data={dtdData} horizontal={false} xLabel={true}/>
             </Col>
             <Col style={{height: '100%'}}>
-                <BarCharting data={mtdData} horizontal={true}/>
+                <BarCharting data={mtdData} horizontal={false} xLabel={true}/>
             </Col>
             <Col style={{height: '100%'}}>
-                <BarCharting data={ytdData} horizontal={true}/>
+                <BarCharting data={ytdData} horizontal={false} xLabel={true}/>
             </Col>
         </Row>
     );

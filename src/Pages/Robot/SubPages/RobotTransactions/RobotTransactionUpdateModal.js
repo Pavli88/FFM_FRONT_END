@@ -34,6 +34,7 @@ const RobotTransactionUpdateModal = (props) => {
             close_price: closePrice,
             open_time: openTime,
             close_time: closeTime,
+            id: props.data[9],
         })
             .catch((error) => {
                 console.error('Error Message:', error);

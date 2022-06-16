@@ -15,8 +15,23 @@ import DateSelectorRobotPage from "../Pages/Robot/DateSelectorRobotPage";
 import ServerContext from "../context/server-context";
 import {store} from "react-notifications-component";
 import axios from "axios";
+import DateContext from "../context/date-context";
 
 const Navigation = (props) => {
+    const startDate = useContext(DateContext)['startDate']
+    const endDate = useContext(DateContext)['endDate']
+    const setStartDate = useContext(DateContext)['saveStartDate']
+    const setEndDate = useContext(DateContext)['saveEndDate']
+    const startDateHandler = (event) => {
+        setStartDate(event.target.value);
+    };
+    const endDateHandler = (event) => {
+        if (event.target.value < startDate) {
+            alert('End date can not be less then start date!');
+        }else {
+            setEndDate(event.target.value);
+        };
+    };
     const server = useContext(ServerContext)['server'];
     const [showNewAccount, setShowNewAccount] = useState(false);
     const envChange = (envValue) => {
@@ -31,7 +46,7 @@ const Navigation = (props) => {
     };
     return (
             <Navbar bg="dark" variant="dark">
-                <Navbar.Brand href="#home">FFM SYSTEM</Navbar.Brand>
+                <Navbar.Brand href="react">FFM SYSTEM</Navbar.Brand>
                 <Nav className="mr-auto">
                     <Nav.Link as={Link} to={'/home'}>Home</Nav.Link>
                     <Nav.Link as={Link} to={'/portfolio'}>Portfolio</Nav.Link>
@@ -44,13 +59,34 @@ const Navigation = (props) => {
                         <NavDropdown.Item>Update</NavDropdown.Item>
                         <NavDropdown.Item>Delete</NavDropdown.Item>
                     </NavDropdown>
+                    <NavDropdown title="Period">
+                        <Form.Label>From</Form.Label>
+                        <FormControl
+                            type="date"
+                            className="me-2"
+                            aria-label="Search"
+                            defaultValue={startDate}
+                            onChange={startDateHandler}
+                        />
+                        <Form.Label>To</Form.Label>
+                        <FormControl
+                            type="date"
+                            className="me-2"
+                            aria-label="Search"
+                            defaultValue={endDate}
+                            onChange={endDateHandler}
+                        />
+                    </NavDropdown>
                 </Nav>
-                <DateSelectorRobotPage/>
+                {/*<DateSelectorRobotPage/>*/}
                 <Notifications server={server}/>
                 {/*<Form inline style={{margin: '5px'}}>*/}
                 {/*    <FormControl type="text" placeholder="Search" className="mr-sm-2"/>*/}
                 {/*    <Button variant="outline-info">Search</Button>*/}
                 {/*</Form>*/}
+                <Nav.Link href="#" disabled>
+                    Environment
+                </Nav.Link>
                 <Dropdown onSelect={envChange} style={{margin: '5px'}}>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                         {props.env}

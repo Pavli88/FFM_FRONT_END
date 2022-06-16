@@ -45,14 +45,14 @@ const HomePage = (props) => {
                     <h4 style={{textAlign:'left', marginTop:'0px', marginBottom:'15px'}}>Balance</h4>
                     <BalanceDashBoard server={server} env={env}/>
                     <h4 style={{textAlign:'left', marginTop:'15px'}}>Total Robot Results</h4>
-                    <TopLevel server={server}/>
+                    <TopLevel server={server} env={env}/>
                 </Col>
                 <Col style={{height: '1000px', width:'50%', margin:'15px'}}>
                     <h4>Profit</h4>
-                    <PnLPanel server={server}/>
-                    <ContributionPnl server={server}/>
+                    <PnLPanel server={server} env={env}/>
+                    <ContributionPnl server={server} env={env}/>
                     <h4>Performance</h4>
-                    <PerfDashBoard server={server} env={env}/>
+                    <PerfDashBoard server={server} env={env} env={env}/>
                 </Col>
             </Row>
         </Container>

@@ -6,6 +6,8 @@ import axios from "axios";
 import {store} from "react-notifications-component";
 import {forEach} from "react-bootstrap/ElementChildren";
 
+// Icons
+import { BsGraphDown, BsBell, BsCpu, BsExclamationTriangle} from 'react-icons/bs';
 
 const Notifications = (props) => {
     const startDate = new Date().toISOString().substr(0,10);
@@ -89,16 +91,24 @@ const Notifications = (props) => {
     return (
         <>
             <Form style={{margin: '5px'}}>
-                <Button id={'notError'}>Error Notifications</Button>
+                <Button className="rounded-circle block-example border border-light" id={'notError'} style={{background: '#49A75D', border:''}}>
+                    <BsExclamationTriangle style={{}}/>
+                </Button>
             </Form>
             <Form style={{margin: '5px'}}>
-                <Button id={'notRisk'}>Risk Notifications</Button>
+                <Button className="rounded-circle block-example border border-light" id={'notRisk'} style={{background: '#49A75D'}}>
+                    <BsGraphDown />
+                </Button>
             </Form>
             <Form onClick={procNotHandler} style={{margin: '5px'}}>
-                <Button id={'notProcess'}>Process Notifications</Button>
+                <Button className="rounded-circle block-example border border-light" id={'notProcess'} style={{background: '#49A75D'}}>
+                    <BsCpu style={{}}/>
+                </Button>
             </Form>
             <Form style={{margin: '5px'}}>
-                <Button onClick={tradeNotHandler} id={'notTrades'}>Trade Notifications</Button>
+                <Button className="rounded-circle block-example border border-light" onClick={tradeNotHandler} id={'notTrades'} style={{background: '#49A75D'}}>
+                    <BsBell style={{}}/>
+                </Button>
             </Form>
         </>
     );

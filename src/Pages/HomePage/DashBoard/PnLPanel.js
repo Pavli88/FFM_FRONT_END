@@ -16,6 +16,7 @@ const PnLPanel = (props) => {
             axios.get(props.server + 'home/total_robot_pnl/', {
                 params: {
                     start_date: date,
+                    env: props.env,
                 }
             })
                 .then(response => setDtdData(response['data'][0]['data']))
@@ -29,6 +30,7 @@ const PnLPanel = (props) => {
             axios.get(props.server + 'home/total_robot_pnl/', {
                 params: {
                     start_date: date.substr(0,7)+'-01',
+                    env: props.env,
                 }
             })
                 .then(response => setMtdData(response['data'][0]['data']))
@@ -41,6 +43,7 @@ const PnLPanel = (props) => {
             axios.get(props.server + 'home/total_robot_pnl/', {
                 params: {
                     start_date: date.substr(0,4)+'-01-01',
+                    env: props.env,
                 }
             })
                 .then(response => setYtdData(response['data'][0]['data']))

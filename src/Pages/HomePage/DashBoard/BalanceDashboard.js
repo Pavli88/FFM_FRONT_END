@@ -13,7 +13,10 @@ const BalanceDashBoard = (props) => {
     const totalBalance = chData.reduce((a, b) => a + b, 0)
 
     useEffect(() => {
-            axios.get(props.server + 'home/total_robot_balances_by_date/',)
+            axios.get(props.server + 'home/total_robot_balances_by_date/',{
+                params: {
+                    env: props.env,
+                }})
                 .then(function (response) {
                     setChData(response['data'].map(item => item['y']));
                     setLabelData(response['data'].map(item => item['x']))
