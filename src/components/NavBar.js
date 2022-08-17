@@ -49,7 +49,7 @@ const Navigation = (props) => {
                 <Navbar.Brand href="react">FFM SYSTEM</Navbar.Brand>
                 <Nav className="mr-auto">
                     <Nav.Link as={Link} to={'/home'}>Home</Nav.Link>
-                    <Nav.Link as={Link} to={'/portfolio'}>Portfolio</Nav.Link>
+                    <Nav.Link as={Link} to={'/portfolio/dashboard'}>Portfolio</Nav.Link>
                     <Nav.Link as={Link} to={'/robot/dashboard'}>Robot</Nav.Link>
                     <Nav.Link as={Link} to={'/risk'}>Risk</Nav.Link>
                     <Nav.Link as={Link} to={'/instruments'}>Instrument</Nav.Link>

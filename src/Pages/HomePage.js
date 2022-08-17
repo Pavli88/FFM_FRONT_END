@@ -41,13 +41,13 @@ const HomePage = (props) => {
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
             <Row style={{height: window.innerHeight}}>
-                <Col style={{height: '1000px', width:'50%', margin:'15px'}}>
+                <Col style={{height: '800px', width:'50%', margin:'15px'}}>
                     <h4 style={{textAlign:'left', marginTop:'0px', marginBottom:'15px'}}>Balance</h4>
                     <BalanceDashBoard server={server} env={env}/>
                     <h4 style={{textAlign:'left', marginTop:'15px'}}>Total Robot Results</h4>
-                    <TopLevel server={server} env={env}/>
+                    <TopLevel server={server} env={env} />
                 </Col>
-                <Col style={{height: '1000px', width:'50%', margin:'15px'}}>
+                <Col style={{height: '800px', width:'50%', margin:'15px'}}>
                     <h4>Profit</h4>
                     <PnLPanel server={server} env={env}/>
                     <ContributionPnl server={server} env={env}/>

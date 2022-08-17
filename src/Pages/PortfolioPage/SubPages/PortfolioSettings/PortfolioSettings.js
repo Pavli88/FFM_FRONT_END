@@ -1,15 +1,27 @@
 import Card from "react-bootstrap/Card";
-
-import "../../../PortfolioPage.css"
-import "../../../MainCSS.css"
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 
 const PortfolioSettings = (props) => {
     return (
-        <Card className="card">
-            <Card.Title className="card-header-first">Settings</Card.Title>
-            <h2>Price source</h2>
-
-        </Card>
+        <Container>
+            <Row>
+                <Card className="card">
+                    <Card.Title className="card-header-first">Settings</Card.Title>
+                </Card>
+            </Row>
+            <Row>
+                <Card className="card">
+                    <Card.Title className="card-header-first">Valuation</Card.Title>
+                </Card>
+            </Row>
+            <Row>
+                <Card className="card">
+                    <Card.Title className="card-header-first">Trade Routing</Card.Title>
+                </Card>
+            </Row>
+        </Container>
     );
 };
 

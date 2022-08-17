@@ -60,7 +60,6 @@ const RobotDrawDown = (props) => {
             }
         ]
     };
-
     return (
         <Card className="card" style={{margin:'0px'}}>
             <Card.Title className="card-header-first">Drawdown</Card.Title>

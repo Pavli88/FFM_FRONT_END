@@ -2,6 +2,11 @@ import CardWidgetMiddle from "../../../../components/CardWidgetMiddle";
 import LineCharts from "../../../../components/Charts/LineCharts";
 import RobotCashFlowTable from "./RobotCashFlowTable";
 import RobotStatistics from "./RobotStatistics";
+import RobotCashFlowChart from "./RobotCashFlowChart";
+import RobotGeneralInformation from "./RobotGeneralInformation";
+import RobotDrawDown from "../RobotRisk/RobotDrawDown";
+import RobotReturn from "../RobotReturn/RobotReturn";
+
 // Bootstrap
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -10,6 +15,10 @@ import Container from "react-bootstrap/Container";
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import DateContext from "../../../../context/date-context";
+import Card from "react-bootstrap/Card";
+
+//CSS
+import './RobotDashBoardPage.css'
 
 const RobotDashBoardPage = (props) => {
     const startDate = useContext(DateContext)['startDate'];
@@ -21,6 +30,7 @@ const RobotDashBoardPage = (props) => {
     const [robotData, setRobotData] = useState([props.default]);
     const [priceData, setPriceData] = useState([]);
     const totalProfit = Math.round(pnlData.reduce((a, b) => a + b, 0) * 100) / 100
+    const totalCashFlow = Math.round(cashFlowData.reduce((a, b) => a + b, 0) * 100) / 100
     useEffect(() => {
             axios.get(props.server + 'robots/get_robot/'+props.robot)
                 .then(response => response['data'].map(data=>data))
@@ -47,8 +57,6 @@ const RobotDashBoardPage = (props) => {
                 });
         }, [props]
     );
-
-    // console.log(chartData)
     useEffect(() => {
             axios.get(props.server + 'robots/get_balance/', {
                 params: {
@@ -73,86 +81,122 @@ const RobotDashBoardPage = (props) => {
                 });
         }, [props]
     );
+    const balanceChartDataSet = {
+        series: [
+            {
+                name: "Balance",
+                type: 'line',
+                data: balanceData,
+            },
+            {
+                name: "Cash Flow",
+                type: 'bar',
+                data: cashFlowData,
+            }
+        ],
+        yaxis: [
+            {
+                min: Math.min(...balanceData),
+                title: {
+                    text: 'Balance',
+                },
+                labels: {
+                    formatter: function (val) {
+                        return val.toFixed(2);
+                    }
+                },
+            },
+            {
+                opposite: true,
+                title: {
+                    text: 'Cash Flow',
+
+                },
+                labels: {
+                    formatter: function (val) {
+                        return val.toFixed(2);
+                    }
+                },
+            }
+        ],
+        title: 'Balance',
+        subTitle: Math.round(balanceData[balanceData.length - 1] * 100) / 100,
+        pnl: Math.round((balanceData[balanceData.length-1]-balanceData[0])*100)/100,
+        perReturn: Math.round(((balanceData[balanceData.length-1]-balanceData[0]-totalCashFlow)/balanceData[0])*10000)/100,
+    }
+
+    const balanceSubtitle =
+        <Card.Subtitle className="mb-2 text-muted" style={{textAlign: 'left', fontSize: 40, paddingLeft: '15px'}}>
+            <div>
+                <div>
+                    {balanceChartDataSet.subTitle + ' USD '}
+                </div>
+            </div>
+        </Card.Subtitle>
+
+    const robotGeneralInformation = {
+        'strategy': robotData[0]['strategy'],
+        'security': robotData[0]['security'],
+        'inception_date': robotData[0]['inception_date'],
+        'broker': robotData[0]['broker'],
+        'account_number': robotData[0]['account_number'],
+        'price': Math.round(priceData['price'] * 100) / 100,
+        'date': priceData['date'],
+        'end_date': endDate,
+    }
     return (
         <Container fluid>
-            <Row style={{height:'100px'}}>
-                <Col style={{height:'100%'}}>
-                    <CardWidgetMiddle title={'Strategy'}>
-                        <p style={{margin:'auto', verticalAlign:'middle', fontSize:16}}>{robotData[0]['strategy']}</p>
-                    </CardWidgetMiddle>
-                </Col>
-                <Col style={{height:'100%'}}>
-                    <CardWidgetMiddle title={'Security'}>
-                        <p style={{margin:'auto', verticalAlign:'middle', fontSize:16}}>{robotData[0]['security']}</p>
-                    </CardWidgetMiddle>
-                </Col>
-                <Col style={{height:'100%'}}>
-                    <CardWidgetMiddle title={'Inception Date'}>
-                        <p style={{margin:'auto', verticalAlign:'middle', fontSize:16}}>{robotData[0]['inception_date']}</p>
-                    </CardWidgetMiddle>
-                </Col>
-                <Col style={{height:'100%'}}>
-                    <CardWidgetMiddle title={'Broker'}>
-                        <p style={{margin:'auto', verticalAlign:'middle', fontSize:16}}>{robotData[0]['broker']}</p>
-                    </CardWidgetMiddle>
-                </Col>
-                <Col style={{height:'100%'}}>
-                    <CardWidgetMiddle title={'Account Number'}>
-                        <p style={{margin:'auto', verticalAlign:'middle', fontSize:16}}>{robotData[0]['account_number']}</p>
-                    </CardWidgetMiddle>
-                </Col>
-                <Col style={{height:'100%'}}>
-                    <CardWidgetMiddle title={'Last Price'}>
-                        <p style={{margin:'auto', verticalAlign:'middle', fontSize:16}}>{Math.round(priceData['price'] * 100) / 100}</p>
-                    </CardWidgetMiddle>
-                </Col>
-                <Col style={{height:'100%'}}>
-                    <CardWidgetMiddle title={'Last Pricing Date'}>
-                        <p style={{margin:'auto', verticalAlign:'middle', fontSize:16, color: priceData['date'] < endDate ? 'red': 'green'}}>{priceData['date']}</p>
-                    </CardWidgetMiddle>
-                </Col>
-            </Row>
-            <Row style={{height:'600px', marginTop:'15px'}}>
-                <Col style={{height:'100%'}}>
-                    <RobotStatistics server={props.server} robot={props.robot}/>
-                </Col>
+            <RobotGeneralInformation data={robotGeneralInformation}/>
+            <Row style={{height:'80%', marginTop:'20px'}}>
                 <Col style={{height: '100%'}}>
-                    <div style={{height:'80%'}}>
-                        <LineCharts data={balanceData} title={'Balance History'}/>
-                    </div>
-                    <div style={{height:'20%', padding:'0px', marginTop:'4px'}}>
-                        <CardWidgetMiddle title={'Last Balance'} >
-                            <p style={{
-                                margin: 'auto',
-                                verticalAlign: 'middle',
-                                fontSize: 40
-                            }}>{Math.round(balanceData[balanceData.length - 1] * 100) / 100}</p>
-                        </CardWidgetMiddle>
-                    </div>
+                    <Row style={{height:'50%'}}>
+                        <Col>
+                            <LineCharts metaData={balanceChartDataSet} subTitle={balanceSubtitle}/>
+                        </Col>
+                    </Row>
+                    <Row style={{height:'50%', marginTop:'20px'}}>
+                        <Col>
+                            <RobotCashFlowTable server={props.server} robot={props.robot}/>
+                        </Col>
+                    </Row>
                 </Col>
                 <Col style={{height:'100%'}}>
-                    <RobotCashFlowTable server={props.server} robot={props.robot}/>
+                    <Row style={{height:'20%'}}>
+                        <Col>
+                            <CardWidgetMiddle title={'Profit'}>
+                                <p className={'card-paragraph-profit'} style={{color: totalProfit > 0 ? 'darkgreen' : 'darkred',}}>{totalProfit}</p>
+                            </CardWidgetMiddle>
+                        </Col>
+                        <Col>
+                            <CardWidgetMiddle title={'Deposit'}>
+                                {/*<p className={'card-paragraph'}>{profitSubtitle}</p>*/}
+                            </CardWidgetMiddle>
+                        </Col>
+                        <Col>
+                            <CardWidgetMiddle title={'Withdraw'}>
+                                {/*<p className={'card-paragraph'}>{profitSubtitle}</p>*/}
+                            </CardWidgetMiddle>
+                        </Col>
+                    </Row>
+                    <Row style={{height:'80%', marginTop:'20px'}}>
+                        <RobotStatistics server={props.server} robot={props.robot}/>
+                    </Row>
+                </Col>
+                <Col style={{height:'100%'}}>
+                    <Row style={{height:'50%'}}>
+                        <Col>
+                            <RobotReturn robot={props.robot} start_date={startDate} end_date={endDate}
+                                     server={props.server}/>
+                        </Col>
+                    </Row>
+                    <Row style={{height:'50%', marginTop:'20px'}}>
+                        <Col>
+                            <RobotDrawDown robot={props.robot} server={props.server}/>
+                        </Col>
+                    </Row>
+
                 </Col>
             </Row>
-            {/*<Row style={{height:'200px',marginTop:'15px'}}>*/}
-            {/*    <Col>*/}
-            {/*        <CardWidgetMiddle title={'Total Profit'}>*/}
-            {/*            <p style={{margin:'auto', verticalAlign:'middle', fontSize:40, color: totalProfit < 0 ? '#E32227':'#007500'}}>{totalProfit}</p>*/}
-            {/*        </CardWidgetMiddle>*/}
-            {/*    </Col>*/}
-            {/*    <Col>*/}
-            {/*        <Col style={{margin:'5px'}}>*/}
-            {/*            <CardWidgetMiddle title={'Inflow'}>*/}
-            {/*            <p style={{margin:'auto', verticalAlign:'middle', fontSize:40}}>{cashFlowData.reduce((a, b) => a + b, 0)}</p>*/}
-            {/*        </CardWidgetMiddle>*/}
-            {/*        </Col>*/}
-            {/*        <Col style={{margin:'5px'}}>*/}
-            {/*            <CardWidgetMiddle title={'Outflow'}>*/}
-            {/*            <p style={{margin:'auto', verticalAlign:'middle', fontSize:40}}>{cashFlowData.reduce((a, b) => a + b, 0)}</p>*/}
-            {/*        </CardWidgetMiddle>*/}
-            {/*        </Col>*/}
-            {/*    </Col>*/}
-            {/*</Row>*/}
         </Container>
     );
 };

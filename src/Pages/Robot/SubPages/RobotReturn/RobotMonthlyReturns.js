@@ -5,19 +5,16 @@ import Chart from "react-apexcharts";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-const RobotDailyReturns = (props) => {
-    const [chartData, setChartData] = useState([]);
-    const dailyReturnList = chartData.map(data => Math.round(data['ret']*10000)/100)
+const RobotMonthlyReturns = (props) => {
+    const [monthlyChartData, setMonthlyChartData] = useState([]);
     useEffect(() => {
-            axios.get(props.server + 'robots/get_balance/', {
+            axios.get(props.server + 'robots/monthly_returns_calc/', {
                 params: {
                     robot: props.robot,
-                    start_date: props.start_date,
-                    end_date: props.end_date
+                    year: '2022'
                 }
             })
-                .then(response => response['data'].map(data=>data))
-                .then(data=>setChartData(data))
+                .then(response => setMonthlyChartData(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
@@ -39,7 +36,7 @@ const RobotDailyReturns = (props) => {
             annotations: {
                 yaxis: [
                     {
-                        y: -5,
+                        y: -10,
                         borderColor: '#BF4737',
                         label: {
                             borderColor: '#BF4737',
@@ -47,18 +44,17 @@ const RobotDailyReturns = (props) => {
                                 color: '#fff',
                                 background: '#BF4737'
                             },
-                            text: 'Daily Risk Limit'
+                            text: 'Monthly Risk Limit'
                         }
                     }
                 ]
             },
             xaxis: {
-                categories: [],
-                labels: {show: false}
+                // categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                // labels: {show: true}
             },
             yaxis: [
                 {
-                    tickAmount: 10,
                     labels: {
                         formatter: function (val) {
                             return val.toFixed(0);
@@ -67,27 +63,19 @@ const RobotDailyReturns = (props) => {
                 }
             ],
             dataLabels: {
-                enabled: false,
-                textAnchor: 'middle',
-                style: {
-                    fontSize: '14px',
-                    fontFamily: 'Helvetica, Arial, sans-serif',
-                    fontWeight: 'bold',
-                    colors: undefined
-                },
+                enabled: false
             },
         },
         series: [
             {
-                name: "Daily Retur",
-                data: dailyReturnList,
+                name: "Monthly Return",
+                data: monthlyChartData,
             }
         ]
     };
-
     return (
         <Card className="card" style={{margin: '0px'}}>
-            <Card.Title className="card-header-first">Daily Returns</Card.Title>
+            <Card.Title className="card-header-first">Monthly Returns</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>
@@ -104,5 +92,4 @@ const RobotDailyReturns = (props) => {
         </Card>
     );
 };
-
-export default RobotDailyReturns;
+export default RobotMonthlyReturns;

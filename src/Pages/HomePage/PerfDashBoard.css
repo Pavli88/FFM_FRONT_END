@@ -1,7 +1,10 @@
-.table-row-robot-name{
-    text-align: left;
+.table-row{
+    vertical-align: middle;
+    font-size: 26px;
 }
 
-.table-row-other{
-    text-align: center;
+.table-header{
+    vertical-align: middle;
+    font-size: 26px;
+    font-weight: bold;
 }

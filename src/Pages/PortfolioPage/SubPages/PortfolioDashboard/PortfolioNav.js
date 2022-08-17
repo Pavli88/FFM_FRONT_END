@@ -1,14 +1,21 @@
+import {useEffect, useState} from "react";
+import axios from "axios";
+import CumulativeReturnChart from "../../../Robot/Charts/CumulativeReturn";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Chart from "react-apexcharts";
 
-const LineCharts = (props) => {
+const PortfolioNav = (props) => {
     const chartOptions = {
         options: {
             chart: {
+                type: 'area',
                 toolbar: false,
-                id: "balance-cashflow"
+                id: "portfolio-nav-chart",
+                zoom: {
+            enabled: false
+          }
             },
             xaxis: {
                 categories: [],
@@ -30,14 +37,24 @@ const LineCharts = (props) => {
                     offsetY: 0
                 },
             },
-            yaxis: props.metaData.yaxis,
+            yaxis: [
+                {
+                    labels: {
+                        formatter: function (val) {
+                            return val.toFixed(0);
+                        }
+                    }
+                }
+            ],
             dataLabels: {
                 enabled: false
             },
         },
-
+        stroke: {
+          curve: 'straight'
+        },
         title: {
-            text: 'Cumulative Return',
+            text: 'NAV History',
             align: 'left',
             margin: 10,
             offsetX: 0,
@@ -50,18 +67,26 @@ const LineCharts = (props) => {
                 color: '#263238'
             },
         },
+        series: [
+            {
+                type: 'area',
+                name: "NAV History",
+                data: props.data,
+            }
+        ]
     };
+
     return (
         <Card className="card" style={{margin: '0px'}}>
-            <Card.Title className="card-header-first">{props.metaData.title}</Card.Title>
-            {props.subTitle}
+            <Card.Title className="card-header-first">NAV History</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>
                         <div style={{padding: '0px', height: '100%'}}>
                             <Chart
                                 options={chartOptions.options}
-                                series={props.metaData.series}
+                                series={chartOptions.series}
+                                type={'area'}
                                 width="100%"
                                 height="100%"
                             />
@@ -72,4 +97,4 @@ const LineCharts = (props) => {
         </Card>
     );
 };
-export default LineCharts;
+export default PortfolioNav;

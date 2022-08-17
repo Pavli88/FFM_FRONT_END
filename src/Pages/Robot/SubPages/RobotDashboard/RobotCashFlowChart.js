@@ -1,26 +1,29 @@
 import Card from "react-bootstrap/Card";
-import Row from 'react-bootstrap/Row';
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Chart from "react-apexcharts";
 
-import "../MainCSS.css"
-import {useEffect, useState} from "react";
-import axios from "axios";
-import Col from "react-bootstrap/Col";
-
-const RobotCashFlow = (props) => {
-
+const RobotCashFlowChart = (props) => {
     const chartOptions = {
         options: {
             chart: {
                 toolbar: false,
                 id: "basic-bar"
             },
+            colors: [function(value){
+                if (value['value'] < 0){
+                    return '#E32227'
+                }else {
+                    return '#007500'
+                }
+            }],
             xaxis: {
                 categories: [],
                 labels: {show: false}
             },
             yaxis: [
                 {
+                    tickAmount: 10,
                     labels: {
                         formatter: function (val) {
                             return val.toFixed(0);
@@ -29,22 +32,28 @@ const RobotCashFlow = (props) => {
                 }
             ],
             dataLabels: {
-                enabled: false
+                enabled: false,
+                textAnchor: 'middle',
+                style: {
+                    fontSize: '14px',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontWeight: 'bold',
+                    colors: undefined
+                },
             },
         },
         series: [
             {
-                name: "series-1",
+                name: "Flows",
                 data: props.data,
             }
         ]
     };
-
     return (
         <Card className="card" style={{margin: '0px'}}>
-            <Card.Title className="card-header-first">Cash Flow History</Card.Title>
+            <Card.Title className="card-header-first">Flows</Card.Title>
             <Card.Body style={{padding: '0px'}}>
-                <Row style={{height: '100%'}}>
+                <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>
                         <Chart
                             options={chartOptions.options}
@@ -59,5 +68,4 @@ const RobotCashFlow = (props) => {
         </Card>
     );
 };
-
-export default RobotCashFlow;
+export default RobotCashFlowChart;

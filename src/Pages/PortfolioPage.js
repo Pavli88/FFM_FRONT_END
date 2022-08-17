@@ -41,6 +41,7 @@ import PortfolioHoldingsPage from "./PortfolioPage/SubPages/PortfolioHoldings/Po
 import PortfolioDashBoardPage from "./PortfolioPage/SubPages/PortfolioDashboard/PortfolioDashBoardPage";
 import PortfolioSettingsPage from "./PortfolioPage/SubPages/PortfolioSettings/PortfolioSettingsPage";
 import PortfolioTransactionsPage from "./PortfolioPage/SubPages/PortfolioTransactions/PortfolioTransactionsPage";
+import PortfolioDataImport from "./PortfolioPage/SubPages/PortfolioImport/PortfolioDataImport";
 
 const PortfolioPage = (props) => {
     // Date variables
@@ -80,6 +81,14 @@ const PortfolioPage = (props) => {
         setNewRobotTrade(false);
     };
 
+    // Import Modal
+    const [showImportModal, setShowImportModal] = useState(false);
+    const showImport = () => {
+        setShowImportModal(true);
+    };
+    const hideImportModal = () => {
+        setShowImportModal(false);
+    };
     // New portfolio cash flow
     const [showNewPortCashFlow, setNewPortCashFlow] = useState(false);
     const showNewPortCashFlowForm = () => {
@@ -148,6 +157,7 @@ const PortfolioPage = (props) => {
                         <MenuItem>Settings
                             <Link to="/portfolio/settings"/>
                         </MenuItem>
+                        <MenuItem onClick={showImport}>Import</MenuItem>
                     </Menu>
                     </ProSidebar>;
                 <Col style={{width: '50%'}}>
@@ -155,13 +165,11 @@ const PortfolioPage = (props) => {
                         padding: '15px',
                         height: window.innerHeight,
                         width: '100%',
-                        background: 'green',
                         margin: '0px'
                     }}>
                         <Switch>
                             <Route path="/portfolio/dashboard">
-                                <PortfolioDashBoardPage portfolio={portfolio} server={server} default={portfolios[0]}
-                                />
+                                <PortfolioDashBoardPage portfolio={portfolio} server={server} default={portfolios[0]}/>
                             </Route>
                             <Route path="/portfolio/holdings">
                                 <PortfolioHoldingsPage portfolio={portfolio} server={server}/>
@@ -200,6 +208,7 @@ const PortfolioPage = (props) => {
             <NewPortCashFlow show={showNewPortCashFlow} hide={hideNewPortCashFlow} portfolio={portfolio} server={server}/>
             <PositionCalculation show={showPosCalc} hide={hidePosCalcForm} server={server} portfolio={portfolio}/>
             <CashHoldingCalculation show={showCashCalc} hide={hideCashCalcForm} server={server} portfolio={portfolio}/>
+            <PortfolioDataImport show={showImportModal} hide={hideImportModal} server={server}/>
         </Container>
     );
 };

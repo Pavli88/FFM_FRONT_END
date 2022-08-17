@@ -1,0 +1,13 @@
+.card-paragraph{
+    margin: auto;
+    vertical-align: middle;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.card-paragraph-profit{
+    margin: auto;
+    vertical-align: middle;
+    font-size: 40px;
+
+}

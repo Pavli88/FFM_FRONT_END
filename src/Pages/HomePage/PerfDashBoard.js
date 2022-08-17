@@ -5,6 +5,9 @@ import axios from "axios";
 import './PerfDashBoard.css'
 import Row from "react-bootstrap/Row";
 
+//CSS
+import './PerfDashBoard.css'
+
 const PerformanceDashboard = (props) => {
 
     // Fetching Robot balance data
@@ -22,11 +25,11 @@ const PerformanceDashboard = (props) => {
 
     const perfRespData = perfData.map((record) =>
     <tr key={record['robot']['id']}>
-        <td style={{fontSize: 14, verticalAlign:"middle"}} className="table-row-robot-name">{record['robot']['name']}</td>
-        <td style={{fontSize: 14, verticalAlign:"middle", color: record['balance']<0.0 ? 'red': 'green'}} className="table-row-other">{record['balance']}</td>
-        <td style={{fontSize: 14, verticalAlign:"middle", color: record['dtd_ret']<0.0 ? 'red': 'green'}} className="table-row-other">{record['dtd_ret']} %</td>
-        <td style={{fontSize: 14, verticalAlign:"middle", color: record['mtd_ret']<0.0 ? 'red': 'green'}} className="table-row-other">{record['mtd_ret']} %</td>
-        <td style={{fontSize: 14, verticalAlign:"middle", color: record['ytd_ret']<0.0 ? 'red': 'green'}} className="table-row-other">{record['ytd_ret']} %</td>
+        <td className={'table-row'}>{record['robot']['name']}</td>
+        <td className={'table-row'} style={{color: record['balance']<0.0 ? 'red': 'green'}}>{record['balance']}</td>
+        <td className={'table-row'} style={{color: record['dtd_ret']<0.0 ? 'red': 'green'}}>{record['dtd_ret']} %</td>
+        <td className={'table-row'} style={{color: record['mtd_ret']<0.0 ? 'red': 'green'}}>{record['mtd_ret']} %</td>
+        <td className={'table-row'} style={{color: record['ytd_ret']<0.0 ? 'red': 'green'}}>{record['ytd_ret']} %</td>
     </tr>);
 
     return (
@@ -36,12 +39,12 @@ const PerformanceDashboard = (props) => {
                     <Table>
                         <thead>
                         <tr>
-                            <th style={{fontSize: 14, verticalAlign: "middle"}} className="table-row-robot-name">Robot
+                            <th className={'table-header'}>Robot
                             </th>
-                            <th style={{fontSize: 14, verticalAlign: "middle"}}>Balance</th>
-                            <th style={{fontSize: 14, verticalAlign: "middle"}}>DTD</th>
-                            <th style={{fontSize: 14, verticalAlign: "middle"}}>MTD</th>
-                            <th style={{fontSize: 14, verticalAlign: "middle"}}>YTD</th>
+                            <th className={'table-header'}>Balance</th>
+                            <th className={'table-header'}>DTD</th>
+                            <th className={'table-header'}>MTD</th>
+                            <th className={'table-header'}>YTD</th>
                         </tr>
                         </thead>
                         <tbody>

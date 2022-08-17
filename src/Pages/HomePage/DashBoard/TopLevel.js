@@ -34,10 +34,10 @@ const TopLevel = (props) =>{
     return (
         <Row style={{height: '600px', width: '100%', margin: '0px', padding: '0px'}}>
             <Col style={{height: '100%', width: '50%'}}>
-                <HomePageBarChart data={findCumulativeSum(responseData)} title={'Total Cumulative Year to Date P&L'}/>
+                <HomePageBarChart data={findCumulativeSum(responseData)} title={'Total Cumulative Year to Date P&L'} id={'aggregated-pnl-chart'}/>
             </Col>
             <Col style={{height: '100%', width: '50%'}}>
-                <HomePageBarChart data={responseData} title={'Daily P&L'}/>
+                <HomePageBarChart data={responseData} title={'Daily P&L'} id={'daily-aggregated-pnl-chart'}/>
             </Col>
         </Row>
     )

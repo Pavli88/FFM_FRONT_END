@@ -55,12 +55,16 @@ const NewPortCashFlow = (props) => {
                         <Form.Control onChange={currencyHandler} as="select">
                             <option value={'USD'}>USD</option>
                             <option value={'EUR'}>EUR</option>
+                            <option value={'HUF'}>HUF</option>
                         </Form.Control>
                     </Form.Group>
                     <Form.Group>
                         <Form.Label>Type</Form.Label>
                         <Form.Control onChange={cashTypeHandler} as="select">
                             <option value={'INFLOW'}>Inflow</option>
+                            <option value={'DEPOSIT'}>Deposit</option>
+                            <option value={'WITHDRAW'}>Withdraw</option>
+                            <option value={'COST'}>Cost</option>
                         </Form.Control>
                     </Form.Group>
                 </Form>

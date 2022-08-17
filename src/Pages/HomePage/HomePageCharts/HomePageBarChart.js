@@ -5,8 +5,9 @@ const HomePageBarChart = (props) => {
     const chartOptions = {
         options: {
             chart: {
+                type: 'bar',
                 toolbar: false,
-                id: "basic-bar"
+                id: props.id
             },
             colors: [function(value){
                 if (value['value'] < 0){
@@ -34,7 +35,6 @@ const HomePageBarChart = (props) => {
             dataLabels: {
                 enabled: false
             },
-
         },
         series: [
             {

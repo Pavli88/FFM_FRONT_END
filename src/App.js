@@ -7,7 +7,7 @@ import PortfolioPage from "./Pages/PortfolioPage";
 import TradePage from "./Pages/TradePage";
 import Navigation from "./components/NavBar";
 import RobotPage from "./Pages/RobotPage";
-import InstrumentPage from "./Pages/InstrumentPage";
+import InstrumentPage from "./Pages/InstrumentPage/InstrumentPage";
 
 // Contexts
 import ServerContext from "./context/server-context";
@@ -35,10 +35,10 @@ function App() {
     };
     // Date variables
     const date = new Date();
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 2);
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
-    console.log(startDate)
+    console.log(firstDay.toISOString())
     useEffect(() => {
             axios.get(server + 'portfolios/get_portfolio_data/all')
                 .then(response => setPortfolioData(response['data']))
@@ -47,7 +47,6 @@ function App() {
                 });
         }, []
     );
-
     useEffect(() => {
             axios.get(server + 'robots/get_robots/' + robotEnvData)
                 .then(response => setRobotsData(response['data']))
@@ -69,7 +68,6 @@ function App() {
                         }}>
                             <ReactNotification/>
                             <div className="App">
-
                                 <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
                                 <Switch>
                                     <Route path="/risk">
@@ -91,7 +89,6 @@ function App() {
                                         <RobotPage/>
                                     </Route>
                                 </Switch>
-
                             </div>
                         </DateContext.Provider>
                     </PortfolioContext.Provider>

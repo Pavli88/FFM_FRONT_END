@@ -1,8 +1,8 @@
+import PortfolioSettings from "./PortfolioSettings";
+
 const PortfolioSettingsPage = (props) => {
     return (
-        <>
-            portfolio settings
-        </>
+        <PortfolioSettings/>
     );
 };
 

@@ -8,8 +8,12 @@ const CumulativeReturnChart = (props) => {
     const chartOptions = {
         options: {
             chart: {
+                type: 'area',
                 toolbar: false,
-                id: "basic-bar"
+                id: "basic-bar",
+                zoom: {
+            enabled: false
+          }
             },
             xaxis: {
                 categories: [],
@@ -45,7 +49,9 @@ const CumulativeReturnChart = (props) => {
             },
 
         },
-
+        stroke: {
+          curve: 'straight'
+        },
         title: {
             text: 'Cumulative Return',
             align: 'left',
@@ -63,7 +69,8 @@ const CumulativeReturnChart = (props) => {
 
         series: [
             {
-                name: "series-1",
+                type: 'area',
+                name: "Cumulative Return",
                 data: props.data,
             }
         ]
@@ -79,7 +86,7 @@ const CumulativeReturnChart = (props) => {
                             <Chart
                                 options={chartOptions.options}
                                 series={chartOptions.series}
-                                type={'line'}
+                                type={'area'}
                                 width="100%"
                                 height="100%"
                             />

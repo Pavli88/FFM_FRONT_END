@@ -30,14 +30,18 @@ const RobotTransactionsTable = (props) => {
     return (
         <RobotTransactionContext.Provider value={{saveModalDataParameters: setModalDataParameters}}>
             <Card className="card" style={{margin: '2px', height: '100%'}}>
-                <Card.Title className="card-header-first">Transactions<ReactHTMLTableToExcel
-                    id="test-table-xls-button"
-                    className="download-table-xls-button"
-                    table="transaction-table"
-                    filename="transactions"
-                    sheet="transactions"
-                    buttonText="Export to Excel"/></Card.Title>
-                <div style={{overflowY: 'scroll', overflowX: 'hidden', height:'100%'}}>
+                <Card.Title className="card-header-first">Transactions</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted"
+                               style={{textAlign: 'left', fontSize: 10, paddingLeft: '15px'}}>
+                    <ReactHTMLTableToExcel
+                        id="test-table-xls-button"
+                        className="download-table-xls-button"
+                        table="transaction-table"
+                        filename="transactions"
+                        sheet="transactions"
+                        buttonText="Export to Excel"/>
+                </Card.Subtitle>
+                <div style={{overflowY: 'scroll', overflowX: 'hidden', height: '100%'}}>
                     <Table id={'transaction-table'}>
                         <thead style={{fontSize: 12}}>
                         <tr>
