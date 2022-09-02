@@ -3,14 +3,16 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import {useState} from "react";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const InstrumentNew = (props) => {
     const [showNewInstrumentModal, setShowNewInstrumentModal] = useState(false);
     const [name, setName] = useState();
-    const [internalCode, setInternalCode] = useState();
-    const [broker, setBroker] = useState();
+    const [broker, setBroker] = useState("ffm_system");
     const [sourceCode, setSourceCode] = useState();
-    const [currency, setCurrency] = useState();
+    const [currency, setCurrency] = useState("USD");
+    const [type, setType] = useState("Cash");
 
     const handleClose = () => {
         setShowNewInstrumentModal(false);
@@ -19,10 +21,8 @@ const InstrumentNew = (props) => {
         event.preventDefault();
         axios.post(props.server + 'instruments/new/', {
             inst_name: name,
-            internal_code: internalCode,
-            broker: broker,
-            source_code: sourceCode,
             currency: currency,
+            instrument_type: type,
         })
             .then(function (response) {
                 if (response['data'] == 'New Portfolio is created!') {
@@ -51,27 +51,22 @@ const InstrumentNew = (props) => {
                             <Form.Label>Name</Form.Label>
                             <Form.Control onChange={(e)=>setName(e.target.value)} type="text" required/>
                         </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Internal Code</Form.Label>
-                            <Form.Control onChange={(e)=>setInternalCode(e.target.value)} type="text" required/>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Broker</Form.Label>
-                            <Form.Control onChange={(e)=>setBroker(e.target.value)} type="text" required as={"select"}>
-                                <option hidden>Please select a broker</option>
-                                <option value={"ffm_system"}>FFM System</option>
-                                <option value={"oanda"}>Oanda</option>
-                                <option value={"MAP"}>Magyar Államkincstár</option>
+                        <Form.Group className="form-group">
+                            <Form.Label style={{textAlign: 'left'}}>Type</Form.Label>
+                            <Form.Control onChange={(e)=>setType(e.target.value)} as={'select'}>
+                                <option value={'Cash'}>Cash</option>
+                                <option value={'Commodity'}>Commodity</option>
+                                <option value={'CFD'}>CFD</option>
+                                <option value={'Equity'}>Equity</option>
+                                <option value={'Fixed Income'}>Fixed Income</option>
+                                <option value={'Futures'}>Futures</option>
+                                <option value={'Mutual Fund'}>Mutual Fund</option>
+                                <option value={'Robot'}>Robot</option>
                             </Form.Control>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Broker Ticker</Form.Label>
-                            <Form.Control onChange={(e)=>setSourceCode(e.target.value)} type="text" required/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Currency</Form.Label>
                             <Form.Control onChange={(e)=>setCurrency(e.target.value)} type="text" required as={"select"}>
-                                <option hidden>Please select a currency</option>
                                 <option value={"USD"}>USD</option>
                                 <option value={"EUR"}>EUR</option>
                                 <option value={"HUF"}>HUF</option>

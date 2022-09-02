@@ -13,7 +13,7 @@ import Table from "react-bootstrap/Table";
 
 const PortfolioDetails = (props) => {
     return (
-        <Card className="card" style={{margin:'0px'}}>
+        <Card className="card" style={{margin: '0px'}}>
             <Card.Title className="card-header-first">Portfolio Summary</Card.Title>
             <Card.Body>
                 <div style={{height: '100%'}}>
@@ -47,13 +47,9 @@ const PortfolioDetails = (props) => {
                             <td className={'table-row-text'}>{'Status'}</td>
                             <td className={'table-row'}>{'Funded'}</td>
                         </tr>
-                        <tr key={8}>
-                            <td className={'table-row-text'}>{'NAV'}</td>
-                            <td className={'table-row'}>{'100.000'}</td>
-                        </tr>
-                        <tr key={9}>
-                            <td className={'table-row-text'}>{'Available Cash'}</td>
-                            <td className={'table-row'}>{'800'}</td>
+                        <tr key={7}>
+                            <td className={'table-row-text'}>{'Asset Type'}</td>
+                            <td className={'table-row'}>{'Fixed Income'}</td>
                         </tr>
                         </tbody>
                     </Table>

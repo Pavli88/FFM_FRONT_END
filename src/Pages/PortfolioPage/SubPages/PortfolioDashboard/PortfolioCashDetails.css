@@ -1,0 +1,10 @@
+.table-row-name{
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.table-row-value{
+    text-align: right;
+    font-size: 14px;
+}

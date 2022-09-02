@@ -1,5 +1,7 @@
 import InstrumentSearch from "./InstrumentSearch";
 import InstrumentResultTable from "./InstrumentResultTable";
+import InstrumentSettings from "./InstrumentSettings/InstrumentSettings";
+import InstrumentDetails from "./InstrumentDetails";
 
 // Bootstrap
 import Col from 'react-bootstrap/Col';
@@ -26,26 +28,37 @@ const InstrumentPage = () => {
         'instrument_type': '',
         'source': '',
     }]);
+    const [selectedInstrument, setSelectedInstrument] = useState([{'inst_code': ''}]);
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
 
     return (
         <InstrumentSearchContext.Provider
-            value={{searchResults: instrumentSearchResults, saveInstrumentSearchResults: setInstrumentSearchResults}}>
+            value={{
+                searchResults: instrumentSearchResults,
+                saveInstrumentSearchResults: setInstrumentSearchResults,
+                selectedInstrument: selectedInstrument,
+                saveSelectedInstrument: setSelectedInstrument,
+            }}>
             <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
-                <Row className={"row"} style={{height: '50%', width: '100%'}}>
-                    <Col sm={4}>
-                        <InstrumentSearch server={server}/>
+                <Row className={"row"} style={{height: '90%', width: '100%'}}>
+                    <Col style={{height:'100%'}} sm={4}>
+                        <Row style={{height: '50%'}}>
+                            <InstrumentSearch server={server}/>
+                        </Row>
+                        <Row style={{height: '50%'}}>
+                            <InstrumentDetails server={server} data={selectedInstrument[0]}/>
+                        </Row>
                     </Col>
                     <Col style={{height:'100%'}} sm={8}>
-                        <InstrumentResultTable/>
+                        <InstrumentResultTable server={server}/>
                     </Col>
                 </Row>
-                <Row className={"row"} style={{height: '50%', width: '100%'}}>
-                    <Col>
-                        <InstrumentSearch/>
-                    </Col>
-                </Row>
+                {/*<Row className={"row"} style={{height: '40%', width: '100%'}}>*/}
+                {/*    <Col style={{height:'100%'}}>*/}
+                {/*        */}
+                {/*    </Col>*/}
+                {/*</Row>*/}
             </Container>
         </InstrumentSearchContext.Provider>
     );

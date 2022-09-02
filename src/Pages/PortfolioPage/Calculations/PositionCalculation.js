@@ -17,7 +17,6 @@ const PositionCalculation = (props) => {
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
     const [response, setResponse] = useState([]);
-    const [portfolio, setPortfolio] = useState(props.portfolio);
     const treeData = response.map(function (data, index) {
 
         return <TreeItem nodeId={index.toString()} label={data['portfolio']}>
@@ -41,15 +40,15 @@ const PositionCalculation = (props) => {
     };
     const changePortfolio = (event) => {
         if (event.target.checked){
-            setPortfolio('ALL');
+            // setPortfolio('ALL');
         }else {
-            setPortfolio(props.portfolio);
+            // setPortfolio(props.portfolio);
         };
     };
     const submitHandler = (event) => {
         event.preventDefault();
         axios.post(props.server + 'portfolios/positions/', {
-            portfolio: portfolio,
+            portfolio: props.portfolio,
             start_date: startDate,
             end_date: endDate,
         })
@@ -61,7 +60,7 @@ const PositionCalculation = (props) => {
     return (
         <Modal show={props.show} onHide={handleClose} size={'xl'}>
             <Modal.Header closeButton>
-                <Modal.Title>Portfolio Position Calculation - {portfolio}</Modal.Title>
+                <Modal.Title>Portfolio Position Calculation - {props.portfolio}</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{height: '300px'}}>
                 <Row style={{height: '100%'}}>

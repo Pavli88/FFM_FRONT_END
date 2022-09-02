@@ -1,5 +1,5 @@
 import './App.css';
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Route, Switch} from "react-router-dom";
 import RiskPage from "./Pages/RiskPage";
 import HomePage from "./Pages/HomePage";
@@ -8,6 +8,7 @@ import TradePage from "./Pages/TradePage";
 import Navigation from "./components/NavBar";
 import RobotPage from "./Pages/RobotPage";
 import InstrumentPage from "./Pages/InstrumentPage/InstrumentPage";
+import CalculationsPage from "./Pages/CalculationsPage/CalculationsPage";
 
 // Contexts
 import ServerContext from "./context/server-context";
@@ -15,6 +16,7 @@ import EnvContext from "./context/env-context";
 import PortfolioContext from "./context/portfolio-context";
 import RobotContext from "./context/robot-context";
 import DateContext from "./context/date-context";
+import BrokerContext from "./context/broker-context";
 
 import axios from "axios";
 import Button from "react-bootstrap/Button";
@@ -28,6 +30,7 @@ function App() {
     const [robotEnvData, setRobotEnvData] = useState('live');
     const [portfolioData, setPortfolioData] = useState([]);
     const [robotsData, setRobotsData] = useState([]);
+    const [brokerData, setBrokerData] = useState([{'id': 1,'broker': 'System', 'broker_code': 'ffm_system'}]);
     const server = 'https://pavliati.pythonanywhere.com/'
 
     const getEnvData = (env) => {
@@ -38,10 +41,16 @@ function App() {
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 2);
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
-    console.log(firstDay.toISOString())
+    const currentDate = date.toISOString().substr(0,10);
+
     useEffect(() => {
             axios.get(server + 'portfolios/get_portfolio_data/all')
                 .then(response => setPortfolioData(response['data']))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+            axios.get(server + 'accounts/get_brokers/')
+                .then(response => setBrokerData(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
@@ -55,6 +64,7 @@ function App() {
                 });
         }, []
     );
+
     return (
         <ServerContext.Provider value={{server: server}}>
             <EnvContext.Provider value={{environment: robotEnvData}}>
@@ -65,31 +75,41 @@ function App() {
                             endDate: endDate,
                             saveStartDate: setStartDate,
                             saveEndDate: setEndDate,
+                            currentDate: currentDate,
                         }}>
-                            <ReactNotification/>
-                            <div className="App">
-                                <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
-                                <Switch>
-                                    <Route path="/risk">
-                                        <RiskPage/>
-                                    </Route>
-                                    <Route path="/home">
-                                        <HomePage/>
-                                    </Route>
-                                    <Route path="/trade">
-                                        <TradePage/>
-                                    </Route>
-                                    <Route path="/portfolio">
-                                        <PortfolioPage/>
-                                    </Route>
-                                    <Route path="/instruments">
-                                        <InstrumentPage/>
-                                    </Route>
-                                    <Route path="/robot">
-                                        <RobotPage/>
-                                    </Route>
-                                </Switch>
-                            </div>
+                            <BrokerContext.Provider value={
+                                {
+                                    brokerData: brokerData
+                                }
+                            }>
+                                <ReactNotification/>
+                                <div className="App">
+                                    <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
+                                    <Switch>
+                                        <Route path="/risk">
+                                            <RiskPage/>
+                                        </Route>
+                                        <Route path="/home">
+                                            <HomePage/>
+                                        </Route>
+                                        <Route path="/trade">
+                                            <TradePage/>
+                                        </Route>
+                                        <Route path="/portfolio">
+                                            <PortfolioPage/>
+                                        </Route>
+                                        <Route path="/calculations">
+                                            <CalculationsPage/>
+                                        </Route>
+                                        <Route path="/instruments">
+                                            <InstrumentPage/>
+                                        </Route>
+                                        <Route path="/robot">
+                                            <RobotPage/>
+                                        </Route>
+                                    </Switch>
+                                </div>
+                            </BrokerContext.Provider>
                         </DateContext.Provider>
                     </PortfolioContext.Provider>
                 </RobotContext.Provider>

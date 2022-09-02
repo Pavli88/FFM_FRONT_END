@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import {useContext, useEffect, useState} from "react";
 
 import NewBrokerAccount from "./NewBrokerAccount";
+import NewBroker from "../NavBar/NewBroker";
 import Notifications from "./Notifications";
 import DateSelectorRobotPage from "../Pages/Robot/DateSelectorRobotPage";
 import ServerContext from "../context/server-context";
@@ -17,11 +18,14 @@ import {store} from "react-notifications-component";
 import axios from "axios";
 import DateContext from "../context/date-context";
 
+
 const Navigation = (props) => {
     const startDate = useContext(DateContext)['startDate']
     const endDate = useContext(DateContext)['endDate']
     const setStartDate = useContext(DateContext)['saveStartDate']
     const setEndDate = useContext(DateContext)['saveEndDate']
+    const [showNewAccount, setShowNewAccount] = useState(false);
+    const [brokerModalStatus, setBrokerModalStatus] = useState(false);
     const startDateHandler = (event) => {
         setStartDate(event.target.value);
     };
@@ -33,7 +37,7 @@ const Navigation = (props) => {
         };
     };
     const server = useContext(ServerContext)['server'];
-    const [showNewAccount, setShowNewAccount] = useState(false);
+
     const envChange = (envValue) => {
         props.onEnvChange(envValue);
     };
@@ -54,8 +58,10 @@ const Navigation = (props) => {
                     <Nav.Link as={Link} to={'/risk'}>Risk</Nav.Link>
                     <Nav.Link as={Link} to={'/instruments'}>Instrument</Nav.Link>
                     <Nav.Link as={Link} to={'/trade'}>Trade</Nav.Link>
+                    <Nav.Link as={Link} to={'/calculations'}>Calculations</Nav.Link>
                     <NavDropdown title="Broker Accounts">
-                        <NavDropdown.Item onSelect={newAccountHandler}>New</NavDropdown.Item>
+                        <NavDropdown.Item onSelect={newAccountHandler}>New Account</NavDropdown.Item>
+                        <NavDropdown.Item onSelect={() => setBrokerModalStatus(true)}>New Broker</NavDropdown.Item>
                         <NavDropdown.Item>Update</NavDropdown.Item>
                         <NavDropdown.Item>Delete</NavDropdown.Item>
                     </NavDropdown>
@@ -97,6 +103,7 @@ const Navigation = (props) => {
                     </Dropdown.Menu>
                 </Dropdown>
                 <NewBrokerAccount show={showNewAccount} hide={hideNewAccount} server={server}/>
+                <NewBroker show={brokerModalStatus} hide={() => setBrokerModalStatus(false)} server={server}/>
             </Navbar>
     );
 };

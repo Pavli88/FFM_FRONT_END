@@ -1,0 +1,33 @@
+.table-header-row{
+    font-size: 14px;
+    text-align: left;
+}
+
+.table-cell{
+    font-size: 14px;
+    text-align: left;
+}
+
+.table-cell-pointer{
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.table-row-error{
+    font-size: 14px;
+    text-align: left;
+    color: red;
+}
+
+.table-row-fixed{
+    font-size: 14px;
+    text-align: left;
+    color: darkgreen;
+}
+
+.table-row-alert{
+    font-size: 14px;
+    text-align: left;
+    color: darkgoldenrod;
+}

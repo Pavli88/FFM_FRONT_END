@@ -1,4 +1,4 @@
-import PortfolioTransactionModal from "./PortfolioTransactionModal";
+import PortfolioNewTransaction from "./PortfolioNewTransaction";
 
 import PortfolioBuy from "../../PortfolioBuy";
 import {useEffect, useState} from "react";
@@ -48,6 +48,8 @@ const PortfolioTransactions = (props) => {
                     <td className={'table-row'}>{data[6]}</td>
                     <td className={'table-row'}>{data[7]}</td>
                     <td className={'table-row'}>{data[8]}</td>
+                    <td className={'table-row'}>{data[9]}</td>
+                    <td className={'table-row'}>{data[10]}</td>
                 </tr>
             ))
             .then(data => setPortTransData(data))
@@ -62,24 +64,6 @@ const PortfolioTransactions = (props) => {
                 <Row style={{width: '100%', margin: '0px'}}>
                     <Col sm={2}>
                         <Card.Title className="card-header-first">Transactions</Card.Title>
-                    </Col>
-                    <Col>
-                        <Button onClick={function () {
-                            setRowData({
-                                'id': '',
-                                'portfolio': '',
-                                'quantity': 0.0,
-                                'price': 0.0,
-                                'mv': '',
-                                'trade date': '',
-                                'instrument': '',
-                                'instrument type': '',
-                                'source': '',
-                                'type': ''
-                            });
-                            setShowModal(true);
-                            setModalType('new')
-                        }}>New Transaction</Button>
                     </Col>
                     <Col>
                         <Button onClick={function () {
@@ -115,8 +99,6 @@ const PortfolioTransactions = (props) => {
                     </Table>
                 </div>
             </Card>
-            //Modals
-            <PortfolioTransactionModal show={showModal} hide={() => setShowModal(false)} data={rowData}/>
         </>
 
     );

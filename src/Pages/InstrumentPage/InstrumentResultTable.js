@@ -8,17 +8,27 @@ import "./InstrumentResultTable.css"
 import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-context";
 
 import {useContext, useState} from "react";
+import axios from "axios";
 
 const InstrumentResultTable = (props) => {
     const searchResults = useContext(InstrumentSearchContext)['searchResults']
-    console.log(searchResults)
-    const searchRecords = searchResults.map((data) => <tr key={data['id']}>
+    const saveSelectedInstrument = useContext(InstrumentSearchContext)['saveSelectedInstrument']
+    const searchRecords = searchResults.map((data) => <tr onDoubleClick={()=>getInstrumentData(data['id'])} key={data['id']}>
         <td className={'table-row'}>{data['instrument_name']}</td>
-        <td className={'table-row'}>{data['inst_code']}</td>
         <td className={'table-row'}>{data['instrument_type']}</td>
         <td className={'table-row'}>{data['currency']}</td>
-        <td className={'table-row'}>{data['source']}</td>
     </tr>)
+    const getInstrumentData = (instrumentId) => {
+        axios.get(props.server + 'instruments/get_instruments/', {
+            params: {
+                id: instrumentId,
+            }
+        })
+            .then(response => saveSelectedInstrument(response['data']))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
     return (
         <Card className="card main-layout">
             <Card.Title className="card-header-first">Available Instruments</Card.Title>
@@ -27,10 +37,8 @@ const InstrumentResultTable = (props) => {
                     <thead className="table-header-row">
                     <tr>
                         <td className="table-header-row">Name</td>
-                        <td className="table-header-row">Instrument Code</td>
                         <td className="table-header-row">Instrument Type</td>
                         <td className="table-header-row">Currency</td>
-                        <td className="table-header-row">Source</td>
                     </tr>
                     </thead>
                     <tbody style={{height: '100%', overflow: 'scroll'}}>

@@ -52,7 +52,7 @@ const CashHoldingCalculation = (props) => {
         event.preventDefault();
 
         axios.post(props.server + 'portfolios/cash_holding/', {
-            portfolio: portfolio,
+            portfolio: props.portfolio,
             start_date: startDate,
             end_date: endDate,
         })
@@ -64,7 +64,7 @@ const CashHoldingCalculation = (props) => {
     return (
         <Modal show={props.show} onHide={handleClose} size={'xl'}>
             <Modal.Header closeButton>
-                <Modal.Title>Cash Holding Calculation - {portfolio}</Modal.Title>
+                <Modal.Title>Cash Holding Calculation - {props.portfolio}</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{width: '100%', height: '300px'}}>
                 <Row style={{height:'100%'}}>
