@@ -43,14 +43,17 @@ import PortfolioDataImport from "./PortfolioPage/SubPages/PortfolioImport/Portfo
 import PortfolioNewCashFlowEntry from "./PortfolioPage/SubPages/PortfolioTransactions/PortfolioNewCashFlow";
 import PortfolioBuy from "./PortfolioPage/PortfolioBuy";
 import PortfolioNewTransaction from "./PortfolioPage/SubPages/PortfolioTransactions/PortfolioNewTransaction";
+import PortfolioDetails from "./PortfolioPage/SubPages/PortfolioDashboard/PortfolioDetails";
 
 const PortfolioPage = (props) => {
-    // Date variables
     const defaultRobots = useContext(RobotContext)['robots'];
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
-    const portfolios = useContext(PortfolioContext)['portfolioData'];
+
+    const portfolios = useContext(PortfolioContext)['portfolios'];
     const [portfolio, setPortfolio] = useState(portfolios[0]['portfolio_code']);
+    const [selectedPortfolioInfo, setSelectedPortfolioInfo] = useState([]);
+
     const [showNewTransactionModal, setShowNewTransactionModal] = useState(false);
     const [showNewPortCashFlow, setNewPortCashFlow] = useState(false);
     const [showNewRobotTrade, setNewRobotTrade] = useState(false);
@@ -58,64 +61,26 @@ const PortfolioPage = (props) => {
     const [showNewPortfolio, setShowNewPortfolio] = useState(false);
     const [showImportModal, setShowImportModal] = useState(false);
     const [showPosCalc, setPosCalc] = useState(false);
-    const portfolioRef = useRef();
-    const portfolioOptions = portfolios.map((record) =>
-        <option key={record['id']} value={record['portfolio_code']}>{record['portfolio_name']}</option>)
 
-    const portSelect = (port) => {
-        setPortfolio(port);
-    };
+    useEffect(() => {
+        axios.get(server + 'portfolios/get_portfolio_data/' + portfolio)
+            .then(response => response['data'].map(data => data))
+            .then(data => setSelectedPortfolioInfo(data))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+        }, [props]
+    );
 
-
-    const hideNewPortfolio = () => {
-        setShowNewPortfolio(false);
-    };
-
-    const hideNewRobotTrade = () => {
-        setNewRobotTrade(false);
-    };
-
-    const hideImportModal = () => {
-        setShowImportModal(false);
-    };
-
-    const hideNewPortCashFlow = () => {
-        setNewPortCashFlow(false);
-    };
-
-    const showPosCalcForm = () => {
-        setPosCalc(true);
-    };
-    const hidePosCalcForm = () => {
-        setPosCalc(false);
-    };
-
-    const showCashCalcForm = () => {
-        setCashCalc(true);
-    };
-    const hideCashCalcForm = () => {
-        setCashCalc(false);
-    };
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
             <Row style={{height: '100%', margin:'0px'}}>
                 <ProSidebar>
-                    <MenuItem style={{padding: '5px'}}>
-                        <Form.Control ref={portfolioRef} onChange={(e) => setPortfolio(e.target.value)} as="select">
-                            {portfolioOptions}
-                        </Form.Control>
-                    </MenuItem>
                     <Menu iconShape="square">
                         <MenuItem onClick={()=>setShowNewPortfolio(true)}>New Portfolio</MenuItem>
                         <MenuItem>Dashboard
                             <Link to="/portfolio/dashboard"/>
                         </MenuItem>
-                        <SubMenu title="Calculations">
-                            <MenuItem onClick={showCashCalcForm}>Cash Holdings</MenuItem>
-                            <MenuItem onClick={showPosCalcForm}>Positions</MenuItem>
-                            <MenuItem>Holdings</MenuItem>
-                            <MenuItem>Return</MenuItem>
-                        </SubMenu>
                         <MenuItem>Holdings
                             <Link to="/portfolio/holdings"/>
                         </MenuItem>
@@ -154,7 +119,7 @@ const PortfolioPage = (props) => {
                     }}>
                         <Switch>
                             <Route path="/portfolio/dashboard">
-                                <PortfolioDashBoardPage portfolio={portfolio} server={server} default={portfolios[0]}/>
+                                {/*<PortfolioDashBoardPage portfolio={portfolio} server={server} default={portfolios[0]}/>*/}
                             </Route>
                             <Route path="/portfolio/holdings">
                                 <PortfolioHoldingsPage portfolio={portfolio} server={server}/>
@@ -177,12 +142,12 @@ const PortfolioPage = (props) => {
             </Row>
 
             // Modals
-            <NewPortfolioForm show={showNewPortfolio} hide={hideNewPortfolio} server={server}/>
-            <PortfolioBuy show={showNewRobotTrade} hide={hideNewRobotTrade} portfolio={portfolio} server={server} env={env}/>
-            <PortfolioNewCashFlowEntry show={showNewPortCashFlow} hide={hideNewPortCashFlow} portfolio={portfolio} server={server}/>
-            <PositionCalculation show={showPosCalc} hide={hidePosCalcForm} server={server} portfolio={portfolio}/>
-            <CashHoldingCalculation show={showCashCalc} hide={hideCashCalcForm} server={server} portfolio={portfolio}/>
-            <PortfolioDataImport show={showImportModal} hide={hideImportModal} server={server}/>
+            <NewPortfolioForm show={showNewPortfolio} hide={() => setShowNewPortfolio(false)} server={server}/>
+            <PortfolioBuy show={showNewRobotTrade} hide={() => setNewRobotTrade(false)} portfolio={portfolio} server={server} env={env}/>
+            <PortfolioNewCashFlowEntry show={showNewPortCashFlow} hide={() => setNewPortCashFlow(false)} portfolio={portfolio} server={server}/>
+            <PositionCalculation show={showPosCalc} hide={() => setPosCalc(false)} server={server} portfolio={portfolio}/>
+            <CashHoldingCalculation show={showCashCalc} hide={() => setCashCalc(false)} server={server} portfolio={portfolio}/>
+            <PortfolioDataImport show={showImportModal} hide={() => setShowImportModal(false)} server={server}/>
             <PortfolioNewTransaction show={showNewTransactionModal} hide={() => setShowNewTransactionModal(false)} portfolio={portfolio} server={server}/>
         </Container>
     );

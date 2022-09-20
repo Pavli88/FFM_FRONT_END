@@ -33,6 +33,20 @@ const RobotMonthlyReturns = (props) => {
                     return '#007500'
                 }
             }],
+            title: {
+                text: 'Monthly Returns',
+                align: 'left',
+                margin: 10,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    fontFamily: undefined,
+                    color: '#263238'
+                },
+            },
             annotations: {
                 yaxis: [
                     {
@@ -75,7 +89,6 @@ const RobotMonthlyReturns = (props) => {
     };
     return (
         <Card className="card" style={{margin: '0px'}}>
-            <Card.Title className="card-header-first">Monthly Returns</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>

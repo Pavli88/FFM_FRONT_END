@@ -2,8 +2,22 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Chart from "react-apexcharts";
+import {useEffect, useState} from "react";
+import axios from "axios";
 
 const RobotCashFlowChart = (props) => {
+    const [responseData, setResponseData] = useState([]);
+    const cashFlowData = responseData.map((data) => data['cash_flow']);
+    const dates = responseData.map((data) => data['date']);
+    const totalFlow = cashFlowData.reduce((a, b) => a + b, 0)
+    useEffect(() => {
+            axios.get(props.server + 'robots/get/cash_flow/' + props.robot)
+                .then(response => setResponseData(response['data']))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, [props]
+    );
     const chartOptions = {
         options: {
             chart: {
@@ -18,8 +32,8 @@ const RobotCashFlowChart = (props) => {
                 }
             }],
             xaxis: {
-                categories: [],
-                labels: {show: false}
+                categories: dates,
+                labels: {show: true}
             },
             yaxis: [
                 {
@@ -31,6 +45,20 @@ const RobotCashFlowChart = (props) => {
                     }
                 }
             ],
+            title: {
+                text: 'Cash Flow   ' + totalFlow.toString(),
+                align: 'left',
+                margin: 10,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    fontFamily: undefined,
+                    color: '#263238'
+                },
+            },
             dataLabels: {
                 enabled: false,
                 textAnchor: 'middle',
@@ -45,13 +73,12 @@ const RobotCashFlowChart = (props) => {
         series: [
             {
                 name: "Flows",
-                data: props.data,
+                data: cashFlowData,
             }
         ]
     };
     return (
         <Card className="card" style={{margin: '0px'}}>
-            <Card.Title className="card-header-first">Flows</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>

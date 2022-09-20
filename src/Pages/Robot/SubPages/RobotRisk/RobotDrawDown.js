@@ -10,16 +10,14 @@ import Row from 'react-bootstrap/Row';
 import DateContext from "../../../../context/date-context";
 
 const RobotDrawDown = (props) => {
-    const startDate = useContext(DateContext)['startDate'];
-    const endDate = useContext(DateContext)['endDate'];
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
             axios.get(props.server + 'robots/drawdown/', {
                 params: {
                     robot: props.robot,
-                    start_date: startDate,
-                    end_date: endDate,
+                    start_date: props.startDate,
+                    end_date: props.endDate,
                 }
             })
                 .then(response => response['data'].map(data=>data))
@@ -48,6 +46,36 @@ const RobotDrawDown = (props) => {
                     }
                 }
             ],
+            annotations: {
+                yaxis: [
+                    {
+                        y: -10,
+                        borderColor: '#BF4737',
+                        label: {
+                            borderColor: '#BF4737',
+                            style: {
+                                color: '#fff',
+                                background: '#BF4737'
+                            },
+                            text: 'Drawdown Limit 1'
+                        }
+                    }
+                ]
+            },
+            title: {
+                text: 'Drawdown',
+                align: 'left',
+                margin: 10,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    fontFamily: undefined,
+                    color: '#263238'
+                },
+            },
             dataLabels: {
                 enabled: false
             },
@@ -62,7 +90,6 @@ const RobotDrawDown = (props) => {
     };
     return (
         <Card className="card" style={{margin:'0px'}}>
-            <Card.Title className="card-header-first">Drawdown</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%'}}>
                     <Col style={{height: '100%'}}>

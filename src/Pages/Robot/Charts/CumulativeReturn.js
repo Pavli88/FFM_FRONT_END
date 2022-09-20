@@ -4,8 +4,7 @@ import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 
 const CumulativeReturnChart = (props) => {
-
-    const chartOptions = {
+        const chartOptions = {
         options: {
             chart: {
                 type: 'area',
@@ -33,6 +32,20 @@ const CumulativeReturnChart = (props) => {
                     height: 6,
                     offsetX: 0,
                     offsetY: 0
+                },
+            },
+            title: {
+                text: 'Cumulative Performance',
+                align: 'left',
+                margin: 10,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    fontFamily: undefined,
+                    color: '#263238'
                 },
             },
             yaxis: [
@@ -67,18 +80,10 @@ const CumulativeReturnChart = (props) => {
             },
         },
 
-        series: [
-            {
-                type: 'area',
-                name: "Cumulative Return",
-                data: props.data,
-            }
-        ]
+        series: props.series
     };
-
     return (
         <Card className="card" style={{margin: '0px'}}>
-            <Card.Title className="card-header-first">Cumulative Return</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>

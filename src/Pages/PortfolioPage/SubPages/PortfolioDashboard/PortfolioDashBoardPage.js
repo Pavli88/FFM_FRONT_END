@@ -17,13 +17,34 @@ import DateContext from "../../../../context/date-context";
 const PortfolioDashBoardPage = (props) => {
     const startDate = useContext(DateContext)['startDate'];
     const endDate = useContext(DateContext)['endDate'];
+    const currentDate = useContext(DateContext)['currentDate'];
     const [navData, setNavData] = useState([]);
     const [portData, setPortData] = useState();
-    const [cashHoldingData, setCashHoldingData] = useState([]);
+    const [cashHoldingData, setCashHoldingData] = useState([{'date': ''}]);
     const [cashTypeData, setCashTypeData] = useState([]);
     const portfolioNavData = navData.map(data => data['total'])
 
+    const cashHoldings = cashHoldingData[cashHoldingData.length-1];
+    delete cashHoldings['date'];
+    console.log(cashHoldings)
+    const currencyList = []
+    for (const [key, value] of Object.entries(cashHoldings)) {
+        currencyList.push({'currency': key, 'amount': value});
+    };
+    console.log(currencyList)
+
     useEffect(() => {
+        axios.get(props.server + 'calculate/get/portfolio/ch_hist/', {
+            params: {
+                portfolio_code: props.portfolio,
+                start_date: startDate,
+                end_date: currentDate,
+            }
+        })
+            .then(response => setCashHoldingData(response['data']))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            })
         axios.get(props.server + 'portfolios/cash/total/by_type/' + props.portfolio, {
             params: {
                 portfolio_code: props.portfolio
@@ -39,17 +60,9 @@ const PortfolioDashBoardPage = (props) => {
             .catch((error) => {
                 console.error('Error Message:', error);
             });
-        axios.get(props.server + 'portfolios/cash/holding/' + endDate, {
-            params: {
-                portfolio_code: props.portfolio
-            }
-        })
-            .then(response => setCashHoldingData(response['data']))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
         }, [props]
     );
+
     // useEffect(() => {
 
         // axios.get(props.server + 'portfolios/nav/' + props.portfolio, {
@@ -83,7 +96,7 @@ const PortfolioDashBoardPage = (props) => {
                     </Col>
                     <Col style={{height: '50%'}}>
                         <Row style={{height: '50%', paddingBottom: '5px'}}>
-                            <PortfolioCashSummary data={cashHoldingData}/>
+                            <PortfolioCashSummary data={currencyList}/>
                         </Row>
                          <Row style={{height: '50%', paddingBottom: '5px'}}>
                               <PortfolioCashDetails data={cashTypeData}/>

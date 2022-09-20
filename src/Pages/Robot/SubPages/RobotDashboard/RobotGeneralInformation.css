@@ -1,6 +1,6 @@
-.card-paragraph{
-    margin: auto;
+.table-row-text{
+    font-size: 14px;
     vertical-align: middle;
-    font-size: 18px;
+    text-align: left;
     font-weight: bold;
 }

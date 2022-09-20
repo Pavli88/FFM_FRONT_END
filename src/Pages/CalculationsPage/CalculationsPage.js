@@ -7,21 +7,27 @@ import CalculationEntities from "./CalculationEntities/CalculationEntities";
 import CalculationOptions from "./CalculationOptions/CalculationOptions";
 import CalculationSecurityExceptions from "./CalculationsExceptions/CalculationSecurityExceptions";
 import CalculationPortfolioExceptions from "./CalculationsExceptions/CalculationPortfolioExceptions";
+import CalculationProcessStatus from "./CalculationProcessStatus/CalculationProcessStatus";
 
 //Context
 import ServerContext from "../../context/server-context";
 import CalculationContext from "./CalculationPageContext/calculation-context";
 import DateContext from "../../context/date-context";
+import EntityContext from "../../context/entity-context";
 
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 
 const CalculationsPage = (props) => {
     const server = useContext(ServerContext)['server'];
-    const [entity, setEntity] = useState('Portfolio');
+    const entity = useContext(EntityContext)['entity'];
+    const [startDate, setStartDate] = useState(useContext(DateContext)['currentDate']);
+    const [endDate, setEndDate] = useState(useContext(DateContext)['currentDate']);
+    const [selectedDate, setSelectedDate] = useState(useContext(DateContext)['currentDate']);
     const [entityData, setEntityData] = useState([]);
     const [selectedEntity, setSelectedEntity] = useState([]);
     const [calcDate, setCalDate] = useState(useContext(DateContext)['currentDate']);
+    const [entityUrl, setEntityUrl] = useState('portfolios/get_portfolio_data/all');
 
     let url = ''
     if (entity === 'Portfolio'){
@@ -30,42 +36,48 @@ const CalculationsPage = (props) => {
         url = 'robots/get_robots/live'
     };
     useEffect(() => {
-            axios.get(server + url)
+            axios.get(server + entityUrl)
                 .then(response => setEntityData(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
         }, [entity]
     );
-
-    console.log(selectedEntity)
     return (
         <CalculationContext.Provider value={{
             entity: entity,
-            saveEntity: setEntity,
             entityData: entityData,
             selectedEntity: selectedEntity,
             saveSelectedEntity: setSelectedEntity,
             currentDate: calcDate,
             saveCalcDate: setCalDate,
+            startDate: startDate,
+            saveStartDate: setStartDate,
+            endDate: endDate,
+            saveEndDate: setEndDate,
+            selectedDate: selectedDate,
+            saveSelectedDate: setSelectedDate,
         }}>
             <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
-                <Row className={"row"} style={{height: '90%', width: '100%'}}>
-                    <Col style={{height: '100%'}} sm={4}>
-                        <Row style={{height: '50%'}}>
-                            <CalculationOptions server={server}/>
-                        </Row>
-                        <Row style={{height: '50%'}}>
-                            <CalculationEntities/>
-                        </Row>
+                <Row className={"row"}>
+                    <Col>
+                        <CalculationOptions server={server} />
                     </Col>
-                    <Col style={{height: '100%'}} sm={8}>
-                        <Row style={{height: '50%'}}>
-                            <CalculationPortfolioExceptions server={server} tableType={entity} calcDate={calcDate}/>
-                        </Row>
-                        <Row style={{height: '50%'}}>
-                            <CalculationSecurityExceptions server={server} tableType={'Security'} calcDate={calcDate}/>
-                        </Row>
+                </Row>
+                <Row className={"row"} style={{height: '40%', width: '100%'}}>
+                    <Col style={{height: '100%'}} sm={3}>
+                        <CalculationEntities/>
+                    </Col>
+                    <Col style={{height: '100%'}}>
+                        <CalculationProcessStatus server={server}/>
+                    </Col>
+                </Row>
+                <Row className={"row"} style={{height: '50%', width: '100%'}}>
+                    <Col style={{height: '100%'}}>
+                        <CalculationPortfolioExceptions server={server} tableType={entity} calcDate={calcDate}/>
+                    </Col>
+                    <Col style={{height: '100%'}}>
+                        <CalculationSecurityExceptions server={server} tableType={'Security'} calcDate={calcDate}/>
                     </Col>
                 </Row>
             </Container>

@@ -1,31 +1,11 @@
-import {useContext, useEffect, useState} from "react";
+import {useEffect} from "react";
 import axios from "axios";
-
-// Charts
-import CumulativeReturnChart from "../../Charts/CumulativeReturn";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Chart from "react-apexcharts";
 
-const RobotReturn = (props) => {
-    const [chartData, setChartData] = useState([]);
-    useEffect(() => {
-            axios.get(props.server + 'robots/cumulative_ret/', {
-                params: {
-                    robot: props.robot,
-                    start_date: props.start_date,
-                    end_date: props.end_date
-                }
-            })
-                .then(response => response['data'].map(data => data))
-                .then(data => setChartData(data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [props]
-    );
-
+const RobotBalance = (props) => {
     const chartOptions = {
         options: {
             chart: {
@@ -57,7 +37,7 @@ const RobotReturn = (props) => {
                 },
             },
             title: {
-                text: 'Cumulative Performance',
+                text: 'Balance',
                 align: 'left',
                 margin: 10,
                 offsetX: 0,
@@ -70,6 +50,22 @@ const RobotReturn = (props) => {
                     color: '#263238'
                 },
             },
+            // annotations: {
+            //     yaxis: [
+            //         {
+            //             y: props.lastBalance,
+            //             borderColor: '#BF4737',
+            //             label: {
+            //                 borderColor: '#BF4737',
+            //                 style: {
+            //                     color: '#fff',
+            //                     background: '#BF4737'
+            //                 },
+            //                 text: props.lastBalance.toString()
+            //             }
+            //         }
+            //     ]
+            // },
             yaxis: [
                 {
                     labels: {
@@ -87,30 +83,15 @@ const RobotReturn = (props) => {
         stroke: {
             curve: 'straight'
         },
-        title: {
-            text: 'Cumulative Return',
-            align: 'left',
-            margin: 10,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-                fontSize: '14px',
-                fontWeight: 'bold',
-                // fontFamily: undefined,
-                color: '#263238'
-            },
-        },
-
         series: [
             {
                 type: 'area',
-                name: "Cumulative Return",
-                data: chartData,
+                name: "Balance",
+                data: props.data,
             }
         ]
     };
-    return (
+    return(
         <Card className="card" style={{margin: '0px'}}>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
@@ -130,5 +111,4 @@ const RobotReturn = (props) => {
         </Card>
     );
 };
-
-export default RobotReturn;
+export default RobotBalance;

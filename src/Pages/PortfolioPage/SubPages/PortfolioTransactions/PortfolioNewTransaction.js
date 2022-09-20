@@ -43,9 +43,6 @@ const PortfolioNewTransaction = (props) => {
     const instrumentHandler = () => {
         fetchInstrumentData(sourceRef.current.value, instrumentTypeRef.current.value);
     };
-    console.log(responseData)
-    console.log(instrumentType)
-
     const submitHandler = (event) => {
         event.preventDefault();
         axios.post(props.server + 'portfolios/new_transaction/', {

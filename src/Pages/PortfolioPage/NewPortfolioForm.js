@@ -3,15 +3,20 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-import {useState} from "react";
+import {useContext, useState} from "react";
 import axios from "axios";
 
+// Context
+import DateContext from "../../context/date-context";
+import PortfolioContext from "../../context/portfolio-context";
+
 const NewPortfolioForm = (props) => {
+    const saveNewPortfolio = useContext(PortfolioContext)['saveNewPortfolio'];
     const [portfolioName, setPortfolioName] = useState('');
     const [portfolioCode, setPortfolioCode] = useState('');
     const [portType, setPortType] = useState('Trade');
     const [currency, setCurrency] = useState('USD');
-    const [date, setDate] = useState();
+    const [date, setDate] = useState(useContext(DateContext)['currentDate']);
     const handleClose = () => {
         props.hide();
     };
@@ -40,8 +45,9 @@ const NewPortfolioForm = (props) => {
             inception_date: date,
         })
             .then(function (response) {
-                if (response['data'] == 'New Portfolio is created!') {
+                if (response['data'] === 'New Portfolio is created!') {
                     alert('New portfolio is created!')
+                    saveNewPortfolio(portfolioCode);
                     props.hide();
                 } else {
                     alert(response['data']);

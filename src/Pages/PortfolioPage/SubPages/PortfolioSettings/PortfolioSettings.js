@@ -11,6 +11,7 @@ const PortfolioSettings = (props) => {
                     <Card.Title className="card-header-first">Settings</Card.Title>
                     <p>set portfolio status - active or inactive</p>
                     <p>is robot trading allowed on the portfolio ?</p>
+                    <p>allowed multi currency ?</p>
                 </Card>
             </Row>
             <Row>

@@ -5,21 +5,41 @@ import Chart from "react-apexcharts";
 
 
 const BarCharting = (props) => {
-    const yMax = Math.max(...props.data);
-    console.log(props.data)
+    // const yMax = Math.max(...props.data);
     const chartOptions = {
         options: {
-            // chart: {
-            //     toolbar: true,
-            // },
+            chart: {
+                toolbar: false,
+            },
             plotOptions: {
                 bar: {
                     horizontal: props.horizontal
                 }
             },
+            colors: [function(value){
+                if (value['value'] < 0){
+                    return '#E32227'
+                }else {
+                    return '#007500'
+                }
+            }],
             xaxis: {
                 categories: [],
                 labels: {show: false}
+            },
+            title: {
+                text: props.title,
+                align: 'left',
+                margin: 10,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    fontFamily: undefined,
+                    color: '#263238'
+                },
             },
             yaxis: [
                 {
@@ -53,7 +73,6 @@ const BarCharting = (props) => {
 
     return (
         <Card className="card" style={{margin:'0px'}}>
-            <Card.Title className="card-header-first">{props.title}</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%'}}>
                     <Col style={{height: '100%'}}>

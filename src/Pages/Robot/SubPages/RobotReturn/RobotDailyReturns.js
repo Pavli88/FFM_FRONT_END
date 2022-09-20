@@ -6,23 +6,6 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 
 const RobotDailyReturns = (props) => {
-    const [chartData, setChartData] = useState([]);
-    const dailyReturnList = chartData.map(data => Math.round(data['ret']*10000)/100)
-    useEffect(() => {
-            axios.get(props.server + 'robots/get_balance/', {
-                params: {
-                    robot: props.robot,
-                    start_date: props.start_date,
-                    end_date: props.end_date
-                }
-            })
-                .then(response => response['data'].map(data=>data))
-                .then(data=>setChartData(data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [props]
-    );
     const chartOptions = {
         options: {
             chart: {
@@ -52,6 +35,20 @@ const RobotDailyReturns = (props) => {
                     }
                 ]
             },
+            title: {
+                text: 'Daily Returns',
+                align: 'left',
+                margin: 10,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    fontFamily: undefined,
+                    color: '#263238'
+                },
+            },
             xaxis: {
                 categories: [],
                 labels: {show: false}
@@ -79,15 +76,14 @@ const RobotDailyReturns = (props) => {
         },
         series: [
             {
-                name: "Daily Retur",
-                data: dailyReturnList,
+                name: "Daily Return",
+                data: props.data,
             }
         ]
     };
 
     return (
         <Card className="card" style={{margin: '0px'}}>
-            <Card.Title className="card-header-first">Daily Returns</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>

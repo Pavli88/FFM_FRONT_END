@@ -12,6 +12,7 @@ import "./CalculationPortfolioExceptions.css"
 
 const CalculationPortfolioExceptions = (props) => {
     const selectedEntity = useContext(CalculationContext)['selectedEntity'][1];
+    const selectedDate = useContext(CalculationContext)['selectedDate'];
     const [exceptions, setExceptions] = useState([]);
     const securityExceptions = exceptions.map((data) =>
         <tr className={data['status'] == 'Error' ? "table-row-error": data['status'] == 'Alert' ? "table-row-alert": "table-row-fixed"} key={data['id']}>
@@ -27,7 +28,7 @@ const CalculationPortfolioExceptions = (props) => {
                 params:{
                     entity_code: selectedEntity,
                     exception_level: 'Portfolio',
-                    calculation_date: props.calcDate,
+                    calculation_date: selectedDate,
                 }
             })
                 .then(response => setExceptions(response['data']))

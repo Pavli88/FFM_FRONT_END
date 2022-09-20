@@ -6,12 +6,10 @@ import React from "react";
 import "./PortfolioCashDetails.css"
 
 const PortfolioCashDetails = (props) => {
-
     const cashData = props.data.map((data) => <tr key={data['id']}>
         <td className={'table-row-name'}>{data['name']}</td>
         <td className={'table-row-value'}>{data['value']}</td>
     </tr>);
-     console.log(props.data)
     return(
         <Card className="card" style={{margin: '0px'}}>
             <Card.Title className="card-header-first">Cash Details</Card.Title>

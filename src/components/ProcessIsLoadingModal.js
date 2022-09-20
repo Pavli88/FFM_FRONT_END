@@ -23,7 +23,7 @@ const ProcessIsLoadingModal = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form.Group>
-                    <Form.Label>Name</Form.Label>
+                    <Form.Label>{props.response}</Form.Label>
                 </Form.Group>
             </Modal.Body>
             {button}
