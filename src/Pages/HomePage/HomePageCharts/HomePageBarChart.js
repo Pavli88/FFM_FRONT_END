@@ -5,9 +5,8 @@ const HomePageBarChart = (props) => {
     const chartOptions = {
         options: {
             chart: {
-                type: 'bar',
                 toolbar: false,
-                id: props.id
+                id: props.id,
             },
             colors: [function(value){
                 if (value['value'] < 0){
@@ -18,7 +17,37 @@ const HomePageBarChart = (props) => {
             }],
             xaxis: {
                 categories: [],
-                labels: {show: false}
+                labels: {show: false},
+                axisBorder: {
+                    show: false,
+                    color: '#78909C',
+                    height: 1,
+                    width: '100%',
+                    offsetX: 0,
+                    offsetY: 0
+                },
+            axisTicks: {
+                    show: false,
+                    borderType: 'solid',
+                    color: '#78909C',
+                    height: 6,
+                    offsetX: 0,
+                    offsetY: 0
+                },
+            },
+            title: {
+                text: props.title,
+                align: 'left',
+                margin: 10,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    fontFamily: undefined,
+                    color: '#263238'
+                },
             },
             yaxis: [
                 {
@@ -45,12 +74,11 @@ const HomePageBarChart = (props) => {
     };
     return (
         <Card className="card" style={{margin: '2px', height: '100%'}}>
-            <Card.Title className="card-header-first">{props.title}</Card.Title>
             <Card.Body style={{padding: '0px'}}>
                 <Chart
                     options={chartOptions.options}
                     series={chartOptions.series}
-                    type={'bar'}
+                    type={props.type}
                     width="100%"
                     height="100%"/>
             </Card.Body>

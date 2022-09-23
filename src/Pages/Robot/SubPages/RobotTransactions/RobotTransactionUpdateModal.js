@@ -15,7 +15,7 @@ const RobotTransactionUpdateModal = (props) => {
     const openTimeRef = useRef();
     const closeTimeRef = useRef();
     const handleClose = () => {
-        saveModalStatus({'data': [], 'status': false});
+        props.close();
     };
     const submitHandler = (event) => {
         event.preventDefault();
@@ -35,6 +35,18 @@ const RobotTransactionUpdateModal = (props) => {
             open_time: openTime,
             close_time: closeTime,
             id: props.data[9],
+        }).then(response => alert(response['data']))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
+    const deleteHandler = (event) => {
+        event.preventDefault();
+        axios.post(props.server + 'robots/delete/transaction/', {
+            id: props.data[0],
+        }).then(response => {
+            alert(response['data']);
+            props.close();
         })
             .catch((error) => {
                 console.error('Error Message:', error);
@@ -43,13 +55,13 @@ const RobotTransactionUpdateModal = (props) => {
     return (
         <Modal show={props.show} onHide={handleClose} animation={false}>
             <Modal.Header closeButton>
-                <Modal.Title>Edit Transaction - Broker ID - {props.data[8]}</Modal.Title>
+                <Modal.Title>Edit Transaction - Broker ID - {props.data[0]}</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{width: '100%', height: '700px'}}>
                 <Form onSubmit={submitHandler} style={{width: '100%'}}>
                     <Form.Group className="mb-3" controlId="quantity_type">
                         <Form.Label>Status</Form.Label>
-                        <Form.Control ref={statusRef} defaultValue={props.data[1]}
+                        <Form.Control ref={statusRef} defaultValue={props.data[2]}
                                       as="select">
                             <option value={'OPEN'}>OPEN</option>
                             <option value={'CLOSED'}>CLOSED</option>
@@ -57,37 +69,40 @@ const RobotTransactionUpdateModal = (props) => {
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Quantity</Form.Label>
-                        <Form.Control ref={quantityRef} type="number" defaultValue={props.data[0]}
+                        <Form.Control ref={quantityRef} type="number" defaultValue={props.data[1]}
                                       step={1}/>
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>P&L</Form.Label>
-                        <Form.Control ref={pnlRef} type="number" defaultValue={props.data[2]}
+                        <Form.Control ref={pnlRef} type="number" defaultValue={props.data[3]}
                                       step={1}/>
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Open Price</Form.Label>
-                        <Form.Control ref={openPriceRef} type="number" defaultValue={props.data[3]}
+                        <Form.Control ref={openPriceRef} type="number" defaultValue={props.data[4]}
                                       min={0.0}
                                       step={0.01}/>
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Close Price</Form.Label>
-                        <Form.Control ref={closePriceRef} type="number" defaultValue={props.data[4]}
+                        <Form.Control ref={closePriceRef} type="number" defaultValue={props.data[5]}
                                       min={0.0}
                                       step={0.01}/>
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Open Time</Form.Label>
-                        <Form.Control ref={openTimeRef} type="date" defaultValue={props.data[5]}/>
+                        <Form.Control ref={openTimeRef} type="date" defaultValue={props.data[6]}/>
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Close Time</Form.Label>
-                        <Form.Control ref={closeTimeRef} type="date" defaultValue={props.data[6]}/>
+                        <Form.Control ref={closeTimeRef} type="date" defaultValue={props.data[7]}/>
                     </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
+                <Button variant="danger" onClick={deleteHandler}>
+                    Delete
+                </Button>
                 <Button variant="primary" onClick={submitHandler}>
                     Save
                 </Button>

@@ -27,44 +27,38 @@ const RobotGeneralInformation = (props) => {
         }, [props]
     );
     return (
-        <Card className="card" style={{margin: '0px'}}>
-            <Card.Body>
-                <div style={{height: '100%'}}>
-                    <Table id={'cash-flow-table'} style={{margin: '0px'}}>
-                        <tbody style={{height: '100%', padding:'5px'}}>
-                        <tr key={1}>
-                            <td className={'table-row-text'} >{'Strategy'}</td>
-                            <td >{responseData[0]['strategy']}</td>
-                        </tr>
-                        <tr key={2}>
-                            <td className={'table-row-text'}>{'Security'}</td>
-                            <td>{responseData[0]['security']}</td>
-                        </tr>
-                        <tr key={3}>
-                            <td className={'table-row-text'} >{'Inception Date'}</td>
-                            <td >{responseData[0]['inception_date']}</td>
-                        </tr>
-                        <tr key={4}>
-                            <td className={'table-row-text'} >{'Broker'}</td>
-                            <td >{responseData[0]['broker']}</td>
-                        </tr>
-                        <tr key={6}>
-                            <td className={'table-row-text'} >{'Account Number'}</td>
-                            <td >{responseData[0]['account_number']}</td>
-                        </tr>
-                        {/*<tr key={7}>*/}
-                        {/*    <td className={'table-row-text'}>{'Last Price'}</td>*/}
-                        {/*    <td className={'table-row'}>{props.data['price']}</td>*/}
-                        {/*</tr>*/}
-                        {/*<tr key={8}>*/}
-                        {/*    <td className={'table-row-text'}>{'Last Pricing Date'}</td>*/}
-                        {/*    <td className={'table-row'}>{props.data['date']}</td>*/}
-                        {/*</tr>*/}
-                        </tbody>
-                    </Table>
-                </div>
-            </Card.Body>
-        </Card>
+        <Table id={'cash-flow-table'} style={{margin: '0px'}}>
+            <tbody style={{height: '100%', padding: '5px'}}>
+            <tr key={1}>
+                <td className={'table-row-text'}>{'Strategy'}</td>
+                <td>{responseData[0]['strategy']}</td>
+            </tr>
+            <tr key={2}>
+                <td className={'table-row-text'}>{'Security'}</td>
+                <td>{responseData[0]['security']}</td>
+            </tr>
+            <tr key={3}>
+                <td className={'table-row-text'}>{'Inception Date'}</td>
+                <td>{responseData[0]['inception_date']}</td>
+            </tr>
+            <tr key={4}>
+                <td className={'table-row-text'}>{'Broker'}</td>
+                <td>{responseData[0]['broker']}</td>
+            </tr>
+            <tr key={6}>
+                <td className={'table-row-text'}>{'Account Number'}</td>
+                <td>{responseData[0]['account_number']}</td>
+            </tr>
+            {/*<tr key={7}>*/}
+            {/*    <td className={'table-row-text'}>{'Last Price'}</td>*/}
+            {/*    <td className={'table-row'}>{props.data['price']}</td>*/}
+            {/*</tr>*/}
+            {/*<tr key={8}>*/}
+            {/*    <td className={'table-row-text'}>{'Last Pricing Date'}</td>*/}
+            {/*    <td className={'table-row'}>{props.data['date']}</td>*/}
+            {/*</tr>*/}
+            </tbody>
+        </Table>
         // <Row style={{height:'100px'}}>
         //
         //

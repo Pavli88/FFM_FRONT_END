@@ -53,7 +53,7 @@ const PnLPanel = (props) => {
         }, [props]
     );
     return (
-        <Row style={{height: '150px', width: '100%', margin: '0px', padding: '10px'}}>
+        <Row style={{height: '100%', width: '100%', margin: '0px'}}>
             <Col style={{height: '100%'}}>
                 <CardWidget title={'DTD'}>
                     <h1 style={{

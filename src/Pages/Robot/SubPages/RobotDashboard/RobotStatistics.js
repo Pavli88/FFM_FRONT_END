@@ -104,18 +104,12 @@ const RobotStatistics = (props) => {
 
 
     return (
-        <>
-            <Row style={{height: '50%', margin: '0px', padding: '0px'}}>
-                <Col style={{width: '100%', padding: '5px', margin: '0px'}}>
+        <Row style={{height: '100%'}}>
+            <Col style={{height: '100%', width: '50%'}}>
+                <Row>
                     <PieChartFull data={[winRatio, lossRatio]}/>
-
-                </Col>
-                <Col style={{width: '100%', padding:'5px'}}>
-                    <BarCharting horizontal={false} data={[avgWinningTrade, avgLosingTrade]} title={'Avg Winning & Loosing '}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col style={{height:'100%'}}>
+                </Row>
+                <Row>
                     <Card>
                         <Card.Body>
                             <Card.Title>Profit</Card.Title>
@@ -124,7 +118,9 @@ const RobotStatistics = (props) => {
                             </Card.Text>
                         </Card.Body>
                     </Card>
-                    <Card>
+                </Row>
+                <Row>
+                    <Card style={{height: '100%'}}>
                         <Card.Body>
                             <Card.Title>Profit Factor</Card.Title>
                             <Card.Text className={'card-text'}>
@@ -132,46 +128,35 @@ const RobotStatistics = (props) => {
                             </Card.Text>
                         </Card.Body>
                     </Card>
-
-                </Col>
-                <Col style={{height:'100%'}}>
+                </Row>
+            </Col>
+            <Col style={{height: '100%', width: '50%'}}>
+                <Row>
+                    <BarCharting horizontal={false} data={[avgWinningTrade, avgLosingTrade]}
+                             title={'Avg Winning & Loosing '}/>
+                </Row>
+                <Row>
                     <Card>
-                        <Card.Body>
-                            <Card.Title>Payoff Ratio</Card.Title>
-                            <Card.Text className={'card-text'}>
-                                {Math.round((avgWinningTrade / (avgLosingTrade * -1)) * 100) / 100}
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-
+                    <Card.Body>
+                        <Card.Title>Payoff Ratio</Card.Title>
+                        <Card.Text className={'card-text'}>
+                            {Math.round((avgWinningTrade / (avgLosingTrade * -1)) * 100) / 100}
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+                </Row>
+                <Row>
                     <Card>
-                        <Card.Body>
-                            <Card.Title>Total Trades</Card.Title>
-                            <Card.Text className={'card-text'}>
-                                {totalNumberOfTrades}
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                {/*<Card className="card" style={{margin: '0px', height: '100%'}}>*/}
-                {/*    <div style={{overflowY: 'scroll', overflowX: 'hidden', height: '100%'}}>*/}
-                {/*        <Table id={'cash-flow-table'}>*/}
-                {/*            <thead>*/}
-                {/*            <tr>*/}
-                {/*                <th className={'table-header'}></th>*/}
-                {/*                <th className={'table-header'}>All</th>*/}
-                {/*                <th className={'table-header'}>Long</th>*/}
-                {/*                <th className={'table-header'}>Short</th>*/}
-                {/*            </tr>*/}
-                {/*            <tbody style={{height: '100%', overflow: 'scroll'}}>*/}
-                {/*            */}
-                {/*                </tbody>*/}
-                {/*            </thead>*/}
-                {/*        </Table>*/}
-                {/*    </div>*/}
-                {/*</Card>*/}
-            </Row>
-        </>
+                    <Card.Body>
+                        <Card.Title>Total Trades</Card.Title>
+                        <Card.Text className={'card-text'}>
+                            {totalNumberOfTrades}
+                        </Card.Text>
+                    </Card.Body>
+                </Card>
+                </Row>
+            </Col>
+        </Row>
     );
 };
 export default RobotStatistics;

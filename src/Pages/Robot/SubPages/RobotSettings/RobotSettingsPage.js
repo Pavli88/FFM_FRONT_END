@@ -2,21 +2,24 @@ import RobotRiskSettings from "./RobotRiskSettings";
 import RobotSettings from "./RobotSettings";
 
 // Bootstrap
-import Container from "react-bootstrap/Container";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
+
+// Context
+import serverContext from "../../../../context/server-context";
+
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import {useEffect, useState} from "react";
+
+import {useContext} from "react";
 
 const RobotSettingsPage = (props) => {
+    const server = useContext(serverContext)['server'];
     return (
-        <Row style={{height: '100%', width: '100%', margin:'0px'}}>
+        <Row style={{height: '100%', width: '100%', margin: '0px'}}>
             <Col>
-                <RobotRiskSettings robot={props.robot} server={props.server}/>
+                {/*<RobotRiskSettings robot={props.robotId} server={props.server}/>*/}
             </Col>
             <Col>
-                <RobotSettings robot={props.robot} server={props.server}/>
+                <RobotSettings server={server}/>
             </Col>
         </Row>
     );

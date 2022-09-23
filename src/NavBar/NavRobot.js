@@ -10,20 +10,31 @@ import {useContext} from "react";
 import DateContext from "../context/date-context";
 import RobotContext from "../context/robot-context";
 import EnvContext from "../context/env-context";
+import axios from "axios";
 
-const NavRobot = () => {
-    const robots = useContext(RobotContext)['robots'];
+const NavRobot = (props) => {
+    const allRobotsData = useContext(RobotContext)['allRobotsData'];
     const selectRobot = useContext(RobotContext)['selectRobot'];
+    const selectedRobotData = useContext(RobotContext)['selectedRobotData'];
     const startDate = useContext(DateContext)['startDate'];
     const endDate = useContext(DateContext)['endDate'];
     const setStartDate = useContext(DateContext)['saveStartDate'];
     const setEndDate = useContext(DateContext)['saveEndDate'];
     const saveEnvironment = useContext(EnvContext)['saveEnvironment'];
-
-    const robotsOptions = robots.map((record) =>
-        <Dropdown.Item key={record['id']} eventKey={record['name']}>{record['name']}</Dropdown.Item>);
+    const getRobotData = (id) => {
+        axios.get(props.server + 'robots/get/robot/' + id)
+            .then(response => selectRobot(response['data'][0]))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
+    const robotsOptions = allRobotsData.map((record) =>
+        <Dropdown.Item key={record['id']} eventKey={record['id']}>{record['name']}</Dropdown.Item>);
     return (
         <Row>
+            <Nav.Link href="#" disabled>
+                {selectedRobotData['name']}
+            </Nav.Link>
             <Col>
                 <Nav.Link href="#" disabled>
                     From
@@ -53,7 +64,7 @@ const NavRobot = () => {
                 />
             </Col>
             <Col style={{width: '100%'}}>
-                <Dropdown onSelect={(robot) => selectRobot(robot)}>
+                <Dropdown onSelect={(id) => getRobotData(id)}>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                         Robot
                     </Dropdown.Toggle>

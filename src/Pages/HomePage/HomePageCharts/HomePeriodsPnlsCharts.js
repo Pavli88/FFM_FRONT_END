@@ -3,9 +3,9 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Chart from "react-apexcharts";
 
-
-const BarCharting = (props) => {
-    // const yMax = Math.max(...props.data);
+const HomePeriodsPnlsCharts = (props) => {
+    const totalValue = props.data.map(data => data['y']).reduce((a, b) => a + b, 0)
+    console.log(props.data)
     const chartOptions = {
         options: {
             chart: {
@@ -25,10 +25,42 @@ const BarCharting = (props) => {
             }],
             xaxis: {
                 categories: [],
-                labels: {show: false}
+                labels: {
+                    show: true,
+                    style: {
+                        colors: [],
+                        fontSize: '8px',
+                        fontFamily: 'Helvetica, Arial, sans-serif',
+                        fontWeight: 400,
+                        cssClass: 'apexcharts-xaxis-label',
+                    },
+                },
+                axisTicks: {
+                    show: false,
+                    borderType: 'solid',
+                    color: '#78909C',
+                    height: 6,
+                    offsetX: 0,
+                    offsetY: 0
+                }
+            },
+            annotations: {
+                yaxis: [
+                    {
+                        y: 0,
+                        borderColor: '#BF4737',
+                        label: {
+                            borderColor: '#BF4737',
+                            style: {
+                                color: '#fff',
+                                background: '#BF4737'
+                            },
+                        }
+                    }
+                ]
             },
             title: {
-                text: props.title,
+                text: props.title + ' ('  + totalValue.toString() + ')',
                 align: 'left',
                 margin: 10,
                 offsetX: 0,
@@ -45,7 +77,7 @@ const BarCharting = (props) => {
                 {
                     tickAmount: 10,
                     labels: {
-                        show: false,
+                        show: true,
                         style: {
                             colors: [],
                             fontSize: '12px',
@@ -70,8 +102,7 @@ const BarCharting = (props) => {
             }
         ]
     };
-
-    return (
+    return(
         <Card className="card" style={{margin: '0px'}}>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
@@ -89,5 +120,4 @@ const BarCharting = (props) => {
         </Card>
     );
 };
-
-export default BarCharting;
+export default HomePeriodsPnlsCharts;

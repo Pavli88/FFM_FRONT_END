@@ -3,18 +3,12 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Chart from "react-apexcharts";
 
-
-const BarCharting = (props) => {
-    // const yMax = Math.max(...props.data);
+const MonthlyReturnsChart = (props) => {
     const chartOptions = {
         options: {
             chart: {
                 toolbar: false,
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: props.horizontal
-                }
+                id: "basic-bar"
             },
             colors: [function(value){
                 if (value['value'] < 0){
@@ -23,12 +17,8 @@ const BarCharting = (props) => {
                     return '#007500'
                 }
             }],
-            xaxis: {
-                categories: [],
-                labels: {show: false}
-            },
             title: {
-                text: props.title,
+                text: 'Monthly Returns',
                 align: 'left',
                 margin: 10,
                 offsetX: 0,
@@ -41,22 +31,33 @@ const BarCharting = (props) => {
                     color: '#263238'
                 },
             },
+            annotations: {
+                yaxis: [
+                    {
+                        y: -10,
+                        borderColor: '#BF4737',
+                        label: {
+                            borderColor: '#BF4737',
+                            style: {
+                                color: '#fff',
+                                background: '#BF4737'
+                            },
+                            text: 'Monthly Risk Limit'
+                        }
+                    }
+                ]
+            },
+            xaxis: {
+                categories: props.dates,
+                labels: {show: true}
+            },
             yaxis: [
                 {
-                    tickAmount: 10,
                     labels: {
-                        show: false,
-                        style: {
-                            colors: [],
-                            fontSize: '12px',
-                            fontFamily: 'Helvetica, Arial, sans-serif',
-                            fontWeight: 400,
-                            cssClass: 'apexcharts-yaxis-label',
-                        },
-                        // formatter: function (val) {
-                        //     return val.toFixed(0);
-                        // }
-                    },
+                        formatter: function (val) {
+                            return val.toFixed(0);
+                        }
+                    }
                 }
             ],
             dataLabels: {
@@ -65,23 +66,22 @@ const BarCharting = (props) => {
         },
         series: [
             {
-                name: "Aggregated Robot Profit and Loss",
-                data: props.data,
+                name: "Monthly Return",
+                data: props.returns,
             }
         ]
     };
-
-    return (
+    return(
         <Card className="card" style={{margin: '0px'}}>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
-                    <Col style={{height: '100%', width: '100%', margin: '0px'}}>
+                    <Col style={{height: '100%'}}>
                         <Chart
                             options={chartOptions.options}
                             series={chartOptions.series}
                             type={'bar'}
                             width="100%"
-                            height="90%"
+                            height="100%"
                         />
                     </Col>
                 </Row>
@@ -89,5 +89,4 @@ const BarCharting = (props) => {
         </Card>
     );
 };
-
-export default BarCharting;
+export default MonthlyReturnsChart;

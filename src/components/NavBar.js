@@ -27,7 +27,7 @@ const Navigation = (props) => {
                 <Nav className="mr-auto">
                     <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/home'}>Home</Nav.Link>
                     <Nav.Link onClick={() => setProcessHandler(<NavPortfolio/>)} as={Link} to={'/portfolio/dashboard'}>Portfolio</Nav.Link>
-                    <Nav.Link onClick={() => setProcessHandler(<NavRobot/>)} as={Link} to={'/robot/dashboard'}>Robot</Nav.Link>
+                    <Nav.Link onClick={() => setProcessHandler(<NavRobot server={server}/>)} as={Link} to={'/robot/dashboard'}>Robot</Nav.Link>
                     <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/risk'}>Risk</Nav.Link>
                     <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/instruments'}>Instrument</Nav.Link>
                     <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/trade'}>Trade</Nav.Link>

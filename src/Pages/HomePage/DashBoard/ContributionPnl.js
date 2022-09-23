@@ -2,6 +2,8 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
 import BarCharting from "../../../components/Charts/BarCharting";
+import HomePeriodsPnlsCharts from "../HomePageCharts/HomePeriodsPnlsCharts";
+
 import {useEffect, useState} from "react";
 import axios from "axios";
 
@@ -22,10 +24,6 @@ const ContributionPnl = (props) => {
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        }, [props]
-    );
-
-    useEffect(() => {
             axios.get(props.server + 'home/robot_pnl/', {
                 params: {
                     start_date: date.substr(0,7)+'-01',
@@ -36,9 +34,6 @@ const ContributionPnl = (props) => {
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        }, [props]
-    );
-    useEffect(() => {
             axios.get(props.server + 'home/robot_pnl/', {
                 params: {
                     start_date: date.substr(0,4)+'-01-01',
@@ -53,15 +48,15 @@ const ContributionPnl = (props) => {
     );
 
     return (
-        <Row style={{height: '300px', width: '100%', margin: '0px', padding: '10px'}}>
+        <Row style={{height: '100%', width: '100%', margin: '0px'}}>
             <Col style={{height: '100%'}}>
-                <BarCharting data={dtdData} horizontal={false} xLabel={true}/>
+                <HomePeriodsPnlsCharts data={dtdData} horizontal={false} xLabel={true} title={'Day to Date'}/>
             </Col>
             <Col style={{height: '100%'}}>
-                <BarCharting data={mtdData} horizontal={false} xLabel={true}/>
+                <HomePeriodsPnlsCharts data={mtdData} horizontal={false} xLabel={true} title={'Month to Date'}/>
             </Col>
             <Col style={{height: '100%'}}>
-                <BarCharting data={ytdData} horizontal={false} xLabel={true}/>
+                <HomePeriodsPnlsCharts data={ytdData} horizontal={false} xLabel={true} title={'Year to Date'}/>
             </Col>
         </Row>
     );

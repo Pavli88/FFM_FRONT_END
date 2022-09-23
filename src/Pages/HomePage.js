@@ -17,7 +17,6 @@ import ContributionPnl from "./HomePage/DashBoard/ContributionPnl";
 // Chart Imports
 import BarCharting from "../components/Charts/BarCharting";
 
-
 //CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './HomePage.css';
@@ -32,25 +31,25 @@ const HomePage = (props) => {
     const env = useContext(EnvContext)['environment'];
     const server = useContext(ServerContext)['server'];
     const startDate = new Date().toISOString().substr(0,10);
-    const [date, setDate] = useState(startDate);
-
-    const dateHandler = (event) => {
-        setDate(event.target.value);
-    };
 
     return (
         <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
-            <Row style={{height: window.innerHeight}}>
-                <Col style={{height: '800px', width:'50%', margin:'15px'}}>
-                    <h4 style={{textAlign:'left', marginTop:'0px', marginBottom:'15px'}}>Balance</h4>
-                    <BalanceDashBoard server={server} env={env}/>
-                    <h4 style={{textAlign:'left', marginTop:'15px'}}>Total Robot Results</h4>
+            <h4>Profit and Loss</h4>
+            <Row style={{height: '33%'}}>
+                <Col style={{height: '100%'}}>
                     <TopLevel server={server} env={env} />
                 </Col>
-                <Col style={{height: '800px', width:'50%', margin:'15px'}}>
-                    <h4>Profit</h4>
-                    <PnLPanel server={server} env={env}/>
+                <Col style={{height: '100%'}}>
                     <ContributionPnl server={server} env={env}/>
+                </Col>
+            </Row>
+            <Row style={{height: '33%'}}>
+                <Col>
+                    <h4>Balance</h4>
+                    <BalanceDashBoard server={server} env={env}/>
+                </Col>
+
+                <Col>
                     <h4>Performance</h4>
                     <PerfDashBoard server={server} env={env} env={env}/>
                 </Col>

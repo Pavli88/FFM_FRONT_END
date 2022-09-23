@@ -30,13 +30,12 @@ const RobotDashBoardPage = (props) => {
     const dailyReturns = balanceData.map((data) => Math.round(data['ret']*10000)/100);
     const balances = balanceData.map((data) => data['close_balance']);
     const lastBalance = balances[balances.length-1];
-
+    console.log(balanceData)
     useEffect(() => {
-            axios.get(props.server + 'robots/get_balance/', {
+            axios.get(props.server + 'robots/get/balance/', {
                 params: {
-                    robot: props.robot,
+                    id: props.robotData['id'],
                     start_date: props.startDate,
-                    end_date: props.endDate,
                 }
             })
                 .then(response => setBalanceData(response['data']))
@@ -47,45 +46,44 @@ const RobotDashBoardPage = (props) => {
     );
 
     return (
-        <Container fluid>
-            <Row style={{height:'100%'}}>
-                <Col style={{height: '90%'}} sm={8}>
-                    <Row style={{height: '50%'}}>
-                        <Col>
-                            <Row style={{height: '50%'}}>
-                                <RobotGeneralInformation />
-                            </Row>
-                            <Row style={{height: '50%'}}>
-
-                            </Row>
-                        </Col>
-                        <Col style={{height: '100%', padding:'0px'}}>
-                            <RobotStatistics robot={props.robot} server={props.server} startDate={props.startDate} endDate={props.endDate}/>
-                        </Col>
+        <Container style={{height:'90%'}} fluid>
+            <Row style={{height: '100%', width:'100%', margin:'5px'}}>
+                <Col style={{height: '90%'}}>
+                    <Row style={{height: '50%', margin: '0px', padding: '20px'}}>
+                        {/*<RobotGeneralInformation/>*/}
                     </Row>
                     <Row style={{height: '50%'}}>
-                        <Col>
-                            <RobotBalance robot={props.robot} server={props.server} startDate={props.startDate} endDate={props.endDate} data={balances} lastBalance={lastBalance}/>
+                        <Col style={{height: '100%'}}>
+                            <RobotBalance robot={props.robot} server={props.server} startDate={props.startDate}
+                                          endDate={props.endDate} data={balances} lastBalance={lastBalance}/>
                         </Col>
-                        <Col>
-                            <RobotCashFlowChart robot={props.robot} server={props.server}/>
-                        </Col>
-                        <Col>
-                            <RobotMonthlyReturns robot={props.robot} server={props.server}/>
+                        <Col style={{height: '100%'}}>
+                            {/*<RobotCashFlowChart robot={props.robot} server={props.server}/>*/}
                         </Col>
                     </Row>
                 </Col>
-                <Col style={{height: '90%'}} sm={4}>
+                <Col style={{height: '90%'}} >
+                    <Row style={{height: '50%'}}>
+                        {/*<RobotStatistics robot={props.robot} server={props.server} startDate={props.startDate} endDate={props.endDate}/>*/}
+                    </Row>
+                    <Row style={{height: '50%'}}>
+                        {/*<RobotMonthlyReturns robot={props.robot} server={props.server}/>*/}
+                    </Row>
+                    {/*<Row style={{height: '50%'}}>*/}
+
+                    {/*</Row>*/}
+                </Col>
+                <Col style={{height: '90%'}} >
                     <Row style={{height:'33%'}}>
-                        <RobotReturn robot={props.robot} start_date={props.startDate} end_date={props.endDate}
-                                     server={props.server}/>
+                        {/*<RobotReturn robot={props.robot} start_date={props.startDate} end_date={props.endDate}*/}
+                        {/*             server={props.server}/>*/}
                     </Row>
                     <Row style={{height:'33%'}}>
-                        <RobotDailyReturns robot={props.robot} start_date={props.startDate} end_date={props.endDate}
-                                           server={props.server} data={dailyReturns}/>
+                        {/*<RobotDailyReturns robot={props.robot} start_date={props.startDate} end_date={props.endDate}*/}
+                        {/*                   server={props.server} data={dailyReturns}/>*/}
                     </Row>
                     <Row style={{height:'33%'}}>
-                        <RobotDrawDown robot={props.robot} server={props.server} startDate={props.startDate} endDate={props.endDate}/>
+                        {/*<RobotDrawDown robot={props.robot} server={props.server} startDate={props.startDate} endDate={props.endDate}/>*/}
                     </Row>
                 </Col>
             </Row>

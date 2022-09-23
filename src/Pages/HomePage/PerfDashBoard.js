@@ -2,17 +2,14 @@ import Card from 'react-bootstrap/Card';
 import Table from "react-bootstrap/Table";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import './PerfDashBoard.css'
 import Row from "react-bootstrap/Row";
 
 //CSS
 import './PerfDashBoard.css'
 
 const PerformanceDashboard = (props) => {
-
-    // Fetching Robot balance data
     const [perfData, setPerfData] = useState([]);
-
+    console.log(perfData)
     useEffect(() => {
             axios.get(props.server + 'home/load_robot_stats/' + props.env)
                 .then(response => response['data'])
@@ -33,14 +30,13 @@ const PerformanceDashboard = (props) => {
     </tr>);
 
     return (
-        <Row style={{height: '450px', width: '100%', margin: '15px'}}>
+        <Row style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card className="card" style={{margin: '0px'}}>
                 <div style={{height: '500px', overflowY: 'scroll', overflowX: 'hidden'}}>
                     <Table>
                         <thead>
                         <tr>
-                            <th className={'table-header'}>Robot
-                            </th>
+                            <th className={'table-header'}>Robot</th>
                             <th className={'table-header'}>Balance</th>
                             <th className={'table-header'}>DTD</th>
                             <th className={'table-header'}>MTD</th>

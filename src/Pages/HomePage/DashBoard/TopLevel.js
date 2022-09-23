@@ -32,12 +32,12 @@ const TopLevel = (props) =>{
         }, [props]
     );
     return (
-        <Row style={{height: '600px', width: '100%', margin: '0px', padding: '0px'}}>
+        <Row style={{height:'100%', width: '100%', margin: '0px', padding: '0px'}}>
             <Col style={{height: '100%', width: '50%'}}>
-                <HomePageBarChart data={findCumulativeSum(responseData)} title={'Total Cumulative Year to Date P&L'} id={'aggregated-pnl-chart'}/>
+                <HomePageBarChart data={findCumulativeSum(responseData)} title={'Total Cumulative Year to Date P&L'} id={'aggregated-pnl-chart'} type={'area'}/>
             </Col>
             <Col style={{height: '100%', width: '50%'}}>
-                <HomePageBarChart data={responseData} title={'Daily P&L'} id={'daily-aggregated-pnl-chart'}/>
+                <HomePageBarChart data={responseData} title={'Daily P&L'} id={'daily-aggregated-pnl-chart'} type={'bar'}/>
             </Col>
         </Row>
     )

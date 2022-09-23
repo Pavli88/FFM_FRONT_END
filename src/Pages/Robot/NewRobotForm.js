@@ -1,79 +1,40 @@
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {useEffect, useState, useRef} from "react";
-import axios from "axios";
-import OptionLoader from "../../components/Options";
 import Modal from "react-bootstrap/Modal";
 
+import {useContext, useRef, useState} from "react";
+import axios from "axios";
+
+// Context
+import RobotContext from "../../context/robot-context";
+import DateContext from "../../context/date-context";
+
 const NewRobotForm = (props) => {
-    const [robotName, setRobotName] = useState('');
-    const [strategy, setStrategy] = useState('');
-    const [broker, setBroker] = useState('oanda');
-    const [env, setEnv] = useState('live');
-    const [account, setAccount] = useState('');
-    const [instrument, setInstrument] = useState('');
-
-    console.log(account);
-    console.log(instrument)
-
-    const handleClose = () => {
-        props.hide();
-    };
-
-    const accountParams = {
-        'broker': broker,
-        'env': env,
-    };
-
-    const instrumentParams = {
-        'broker': broker,
-    };
-
-    const robotNameChangeHandler = (event) => {
-        setRobotName(event.target.value)
-    };
-
-    const robotStrategyHandler = (event) => {
-        setStrategy(event.target.value)
-    };
-
-    const envHandler = (event) => {
-        setEnv(event.target.value);
-    };
-
-    const instHandler = (event) => {
-        setInstrument(event.target.value);
-    };
-
-    const brokerHandler = (event) => {
-        setBroker(event.target.value);
-    };
-
-    const accountHandler = (event) => {
-        setAccount(event.target.value);
-    };
+    const currentDate = useContext(DateContext)['currentDate'];
+    const [inceptionDate, setInceptionDate] = useState(currentDate);
+    const robotNameRef = useRef();
+    const robotCodeRef = useRef();
+    const environmentRef = useRef();
+    const saveNewRobot = useContext(RobotContext)['saveNewRobot'];
 
     const submitHandler = (event) => {
         event.preventDefault();
-
-        axios.post(props.server + 'robots/new_robot/', {
-            robot_name: robotName,
-            strategy: strategy,
-            security: instrument,
-            broker: broker,
-            env: env,
-            account: account,
+        axios.post(props.server + 'robots/new/robot/', {
+            robot_name: robotNameRef.current.value,
+            env: environmentRef.current.value,
+            inception_date: inceptionDate,
         })
-                .then(response => console.log(response))
+                .then(response => alert(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
+        saveNewRobot(robotCodeRef.current.value);
         props.hide();
     };
 
     return (
         <>
-            <Modal show={props.show} onHide={handleClose} animation={false}>
+            <Modal show={props.show} onHide={() => props.hide()} animation={false}>
                 <Modal.Header closeButton>
                     <Modal.Title>New Robot</Modal.Title>
                 </Modal.Header>
@@ -81,57 +42,23 @@ const NewRobotForm = (props) => {
                     <Form onSubmit={submitHandler} style={{width: '100%'}}>
                         <Form.Group>
                             <Form.Label>Robot Name</Form.Label>
-                            <Form.Control onChange={robotNameChangeHandler} type="text" placeholder="Robot Name"
-                                          maxLength={20}/>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Strategy</Form.Label>
-                            <Form.Control onChange={robotStrategyHandler} as="select">
-                                <option value={'Initiative'}>Initiative</option>
-                                <option value={'Responsive'}>Responsive</option>
-                                <option value={'Correction'}>Correction</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Broker</Form.Label>
-                            <Form.Control onChange={brokerHandler} as="select">
-                                <option>oanda</option>
-                                <option>Fix</option>
-                            </Form.Control>
+                            <Form.Control ref={robotNameRef} type="text" maxLength={20}/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Environment</Form.Label>
-                            <Form.Control onChange={envHandler} as="select">
+                            <Form.Control ref={environmentRef} as="select">
                                 <option value={'live'}>Live</option>
                                 <option value={'demo'}>Demo</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Instruments</Form.Label>
-                            <Form.Control onChange={instHandler} as="select">
-                                <OptionLoader
-                                    url={props.server + 'instruments/get_instruments/'}
-                                    params={instrumentParams}
-                                    code={'instrument_name'}
-                                    value={'instrument_name'}
-                                />
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Label>Account Number</Form.Label>
-                            <Form.Control onChange={accountHandler} as="select">
-                                <OptionLoader
-                                    url={props.server + 'accounts/get_accounts_data/'}
-                                    params={accountParams}
-                                    code={'account_number'}
-                                    value={'account_number'}
-                                />
-                            </Form.Control>
+                            <Form.Label>Inception Date</Form.Label>
+                            <Form.Control onChange={(e) => setInceptionDate(e.target.value)} type="date" defaultValue={currentDate}/>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="secondary" onClick={() => props.hide()}>
                         Close
                     </Button>
                     <Button variant="primary" onClick={submitHandler}>

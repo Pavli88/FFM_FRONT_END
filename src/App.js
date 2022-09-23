@@ -21,6 +21,8 @@ import EntityContext from "./context/entity-context";
 
 import axios from "axios";
 import Button from "react-bootstrap/Button";
+import Row from 'react-bootstrap/Row';
+import Container from "react-bootstrap/Container";
 
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
@@ -28,16 +30,16 @@ import 'react-notifications-component/dist/theme.css';
 
 function App() {
     // 'http://127.0.0.1:8000/' 'https://pavliati.pythonanywhere.com/'
+    const server = 'http://127.0.0.1:8000/'
     const [robotEnvData, setRobotEnvData] = useState('live');
     const [portfolioData, setPortfolioData] = useState([]);
-    const [robotsData, setRobotsData] = useState([]);
-    const [selectedRobot, setSelectedRobot] = useState('');
+    const [allRobotsData, setAllRobotsData] = useState([]);
+    const [selectedRobotData, setSelectedRobotData] = useState({});
     const [selectedPortfolio, setSelectedPortfolio] = useState('');
     const [newPortfolio, setNewPortfolio] = useState('');
+    const [newRobot, setNewRobot] = useState('');
     const [brokerData, setBrokerData] = useState([{'id': 1,'broker': 'System', 'broker_code': 'ffm_system'}]);
     const [entity, setEntity] = useState('Portfolio');
-    const server = 'https://pavliati.pythonanywhere.com/'
-    console.log(selectedPortfolio)
     const getEnvData = (env) => {
         setRobotEnvData(env);
     };
@@ -54,7 +56,7 @@ function App() {
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-            axios.get(server + 'accounts/get_brokers/')
+            axios.get(server + 'accounts/get/brokers')
                 .then(response => setBrokerData(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);
@@ -62,18 +64,19 @@ function App() {
         }, [newPortfolio]
     );
     useEffect(() => {
-            axios.get(server + 'robots/get_robots/' + robotEnvData)
-                .then(response => {
-                    setRobotsData(response['data']);
-                    setSelectedRobot(response['data'][0]['name']);
+            axios.get(server + 'robots/get/robots/' + robotEnvData)
+                .then(function(response) {
+                    setAllRobotsData(response['data']);
+                    setSelectedRobotData(response['data'][0]);
                 })
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        }, []
+        }, [newRobot]
     );
 
     return (
+        <div className='App'>
         <ServerContext.Provider value={{server: server}}>
             <EntityContext.Provider value={{
                 entity: entity,
@@ -84,9 +87,10 @@ function App() {
                     saveEnvironment: setRobotEnvData,
                 }}>
                     <RobotContext.Provider value={{
-                        robots: robotsData,
-                        selectedRobot: selectedRobot,
-                        selectRobot: setSelectedRobot,
+                        allRobotsData: allRobotsData,
+                        selectedRobotData: selectedRobotData,
+                        selectRobot: setSelectedRobotData,
+                        saveNewRobot: setNewRobot,
                     }}>
                         <PortfolioContext.Provider value={{
                             portfolios: portfolioData,
@@ -102,35 +106,33 @@ function App() {
                                 currentDate: currentDate,
                             }}>
                                 <BrokerContext.Provider value={{
-                                        brokerData: brokerData
-                                    }}>
+                                    brokerData: brokerData
+                                }}>
                                     <ReactNotification/>
-                                    <div className="App">
-                                        <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
-                                        <Switch>
-                                            <Route path="/risk">
-                                                <RiskPage/>
-                                            </Route>
-                                            <Route path="/home">
-                                                <HomePage/>
-                                            </Route>
-                                            <Route path="/trade">
-                                                <TradePage/>
-                                            </Route>
-                                            <Route path="/portfolio">
-                                                <PortfolioPage/>
-                                            </Route>
-                                            <Route path="/calculations">
-                                                <CalculationsPage/>
-                                            </Route>
-                                            <Route path="/instruments">
-                                                <InstrumentPage/>
-                                            </Route>
-                                            <Route path="/robot">
-                                                <RobotPage/>
-                                            </Route>
-                                        </Switch>
-                                    </div>
+                                    <Navigation onEnvChange={getEnvData} env={robotEnvData}/>
+                                    <Switch>
+                                        <Route path="/risk">
+                                            <RiskPage/>
+                                        </Route>
+                                        <Route path="/home">
+                                            <HomePage/>
+                                        </Route>
+                                        <Route path="/trade">
+                                            <TradePage/>
+                                        </Route>
+                                        <Route path="/portfolio">
+                                            <PortfolioPage/>
+                                        </Route>
+                                        <Route path="/calculations">
+                                            <CalculationsPage/>
+                                        </Route>
+                                        <Route path="/instruments">
+                                            <InstrumentPage/>
+                                        </Route>
+                                        <Route path="/robot">
+                                            <RobotPage/>
+                                        </Route>
+                                    </Switch>
                                 </BrokerContext.Provider>
                             </DateContext.Provider>
                         </PortfolioContext.Provider>
@@ -138,6 +140,7 @@ function App() {
                 </EnvContext.Provider>
             </EntityContext.Provider>
         </ServerContext.Provider>
+            </div>
     );
 }
 
