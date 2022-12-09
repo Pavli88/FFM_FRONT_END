@@ -10,21 +10,21 @@ import Chart from "react-apexcharts";
 
 const RobotReturn = (props) => {
     const [chartData, setChartData] = useState([]);
-    useEffect(() => {
-            axios.get(props.server + 'robots/cumulative_ret/', {
-                params: {
-                    robot: props.robot,
-                    start_date: props.start_date,
-                    end_date: props.end_date
-                }
-            })
-                .then(response => response['data'].map(data => data))
-                .then(data => setChartData(data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [props]
-    );
+    // useEffect(() => {
+    //         axios.get(props.server + 'robots/cumulative_ret/', {
+    //             params: {
+    //                 robot: props.robot,
+    //                 start_date: props.start_date,
+    //                 end_date: props.end_date
+    //             }
+    //         })
+    //             .then(response => response['data'].map(data => data))
+    //             .then(data => setChartData(data))
+    //             .catch((error) => {
+    //                 console.error('Error Message:', error);
+    //             });
+    //     }, [props]
+    // );
 
     const chartOptions = {
         options: {
@@ -111,7 +111,8 @@ const RobotReturn = (props) => {
         ]
     };
     return (
-        <Card className="card" style={{margin: '0px'}}>
+        <div style={{width: '100%', height: '100%', paddingTop:'10px', paddingRight:'0px'}}>
+            <Card className="card" style={{margin: '0px'}}>
             <Card.Body style={{padding: '0px'}}>
                 <Row style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Col style={{height: '100%'}}>
@@ -128,6 +129,7 @@ const RobotReturn = (props) => {
                 </Row>
             </Card.Body>
         </Card>
+        </div>
     );
 };
 

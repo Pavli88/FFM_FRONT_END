@@ -30,7 +30,7 @@ import 'react-notifications-component/dist/theme.css';
 
 function App() {
     // 'http://127.0.0.1:8000/' 'https://pavliati.pythonanywhere.com/'
-    const server = 'http://127.0.0.1:8000/'
+    const server = 'https://pavliati.pythonanywhere.com/'
     const [robotEnvData, setRobotEnvData] = useState('live');
     const [portfolioData, setPortfolioData] = useState([]);
     const [allRobotsData, setAllRobotsData] = useState([]);
@@ -43,6 +43,7 @@ function App() {
     const getEnvData = (env) => {
         setRobotEnvData(env);
     };
+    console.log(robotEnvData)
     // Date variables
     const date = new Date();
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 2);
@@ -72,7 +73,7 @@ function App() {
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        }, [newRobot]
+        }, [newRobot, robotEnvData]
     );
 
     return (

@@ -16,16 +16,10 @@ const BarCharting = (props) => {
                     horizontal: props.horizontal
                 }
             },
-            colors: [function(value){
-                if (value['value'] < 0){
-                    return '#E32227'
-                }else {
-                    return '#007500'
-                }
-            }],
+            colors: props.colors,
             xaxis: {
-                categories: [],
-                labels: {show: false}
+                categories: props.xData,
+                labels: {show: true}
             },
             title: {
                 text: props.title,
@@ -43,9 +37,9 @@ const BarCharting = (props) => {
             },
             yaxis: [
                 {
-                    tickAmount: 10,
+                    tickAmount: 1,
                     labels: {
-                        show: false,
+                        show: true,
                         style: {
                             colors: [],
                             fontSize: '12px',
@@ -60,7 +54,41 @@ const BarCharting = (props) => {
                 }
             ],
             dataLabels: {
-                enabled: false
+                enabled: true,
+                enabledOnSeries: [0],
+                distributed: true,
+                style: {
+                    fontSize: '12px',
+                    fontFamily: 'Helvetica, Arial, sans-serif',
+                    fontWeight: 'bold',
+                    colors: ['white']
+                },
+                textAnchor: 'middle',
+                background: {
+                    enabled: true,
+                    foreColor: '#ffh',
+                    padding: 4,
+                    borderRadius: 2,
+                    borderWidth: 1,
+                    borderColor: 'white',
+                    opacity: 0.9,
+                    dropShadow: {
+                        enabled: false,
+                        top: 1,
+                        left: 1,
+                        blur: 1,
+                        color: '#000',
+                        opacity: 0.45
+                    }
+                },
+                dropShadow: {
+                    enabled: false,
+                    top: 1,
+                    left: 1,
+                    blur: 1,
+                    color: '#000',
+                    opacity: 0.45
+                }
             },
         },
         series: [

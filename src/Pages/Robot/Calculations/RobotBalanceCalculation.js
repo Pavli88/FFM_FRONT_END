@@ -23,10 +23,6 @@ const RobotBalanceCalculation = (props) => {
         <Form.Label>Start Date</Form.Label>
         <Form.Control onChange={(e) => setBeginDate(e.target.value)} type="date" defaultValue={startDate}/>
     </Form.Group>);
-
-    console.log(props.robotData)
-    console.log(checked)
-    console.log(beginDate)
     const submitHandler = (event) => {
         event.preventDefault();
         axios.post(props.server + 'robots/calculate/balance/', {

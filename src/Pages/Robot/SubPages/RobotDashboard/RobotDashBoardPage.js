@@ -7,8 +7,8 @@ import RobotGeneralInformation from "./RobotGeneralInformation";
 import RobotDrawDown from "../RobotRisk/RobotDrawDown";
 import RobotReturn from "../RobotReturn/RobotReturn";
 import RobotDailyReturns from "../RobotReturn/RobotDailyReturns";
-import RobotMonthlyReturns from "../RobotReturn/RobotMonthlyReturns";
 import RobotBalance from "./RobotBalance";
+import MonthlyReturnsChart from "../../../../components/Charts/MonthlyReturnsChart";
 
 // Bootstrap
 import Col from 'react-bootstrap/Col';
@@ -22,15 +22,37 @@ import Card from "react-bootstrap/Card";
 
 //CSS
 import './RobotDashBoardPage.css'
+import serverContext from "../../../../context/server-context";
+
 
 const RobotDashBoardPage = (props) => {
+    const startDate = useContext(DateContext)['startDate'];
+    const server = useContext(serverContext)['server'];
     const [balanceData, setBalanceData] = useState([]);
     const [cashFlowData, setCashFlowData] = useState([]);
     const totalCashFlow = Math.round(cashFlowData.reduce((a, b) => a + b, 0) * 100) / 100
     const dailyReturns = balanceData.map((data) => Math.round(data['ret']*10000)/100);
     const balances = balanceData.map((data) => data['close_balance']);
     const lastBalance = balances[balances.length-1];
-    console.log(balanceData)
+
+    const [monthlyReturnData, setMonthlyReturnData] = useState([]);
+    const monthlyReturns = monthlyReturnData.map((data) => data['ret']*100);
+    const monthlyReturnDates = monthlyReturnData.map((data) => data['date']);
+
+    useEffect(() => {
+            axios.get(server + 'robots/get/monthly_returns/', {
+                params: {
+                    robot_id: props.robotData['id'],
+                    date: startDate.slice(0, 7)
+                }
+            })
+                .then(response => setMonthlyReturnData(response['data']))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, [ ,props.robotData, startDate]
+    );
+
     useEffect(() => {
             axios.get(props.server + 'robots/get/balance/', {
                 params: {
@@ -46,44 +68,41 @@ const RobotDashBoardPage = (props) => {
     );
 
     return (
-        <Container style={{height:'90%'}} fluid>
-            <Row style={{height: '100%', width:'100%', margin:'5px'}}>
-                <Col style={{height: '90%'}}>
-                    <Row style={{height: '50%', margin: '0px', padding: '20px'}}>
-                        {/*<RobotGeneralInformation/>*/}
-                    </Row>
-                    <Row style={{height: '50%'}}>
-                        <Col style={{height: '100%'}}>
-                            <RobotBalance robot={props.robot} server={props.server} startDate={props.startDate}
-                                          endDate={props.endDate} data={balances} lastBalance={lastBalance}/>
+        <Container style={{height:'100%', padding:'0px'}} fluid>
+            <RobotStatistics robot={props.robotData} server={props.server}
+                             startDate={props.startDate}
+                             endDate={props.endDate}/>
+            <Row style={{height: '100%', width: '100%', margin: '5px'}}>
+                <Col style={{height: '100%', paddingLeft: '0px'}} sm={8}>
+                    <Row style={{height: '300px', padding: '0px'}}>
+                        <Col style={{width: '50%', height: '100%', paddingLeft: '0px'}}>
+                            <RobotGeneralInformation/>
                         </Col>
-                        <Col style={{height: '100%'}}>
-                            {/*<RobotCashFlowChart robot={props.robot} server={props.server}/>*/}
+                        <Col style={{height: '100%', paddingRight: '0px'}}>
+                            <RobotDailyReturns data={dailyReturns}/>
                         </Col>
                     </Row>
-                </Col>
-                <Col style={{height: '90%'}} >
-                    <Row style={{height: '50%'}}>
-                        {/*<RobotStatistics robot={props.robot} server={props.server} startDate={props.startDate} endDate={props.endDate}/>*/}
+                    <Row style={{height: '300px', padding: '0px'}}>
+                        <Col style={{height: '100%', paddingLeft: '0px'}}>
+                            <RobotBalance data={balances} lastBalance={lastBalance}/>
+                        </Col>
+                        <Col style={{height: '100%', paddingRight: '0px'}}>
+                            <RobotDrawDown robotData={props.robotData} server={props.server} startDate={props.startDate}
+                                       endDate={props.endDate}/>
+                        </Col>
                     </Row>
-                    <Row style={{height: '50%'}}>
-                        {/*<RobotMonthlyReturns robot={props.robot} server={props.server}/>*/}
-                    </Row>
-                    {/*<Row style={{height: '50%'}}>*/}
-
+                    {/*    /!*<Col style={{height: '100%'}}>*!/*/}
+                    {/*        /!*<RobotCashFlowChart robot={props.robot} server={props.server}/>*!/*/}
+                    {/*    /!*</Col>*!/*/}
                     {/*</Row>*/}
                 </Col>
-                <Col style={{height: '90%'}} >
-                    <Row style={{height:'33%'}}>
-                        {/*<RobotReturn robot={props.robot} start_date={props.startDate} end_date={props.endDate}*/}
-                        {/*             server={props.server}/>*/}
+                <Col style={{height: '100%', paddingRight:'0px'}} sm={4}>
+                    <Row style={{height: '300px'}}>
+                        <MonthlyReturnsChart returns={monthlyReturns} dates={monthlyReturnDates}/>
                     </Row>
-                    <Row style={{height:'33%'}}>
-                        {/*<RobotDailyReturns robot={props.robot} start_date={props.startDate} end_date={props.endDate}*/}
-                        {/*                   server={props.server} data={dailyReturns}/>*/}
-                    </Row>
-                    <Row style={{height:'33%'}}>
-                        {/*<RobotDrawDown robot={props.robot} server={props.server} startDate={props.startDate} endDate={props.endDate}/>*/}
+                    <Row style={{height: '300px'}}>
+                        <RobotReturn robot={props.robot} start_date={props.startDate} end_date={props.endDate}
+                                         server={props.server}/>
                     </Row>
                 </Col>
             </Row>

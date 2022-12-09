@@ -15,39 +15,30 @@ import robotContext from "../../../../context/robot-context";
 import serverContext from "../../../../context/server-context";
 
 const RobotGeneralInformation = (props) => {
-    const robot = useContext(robotContext)['selectedRobot'];
-    const server = useContext(serverContext)['server'];
-    const [responseData, setResponseData] = useState([[{}]]);
-    useEffect(() => {
-            axios.get(server + 'robots/get_robot/' + robot)
-                .then(response => setResponseData(response['data']))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [props]
-    );
+    const robotData = useContext(robotContext)['selectedRobotData'];
     return (
-        <Table id={'cash-flow-table'} style={{margin: '0px'}}>
+        <div style={{height:'100%', width:'100%', paddingTop: '15px', paddingBottom: '15px'}}>
+            <Table id={'cash-flow-table'} style={{margin: '0px'}}>
             <tbody style={{height: '100%', padding: '5px'}}>
             <tr key={1}>
                 <td className={'table-row-text'}>{'Strategy'}</td>
-                <td>{responseData[0]['strategy']}</td>
+                <td>{robotData['strategy']}</td>
             </tr>
             <tr key={2}>
                 <td className={'table-row-text'}>{'Security'}</td>
-                <td>{responseData[0]['security']}</td>
+                <td>{robotData['security']}</td>
             </tr>
             <tr key={3}>
                 <td className={'table-row-text'}>{'Inception Date'}</td>
-                <td>{responseData[0]['inception_date']}</td>
+                <td>{robotData['inception_date']}</td>
             </tr>
             <tr key={4}>
                 <td className={'table-row-text'}>{'Broker'}</td>
-                <td>{responseData[0]['broker']}</td>
+                <td>{robotData['broker']}</td>
             </tr>
             <tr key={6}>
                 <td className={'table-row-text'}>{'Account Number'}</td>
-                <td>{responseData[0]['account_number']}</td>
+                <td>{robotData['account_number']}</td>
             </tr>
             {/*<tr key={7}>*/}
             {/*    <td className={'table-row-text'}>{'Last Price'}</td>*/}
@@ -59,6 +50,8 @@ const RobotGeneralInformation = (props) => {
             {/*</tr>*/}
             </tbody>
         </Table>
+        </div>
+
         // <Row style={{height:'100px'}}>
         //
         //

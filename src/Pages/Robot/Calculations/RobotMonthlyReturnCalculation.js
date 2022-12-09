@@ -9,7 +9,6 @@ import RobotContext from "../../../context/robot-context";
 import serverContext from "../../../context/server-context";
 
 const RobotMonthlyReturnCalculation = (props) => {
-    const selectedRobot = useContext(RobotContext)['selectedRobot'];
     const server = useContext(serverContext)['server'];
     const [month, setMonth] = useState('01-31');
     const [year, setYear] = useState('2020');
@@ -19,7 +18,7 @@ const RobotMonthlyReturnCalculation = (props) => {
     const submitHandler = (event) => {
         event.preventDefault();
         axios.post(server + 'robots/calculate/monthly_return/', {
-            robot: [selectedRobot],
+            robot: [props.robotData['id']],
             month: month,
             year: year,
         })
@@ -31,7 +30,7 @@ const RobotMonthlyReturnCalculation = (props) => {
     return(
         <Modal show={props.show} onHide={handleClose} animation={false}>
             <Modal.Header closeButton>
-                <Modal.Title>Monthly Return - {selectedRobot}</Modal.Title>
+                <Modal.Title>Monthly Return - {props.robotData['name']}</Modal.Title>
             </Modal.Header>
             <Modal.Body style={{width: '100%', height: '200px'}}>
                 <Form.Group className="mb-3" controlId="quantity_type">

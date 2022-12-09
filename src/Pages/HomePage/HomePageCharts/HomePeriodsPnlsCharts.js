@@ -5,7 +5,6 @@ import Chart from "react-apexcharts";
 
 const HomePeriodsPnlsCharts = (props) => {
     const totalValue = props.data.map(data => data['y']).reduce((a, b) => a + b, 0)
-    console.log(props.data)
     const chartOptions = {
         options: {
             chart: {
@@ -75,7 +74,8 @@ const HomePeriodsPnlsCharts = (props) => {
             },
             yaxis: [
                 {
-                    tickAmount: 10,
+                    tickAmount: 5,
+                    decimalsInFloat: 0,
                     labels: {
                         show: true,
                         style: {

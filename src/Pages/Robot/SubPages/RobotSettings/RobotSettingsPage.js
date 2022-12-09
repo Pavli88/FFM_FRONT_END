@@ -16,7 +16,7 @@ const RobotSettingsPage = (props) => {
     return (
         <Row style={{height: '100%', width: '100%', margin: '0px'}}>
             <Col>
-                {/*<RobotRiskSettings robot={props.robotId} server={props.server}/>*/}
+                <RobotRiskSettings server={server}/>
             </Col>
             <Col>
                 <RobotSettings server={server}/>

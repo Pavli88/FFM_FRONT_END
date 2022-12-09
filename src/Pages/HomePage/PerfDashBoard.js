@@ -9,7 +9,6 @@ import './PerfDashBoard.css'
 
 const PerformanceDashboard = (props) => {
     const [perfData, setPerfData] = useState([]);
-    console.log(perfData)
     useEffect(() => {
             axios.get(props.server + 'home/load_robot_stats/' + props.env)
                 .then(response => response['data'])
@@ -23,21 +22,19 @@ const PerformanceDashboard = (props) => {
     const perfRespData = perfData.map((record) =>
     <tr key={record['robot']['id']}>
         <td className={'table-row'}>{record['robot']['name']}</td>
-        <td className={'table-row'} style={{color: record['balance']<0.0 ? 'red': 'green'}}>{record['balance']}</td>
         <td className={'table-row'} style={{color: record['dtd_ret']<0.0 ? 'red': 'green'}}>{record['dtd_ret']} %</td>
         <td className={'table-row'} style={{color: record['mtd_ret']<0.0 ? 'red': 'green'}}>{record['mtd_ret']} %</td>
         <td className={'table-row'} style={{color: record['ytd_ret']<0.0 ? 'red': 'green'}}>{record['ytd_ret']} %</td>
     </tr>);
 
     return (
-        <Row style={{height: '100%', width: '100%', margin: '0px'}}>
+        <Row style={{height: '500px', width: '100%', margin: '0px', paddingTop:'15px'}}>
             <Card className="card" style={{margin: '0px'}}>
                 <div style={{height: '500px', overflowY: 'scroll', overflowX: 'hidden'}}>
                     <Table>
                         <thead>
                         <tr>
                             <th className={'table-header'}>Robot</th>
-                            <th className={'table-header'}>Balance</th>
                             <th className={'table-header'}>DTD</th>
                             <th className={'table-header'}>MTD</th>
                             <th className={'table-header'}>YTD</th>

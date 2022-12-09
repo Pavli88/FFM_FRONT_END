@@ -3,6 +3,7 @@ import RobotTransactionsTable from "./RobotTransactionsTable";
 import DateSelectorRobotPage from "../../DateSelectorRobotPage";
 import RobotTradesStatistics from "./RobotTradesStatistics";
 import RobotTradesQuantiy from "./RobotTradesQuantity";
+
 // Bootstrap
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col'
@@ -11,17 +12,19 @@ import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import DateContext from "../../../../context/date-context";
 
+// Context
+import RobotContext from "../../../../context/robot-context";
+
 const RobotTransactionsPage = (props) => {
     const [transactionData, setTransactionData] = useState([]);
     const pnlData = transactionData.map(data => data['pnl'])
     const quantityData = transactionData.map(data => data['quantity'])
     const startDate = useContext(DateContext)['startDate'];
     const endDate = useContext(DateContext)['endDate'];
-
     useEffect(() => {
-            axios.get(props.server + 'robots/trades/', {
+            axios.get(props.server + 'robots/get/transactions/', {
                 params: {
-                    robot: props.robot,
+                    robot_id: props.robotData['id'],
                     start_date: startDate,
                     end_date: endDate,
                 }
@@ -32,7 +35,6 @@ const RobotTransactionsPage = (props) => {
                 });
         }, [props]
     );
-
     return (
         <Container fluid>
             <Row style={{width: '100%', height: '800px', margin: '0px', padding: '0px'}}>
@@ -52,9 +54,6 @@ const RobotTransactionsPage = (props) => {
                     </Row>
                 </Col>
             </Row>
-            {/*<Col style={{margin: '0px', width: '100%', height: '100%', padding: '0px', background: 'green'}}>*/}
-            {/*    <RobotTradesStatistics data={pnlData}/>*/}
-            {/*</Col>*/}
         </Container>
     );
 };

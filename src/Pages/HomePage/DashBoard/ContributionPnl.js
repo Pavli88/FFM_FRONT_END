@@ -48,7 +48,7 @@ const ContributionPnl = (props) => {
     );
 
     return (
-        <Row style={{height: '100%', width: '100%', margin: '0px'}}>
+        <Row style={{height: '300px', width: '100%', margin: '0px'}}>
             <Col style={{height: '100%'}}>
                 <HomePeriodsPnlsCharts data={dtdData} horizontal={false} xLabel={true} title={'Day to Date'}/>
             </Col>

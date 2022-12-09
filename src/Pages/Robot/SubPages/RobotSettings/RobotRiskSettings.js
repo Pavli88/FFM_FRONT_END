@@ -2,10 +2,14 @@ import CardWidget from "../../../../components/CardWidget";
 
 import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 
+// Context
+import RobotContext from "../../../../context/robot-context";
+
 const RobotRiskSettings = (props) => {
+    const robotData = useContext(RobotContext)['selectedRobotData'];
     const [dailyRiskPerc, setDailyRiskPerc] = useState();
     const [dailyTradeLimit, setDailyTradeLimit] = useState();
     const [riskPerTrade, setRiskPerTrade] = useState();
@@ -13,11 +17,14 @@ const RobotRiskSettings = (props) => {
     const [quantity, setQuantity] = useState();
     const [sl, setSl] = useState();
     const [winExp, setWinExp] = useState();
-    // Fetching robot risk data from database
     useEffect(() => {
-            fetch(props.server + 'risk/get_risk/' + props.robot)
-                .then(response => response.json())
-                .then(function(data){
+            axios.get(props.server + 'risk/get/robot/', {
+                params: {
+                    robot_id: robotData['id'],
+                }
+            })
+                .then(response => response['data'][0])
+                .then(data => {
                     setDailyRiskPerc(data['daily_risk_perc']);
                     setDailyTradeLimit(data['daily_trade_limit']);
                     setRiskPerTrade(data['risk_per_trade']);
@@ -29,12 +36,12 @@ const RobotRiskSettings = (props) => {
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        }, [props]
+        }, [,robotData]
     );
     const submitForm = (event) => {
         event.preventDefault();
         axios.post(props.server + 'risk/update_robot_risk/', {
-            robot: props.robot,
+            robot_id: robotData['id'],
             daily_risk: dailyRiskPerc,
             nbm_trades: dailyTradeLimit,
             risk_per_trade: riskPerTrade,
@@ -44,7 +51,7 @@ const RobotRiskSettings = (props) => {
             sl: sl,
             win_exp: winExp,
         })
-            .then(response => alert('Risk is updated for ' + props.robot))
+            .then(response => alert('Risk is updated for ' + robotData['name']))
             .catch((error) => {
                 console.error('Error Message:', error);
             });

@@ -83,23 +83,25 @@ const CumulativeReturnChart = (props) => {
         series: props.series
     };
     return (
-        <Card className="card" style={{margin: '0px'}}>
-            <Card.Body style={{padding: '0px'}}>
-                <Row style={{height: '100%', width: '100%', margin: '0px'}}>
-                    <Col style={{height: '100%'}}>
-                        <div style={{padding: '0px', height: '100%'}}>
-                            <Chart
-                                options={chartOptions.options}
-                                series={chartOptions.series}
-                                type={'area'}
-                                width="100%"
-                                height="100%"
-                            />
-                        </div>
-                    </Col>
-                </Row>
-            </Card.Body>
-        </Card>
+        <div style={{width: '100%', height: '100%', paddingTop: '10px', paddingLeft: '0px'}}>
+            <Card className="card" style={{margin: '0px'}}>
+                <Card.Body style={{padding: '0px'}}>
+                    <Row style={{height: '100%', width: '100%', margin: '0px'}}>
+                        <Col style={{height: '100%'}}>
+                            <div style={{padding: '0px', height: '100%'}}>
+                                <Chart
+                                    options={chartOptions.options}
+                                    series={chartOptions.series}
+                                    type={'area'}
+                                    width="100%"
+                                    height="100%"
+                                />
+                            </div>
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
+        </div>
     );
 };
 

@@ -11,11 +11,10 @@ import DateContext from "../../../../context/date-context";
 
 const RobotDrawDown = (props) => {
     const [chartData, setChartData] = useState([]);
-
     useEffect(() => {
-            axios.get(props.server + 'robots/drawdown/', {
+            axios.get(props.server + 'robots/get/drawdown/', {
                 params: {
-                    robot: props.robot,
+                    robot_id: props.robotData['id'],
                     start_date: props.startDate,
                     end_date: props.endDate,
                 }
@@ -89,21 +88,23 @@ const RobotDrawDown = (props) => {
         ]
     };
     return (
-        <Card className="card" style={{margin:'0px'}}>
-            <Card.Body style={{padding: '0px'}}>
-                <Row style={{height: '100%'}}>
-                    <Col style={{height: '100%'}}>
-                        <Chart
-                            options={chartOptions.options}
-                            series={chartOptions.series}
-                            type={'bar'}
-                            width="100%"
-                            height="100%"
-                        />
-                    </Col>
-                </Row>
-            </Card.Body>
-        </Card>
+        <div style={{width: '100%', height: '100%', paddingTop: '10px', paddingLeft: '0px'}}>
+            <Card className="card" style={{margin: '0px'}}>
+                <Card.Body style={{padding: '0px'}}>
+                    <Row style={{height: '100%'}}>
+                        <Col style={{height: '100%'}}>
+                            <Chart
+                                options={chartOptions.options}
+                                series={chartOptions.series}
+                                type={'bar'}
+                                width="100%"
+                                height="100%"
+                            />
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
+        </div>
     );
 };
 

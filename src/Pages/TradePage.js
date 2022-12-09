@@ -5,22 +5,20 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button'
 
 import TradeTableData from "./TradePage/TradeTableData";
-import PriceParagraph from "./TradePage/PriceParagraph";
 import TradeExecutor from "./TradePage/TradeExecutor";
 
+import React from "react";
 import {useContext, useState} from "react";
 
 // Contexts
 import EnvContext from "../context/env-context";
 import ServerContext from "../context/server-context";
-import axios from "axios";
-import Card from "react-bootstrap/Card";
-import Table from "react-bootstrap/Table";
+import TradeContext from "./TradePage/TradePageContext/TradePageContext";
 
 const TradePage = () => {
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
-
+    const [lastTrade, setLastTrade] = useState(0);
     // This part connects a websocket with the back end from the front end
     // const newWebSocket = new WebSocket('http://127.0.0.1:8000/trade/price_stream/')
     //
@@ -40,31 +38,23 @@ const TradePage = () => {
     // };
 
     return (
-        <Container className={'border'}
-                   style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
-            <Row style={{height: '400px'}}>
-                <Col style={{height: '100%'}}>
-                    <Card style={{height: '100%'}} className="card">
-                        <Card.Title className="card-header-first">Portfolio Trade</Card.Title>
-                        <div style={{height: '500px', overflowY: 'scroll', overflowX: 'hidden'}}>
-
-                        </div>
-                    </Card>
-                </Col>
-                <Col style={{height: '100%'}}>
-                    <Card style={{height: '100%'}} className="card">
-                        <Card.Title className="card-header-first">Robot Trade</Card.Title>
-                        <div style={{height: '500px', overflowY: 'scroll', overflowX: 'hidden'}}>
-                            <TradeExecutor/>
-                        </div>
-                    </Card>
-                </Col>
-            </Row>
-            <br/>
-            <Row style={{height: '500px'}}>
-                <TradeTableData env={env} server={server}/>
-            </Row>
-        </Container>
+        <TradeContext.Provider value={{
+            lastTrade: lastTrade,
+            saveLastTrade: setLastTrade,
+        }}>
+            <Container className={'border'}
+                       style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}}
+                       fluid>
+                <Row style={{height: '500px'}}>
+                    <Col sm={8}>
+                        <TradeTableData env={env} server={server} />
+                    </Col>
+                    <Col sm={4}>
+                        <TradeExecutor server={server} />
+                    </Col>
+                </Row>
+            </Container>
+        </TradeContext.Provider>
     );
 };
 

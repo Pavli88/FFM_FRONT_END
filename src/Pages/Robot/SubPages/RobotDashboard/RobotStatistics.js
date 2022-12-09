@@ -21,9 +21,9 @@ const RobotStatistics = (props) => {
     const [transactionData, setTransactionData] = useState([]);
 
     useEffect(() => {
-            axios.get(props.server + 'robots/trades/', {
+            axios.get(props.server + 'robots/get/transactions/', {
                 params: {
-                    robot: props.robot,
+                    robot_id: props.robot['id'],
                     start_date: props.startDate,
                     end_date: props.endDate,
                 }
@@ -101,61 +101,35 @@ const RobotStatistics = (props) => {
     const avgWinningTrade = Math.round(((totalWinner / winningTradesList.length)) * 100) / 100
     const winRatio = Math.round(((winningTradesList.length / transactionData.length)) * 10000) / 100
     const lossRatio = Math.round(((losingTradesList.length / transactionData.length)) * 10000) / 100
-
-
     return (
-        <Row style={{height: '100%'}}>
-            <Col style={{height: '100%', width: '50%'}}>
-                <Row>
-                    <PieChartFull data={[winRatio, lossRatio]}/>
-                </Row>
-                <Row>
-                    <Card>
-                        <Card.Body>
-                            <Card.Title>Profit</Card.Title>
-                            <Card.Text className={'card-text'}>
-                                {Math.round(totalPnl * 100) / 100}
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Row>
-                <Row>
-                    <Card style={{height: '100%'}}>
-                        <Card.Body>
-                            <Card.Title>Profit Factor</Card.Title>
-                            <Card.Text className={'card-text'}>
-                                {Math.round((winRatio * avgWinningTrade) / (lossRatio * avgLosingTrade * -1) * 100) / 100}
-                            </Card.Text>
-                        </Card.Body>
-                    </Card>
-                </Row>
+        <Row style={{height: '250px', paddingTop:'10px'}}>
+            <Col style={{height: '100%', paddingLeft: '0px'}} sm={2}>
+                <PieChartFull data={[winRatio, lossRatio]}/>
             </Col>
-            <Col style={{height: '100%', width: '50%'}}>
-                <Row>
-                    <BarCharting horizontal={false} data={[avgWinningTrade, avgLosingTrade]}
-                             title={'Avg Winning & Loosing '}/>
-                </Row>
-                <Row>
-                    <Card>
-                    <Card.Body>
-                        <Card.Title>Payoff Ratio</Card.Title>
-                        <Card.Text className={'card-text'}>
-                            {Math.round((avgWinningTrade / (avgLosingTrade * -1)) * 100) / 100}
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-                </Row>
-                <Row>
-                    <Card>
-                    <Card.Body>
-                        <Card.Title>Total Trades</Card.Title>
-                        <Card.Text className={'card-text'}>
-                            {totalNumberOfTrades}
-                        </Card.Text>
-                    </Card.Body>
-                </Card>
-                </Row>
+            <Col style={{height: '100%'}}>
+                <BarCharting horizontal={false}
+                                     data={[totalNumberOfTrades, totalNumberOfLongTradesList.length, totalNumberOfShortTradesList.length]}
+                                     title={'Number of Trades'} xData={['Total', 'Longs', 'Shorts']}
+                                     colors={['#009999', '#007500', '#007500']}/>
             </Col>
+            <Col style={{height: '100%'}}>
+                <BarCharting horizontal={true}
+                                     data={[Math.round(totalPnl * 100) / 100, Math.round(totalLongWinner*100)/100, Math.round(totalLongLoser*100)/100, Math.round(totalShortWinner*100)/100, Math.round(totalShortLoser*100)/100]}
+                                     title={'Profit and Loss'} xData={['Total', 'Long Winners', 'Long Losers', 'Short Winners', 'Short Losers']}
+                                     colors={['#009999', '#007500', '#007500']}/>
+            </Col>
+            <Col style={{height: '100%', paddingRight:'0px'}}>
+                <BarCharting horizontal={false}
+                                     data={[Math.round((winRatio * avgWinningTrade) / (lossRatio * avgLosingTrade * -1) * 100) / 100, Math.round((avgWinningTrade / (avgLosingTrade * -1)) * 100) / 100]}
+                                     title={'Profit and Loss'} xData={['Profit Factor', 'Payoff Ratio']}
+                                     colors={['#009999', '#007500', '#007500']}/>
+            </Col>
+                {/*    [function(value){*/}
+                {/*if (value['value'] < 0){*/}
+                {/*    return '#E32227'*/}
+                {/*}else {*/}
+                {/*    return '#007500'*/}
+                {/*}]*/}
         </Row>
     );
 };

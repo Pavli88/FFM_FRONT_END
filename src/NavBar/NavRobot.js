@@ -3,14 +3,17 @@ import {Nav} from "react-bootstrap";
 import FormControl from "react-bootstrap/FormControl";
 import Dropdown from "react-bootstrap/Dropdown";
 import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
 
-import {useContext} from "react";
+import {useContext, useState} from "react";
 
 // Context
 import DateContext from "../context/date-context";
 import RobotContext from "../context/robot-context";
 import EnvContext from "../context/env-context";
 import axios from "axios";
+
+import NewRobotForm from "../Pages/Robot/NewRobotForm";
 
 const NavRobot = (props) => {
     const allRobotsData = useContext(RobotContext)['allRobotsData'];
@@ -20,7 +23,7 @@ const NavRobot = (props) => {
     const endDate = useContext(DateContext)['endDate'];
     const setStartDate = useContext(DateContext)['saveStartDate'];
     const setEndDate = useContext(DateContext)['saveEndDate'];
-    const saveEnvironment = useContext(EnvContext)['saveEnvironment'];
+    const [showNewRobot, setNewRobot] = useState(false);
     const getRobotData = (id) => {
         axios.get(props.server + 'robots/get/robot/' + id)
             .then(response => selectRobot(response['data'][0]))
@@ -32,58 +35,78 @@ const NavRobot = (props) => {
         <Dropdown.Item key={record['id']} eventKey={record['id']}>{record['name']}</Dropdown.Item>);
     return (
         <Row>
-            <Nav.Link href="#" disabled>
-                {selectedRobotData['name']}
-            </Nav.Link>
-            <Col>
-                <Nav.Link href="#" disabled>
-                    From
-                </Nav.Link>
+            <Col style={{padding:'0px'}}>
+                <Row style={{padding: '0px'}}>
+                    <Col md="auto" style={{paddingLeft:'5px'}}>
+                        <Dropdown onSelect={(id) => getRobotData(id)}>
+                            <Dropdown.Toggle variant="success" id="dropdown-basic" >
+                                Robot
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                {robotsOptions}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </Col>
+                <Col>
+                    <Row style={{alignItems: 'middle'}}>
+                        <p style={{margin: '0px', fontSize: '20px', width: '100%'}}>
+                            {selectedRobotData['name']}
+                        </p>
+                    </Row>
+                </Col>
+                </Row>
             </Col>
-            <Col style={{padding: '0px'}}>
-                <FormControl
-                    type="date"
-                    className="me-2"
-                    aria-label="Search"
-                    defaultValue={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                />
+            <Col style={{padding:'0px', height:'100%'}}>
+                <Row style={{padding:'0px', width:'100%', height: '100%'}}>
+                    <Col style={{paddingLeft:'5px'}}>
+                        <Nav.Link href="#" disabled>
+                            Date
+                        </Nav.Link>
+                    </Col>
+                    <Col>
+                        <FormControl
+                            type="date"
+                            size="sm"
+                            className="me-2"
+                            aria-label="Search"
+                            defaultValue={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            style={{height:'100%'}}
+                        />
+                    </Col>
+                    <Col>
+                        <Nav.Link href="#" disabled>
+                            To
+                        </Nav.Link>
+                    </Col>
+                    <Col>
+                        <FormControl
+                            type="date"
+                            size="sm"
+                            className="me-2"
+                            aria-label="Search"
+                            defaultValue={endDate}
+                            style={{height:'100%'}}
+                            onChange={(e) => setEndDate(e.target.value)}
+                        />
+                    </Col>
+                </Row>
             </Col>
-            <Col style={{padding: '0px'}}>
-                <Nav.Link href="#" disabled>
-                    To
-                </Nav.Link>
+            <Col style={{padding:'0px'}}>
+                <Row style={{padding:'0px', width:'100%'}}>
+                    <Col>
+                        <Button onClick={() => setNewRobot(true)}>New Robot</Button>
+                    </Col>
+                    <Col>
+                        <Button>New Strategy</Button>
+                    </Col>
+                    <Col>
+                        <Button>Manage Funds</Button>
+                    </Col>
+                </Row>
             </Col>
-            <Col>
-                <FormControl
-                    type="date"
-                    className="me-2"
-                    aria-label="Search"
-                    defaultValue={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                />
-            </Col>
-            <Col style={{width: '100%'}}>
-                <Dropdown onSelect={(id) => getRobotData(id)}>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        Robot
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        {robotsOptions}
-                    </Dropdown.Menu>
-                </Dropdown>
-            </Col>
-            {/*<Col>*/}
-            {/*    <Dropdown onSelect={(env) => saveEnvironment(env)} style={{margin: '5px'}}>*/}
-            {/*        <Dropdown.Toggle variant="success" id="dropdown-basic">*/}
-            {/*           Environment*/}
-            {/*        </Dropdown.Toggle>*/}
-            {/*        <Dropdown.Menu>*/}
-            {/*            <Dropdown.Item eventKey="live">Live</Dropdown.Item>*/}
-            {/*            <Dropdown.Item eventKey="demo">Demo</Dropdown.Item>*/}
-            {/*        </Dropdown.Menu>*/}
-            {/*    </Dropdown>*/}
-            {/*</Col>*/}
+            <NewRobotForm show={showNewRobot} hide={() => setNewRobot(false)} server={props.server}
+                          style={{height: '400px'}}/>
         </Row>
     );
 };

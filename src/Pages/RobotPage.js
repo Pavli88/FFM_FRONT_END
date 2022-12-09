@@ -1,6 +1,7 @@
 import {useState, useEffect, useContext} from "react";
 
 import NewRobotForm from "./Robot/NewRobotForm";
+import NavRobot from "../NavBar/NavRobot";
 import RobotTable from "./Robot/RobotTable";
 import RobotBalanceCalculation from "./Robot/Calculations/RobotBalanceCalculation";
 import RobotMonthlyReturnCalculation from "./Robot/Calculations/RobotMonthlyReturnCalculation";
@@ -28,7 +29,7 @@ import RobotSettingsPage from "./Robot/SubPages/RobotSettings/RobotSettingsPage"
 import Container from "react-bootstrap/Container";
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Form from "react-bootstrap/Form";
+import Card from "react-bootstrap/Card";
 
 // Context
 import ServerContext from "../context/server-context";
@@ -50,21 +51,17 @@ const RobotPage = (props) => {
     const [showRobotPricingCalc, setRobotPricingCalc] = useState(false);
     const [showRobotBalanceCalc, setRobotBalanceCalc] = useState(false);
     const [showRobotMonthlyCalc, setRobotMonthlyCalc] = useState(false);
-
     return (
-            <Container style={{height:window.innerHeight, background: '#FBFAFA', width: "100%", margin: '0px', padding:'0px'}} fluid>
-                <Row style={{height:'100%', margin: '0px'}}>
-                    <ProSidebar>
-                        <Menu iconShape="square">
-                            <MenuItem onClick={() => setNewRobot(true)}
-                                      icon={<BsFillPlusSquareFill size={20} className="rounded-circle"/>}>New
-                                Robot</MenuItem>
+        <Container
+            style={{height: window.innerHeight, background: '#FBFAFA', width: "100%", margin: '0px', padding: '0px'}}
+            fluid>
+            <Row style={{height: '90%', margin: '10px'}}>
+                <Col sm={2} style={{paddingLeft:'0px'}}>
+                    <ProSidebar backgroundColor='#FBFAFA'>
+                        <Menu iconShape="square" style={{height:'100%'}}>
                             <MenuItem icon={<TiChartPieOutline size={20}/>}>Dashboard
                                 <Link to="/robot/dashboard"/>
                             </MenuItem>
-                            <SubMenu title="Trade" icon={<BsCash size={20}/>}>
-                                <MenuItem>Robot</MenuItem>
-                            </SubMenu>
                             <SubMenu title="Calculations" icon={<BsCalculator size={20} className="rounded-circle"/>}>
                                 <MenuItem onClick={() => setRobotBalanceCalc(true)}>Balance</MenuItem>
                                 <MenuItem onClick={() => setRobotPricingCalc(true)}>Pricing</MenuItem>
@@ -84,39 +81,44 @@ const RobotPage = (props) => {
                             </MenuItem>
                         </Menu>
                     </ProSidebar>
-                    <Col style={{width:'100%'}}>
-                        <Row style={{height:'100%', padding: '0px', width: '100%', margin: '0px'}}>
-                            <Switch>
-                                <Route path="/robot/dashboard">
-                                    <RobotDashBoardPage server={server} robotData={robotData} startDate={startDate}
-                                                        endDate={endDate}/>
-                                </Route>
-                                <Route path="/robot/transactions">
-                                    {/*<RobotTransactionsPage robot={robot} server={server}/>*/}
-                                </Route>
-                                <Route path="/robot/risk">
-                                    {/*<RobotRiskPage robot={robot} server={server}/>*/}
-                                </Route>
-                                <Route path="/robot/return">
-                                    {/*<RobotReturnPage robot={robot} server={server}/>*/}
-                                </Route>
-                                <Route path="/robot/settings">
-                                    <RobotSettingsPage/>
-                                </Route>
-                            </Switch>
-                        </Row>
-                    </Col>
-                </Row>
-                <NewRobotForm show={showNewRobot} hide={() => setNewRobot(false)} server={server}
-                              style={{height: '400px'}}/>
-                <RobotBalanceCalculation show={showRobotBalanceCalc} hide={() => setRobotBalanceCalc(false)}
-                                         server={server}
-                                         robotData={robotData}/>
-                {/*<RobotPricingForm show={showRobotPricingCalc} hide={() => setRobotPricingCalc(false)} server={server}*/}
-                {/*                  robot={robot}/>*/}
-                {/*<RobotMonthlyReturnCalculation show={showRobotMonthlyCalc} hide={() => setRobotMonthlyCalc(false)} server={server}*/}
-                {/*                               robot={[robot]}/>*/}
-            </Container>
+                </Col>
+                <Col style={{width: '100%', height:'100%', paddingLeft:'0px'}}>
+                    <Card style={{height: '50px'}}>
+                        <NavRobot server={server}/>
+                    </Card>
+                    <Row style={{height: '93%', padding: '0px', width: '100%', margin: '0px'}}>
+                        <Switch>
+                            <Route path="/robot/dashboard">
+                                <RobotDashBoardPage server={server} robotData={robotData} startDate={startDate}
+                                                    endDate={endDate}/>
+                            </Route>
+                            <Route path="/robot/transactions">
+                                <RobotTransactionsPage robotData={robotData} server={server}/>
+                            </Route>
+                            <Route path="/robot/risk">
+                                {/*<RobotRiskPage robot={robot} server={server}/>*/}
+                            </Route>
+                            <Route path="/robot/return">
+                                {/*<RobotReturnPage robot={robot} server={server}/>*/}
+                            </Route>
+                            <Route path="/robot/settings">
+                                <RobotSettingsPage/>
+                            </Route>
+                        </Switch>
+                    </Row>
+                </Col>
+            </Row>
+            <NewRobotForm show={showNewRobot} hide={() => setNewRobot(false)} server={server}
+                          style={{height: '400px'}}/>
+            <RobotBalanceCalculation show={showRobotBalanceCalc} hide={() => setRobotBalanceCalc(false)}
+                                     server={server}
+                                     robotData={robotData}/>
+            {/*<RobotPricingForm show={showRobotPricingCalc} hide={() => setRobotPricingCalc(false)} server={server}*/}
+            {/*                  robot={robotData}/>*/}
+            <RobotMonthlyReturnCalculation show={showRobotMonthlyCalc} hide={() => setRobotMonthlyCalc(false)}
+                                           server={server}
+                                           robotData={robotData}/>
+        </Container>
     );
 };
 
