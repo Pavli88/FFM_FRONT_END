@@ -11,13 +11,7 @@ const AllRobotsPnlsChart = (props) => {
             stroke: {
                 curve: 'smooth',
             },
-            // colors: [function (value) {
-            //     if (value['value'] < 0) {
-            //         return '#E32227'
-            //     }else {
-            //         return '#007500'
-            //     }
-            // }],
+            colors: props.colors,
             xaxis: {
                 categories: [],
                 labels: {show: false},
@@ -39,7 +33,7 @@ const AllRobotsPnlsChart = (props) => {
                 },
             },
             title: {
-                text: props.title,
+                text: "Profit History",
                 align: 'left',
                 margin: 10,
                 offsetX: 0,
@@ -59,9 +53,6 @@ const AllRobotsPnlsChart = (props) => {
                             return val.toFixed(0);
                         }
                     },
-                    title: {
-            text: 'Profit'
-          }
                 }
             ],
             dataLabels: {

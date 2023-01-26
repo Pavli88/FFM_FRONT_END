@@ -32,15 +32,13 @@ const PerformanceDashboard = (props) => {
             <Card className="card" style={{margin: '0px'}}>
                 <div style={{height: '500px', overflowY: 'scroll', overflowX: 'hidden'}}>
                     <Table>
-                        <thead>
-                        <tr>
-                            <th className={'table-header'}>Robot</th>
-                            <th className={'table-header'}>DTD</th>
-                            <th className={'table-header'}>MTD</th>
-                            <th className={'table-header'}>YTD</th>
-                        </tr>
-                        </thead>
                         <tbody>
+                        <tr>
+                            <th className={'table-row'}>Robot</th>
+                            <th className={'table-row'}>DTD</th>
+                            <th className={'table-row'}>MTD</th>
+                            <th className={'table-row'}>YTD</th>
+                        </tr>
                         {perfRespData}
                         </tbody>
                     </Table>

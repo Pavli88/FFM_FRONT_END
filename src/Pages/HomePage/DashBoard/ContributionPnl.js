@@ -20,7 +20,8 @@ const ContributionPnl = (props) => {
                     env: props.env,
                 }
             })
-                .then(response => setDtdData(response['data']))
+                .then(response => response['data'])
+                .then(data => setDtdData(data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
@@ -30,7 +31,8 @@ const ContributionPnl = (props) => {
                     env: props.env,
                 }
             })
-                .then(response => setMtdData(response['data']))
+                .then(response => response['data'])
+                .then(data => setMtdData(data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
@@ -40,7 +42,8 @@ const ContributionPnl = (props) => {
                     env: props.env,
                 }
             })
-                .then(response => setYtdData(response['data']))
+                .then(response => response['data'])
+                .then(data => setYtdData(data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });

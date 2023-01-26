@@ -4,13 +4,128 @@ import AllRobotsPnlsChart from "../HomePageCharts/AllRobotsPnlsChart";
 // Bootstrap Imports
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {useEffect, useState} from "react";
 import axios from "axios";
+import Card from "react-bootstrap/Card";
 
+// Chart Import
+import Chart from "react-apexcharts";
 
+import {useEffect, useState, useContext} from "react";
+
+// Context
+
+const DailyPnlChart = (props) => {
+    const columnChartOptions = {
+        options: {
+            chart: {
+                toolbar: false,
+                id: 'barChart_1',
+                type: 'bar',
+                // stacked:true,
+            },
+            colors: [function(value){
+                if (value['value'] < 0){
+                    return '#E32227'
+                }else {
+                    return '#007500'
+                }
+            }],
+            annotations: {
+                yaxis: [
+                    {
+                        y: -2.5,
+                        borderColor: '#BF4737',
+                        label: {
+                            borderColor: '#BF4737',
+                            position:'left',
+                            style: {
+                                color: '#fff',
+                                background: '#BF4737'
+                            },
+                            text: '-2.5 %'
+                        }
+                    },
+                    {
+                        y: -5,
+                        borderColor: '#BF4737',
+                        label: {
+                            borderColor: '#BF4737',
+                            position:'left',
+                            style: {
+                                color: '#fff',
+                                background: '#BF4737'
+                            },
+                            text: '-5%'
+                        }
+                    },
+                ]
+            },
+            xaxis: {
+                categories: props.dates,
+                labels: {show: false},
+                axisBorder: {
+                    show: false,
+                    color: '#78909C',
+                    height: 1,
+                    width: '100%',
+                    offsetX: 0,
+                    offsetY: 0
+                },
+            axisTicks: {
+                    show: false,
+                    borderType: 'solid',
+                    color: '#78909C',
+                    height: 6,
+                    offsetX: 0,
+                    offsetY: 0
+                },
+            },
+            title: {
+                text: 'Daily Return %',
+                align: 'left',
+                margin: 10,
+                offsetX: 0,
+                offsetY: 0,
+                floating: false,
+                style: {
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    fontFamily: undefined,
+                    color: '#263238'
+                },
+            },
+            yaxis: [
+                {
+                    labels: {
+                        formatter: function (val) {
+                            return val.toFixed(0);
+                        }
+                    },
+                }
+            ],
+            dataLabels: {
+                enabled: false
+            },
+        },
+        series: [{
+            data: props.data,
+        }]
+    };
+    return (
+        <Chart
+            options={columnChartOptions.options}
+            series={columnChartOptions.series}
+            type={'bar'}
+            width="100%"
+            height="100%"/>
+    );
+};
 
 const TopLevel = (props) =>{
+    const robotColors = props.robots.map((data) => data['color']);
     const [responseData, setResponseData] = useState([{}]);
+    const [pnlChart, setPnlChart] = useState(<></>);
+
     const findCumulativeSum = arr => {
         const creds = arr.reduce((acc, val) => {
             let {sum, res} = acc;
@@ -23,28 +138,39 @@ const TopLevel = (props) =>{
         });
         return creds.res;
     };
+
+    const getAllRobotDailyReturns = async () => {
+        const response = await axios.get(props.server + 'home/get/robot/all/daily_returns/', {
+            params: {
+                env: props.env,
+                date: '2022-01-01',
+            }
+        });
+        setPnlChart(<DailyPnlChart data={response.data['total_returns']} dates={response.data['dates']}/>);
+        const response2 = await axios.get(props.server + 'robots/get/pnls/', {
+            params: {
+                env: props.env,
+            }
+        });
+        setResponseData(response2.data['data'].map(data => data))
+    };
+
     useEffect(() => {
-            axios.get(props.server + 'robots/get/pnls/', {
-                params: {
-                    env: props.env,
-                }
-            })
-                .then(response => response['data']['data'].map(data => data))
-                .then(data => setResponseData(data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
+        getAllRobotDailyReturns();
         }, [props]
     );
+
     return (
         <Row style={{height:'100%', width: '100%', margin: '0px', paddingLeft: '0px'}}>
             <Col style={{height: '100%', width: '50%', paddingLeft: '15px'}}>
-                <AllRobotsPnlsChart data={responseData}/>
-                {/*<HomePageBarChart data={findCumulativeSum(responseData)} title={'Total Cumulative Year to Date P&L'} id={'aggregated-pnl-chart'} type={'area'}/>*/}
+                <AllRobotsPnlsChart data={responseData} colors={robotColors}/>
             </Col>
-            <Col style={{height: '100%', width: '50%'}}>
-                <AllRobotsPnlsChart data={responseData}/>
-                {/*<HomePageBarChart data={responseData} title={'Daily P&L'} id={'daily-aggregated-pnl-chart'} type={'bar'}/>*/}
+            <Col style={{height: '100%', width: '50%', display: 'flex'}}>
+                <Card className="card" style={{margin: '2px', height: '100%'}}>
+                    <Card.Body style={{padding: '0px'}}>
+                        {pnlChart}
+                    </Card.Body>
+                </Card>
             </Col>
         </Row>
     )

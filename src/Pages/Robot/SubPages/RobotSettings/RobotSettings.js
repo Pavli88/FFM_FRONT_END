@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
 import {useContext, useEffect, useRef, useState} from "react";
+import { HexColorPicker } from "react-colorful";
 
 // Context
 import RobotContext from "../../../../context/robot-context";
@@ -18,6 +19,14 @@ const RobotSettings = (props) => {
     const [status, setStatus] = useState(robotData['status']);
     const [security, setSecurity] = useState(robotData['security']);
     const [accounts, setAccounts] = useState([]);
+    const [robotColorCode, setRobotColorCode] = useState(robotData['color']);
+
+    const handleChangeComplete = (color) => {
+        setRobotColorCode({background: color.hex});
+    };
+    const colorChange = (color, event) => {
+
+    };
 
     useEffect(() => {
             setSecurity(robotData['security']);
@@ -47,6 +56,7 @@ const RobotSettings = (props) => {
             status: status,
             security: security,
             account_number: selectedAccount,
+            color: robotColorCode,
         })
             .then(response => alert(response['data']))
             .catch((error) => {
@@ -83,6 +93,7 @@ const RobotSettings = (props) => {
                     <Form.Label>Security Code</Form.Label>
                     <Form.Control onChange={(e) => setSecurity(e.target.value)} value={security} type={'text'}/>
                 </Form.Group>
+                <HexColorPicker color={robotColorCode} onChange={setRobotColorCode} />
                 <Button onClick={submitForm} variant="primary" type="submit">
                     Save
                 </Button>

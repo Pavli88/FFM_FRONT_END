@@ -9,15 +9,17 @@ import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
 
 const BalanceDashBoard = (props) => {
+    const robotColors = props.robots.map((data) => data['color']);
     const [responseData, setResponseData] = useState([]);
     const [chData, setChData] =  useState([]);
     const [labelData, setLabelData] =  useState([]);
     const totalBalance = chData.reduce((a, b) => a + b, 0);
     const pieChartData = responseData.map((data) => data['y']);
     const pieChartLabels = responseData.map((data) => data['x']);
+
     console.log(responseData)
     useEffect(() => {
-            axios.get(props.server + 'home/total_robot_balances_by_date/',{
+            axios.get(props.server + 'home/robot_balances_by_date/',{
                 params: {
                     env: props.env,
                 }})
@@ -32,19 +34,15 @@ const BalanceDashBoard = (props) => {
         options: {
             chart: {
                 toolbar: false,
+                stacked: true,
+                type: 'bar'
             },
             plotOptions: {
                 bar: {
-                    horizontal: false,
+                    columnWidth: '60%'
                 }
             },
-            colors: [function(value){
-                if (value['value'] < 0){
-                    return '#E32227'
-                }else {
-                    return '#007500'
-                }
-            }],
+            colors: ['#1D4464'],
             xaxis: {
                 categories: [],
                 labels: {
@@ -66,21 +64,21 @@ const BalanceDashBoard = (props) => {
                     offsetY: 0
                 }
             },
-            annotations: {
-                yaxis: [
-                    {
-                        y: 0,
-                        borderColor: '#BF4737',
-                        label: {
-                            borderColor: '#BF4737',
-                            style: {
-                                color: '#fff',
-                                background: '#BF4737'
-                            },
-                        }
-                    }
-                ]
-            },
+            // annotations: {
+            //     yaxis: [
+            //         {
+            //             y: 0,
+            //             borderColor: '#BF4737',
+            //             label: {
+            //                 borderColor: '#BF4737',
+            //                 style: {
+            //                     color: '#fff',
+            //                     background: '#BF4737'
+            //                 },
+            //             }
+            //         }
+            //     ]
+            // },
             title: {
                 text: 'Total Balance ('  + totalValue.toString() + ')',
                 align: 'left',
@@ -118,11 +116,54 @@ const BalanceDashBoard = (props) => {
                 enabled: false
             },
         },
-        series: [
-            {
-                name: "Aggregated Robot Profit and Loss",
-                data: responseData,
-            }
+        legend: {
+          show: true,
+          showForSingleSeries: true,
+          customLegendItems: ['Actual', 'Expected'],
+          markers: {
+            fillColors: ['#00E396', '#775DD0']
+          }
+        },
+        series: [{
+            data: responseData
+        },
+            // {
+            // data: [
+            //     {
+            //         x: 'WTI',
+            //         y: 8.032,
+            //         goals: {
+            //             name: 'Treshold',
+            //             value: 183.62,
+            //             strokeColor: '#78909C'
+            //         }
+            //     },
+            //     {
+            //         x: 'EUR',
+            //         y: 5.91,
+            //         goals: {
+            //             name: 'Treshold',
+            //             value: 172.72,
+            //             strokeColor: '#78909C'
+            //         }
+            //     },
+            //     {
+            //         x: 'Silver',
+            //         y: -5,
+            //         goals: {
+            //             name: 'Treshold',
+            //             value: -10,
+            //             strokeHeight: 5,
+            //             strokeColor: '#78909C'
+            //         }
+            //     },
+            // ]
+        // }
+
+            // {
+            //     name: "Aggregated Robot Profit and Loss",
+            //     data: responseData,
+            // }
         ]
     };
     const pieChartOptions = {
@@ -157,7 +198,7 @@ const BalanceDashBoard = (props) => {
                 showForSingleSeries: false,
                 position: 'top',
             },
-            // colors: ['#489F33', '#DB604F'],
+            colors: robotColors,
             labels: pieChartLabels,
         },
     };
@@ -196,7 +237,6 @@ const BalanceDashBoard = (props) => {
                         </Row>
                     </Card.Body>
                 </Card>
-                {/*<PieChartFull data={[20, 80]}/>*/}
             </Col>
         </Row>
     );
