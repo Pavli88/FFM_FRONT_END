@@ -1,5 +1,5 @@
-import HomePageBarChart from "../HomePageCharts/HomePageBarChart";
 import AllRobotsPnlsChart from "../HomePageCharts/AllRobotsPnlsChart";
+import {useEffect, useState, useContext} from "react";
 
 // Bootstrap Imports
 import Row from 'react-bootstrap/Row';
@@ -10,9 +10,8 @@ import Card from "react-bootstrap/Card";
 // Chart Import
 import Chart from "react-apexcharts";
 
-import {useEffect, useState, useContext} from "react";
-
 // Context
+import HomePageReportDateContext from "../contexts/HomePageReportDateContext";
 
 const DailyPnlChart = (props) => {
     const columnChartOptions = {
@@ -122,6 +121,7 @@ const DailyPnlChart = (props) => {
 };
 
 const TopLevel = (props) =>{
+    const reportingStartDate = useContext(HomePageReportDateContext)['reportingDate'];
     const robotColors = props.robots.map((data) => data['color']);
     const [responseData, setResponseData] = useState([{}]);
     const [pnlChart, setPnlChart] = useState(<></>);
@@ -143,13 +143,14 @@ const TopLevel = (props) =>{
         const response = await axios.get(props.server + 'home/get/robot/all/daily_returns/', {
             params: {
                 env: props.env,
-                date: '2022-01-01',
+                date: reportingStartDate,
             }
         });
         setPnlChart(<DailyPnlChart data={response.data['total_returns']} dates={response.data['dates']}/>);
         const response2 = await axios.get(props.server + 'robots/get/pnls/', {
             params: {
                 env: props.env,
+                date: reportingStartDate,
             }
         });
         setResponseData(response2.data['data'].map(data => data))
@@ -157,7 +158,7 @@ const TopLevel = (props) =>{
 
     useEffect(() => {
         getAllRobotDailyReturns();
-        }, [props]
+        }, [props, reportingStartDate]
     );
 
     return (
