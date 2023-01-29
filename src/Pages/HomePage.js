@@ -142,7 +142,7 @@ const HomePage = (props) => {
         }}>
             <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
                 <Row style={{paddingTop: '15px'}}>
-                    <HomeNavBar/>
+                    <HomeNavBar server={server}/>
                 </Row>
                 <Row style={{height: '100%'}}>
                     <Col style={{height: '400px', paddingRight: '0px', paddingLeft: '0px'}}>

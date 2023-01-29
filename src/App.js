@@ -30,7 +30,7 @@ import 'react-notifications-component/dist/theme.css';
 
 function App() {
     // 'http://127.0.0.1:8000/' 'https://pavliati.pythonanywhere.com/'
-    const server = 'https://pavliati.pythonanywhere.com/'
+    const server = 'http://127.0.0.1:8000/'
 
     const [robotEnvData, setRobotEnvData] = useState('live');
     const [portfolioData, setPortfolioData] = useState([]);

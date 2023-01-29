@@ -6,14 +6,30 @@ import Form from 'react-bootstrap/Form';
 import {Nav} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
+
+import Select from 'react-select'
 
 // Contexts
 import HomePageReportDateContext from "../contexts/HomePageReportDateContext";
+import axios from "axios";
 
 const HomeNavBar = (props) => {
     const reportingStartDate = useContext(HomePageReportDateContext)['reportingDate'];
     const saveReportingStartDate = useContext(HomePageReportDateContext)['saveReportingDate'];
+    const [strategyOptions, setStrategyOptions] = useState([]);
+    const getRobotStrategies = async () => {
+        const responseStrategies = await axios.get(props.server + 'robots/get/strategies/', );
+        console.log(responseStrategies['data']);
+        setStrategyOptions(responseStrategies['data'].map((data) => ({'value': data['id'], 'label': data['name']})));
+    };
+
+    useEffect(() => {
+        getRobotStrategies();
+        }, []
+    );
+
+
     return (
         <Card style={{height: '50px', paddingTop: '0px', margin: '0px'}}>
             <Row style={{height:'100%', padding:'5px'}}>
@@ -41,10 +57,9 @@ const HomeNavBar = (props) => {
                             </Nav.Link>
                         </Col>
                         <Col md="auto">
-                            <Form.Control as="select">
-                                <option value={'live'}>All</option>
-                                <option value={'live'}>All2</option>
-                            </Form.Control>
+                            <Select
+                                isMulti
+                                options={strategyOptions} />
                         </Col>
                         <Col md="auto" style={{paddingLeft: '5px'}}>
                             <Nav.Link href="#" disabled>
