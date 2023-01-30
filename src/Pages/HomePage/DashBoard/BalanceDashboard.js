@@ -1,15 +1,18 @@
-import PieChartFull from "../../../components/Charts/PieChartFull";
 
 // Bootstrap imports
 import Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
-import {useEffect, useState} from "react";
-import axios from "axios";
 import Card from "react-bootstrap/Card";
+
 import Chart from "react-apexcharts";
+import axios from "axios";
+import {useContext, useEffect, useState} from "react";
+
+import HomePageReportDateContext from "../contexts/HomePageReportDateContext";
 
 const BalanceDashBoard = (props) => {
-    const robotColors = props.robots.map((data) => data['color']);
+    const requestParameters = useContext(HomePageReportDateContext)['requestParameters'];
+    const robotColors = requestParameters['robots'].map((data) => data['color']);
     const [responseData, setResponseData] = useState([]);
     const [chData, setChData] =  useState([]);
     const [labelData, setLabelData] =  useState([]);

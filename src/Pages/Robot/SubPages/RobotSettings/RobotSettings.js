@@ -89,6 +89,13 @@ const RobotSettings = (props) => {
                         {accountData}
                     </Form.Control>
                 </Form.Group>
+                <Form.Group className="mb-3" controlId="account">
+                    <Form.Label>Strategy</Form.Label>
+                    <Form.Control onChange={(e) => setSelectedAccount(e.target.value)} as="select" value={selectedAccount}>
+                        <option value={selectedAccount} hidden>{selectedAccount}</option>
+                        {accountData}
+                    </Form.Control>
+                </Form.Group>
                  <Form.Group className="mb-3" controlId="security_code">
                     <Form.Label>Security Code</Form.Label>
                     <Form.Control onChange={(e) => setSecurity(e.target.value)} value={security} type={'text'}/>

@@ -121,8 +121,8 @@ const DailyPnlChart = (props) => {
 };
 
 const TopLevel = (props) =>{
-    const reportingStartDate = useContext(HomePageReportDateContext)['reportingDate'];
-    const robotColors = props.robots.map((data) => data['color']);
+    const requestParameters = useContext(HomePageReportDateContext)['requestParameters'];
+    const robotColors = requestParameters['robots'].map((data) => data['color']);
     const [responseData, setResponseData] = useState([{}]);
     const [pnlChart, setPnlChart] = useState(<></>);
 
@@ -143,14 +143,14 @@ const TopLevel = (props) =>{
         const response = await axios.get(props.server + 'home/get/robot/all/daily_returns/', {
             params: {
                 env: props.env,
-                date: reportingStartDate,
+                date: requestParameters['startDate'],
             }
         });
         setPnlChart(<DailyPnlChart data={response.data['total_returns']} dates={response.data['dates']}/>);
         const response2 = await axios.get(props.server + 'robots/get/pnls/', {
             params: {
                 env: props.env,
-                date: reportingStartDate,
+                date: requestParameters['startDate'],
             }
         });
         setResponseData(response2.data['data'].map(data => data))
@@ -158,7 +158,7 @@ const TopLevel = (props) =>{
 
     useEffect(() => {
         getAllRobotDailyReturns();
-        }, [props, reportingStartDate]
+        }, [requestParameters]
     );
 
     return (

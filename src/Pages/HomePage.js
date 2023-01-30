@@ -105,49 +105,37 @@ const DrawdownChart = (props) => {
 
 const HomePage = (props) => {
     // Date variables
-    const date = new Date();
-    const firstDayOfYear = new Date(date.getFullYear(), date.getMonth(), 2).toISOString().substr(0,10);
-    const [reportingStartDate, setReportingStartDate] = useState(firstDayOfYear);
+    const [requestParameters, setRequestParameters] = useState({'startDate': '', 'robots': []});
 
     // Context variables
     const env = useContext(EnvContext)['environment'];
     const server = useContext(ServerContext)['server'];
-    const [activeRobotsData, setActiveRobotsData] = useState([]);
     const [drawDown, setDrawdown]  = useState(<></>);
 
-    const getAllRobotDailyReturns = async () => {
-        const response = await axios.get(server + 'robots/get/all/drawdown/', {
-            params: {
-                env: env,
-                date: reportingStartDate,
-            }});
-        console.log(response.data)
-        setDrawdown(<DrawdownChart data={response.data['drawdown']}/>);
-    };
+    console.log(requestParameters)
 
-    useEffect(() => {
-            axios.get(server + 'robots/get/active/' + env)
-                .then(response => setActiveRobotsData(response['data']))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-            getAllRobotDailyReturns();
-        }, [props, reportingStartDate]
-    );
+    // const getAllRobotDailyReturns = async () => {
+    //     const response = await axios.get(server + 'robots/get/all/drawdown/', {
+    //         params: {
+    //             env: env,
+    //             date: reportingStartDate,
+    //         }});
+    //     setDrawdown(<DrawdownChart data={response.data['drawdown']}/>);
+    // };
 
     return (
         <HomePageReportDateContext.Provider value={{
-            reportingDate: reportingStartDate,
-            saveReportingDate: setReportingStartDate,
+            requestParameters: requestParameters,
+            saveRequestParameters: setRequestParameters,
         }}>
             <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
                 <Row style={{paddingTop: '15px'}}>
-                    <HomeNavBar server={server}/>
+                    <HomeNavBar server={server} env={env}/>
                 </Row>
                 <Row style={{height: '100%'}}>
                     <Col style={{height: '400px', paddingRight: '0px', paddingLeft: '0px'}}>
-                        <TopLevel server={server} env={env} robots={activeRobotsData}/>
-                        <BalanceDashBoard server={server} env={env} robots={activeRobotsData}/>
+                        <TopLevel server={server} env={env}/>
+                        <BalanceDashBoard server={server} env={env}/>
                     </Col>
                     <Col style={{height: '600px', paddingRight: '0px', paddingLeft: '0px'}}>
                         <ContributionPnl server={server} env={env}/>
