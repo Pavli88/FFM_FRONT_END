@@ -18,7 +18,6 @@ import TradeContext from "./TradePage/TradePageContext/TradePageContext";
 const TradePage = () => {
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
-    const [lastTrade, setLastTrade] = useState(0);
     // This part connects a websocket with the back end from the front end
     // const newWebSocket = new WebSocket('http://127.0.0.1:8000/trade/price_stream/')
     //
@@ -38,23 +37,18 @@ const TradePage = () => {
     // };
 
     return (
-        <TradeContext.Provider value={{
-            lastTrade: lastTrade,
-            saveLastTrade: setLastTrade,
-        }}>
-            <Container className={'border'}
-                       style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}}
-                       fluid>
-                <Row style={{height: '500px'}}>
-                    <Col sm={8}>
-                        <TradeTableData env={env} server={server} />
-                    </Col>
-                    <Col sm={4}>
-                        <TradeExecutor server={server} />
-                    </Col>
-                </Row>
-            </Container>
-        </TradeContext.Provider>
+        <Container className={'border'}
+                   style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}}
+                   fluid>
+            <Row style={{height: '500px'}}>
+                <Col sm={8}>
+                    <TradeTableData env={env} server={server}/>
+                </Col>
+                <Col sm={4}>
+                    <TradeExecutor server={server}/>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 
