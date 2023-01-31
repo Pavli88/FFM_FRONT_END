@@ -1,6 +1,5 @@
 import {useState, useEffect, useContext} from "react";
 
-import NewRobotForm from "./Robot/NewRobotForm";
 import NavRobot from "../NavBar/NavRobot";
 import RobotTable from "./Robot/RobotTable";
 import RobotBalanceCalculation from "./Robot/Calculations/RobotBalanceCalculation";
@@ -108,8 +107,6 @@ const RobotPage = (props) => {
                     </Row>
                 </Col>
             </Row>
-            <NewRobotForm show={showNewRobot} hide={() => setNewRobot(false)} server={server}
-                          style={{height: '400px'}}/>
             <RobotBalanceCalculation show={showRobotBalanceCalc} hide={() => setRobotBalanceCalc(false)}
                                      server={server}
                                      robotData={robotData}/>

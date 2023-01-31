@@ -10,10 +10,7 @@ import {useContext, useState} from "react";
 // Context
 import DateContext from "../context/date-context";
 import RobotContext from "../context/robot-context";
-import EnvContext from "../context/env-context";
 import axios from "axios";
-
-import NewRobotForm from "../Pages/Robot/NewRobotForm";
 
 const NavRobot = (props) => {
     const allRobotsData = useContext(RobotContext)['allRobotsData'];
@@ -23,7 +20,7 @@ const NavRobot = (props) => {
     const endDate = useContext(DateContext)['endDate'];
     const setStartDate = useContext(DateContext)['saveStartDate'];
     const setEndDate = useContext(DateContext)['saveEndDate'];
-    const [showNewRobot, setNewRobot] = useState(false);
+
     const getRobotData = (id) => {
         axios.get(props.server + 'robots/get/robot/' + id)
             .then(response => selectRobot(response['data'][0]))
@@ -92,21 +89,6 @@ const NavRobot = (props) => {
                     </Col>
                 </Row>
             </Col>
-            <Col style={{padding:'0px'}}>
-                <Row style={{padding:'0px', width:'100%'}}>
-                    <Col>
-                        <Button onClick={() => setNewRobot(true)}>New Robot</Button>
-                    </Col>
-                    <Col>
-                        <Button>New Strategy</Button>
-                    </Col>
-                    <Col>
-                        <Button>Manage Funds</Button>
-                    </Col>
-                </Row>
-            </Col>
-            <NewRobotForm show={showNewRobot} hide={() => setNewRobot(false)} server={props.server}
-                          style={{height: '400px'}}/>
         </Row>
     );
 };

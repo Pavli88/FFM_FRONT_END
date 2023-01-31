@@ -1,55 +1,44 @@
 import FormControl from "react-bootstrap/FormControl";
+import InputGroup from 'react-bootstrap/InputGroup';
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
-import Form from 'react-bootstrap/Form';
 import {Nav} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
 import {useContext, useEffect, useState} from "react";
 import Select from 'react-select'
-
+import axios from "axios";
 // Contexts
 import HomePageReportDateContext from "../contexts/HomePageReportDateContext";
-import axios from "axios";
-
+import RobotContext from "../../../context/robot-context";
+// Modals
 import NewStrategyModal from "../HomePageModals/NewStrategyModal";
+import NewRobotModal from "../HomePageModals/NewRobotModal";
+import ManageFundsModal from "../HomePageModals/ManageFundsModal";
 
 const HomeNavBar = (props) => {
+    const {server, env} = props;
     const date = new Date();
     const firstDayOfYear = new Date(date.getFullYear(), date.getMonth(), 2).toISOString().substr(0,10);
     const [reportingStartDate, setReportingStartDate] = useState(firstDayOfYear);
 
     const saveRequestParameters = useContext(HomePageReportDateContext)['saveRequestParameters'];
-    const [strategyOptions, setStrategyOptions] = useState([]);
+    const robotStrategies = useContext(RobotContext)['robotStrategies'];
     const [selectedStrategies, setSelectedStrategies] = useState([]);
     const [newStrategyModalStatus, setNewStrategyModalStatus] = useState(false);
+    const [newRobotModalStatus, setNewRobotModalStatus] = useState(false);
+    const [fundsModalStatus, setFundsModalStatus] = useState(false);
 
-    const getRobotStrategies = async () => {
-        const responseStrategies = await axios.get(props.server + 'robots/get/strategies/',);
-        setStrategyOptions(responseStrategies['data'].map(function (data, index) {
-            if (index === 0) {
-                return {'value': '0', 'label': 'All'}
-            } else {
-                return {'value': data['id'], 'label': data['name']}
-            }
-            ;
-        }));
-    };
-
-    useEffect(() => {
-        getRobotStrategies();
-        }, [newStrategyModalStatus]
-    );
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const fetchRobots = () => {
-        axios.get(props.server + 'robots/get/active/' + props.env)
+        axios.get(server + 'robots/get/active/' + env)
                 .then(response => saveRequestParameters({'startDate': reportingStartDate, 'robots': response['data']}))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
     };
-
     return (
         <Card style={{height: '50px', paddingTop: '0px', margin: '0px'}}>
             <Row style={{height:'100%', padding:'5px'}}>
@@ -77,11 +66,19 @@ const HomeNavBar = (props) => {
                             </Nav.Link>
                         </Col>
                         <Col md="auto">
-                            <Select
-                                isMulti
-                                options={strategyOptions}
-                                defaultValue={selectedStrategies}
-                                onChange={(e) => setSelectedStrategies(e)}/>
+                            <InputGroup>
+                                <InputGroup.Text>All</InputGroup.Text>
+                                <InputGroup.Checkbox aria-label="Checkbox for following text input" onChange={function(){
+                                    setIsDisabled((state) => !state);
+                                    setSelectedStrategies([]);
+                                }}/>
+                                <Select
+                                    isMulti
+                                    options={robotStrategies}
+                                    value={selectedStrategies}
+                                    isDisabled={isDisabled}
+                                    onChange={(e) => setSelectedStrategies(e)}/>
+                            </InputGroup>
                         </Col>
                         <Col md="auto">
                             <Button onClick={fetchRobots}>Run</Button>
@@ -89,10 +86,21 @@ const HomeNavBar = (props) => {
                         <Col md="auto">
                             <Button onClick={() => setNewStrategyModalStatus(true)}>New Strategy</Button>
                         </Col>
+                        <Col md="auto">
+                            <Button onClick={() => setNewRobotModalStatus(true)}>New Robot</Button>
+                        </Col>
+                        <Col md="auto">
+                            <Button onClick={() => setFundsModalStatus(true)}>Manage Funds</Button>
+                        </Col>
                     </Row>
                 </Col>
             </Row>
-            <NewStrategyModal server={props.server} show={newStrategyModalStatus} hide={() => setNewStrategyModalStatus(false)}/>
+            <NewStrategyModal server={server} show={newStrategyModalStatus}
+                              hide={() => setNewStrategyModalStatus(false)}/>
+            <NewRobotModal server={server} show={newRobotModalStatus} hide={() => setNewRobotModalStatus(false)}
+                           strategyCodes={robotStrategies}/>
+            <ManageFundsModal server={server} show={fundsModalStatus}
+                              hide={() => setFundsModalStatus(false)}/>
         </Card>
     )
 };

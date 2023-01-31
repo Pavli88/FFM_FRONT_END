@@ -106,12 +106,12 @@ const DrawdownChart = (props) => {
 const HomePage = (props) => {
     // Date variables
     const [requestParameters, setRequestParameters] = useState({'startDate': '', 'robots': []});
-
-    // Context variables
-    const env = useContext(EnvContext)['environment'];
-    const server = useContext(ServerContext)['server'];
     const [drawDown, setDrawdown]  = useState(<></>);
 
+    const metaData = {
+        'server': useContext(ServerContext)['server'],
+        'env': useContext(EnvContext)['environment']
+    }
     console.log(requestParameters)
 
     // const getAllRobotDailyReturns = async () => {
@@ -130,16 +130,16 @@ const HomePage = (props) => {
         }}>
             <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
                 <Row style={{paddingTop: '15px'}}>
-                    <HomeNavBar server={server} env={env}/>
+                    <HomeNavBar {...metaData}/>
                 </Row>
                 <Row style={{height: '100%'}}>
                     <Col style={{height: '400px', paddingRight: '0px', paddingLeft: '0px'}}>
-                        <TopLevel server={server} env={env}/>
-                        <BalanceDashBoard server={server} env={env}/>
+                        <TopLevel {...metaData}/>
+                        <BalanceDashBoard {...metaData}/>
                     </Col>
                     <Col style={{height: '600px', paddingRight: '0px', paddingLeft: '0px'}}>
-                        <ContributionPnl server={server} env={env}/>
-                        <PerfDashBoard server={server} env={env} env={env}/>
+                        <ContributionPnl {...metaData}/>
+                        <PerfDashBoard {...metaData}/>
                     </Col>
                 </Row>
                 <Row style={{height: '300px'}}>

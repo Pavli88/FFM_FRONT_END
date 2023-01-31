@@ -41,6 +41,8 @@ function App() {
     const [newRobot, setNewRobot] = useState('');
     const [brokerData, setBrokerData] = useState([{'id': 1,'broker': 'System', 'broker_code': 'ffm_system'}]);
     const [entity, setEntity] = useState('Portfolio');
+    const [robotStrategies, setRobotStrategyOptions] = useState([]);
+
     const getEnvData = (env) => {
         setRobotEnvData(env);
     };
@@ -77,6 +79,16 @@ function App() {
         }, [newRobot, robotEnvData]
     );
 
+    const getRobotStrategies = async () => {
+        const responseStrategies = await axios.get(server + 'robots/get/strategies/',);
+        setRobotStrategyOptions(responseStrategies['data'].map((data) => ({'value': data['id'], 'label': data['name']})));
+    };
+
+    useEffect(() => {
+        getRobotStrategies();
+        }, []
+    );
+    console.log(robotStrategies)
     return (
         <div className='App'>
         <ServerContext.Provider value={{server: server}}>
@@ -93,6 +105,9 @@ function App() {
                         selectedRobotData: selectedRobotData,
                         selectRobot: setSelectedRobotData,
                         saveNewRobot: setNewRobot,
+                        robotStrategies: robotStrategies,
+                        saveRobotStrategy: setRobotStrategyOptions
+
                     }}>
                         <PortfolioContext.Provider value={{
                             portfolios: portfolioData,
