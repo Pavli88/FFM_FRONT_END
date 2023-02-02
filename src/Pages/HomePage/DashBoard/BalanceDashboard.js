@@ -19,8 +19,6 @@ const BalanceDashBoard = (props) => {
     const totalBalance = chData.reduce((a, b) => a + b, 0);
     const pieChartData = responseData.map((data) => data['y']);
     const pieChartLabels = responseData.map((data) => data['x']);
-
-    console.log(responseData)
     useEffect(() => {
             axios.get(props.server + 'home/robot_balances_by_date/',{
                 params: {

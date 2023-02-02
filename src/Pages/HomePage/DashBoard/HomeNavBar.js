@@ -9,9 +9,12 @@ import Button from "react-bootstrap/Button";
 import {useContext, useEffect, useState} from "react";
 import Select from 'react-select'
 import axios from "axios";
+
 // Contexts
 import HomePageReportDateContext from "../contexts/HomePageReportDateContext";
 import RobotContext from "../../../context/robot-context";
+import DateContext from "../../../context/date-context";
+
 // Modals
 import NewStrategyModal from "../HomePageModals/NewStrategyModal";
 import NewRobotModal from "../HomePageModals/NewRobotModal";
@@ -19,17 +22,14 @@ import ManageFundsModal from "../HomePageModals/ManageFundsModal";
 
 const HomeNavBar = (props) => {
     const {server, env} = props;
-    const date = new Date();
-    const firstDayOfYear = new Date(date.getFullYear(), date.getMonth(), 2).toISOString().substr(0,10);
-    const [reportingStartDate, setReportingStartDate] = useState(firstDayOfYear);
-
+    const firstDayOfYear = useContext(DateContext)['firstDayOfCurrentYear'];
     const saveRequestParameters = useContext(HomePageReportDateContext)['saveRequestParameters'];
     const robotStrategies = useContext(RobotContext)['robotStrategies'];
+    const [reportingStartDate, setReportingStartDate] = useState(firstDayOfYear);
     const [selectedStrategies, setSelectedStrategies] = useState([]);
     const [newStrategyModalStatus, setNewStrategyModalStatus] = useState(false);
     const [newRobotModalStatus, setNewRobotModalStatus] = useState(false);
     const [fundsModalStatus, setFundsModalStatus] = useState(false);
-
     const [isDisabled, setIsDisabled] = useState(false);
 
     const fetchRobots = () => {

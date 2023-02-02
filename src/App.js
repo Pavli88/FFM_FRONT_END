@@ -1,3 +1,5 @@
+import appConfig from "./config files/app-config";
+
 import './App.css';
 import React, {useContext, useEffect, useState} from "react";
 import {Route, Switch} from "react-router-dom";
@@ -27,12 +29,8 @@ import Container from "react-bootstrap/Container";
 import ReactNotification from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 
-
-function App() {
-    // 'http://127.0.0.1:8000/' 'https://pavliati.pythonanywhere.com/'
-    const server = 'https://pavliati.pythonanywhere.com/'
-
-    const [robotEnvData, setRobotEnvData] = useState('live');
+function App(props) {
+    const [robotEnvData, setRobotEnvData] = useState(props.defaultEnvironment);
     const [portfolioData, setPortfolioData] = useState([]);
     const [allRobotsData, setAllRobotsData] = useState([]);
     const [selectedRobotData, setSelectedRobotData] = useState({});
@@ -52,15 +50,14 @@ function App() {
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 2);
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0,10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0,10));
-    const currentDate = date.toISOString().substr(0,10);
 
     useEffect(() => {
-            axios.get(server + 'portfolios/get_portfolio_data/all')
+            axios.get(props.server + 'portfolios/get_portfolio_data/all')
                 .then(response => setPortfolioData(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-            axios.get(server + 'accounts/get/brokers')
+            axios.get(props.server + 'accounts/get/brokers')
                 .then(response => setBrokerData(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);
@@ -68,7 +65,7 @@ function App() {
         }, [newPortfolio]
     );
     useEffect(() => {
-            axios.get(server + 'robots/get/robots/' + robotEnvData)
+            axios.get(props.server + 'robots/get/robots/' + robotEnvData)
                 .then(function(response) {
                     setAllRobotsData(response['data']);
                     setSelectedRobotData(response['data'][0]);
@@ -80,7 +77,7 @@ function App() {
     );
 
     const getRobotStrategies = async () => {
-        const responseStrategies = await axios.get(server + 'robots/get/strategies/',);
+        const responseStrategies = await axios.get(props.server + 'robots/get/strategies/',);
         setRobotStrategyOptions(responseStrategies['data'].map((data) => ({'value': data['id'], 'label': data['name']})));
     };
 
@@ -88,10 +85,10 @@ function App() {
         getRobotStrategies();
         }, []
     );
-    console.log(robotStrategies)
+
     return (
         <div className='App'>
-        <ServerContext.Provider value={{server: server}}>
+        <ServerContext.Provider value={{server: props.server}}>
             <EntityContext.Provider value={{
                 entity: entity,
                 saveEntity: setEntity,
@@ -120,7 +117,8 @@ function App() {
                                 endDate: endDate,
                                 saveStartDate: setStartDate,
                                 saveEndDate: setEndDate,
-                                currentDate: currentDate,
+                                currentDate: appConfig.current_date,
+                                firstDayOfCurrentYear: appConfig.fist_day_of_current_year
                             }}>
                                 <BrokerContext.Provider value={{
                                     brokerData: brokerData
