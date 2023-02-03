@@ -65,7 +65,7 @@ const PnlChartConfig = (data) => {
                 },
             },
             title: {
-                text: data['title'],
+                // text: data['title'],
                 align: 'left',
                 margin: 10,
                 offsetX: 0,

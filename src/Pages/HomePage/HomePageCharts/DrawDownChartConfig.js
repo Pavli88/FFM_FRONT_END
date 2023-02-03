@@ -27,7 +27,7 @@ const DrawdownChartConfig = (data) => {
                     },
                 },
                 title: {
-                    text: "Total Drawdown",
+                    // text: "Total Drawdown",
                     align: 'left',
                     margin: 10,
                     offsetX: 0,

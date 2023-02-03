@@ -31,7 +31,7 @@ const PnlHistoryChartConfig = (data) => {
                 },
             },
             title: {
-                text: "Profit History",
+                // text: "Profit History",
                 align: 'left',
                 margin: 10,
                 offsetX: 0,

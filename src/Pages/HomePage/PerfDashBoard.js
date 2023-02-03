@@ -28,23 +28,28 @@ const PerformanceDashboard = (props) => {
     </tr>);
 
     return (
-        <Row style={{height: '500px', width: '100%', margin: '0px', paddingTop:'15px'}}>
-            <Card className="card" style={{margin: '0px'}}>
-                <div style={{height: '500px', overflowY: 'scroll', overflowX: 'hidden'}}>
-                    <Table>
-                        <tbody>
-                        <tr>
-                            <th className={'table-row'}>Robot</th>
-                            <th className={'table-row'}>DTD</th>
-                            <th className={'table-row'}>MTD</th>
-                            <th className={'table-row'}>YTD</th>
-                        </tr>
-                        {perfRespData}
-                        </tbody>
-                    </Table>
-                </div>
-            </Card>
-        </Row>
+        <Card className="card" style={{margin: '0px'}}>
+            <Card.Header>
+                <Table style={{'margin': '0px'}}>
+                    <thead>
+                <tr style={{textDecoration: "none"}}>
+                    <th className={'table-row'} style={{border: '0px', padding:'0px'}}>Robot</th>
+                    <th className={'table-row'} style={{border: '0px', padding:'0px'}}>DTD</th>
+                    <th className={'table-row'} style={{border: '0px', padding:'0px'}}>MTD</th>
+                    <th className={'table-row'} style={{border: '0px', padding:'0px'}}>YTD</th>
+                </tr>
+                </thead>
+                </Table>
+
+            </Card.Header>
+            <div style={{height: '500px', overflowY: 'scroll', overflowX: 'hidden'}}>
+                <Table>
+                    <tbody>
+                    {perfRespData}
+                    </tbody>
+                </Table>
+            </div>
+        </Card>
     );
 
 };

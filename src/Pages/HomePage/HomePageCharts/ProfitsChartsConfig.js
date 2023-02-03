@@ -8,9 +8,18 @@ const ProfitsChartsConfig = (data) => {
             },
             xaxis: {
                 categories: data['name'],
-                labels: {show: true},
+                labels: {
+                    show: true,
+                    style: {
+                        colors: [],
+                        fontSize: '8px',
+                        fontFamily: 'Helvetica, Arial, sans-serif',
+                        fontWeight: 400,
+                        cssClass: 'apexcharts-xaxis-label',
+                    },
+                },
                 axisBorder: {
-                    show: false,
+                    show: true,
                     color: '#78909C',
                     height: 1,
                     width: '100%',
@@ -27,7 +36,7 @@ const ProfitsChartsConfig = (data) => {
                 },
             },
             title: {
-                text: "Outstanding P&L",
+                // text: "Outstanding P&L",
                 align: 'left',
                 margin: 10,
                 offsetX: 0,

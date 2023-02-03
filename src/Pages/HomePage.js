@@ -2,6 +2,8 @@ import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from "react-bootstrap/Card";
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 
 import axios from "axios";
 import {useContext, useEffect, useState, useRef} from "react";
@@ -9,6 +11,7 @@ import {useContext, useEffect, useState, useRef} from "react";
 import HomeNavBar from "./HomePage/DashBoard/HomeNavBar";
 import ContributionPnl from "./HomePage/DashBoard/ContributionPnl";
 import PerfDashBoard from "./HomePage/PerfDashBoard";
+import BalanceDashBoard from "./HomePage/DashBoard/BalanceDashboard";
 
 // Chart Imports
 import ChartWidget from "../Widgets/Charts/ChartWidget";
@@ -122,54 +125,82 @@ const HomePage = (props) => {
             saveRequestParameters: setRequestParameters,
         }}>
             <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
-                <Row style={{paddingTop: '15px'}}>
+                <Row style={{paddingTop: '20px'}}>
                     <HomeNavBar {...metaData}/>
                 </Row>
-                <Row style={{height: '100%'}}>
-                    <Col style={{paddingRight: '0px', paddingLeft: '0px', background: 'green'}}>
-                        <Row>
-                            <Col>
-                                <Row style={{height: '300px', margin: '0px'}}>
-                                    <Col style={{height: '100%', margin: '0px'}}>
-                                        <ChartWidget {...exposureChartParameters}/>
+                <Row style={{height: '100%', paddingTop:'20px'}}>
+                    <Col style={{height: '600px', paddingRight: '0px', paddingLeft: '0px'}}>
+                        <Tabs
+                            defaultActiveKey="risk"
+                            id="risk-balance"
+                            className="mb-3"
+                            fill
+                            style={{margin: 0}}
+                        >
+                            <Tab eventKey="risk" title="Risk" style={{height: '100%'}}>
+                                <Row style={{height: '100%', padding:'0px'}}>
+                                    <Col>
+                                        <Row style={{height: '300px', margin: '0px'}}>
+                                            <Col style={{height: '100%', margin: '0px'}}>
+                                                <ChartWidget {...exposureChartParameters} name={'Exposure'}/>
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                    <Col>
+                                        <Row style={{height: '300px', margin: '0px'}}>
+                                            <Col style={{height: '100%', margin: '0px'}}>
+                                                <ChartWidget {...profitChartConfig} name={'Outstanding P&L'}/>
+                                            </Col>
+                                        </Row>
                                     </Col>
                                 </Row>
-                                <Row style={{height: '300px', background: 'red', margin: '0px'}}>
-                                    <Col style={{height: '100%', margin: '0px'}}>
-                                        <ChartWidget {...profitChartConfig}/>
+                                <Row style={{height: '400px', margin: '0px', marginTop:'20px'}}>
+                                    <Col>
+                                        <ChartWidget {...drawDownChartConfig} name={'Total Drawdown'}/>
                                     </Col>
                                 </Row>
-                                <Row style={{height: '300px'}}>
-
+                            </Tab>
+                            <Tab eventKey="balance" title="Balance">
+                                <Row style={{height: '500px', margin: '0px'}}>
+                                    <BalanceDashBoard {...metaData}/>
                                 </Row>
-                            </Col>
-                            <Col>
-
-                            </Col>
-                        </Row>
+                            </Tab>
+                    </Tabs>
                     </Col>
                     <Col style={{height: '600px', paddingRight: '0px', paddingLeft: '0px'}}>
-                        <Row style={{height: '300px', margin: '0px'}}>
-                            <ChartWidget {...pnlHistoryChartConfig}/>
-                        </Row>
-                        <Row style={{height: '300px', margin: '0px'}}>
-                            <ChartWidget {...dailyReturnsChartConfig}/>
-                        </Row>
-                        <Row style={{height: '300px', margin: '0px'}}>
-                            <ChartWidget {...drawDownChartConfig}/>
-                        </Row>
+                        <Tabs
+                            defaultActiveKey="profit"
+                            id="fill-tab-example"
+                            className="mb-3"
+                            fill
+                            style={{margin:0}}
+                        >
+                            <Tab eventKey="profit" title="Profit">
+                                <Row style={{height: '100%', padding:'0px'}}>
+                                    <ContributionPnl {...metaData}/>
+                                </Row>
+                                <Row style={{height: '400px', paddingLeft: '0px', marginTop:'20px'}}>
+                                    <Col>
+                                        <ChartWidget {...pnlHistoryChartConfig} name={'Profit History'}/>
+                                    </Col>
+                                </Row>
+                            </Tab>
+                            <Tab eventKey="performance" title="Performance">
+                                <Row style={{height: '300px', margin: '0px'}}>
+                                    <Col>
+                                        <ChartWidget {...dailyReturnsChartConfig} name={'Daily Performance'}/>
+                                    </Col>
+                                    <Col>
+
+                                    </Col>
+                                </Row>
+                                <Row style={{height: '400px', margin: '0px', marginTop: '20px'}}>
+                                    <PerfDashBoard {...metaData}/>
+                                </Row>
+                            </Tab>
+                        </Tabs>
                     </Col>
                 </Row>
-                {/*<Row style={{height: '400px'}}>*/}
-                {/*    <Col>*/}
-                {/*        <TopLevel {...metaData}/>*/}
-                {/*        <BalanceDashBoard {...metaData}/>*/}
-                {/*    </Col>*/}
-                    <Col>
-                        <ContributionPnl {...metaData}/>
-                        <PerfDashBoard {...metaData}/>
-                    </Col>
-                {/*</Row>*/}
             </Container>
         </HomePageReportDateContext.Provider>
     );

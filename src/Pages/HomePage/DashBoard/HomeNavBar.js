@@ -20,6 +20,9 @@ import NewStrategyModal from "../HomePageModals/NewStrategyModal";
 import NewRobotModal from "../HomePageModals/NewRobotModal";
 import ManageFundsModal from "../HomePageModals/ManageFundsModal";
 
+// Icons
+import { BsArrowClockwise, BsCashStack, BsTrophy, BsFillPersonPlusFill } from "react-icons/bs";
+
 const HomeNavBar = (props) => {
     const {server, env} = props;
     const firstDayOfYear = useContext(DateContext)['firstDayOfCurrentYear'];
@@ -84,13 +87,13 @@ const HomeNavBar = (props) => {
                             <Button onClick={fetchRobots}>Run</Button>
                         </Col>
                         <Col md="auto">
-                            <Button onClick={() => setNewStrategyModalStatus(true)}>New Strategy</Button>
+                            <Button onClick={() => setNewStrategyModalStatus(true)}><BsTrophy style={{color:'white', fontSize:'16px', borderColor:'darkgrey'}}/></Button>
                         </Col>
                         <Col md="auto">
-                            <Button onClick={() => setNewRobotModalStatus(true)}>New Robot</Button>
+                            <Button onClick={() => setNewRobotModalStatus(true)}><BsFillPersonPlusFill style={{color:'white', fontSize:'16px', borderColor:'darkgrey'}}/></Button>
                         </Col>
                         <Col md="auto">
-                            <Button onClick={() => setFundsModalStatus(true)}>Manage Funds</Button>
+                            <Button onClick={() => setFundsModalStatus(true)}><BsCashStack style={{color:'white', fontSize:'16px', borderColor:'darkgrey'}}/></Button>
                         </Col>
                     </Row>
                 </Col>
