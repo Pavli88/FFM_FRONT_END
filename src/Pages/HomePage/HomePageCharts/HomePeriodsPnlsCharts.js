@@ -59,7 +59,7 @@ const HomePeriodsPnlsCharts = (props) => {
                 ]
             },
             title: {
-                text: props.title + ' ('  + totalValue.toString() + ')',
+                // text: props.title + ' ('  + totalValue.toString() + ')',
                 align: 'left',
                 margin: 10,
                 offsetX: 0,
@@ -103,20 +103,17 @@ const HomePeriodsPnlsCharts = (props) => {
         ]
     };
     return(
-        <Card className="card" style={{margin: '0px'}}>
-            <Card.Body style={{padding: '0px'}}>
-                <Row style={{height: '100%', width: '100%', margin: '0px'}}>
-                    <Col style={{height: '100%', width: '100%', margin: '0px'}}>
-                        <Chart
-                            options={chartOptions.options}
-                            series={chartOptions.series}
-                            type={'bar'}
-                            width="100%"
-                            height="90%"
-                        />
-                    </Col>
-                </Row>
-            </Card.Body>
+        <Card className="card" style={{height: '100%', width: '100%', margin:'0px'}}>
+            <Card.Header>{props.name}</Card.Header>
+            <div style={{height:'100%'}}>
+                <Chart
+                    options={chartOptions.options}
+                    series={chartOptions.series}
+                    type={'bar'}
+                    width="100%"
+                    height="90%"
+                />
+            </div>
         </Card>
     );
 };

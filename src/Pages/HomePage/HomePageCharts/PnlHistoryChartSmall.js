@@ -1,5 +1,4 @@
-const PnlHistoryChartConfig = (data) => {
-    console.log(data['data'])
+const PnlHistoryChartSmall = () => {
     return {
         options: {
             chart: {
@@ -61,4 +60,4 @@ const PnlHistoryChartConfig = (data) => {
         series: data['data']
     }
 }
-export default PnlHistoryChartConfig;
+export default PnlHistoryChartSmall;

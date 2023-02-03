@@ -77,18 +77,6 @@ const ExposureChartConfig = (data) => {
                                 text: '-5%'
                             }
                         },
-                        {
-                            y: -10,
-                            borderColor: '#BF4737',
-                            label: {
-                                borderColor: '#BF4737',
-                                style: {
-                                    color: '#fff',
-                                    background: '#BF4737'
-                                },
-                                text: 'Current Total %'
-                            }
-                        }
                     ]
                 },
                 dataLabels: {

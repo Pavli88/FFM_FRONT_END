@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Card from "react-bootstrap/Card";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import Button from 'react-bootstrap/Button'
 
 import axios from "axios";
 import {useContext, useEffect, useState, useRef} from "react";
@@ -30,6 +31,10 @@ import EnvContext from "../context/env-context";
 import ServerContext from "../context/server-context";
 import HomePageReportDateContext from "./HomePage/contexts/HomePageReportDateContext";
 import DateContext from "../context/date-context";
+
+// Icons
+import { BsCaretDownFill, BsCaretUpFill } from "react-icons/bs";
+
 
 const HomePage = (props) => {
     // Date variables
@@ -86,8 +91,6 @@ const HomePage = (props) => {
                 date: requestParameters['startDate'],
             }
         });
-        console.log(pnlHistoryResponse);
-
         setExposureData(exposureResponse['data']);
         setDrawdown(drawDownResponse['data']);
         setPnlChart(dailyReturnsResponse['data']);
@@ -116,9 +119,35 @@ const HomePage = (props) => {
         'title': 'Daily Total Return'
     });
     const pnlHistoryChartConfig = PnlHistoryChartConfig({
-        'data': pnlHistory['data'],
+        'data': pnlHistory['data'] === 'undefinded' ? [{'name': '', 'data': []}] : pnlHistory['data'],
         'colors': robotColors
     });
+    console.log(exposureData['ret_to_total'].reduce((a, b) => a + b, 0))
+    // console.log(pnlHistory['data'][pnlHistory['data'].length - 1])
+    const totalExposure = (Math.round(exposureData['ret_to_total'].reduce((a, b) => a + b, 0))*100)/100
+    const exposureTitle = <div style={{display:'flex', height: '100%'}}>
+        <p style={{margin: 0}}>Exposure</p>
+        <Row style={{position: 'absolute', right: 5, margin: 0, padding: 0}}>
+            <Col style={{margin: 0, color: totalExposure < 0 ? 'red': 'green', display: 'flex'}}>
+                <Col stlye={{paddingRight: '5px'}}>
+                    {totalExposure < 0 ? <BsCaretDownFill/> : <BsCaretUpFill/>}
+                </Col>
+                <p>{totalExposure} %</p>
+            </Col>
+        </Row>
+    </div>
+    const totalOutstandingProfit = Math.round(exposureData['pnl'].reduce((a, b) => a + b, 0)*100)/100
+    const outstandingProfitTitle = <div style={{display:'flex'}}>
+        <p style={{margin: 0}}>Outstanding Profit</p>
+        <Row style={{position: 'absolute', right: 5, margin: 0, padding: 0}}>
+            <Col style={{margin: 0, color: totalOutstandingProfit < 0 ? 'red': 'green', display: 'flex'}}>
+                <Col stlye={{paddingRight: '5px'}}>
+                    {totalOutstandingProfit < 0 ? <BsCaretDownFill/> : <BsCaretUpFill/>}
+                </Col>
+                <p >{totalOutstandingProfit}</p>
+            </Col>
+        </Row>
+    </div>
     return (
         <HomePageReportDateContext.Provider value={{
             requestParameters: requestParameters,
@@ -142,14 +171,14 @@ const HomePage = (props) => {
                                     <Col>
                                         <Row style={{height: '300px', margin: '0px'}}>
                                             <Col style={{height: '100%', margin: '0px'}}>
-                                                <ChartWidget {...exposureChartParameters} name={'Exposure'}/>
+                                                <ChartWidget {...exposureChartParameters} name={exposureTitle}/>
                                             </Col>
                                         </Row>
                                     </Col>
                                     <Col>
                                         <Row style={{height: '300px', margin: '0px'}}>
                                             <Col style={{height: '100%', margin: '0px'}}>
-                                                <ChartWidget {...profitChartConfig} name={'Outstanding P&L'}/>
+                                                <ChartWidget {...profitChartConfig} name={outstandingProfitTitle}/>
                                             </Col>
                                         </Row>
                                     </Col>
