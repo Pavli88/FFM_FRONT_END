@@ -11,6 +11,7 @@ import Navigation from "./components/NavBar";
 import RobotPage from "./Pages/RobotPage";
 import InstrumentPage from "./Pages/InstrumentPage/InstrumentPage";
 import CalculationsPage from "./Pages/CalculationsPage/CalculationsPage";
+import MainPage from "./Pages/MainPage/MainPage";
 
 // Contexts
 import ServerContext from "./context/server-context";
@@ -85,6 +86,11 @@ function App(props) {
         getRobotStrategies();
         }, []
     );
+
+    const [token, setToken] = useState();
+    if (!token) {
+        return <MainPage server={props.server}/>
+    }
 
     return (
         <div className='App'>
