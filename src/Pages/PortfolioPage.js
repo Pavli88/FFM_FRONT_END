@@ -73,7 +73,7 @@ const PortfolioPage = (props) => {
     );
 
     return (
-        <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
+        <Container style={{width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
             <Row style={{height: '100%', margin:'0px'}}>
                 <ProSidebar>
                     <Menu iconShape="square">

@@ -38,7 +38,7 @@ const TradePage = () => {
 
     return (
         <Container className={'border'}
-                   style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}}
+                   style={{width: "100%", height: window.innerHeight, padding: '20px'}}
                    fluid>
             <Row style={{height: '500px'}}>
                 <Col sm={8}>

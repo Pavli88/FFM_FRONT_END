@@ -52,9 +52,9 @@ const RobotPage = (props) => {
     const [showRobotMonthlyCalc, setRobotMonthlyCalc] = useState(false);
     return (
         <Container
-            style={{height: window.innerHeight, background: '#FBFAFA', width: "100%", margin: '0px', padding: '0px'}}
+            style={{height: window.innerHeight, width: "100%", margin: '0px', padding: '0px'}}
             fluid>
-            <Row style={{height: '90%', margin: '10px'}}>
+            <Row style={{height: '90%'}}>
                 <Col sm={2} style={{paddingLeft:'0px'}}>
                     <ProSidebar backgroundColor='#FBFAFA'>
                         <Menu iconShape="square" style={{height:'100%'}}>

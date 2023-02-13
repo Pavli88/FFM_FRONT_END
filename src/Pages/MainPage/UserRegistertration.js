@@ -1,4 +1,5 @@
 import { Col, Button, Row, Container, Card, Form } from 'react-bootstrap';
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import {useRef} from "react";
 
@@ -6,6 +7,7 @@ export default function Registration(props) {
   const userNameRef = useRef();
   const passwordRef = useRef();
   const emailRef = useRef();
+  const history = useHistory();
   const submitHandler = (event) => {
         event.preventDefault();
         axios.post(props.server + 'register/', {
@@ -17,6 +19,7 @@ export default function Registration(props) {
             .catch((error) => {
                 console.error('Error Message:', error);
             });
+        history.push("login/");
     };
   return (
         <Row className="vh-100 d-flex justify-content-center align-items-center">
@@ -24,9 +27,6 @@ export default function Registration(props) {
             <Card className="shadow">
               <Card.Body>
                 <div className="mb-3 mt-md-4">
-                  <h2 className="fw-bold mb-2 text-center text-uppercase ">
-                    Logo
-                  </h2>
                   <div className="mb-3">
                     <Form>
                       <Form.Group className="mb-3" controlId="Name">

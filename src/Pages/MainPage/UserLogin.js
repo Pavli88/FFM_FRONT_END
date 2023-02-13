@@ -1,9 +1,25 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useRef} from "react";
+import axios from "axios";
 
-export default function Login() {
-  const [username, setUserName] = useState();
-  const [password, setPassword] = useState();
+// Context
+import AuthContext from "../../context/AuthProvider";
+
+export default function Login(props) {
+  const { setAuth } = useContext(AuthContext);
+  const usernameRef = useRef();
+  const passwordRef = useRef();
+  const submitHandler = (event) => {
+        event.preventDefault();
+        axios.post(props.server + 'login/', {
+            username: usernameRef.current.value,
+            password: passwordRef.current.value,
+        })
+            .then(response => setAuth(response.data))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
   return (
       <Row className="vh-100 d-flex justify-content-center align-items-center">
         <Col md={8} lg={6} xs={12}>
@@ -14,9 +30,9 @@ export default function Login() {
                   <Form>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                       <Form.Label className="text-center">
-                        Email address
+                        Username
                       </Form.Label>
-                      <Form.Control type="email" placeholder="Enter email"/>
+                      <Form.Control type="email" placeholder="Enter username" ref={usernameRef}/>
                     </Form.Group>
 
                     <Form.Group
@@ -24,7 +40,7 @@ export default function Login() {
                         controlId="formBasicPassword"
                     >
                       <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password"/>
+                      <Form.Control type="password" placeholder="Password" ref={passwordRef}/>
                     </Form.Group>
                     <Form.Group
                         className="mb-3"
@@ -37,7 +53,7 @@ export default function Login() {
                       </p>
                     </Form.Group>
                     <div className="d-grid">
-                      <Button variant="primary" type="submit" style={{width: '100%'}}>
+                      <Button variant="primary" type="submit" style={{width: '100%'}} onClick={submitHandler}>
                         Login
                       </Button>
                     </div>

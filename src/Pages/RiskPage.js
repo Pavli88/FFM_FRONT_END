@@ -21,7 +21,7 @@ const RiskPage = () => {
 
     return (
         <Container className={"border"}
-                   style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '20px'}} fluid>
+                   style={{width: "100%", height: window.innerHeight, padding: '20px', margintTop: '5px'}} fluid>
             <Row>
                 <Col>
 

@@ -40,7 +40,7 @@ const InstrumentPage = () => {
                 selectedInstrument: selectedInstrument,
                 saveSelectedInstrument: setSelectedInstrument,
             }}>
-            <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
+            <Container style={{width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
                 <Row className={"row"} style={{height: '90%', width: '100%'}}>
                     <Col style={{height:'100%'}} sm={4}>
                         <Row style={{height: '50%'}}>
