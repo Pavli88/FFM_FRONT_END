@@ -34,7 +34,7 @@ const HomeNavBar = (props) => {
     const [newRobotModalStatus, setNewRobotModalStatus] = useState(false);
     const [fundsModalStatus, setFundsModalStatus] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
-
+    console.log(robotStrategies)
     const fetchRobots = () => {
         axios.get(server + 'robots/get/active/' + env)
                 .then(response => saveRequestParameters({'startDate': reportingStartDate, 'robots': response['data']}))

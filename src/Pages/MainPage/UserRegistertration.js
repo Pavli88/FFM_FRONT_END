@@ -1,5 +1,5 @@
 import { Col, Button, Row, Container, Card, Form } from 'react-bootstrap';
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import axios from "axios";
 import {useRef} from "react";
 
@@ -10,7 +10,7 @@ export default function Registration(props) {
   const history = useHistory();
   const submitHandler = (event) => {
         event.preventDefault();
-        axios.post(props.server + 'register/', {
+        axios.post(props.server + 'user_register/', {
             user_name: userNameRef.current.value,
             password: passwordRef.current.value,
             email: emailRef.current.value,
@@ -70,9 +70,9 @@ export default function Registration(props) {
                     <div className="mt-3">
                       <p className="mb-0  text-center">
                         Already have an account??{' '}
-                        <a href="/login" className="text-primary fw-bold">
-                          Sign In
-                        </a>
+                          <Link to={"/login"}>
+                              Sign In
+                          </Link>
                       </p>
                     </div>
                   </div>

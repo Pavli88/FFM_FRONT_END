@@ -1,6 +1,6 @@
 import UserRegistration from "./UserRegistertration";
 import UserLogin from "./UserLogin";
-import {Route, Switch} from "react-router-dom";
+import {Route, Switch, Link} from "react-router-dom";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 const MainPage = (props) => {
     return (
@@ -15,8 +15,12 @@ const MainPage = (props) => {
                     </div>
                 </Col>
                 <Col>
-                    <Button md="auto" href="/register" style={{marginTop: 6}}>Create Account</Button>
-                    <Button md="auto" href="/login" style={{marginTop: 6, marginLeft: 20}}>Login</Button>
+                    <Link to={"/register"}>
+                        <Button md="auto" style={{marginTop: 6}}>Create Account</Button>
+                    </Link>
+                    <Link to={"/login"}>
+                        <Button md="auto" style={{marginTop: 6, marginLeft: 20}}>Login</Button>
+                    </Link>
                 </Col>
             </Row>
             <Switch>

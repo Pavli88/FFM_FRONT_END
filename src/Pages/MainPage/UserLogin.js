@@ -1,5 +1,6 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import React, {useContext, useRef} from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 // Context
@@ -11,7 +12,7 @@ export default function Login(props) {
   const passwordRef = useRef();
   const submitHandler = (event) => {
         event.preventDefault();
-        axios.post(props.server + 'login/', {
+        axios.post(props.server + 'user_login/', {
             username: usernameRef.current.value,
             password: passwordRef.current.value,
         })
@@ -61,9 +62,9 @@ export default function Login(props) {
                   <div className="mt-3">
                     <p className="mb-0  text-center">
                       Don't have an account?{" "}
-                      <a href="/register" className="text-primary fw-bold">
+                      <Link to={"/register"}>
                         Sign Up
-                      </a>
+                      </Link>
                     </p>
                   </div>
                 </div>

@@ -27,7 +27,7 @@ const Navigation = (props) => {
     const [brokerModalStatus, setBrokerModalStatus] = useState(false);
     const [processHandler, setProcessHandler] = useState(<></>);
     const userLogout = () => {
-        axios.get(server + 'logout/', )
+        axios.get(server + 'user_logout/', )
             .then(response => console.log(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);

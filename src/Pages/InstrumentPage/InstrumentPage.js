@@ -12,25 +12,42 @@ import Row from 'react-bootstrap/Row';
 
 //CSS
 import "./InstrumentPage.css"
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
+
+import InstrumentSearchBar from "./InstrumentSearchBar/InstrumentSearchBar";
+import InstrumentInfo from "./InstrumentInfo/InstrumentInfo";
+import InstrumentResuts from "./InstrumentResults/InstrumentResuts";
 
 //Contexts
 import ServerContext from "../../context/server-context";
 import EnvContext from "../../context/env-context";
 import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-context";
+import axios from "axios";
 
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{
         'id': '',
-        'instrument_name': '',
+        'name': '',
+        'code': '',
+        'country': '',
         'currency': '',
-        'inst_code': '',
-        'instrument_type': '',
-        'source': '',
+        'group': '',
+        'type': '',
     }]);
     const [selectedInstrument, setSelectedInstrument] = useState([{'inst_code': ''}]);
     const server = useContext(ServerContext)['server'];
     const env = useContext(EnvContext)['environment'];
+
+    useEffect(() => {
+            // axios.get(server + 'instruments/get/instruments/', {
+            //     params: parameters
+            // })
+            //     .then(data=>setInstrumentData(data.data))
+            //     .catch((error) => {
+            //         console.error('Error Message:', error);
+            //     });
+        }, [instrumentSearchResults]
+    );
 
     return (
         <InstrumentSearchContext.Provider
@@ -41,24 +58,15 @@ const InstrumentPage = () => {
                 saveSelectedInstrument: setSelectedInstrument,
             }}>
             <Container style={{width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
-                <Row className={"row"} style={{height: '90%', width: '100%'}}>
-                    <Col style={{height:'100%'}} sm={4}>
-                        <Row style={{height: '50%'}}>
-                            <InstrumentSearch server={server}/>
-                        </Row>
-                        <Row style={{height: '50%'}}>
-                            <InstrumentDetails server={server} data={selectedInstrument[0]}/>
-                        </Row>
-                    </Col>
-                    <Col style={{height:'100%'}} sm={8}>
-                        <InstrumentResultTable server={server}/>
-                    </Col>
+                <Row style={{width:'100%'}}>
+                    <InstrumentSearchBar/>
                 </Row>
-                {/*<Row className={"row"} style={{height: '40%', width: '100%'}}>*/}
-                {/*    <Col style={{height:'100%'}}>*/}
-                {/*        */}
-                {/*    </Col>*/}
-                {/*</Row>*/}
+                <Row style={{height: 300, width: '100%'}}>
+                    <InstrumentInfo/>
+                </Row>
+                <Row>
+                    <InstrumentResuts data={[{}]}/>
+                </Row>
             </Container>
         </InstrumentSearchContext.Provider>
     );
