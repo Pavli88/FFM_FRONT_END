@@ -17,7 +17,6 @@ import {useContext, useEffect, useState} from "react";
 import InstrumentSearchBar from "./InstrumentSearchBar/InstrumentSearchBar";
 import InstrumentInfo from "./InstrumentInfo/InstrumentInfo";
 import InstrumentResuts from "./InstrumentResults/InstrumentResuts";
-
 //Contexts
 import ServerContext from "../../context/server-context";
 import EnvContext from "../../context/env-context";
@@ -25,28 +24,20 @@ import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-c
 import axios from "axios";
 
 const InstrumentPage = () => {
-    const [instrumentSearchResults, setInstrumentSearchResults] = useState([{
-        'id': '',
-        'name': '',
-        'code': '',
-        'country': '',
-        'currency': '',
-        'group': '',
-        'type': '',
-    }]);
+    const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
     const [selectedInstrument, setSelectedInstrument] = useState([{'inst_code': ''}]);
+    const [requestParameters, setRequestParameters] = useState({})
     const server = useContext(ServerContext)['server'];
-    const env = useContext(EnvContext)['environment'];
 
     useEffect(() => {
-            // axios.get(server + 'instruments/get/instruments/', {
-            //     params: parameters
-            // })
-            //     .then(data=>setInstrumentData(data.data))
-            //     .catch((error) => {
-            //         console.error('Error Message:', error);
-            //     });
-        }, [instrumentSearchResults]
+            axios.get(server + 'instruments/get/instruments/', {
+                params: requestParameters
+            })
+                .then(data=> setInstrumentSearchResults(data.data))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, [requestParameters]
     );
 
     return (
@@ -58,14 +49,14 @@ const InstrumentPage = () => {
                 saveSelectedInstrument: setSelectedInstrument,
             }}>
             <Container style={{width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
-                <Row style={{width:'100%'}}>
+                <Row style={{width:'100%', paddingLeft:'15px', paddingRight:'15px'}}>
                     <InstrumentSearchBar/>
                 </Row>
-                <Row style={{height: 300, width: '100%'}}>
+                <Row style={{height: 300, width: '100%', paddingLeft:'15px', paddingRight:'15px', paddingTop: '15px'}}>
                     <InstrumentInfo/>
                 </Row>
-                <Row>
-                    <InstrumentResuts data={[{}]}/>
+                <Row style={{height: 500, width: '100%', paddingLeft:'15px', paddingRight:'15px', paddingTop: '15px'}}>
+                    <InstrumentResuts data={instrumentSearchResults}/>
                 </Row>
             </Container>
         </InstrumentSearchContext.Provider>

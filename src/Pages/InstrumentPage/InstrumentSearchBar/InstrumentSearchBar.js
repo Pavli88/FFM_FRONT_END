@@ -8,26 +8,62 @@ import Button from "react-bootstrap/Button";
 import Select from 'react-select'
 import {useState} from "react";
 
+import InstrumentNew from "../InstrumentNew";
+
 const InstrumentSearchBar = () => {
     const [instrumentRequestParameters, setInstrumentRequestParameters] = useState({});
+    const [secTypes, setSecTypes] = useState([]);
     const secGroup = [
-        {value: 'CASH', label:'CASH'},
-        {value: 'EQUITY', label: 'EQUITY'},
-        {value: 'BOND', label: 'BOND'},
-        {value: 'CURRENCY', label: 'CURRENCY'},
+        {value: 'BND', label: 'Bond'},
+        {value: 'CSH', label:'Cash'},
+        {value: 'CFD', label:'CFD'},
+        {value: 'EQT', label: 'Equity'},
+    ];
+
+    const bondType = [
+        {value:'CRP', label: 'Corporate'},
+        {value:'GOV', label: 'Government'},
+    ];
+
+    const cashType = [
+        {value:'CSH', label: 'Cash'},
+    ];
+
+    const cfdType = [
+        {value:'BND', label: 'Bond'},
+        {value:'COM', label: 'Commodity'},
+        {value:'EQT', label: 'Equity'},
+        {value:'FX', label: 'Fx'},
+    ];
+
+    const equityType = [
+        {value:'EQT', label: 'Equity'},
     ];
 
     const currencies = [
-        {value: 1, label:'USD'},
-        {value: 2, label: 'EUR'},
-        {value: 3, label: 'HUF'}
+        {value: 'USD', label:'USD'},
+        {value: 'EUR', label: 'EUR'},
+        {value: 'HUF', label: 'HUF'}
     ];
 
     const countries = [
-        {value: 1, label:'USA'},
-        {value: 2, label: 'UK'},
-        {value: 3, label: 'HU'}
+        {value: 'US', label:'United States'},
+        {value: 'UK', label: 'United Kingdom'},
+        {value: 'HU', label: 'Hungary'}
     ];
+
+    const secGroupHandler = (event) => {
+        console.log(event.value)
+        if (event.value === 'BND'){
+            setSecTypes(bondType);
+        }else if (event.value === 'CSH'){
+            setSecTypes(cashType);
+        }else if (event.value === 'CFD'){
+            setSecTypes(cfdType);
+        }else if (event.value === 'EQT'){
+            setSecTypes(equityType);
+        }
+    };
 
     const fetchInstruments = () => {
 
@@ -48,24 +84,16 @@ const InstrumentSearchBar = () => {
                         </Col>
                         <Col md="auto" style={{paddingLeft: '5px'}}>
                             <Nav.Link disabled>
-                                Code
-                            </Nav.Link>
-                        </Col>
-                        <Col md="auto">
-                            <Form.Control type="text"/>
-                        </Col>
-                        <Col md="auto" style={{paddingLeft: '5px'}}>
-                            <Nav.Link disabled>
                                 Country
                             </Nav.Link>
                         </Col>
-                        <Col md="auto">
+                        <Col md="auto" style={{width: 200}}>
                             <Select
                                 isMulti
                                 options={countries}
                                 // value={selectedStrategies}
                                 // isDisabled={isDisabled}
-                                // onChange={(e) => setSelectedStrategies(e)}
+                                // onChange={(e) => secGroupHandler(e)}
                             />
                         </Col>
                         <Col md="auto" style={{paddingLeft: '5px'}}>
@@ -73,13 +101,12 @@ const InstrumentSearchBar = () => {
                                 Group
                             </Nav.Link>
                         </Col>
-                        <Col md="auto">
+                        <Col md="auto" style={{width: 150}}>
                             <Select
-                                isMulti
                                 options={secGroup}
                                 // value={selectedStrategies}
                                 // isDisabled={isDisabled}
-                                // onChange={(e) => setSelectedStrategies(e)}
+                                onChange={(e) => secGroupHandler(e)}
                             />
                         </Col>
                         <Col md="auto" style={{paddingLeft: '5px'}}>
@@ -87,10 +114,11 @@ const InstrumentSearchBar = () => {
                                 Type
                             </Nav.Link>
                         </Col>
-                        <Col md="auto">
+                        <Col md="auto" style={{width: 200}}>
                             <Select
                                 isMulti
-                                // options={robotStrategies}
+                                options={secTypes}
+                                defaultValue={secTypes[0]}
                                 // value={selectedStrategies}
                                 // isDisabled={isDisabled}
                                 // onChange={(e) => setSelectedStrategies(e)}
@@ -101,7 +129,7 @@ const InstrumentSearchBar = () => {
                                 Currency
                             </Nav.Link>
                         </Col>
-                        <Col md="auto">
+                        <Col md="auto" style={{width: 200}}>
                             <Select
                                 isMulti
                                 options={currencies}
@@ -112,6 +140,9 @@ const InstrumentSearchBar = () => {
                         </Col>
                         <Col>
                             <Button onClick={fetchInstruments}>Get</Button>
+                        </Col>
+                        <Col>
+                            <InstrumentNew/>
                         </Col>
                     </Row>
                 </Col>
