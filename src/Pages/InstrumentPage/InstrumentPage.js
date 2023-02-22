@@ -17,6 +17,7 @@ import {useContext, useEffect, useState} from "react";
 import InstrumentSearchBar from "./InstrumentSearchBar/InstrumentSearchBar";
 import InstrumentInfo from "./InstrumentInfo/InstrumentInfo";
 import InstrumentResuts from "./InstrumentResults/InstrumentResuts";
+import InstrumentBrokerTickers from "./InstrumentInfo/InstrumentBrokerTickers";
 //Contexts
 import ServerContext from "../../context/server-context";
 import EnvContext from "../../context/env-context";
@@ -25,7 +26,7 @@ import axios from "axios";
 
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
-    const [selectedInstrument, setSelectedInstrument] = useState([{'inst_code': ''}]);
+    const [selectedInstrument, setSelectedInstrument] = useState({});
     const [requestParameters, setRequestParameters] = useState({})
     const server = useContext(ServerContext)['server'];
 
@@ -53,7 +54,12 @@ const InstrumentPage = () => {
                     <InstrumentSearchBar/>
                 </Row>
                 <Row style={{height: 300, width: '100%', paddingLeft:'15px', paddingRight:'15px', paddingTop: '15px'}}>
-                    <InstrumentInfo/>
+                    <Col sm={10} style={{padding:0, paddingRight: 15}}>
+                        <InstrumentInfo/>
+                    </Col>
+                    <Col sm={2} style={{padding:0}}>
+                        <InstrumentBrokerTickers server={server} id={selectedInstrument.id}/>
+                    </Col>
                 </Row>
                 <Row style={{height: 500, width: '100%', paddingLeft:'15px', paddingRight:'15px', paddingTop: '15px'}}>
                     <InstrumentResuts data={instrumentSearchResults}/>

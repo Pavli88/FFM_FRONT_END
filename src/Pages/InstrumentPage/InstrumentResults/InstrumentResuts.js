@@ -1,15 +1,15 @@
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
-import {useContext, useEffect, useState} from "react";
-import axios from "axios";
+import {useContext} from "react";
 
 //Contexts
-import ServerContext from "../../../context/server-context";
+import InstrumentSearchContext from "../InstrumentPageContext/instrument-search-context";
 
 // CSS
 import "./InstrumentResults.css"
 const InstrumentResuts = (props) => {
-    const instruments = props.data.map((data) => <tr key={data['id']}>
+    const saveSelectedInstrument = useContext(InstrumentSearchContext)['saveSelectedInstrument']
+    const instruments = props.data.map((data) => <tr key={data['id']} onClick={() => saveSelectedInstrument(data)}>
         <td>{data['name']}</td>
         <td>{data['code']}</td>
         <td>{data['country']}</td>
