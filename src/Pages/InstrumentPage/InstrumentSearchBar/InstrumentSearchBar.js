@@ -6,13 +6,18 @@ import {Nav} from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Select from 'react-select'
-import {useState} from "react";
+import {useState, useContext, useRef} from "react";
 
 import InstrumentNew from "../InstrumentNew";
-
+import InstrumentSearchContext from "../InstrumentPageContext/instrument-search-context";
 const InstrumentSearchBar = () => {
-    const [instrumentRequestParameters, setInstrumentRequestParameters] = useState({});
-    const [secTypes, setSecTypes] = useState([]);
+    const saveRequestParameters = useContext(InstrumentSearchContext)['saveRequestParameters'];
+    const nameRef = useRef();
+    const [selectedCountries, setSelectedCountries] = useState([]);
+    const [selectedGroup, setSelectedGroup] = useState([]);
+    const [selectedTypes, setSelectedTypes] = useState([]);
+    const [selectedCurrencies, setSelectedCurrencies] = useState([]);
+
     const secGroup = [
         {value: 'BND', label: 'Bond'},
         {value: 'CSH', label:'Cash'},
@@ -52,21 +57,15 @@ const InstrumentSearchBar = () => {
         {value: 'HU', label: 'Hungary'}
     ];
 
-    const secGroupHandler = (event) => {
-        console.log(event.value)
-        if (event.value === 'BND'){
-            setSecTypes(bondType);
-        }else if (event.value === 'CSH'){
-            setSecTypes(cashType);
-        }else if (event.value === 'CFD'){
-            setSecTypes(cfdType);
-        }else if (event.value === 'EQT'){
-            setSecTypes(equityType);
-        }
-    };
-
     const fetchInstruments = () => {
+        saveRequestParameters({
+            name: nameRef.current.value,
+            country: selectedCountries.map(data=>data.value),
+            group: selectedGroup.value,
+            type: selectedTypes.map(data=>data.value),
+            currency: selectedCurrencies.map(data=>data.value)
 
+        });
     };
 
     return(
@@ -80,7 +79,7 @@ const InstrumentSearchBar = () => {
                             </Nav.Link>
                         </Col>
                         <Col md="auto">
-                            <Form.Control type="text"/>
+                            <Form.Control ref={nameRef} type="text"/>
                         </Col>
                         <Col md="auto" style={{paddingLeft: '5px'}}>
                             <Nav.Link disabled>
@@ -91,9 +90,7 @@ const InstrumentSearchBar = () => {
                             <Select
                                 isMulti
                                 options={countries}
-                                // value={selectedStrategies}
-                                // isDisabled={isDisabled}
-                                // onChange={(e) => secGroupHandler(e)}
+                                onChange={(e) => setSelectedCountries(e)}
                             />
                         </Col>
                         <Col md="auto" style={{paddingLeft: '5px'}}>
@@ -104,9 +101,8 @@ const InstrumentSearchBar = () => {
                         <Col md="auto" style={{width: 150}}>
                             <Select
                                 options={secGroup}
-                                // value={selectedStrategies}
-                                // isDisabled={isDisabled}
-                                onChange={(e) => secGroupHandler(e)}
+                                isClearable
+                                onChange={(e) => e === null ? setSelectedGroup([]): setSelectedGroup(e)}
                             />
                         </Col>
                         <Col md="auto" style={{paddingLeft: '5px'}}>
@@ -117,11 +113,11 @@ const InstrumentSearchBar = () => {
                         <Col md="auto" style={{width: 200}}>
                             <Select
                                 isMulti
-                                options={secTypes}
-                                defaultValue={secTypes[0]}
-                                // value={selectedStrategies}
-                                // isDisabled={isDisabled}
-                                // onChange={(e) => setSelectedStrategies(e)}
+                                options={
+                                selectedGroup.value === 'BND' ? bondType:
+                                    selectedGroup.value === 'CSH' ? cashType:
+                                        selectedGroup.value === 'CFD' ? cfdType: equityType}
+                                onChange={(e) => setSelectedTypes(e)}
                             />
                         </Col>
                         <Col md="auto" style={{paddingLeft: '5px'}}>
@@ -133,9 +129,7 @@ const InstrumentSearchBar = () => {
                             <Select
                                 isMulti
                                 options={currencies}
-                                // value={selectedStrategies}
-                                // isDisabled={isDisabled}
-                                // onChange={(e) => setSelectedStrategies(e)}
+                                onChange={(e) => setSelectedCurrencies(e)}
                             />
                         </Col>
                         <Col>

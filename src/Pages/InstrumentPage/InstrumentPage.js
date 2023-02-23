@@ -12,12 +12,14 @@ import Row from 'react-bootstrap/Row';
 
 //CSS
 import "./InstrumentPage.css"
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState, useRef} from "react";
+import * as qs from 'qs'
 
 import InstrumentSearchBar from "./InstrumentSearchBar/InstrumentSearchBar";
 import InstrumentInfo from "./InstrumentInfo/InstrumentInfo";
 import InstrumentResuts from "./InstrumentResults/InstrumentResuts";
 import InstrumentBrokerTickers from "./InstrumentInfo/InstrumentBrokerTickers";
+
 //Contexts
 import ServerContext from "../../context/server-context";
 import EnvContext from "../../context/env-context";
@@ -27,17 +29,22 @@ import axios from "axios";
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
     const [selectedInstrument, setSelectedInstrument] = useState({});
-    const [requestParameters, setRequestParameters] = useState({})
+    const [requestParameters, setRequestParameters] = useState({});
+    const isMounted = useRef(false);
     const server = useContext(ServerContext)['server'];
 
     useEffect(() => {
-            axios.get(server + 'instruments/get/instruments/', {
-                params: requestParameters
-            })
-                .then(data=> setInstrumentSearchResults(data.data))
+        if (isMounted.current) {
+            axios.post(server + 'instruments/get/instruments/',
+                requestParameters,
+            )
+                .then(data => setInstrumentSearchResults(data.data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
+        } else {
+            isMounted.current = true;
+        }
         }, [requestParameters]
     );
 
@@ -48,6 +55,7 @@ const InstrumentPage = () => {
                 saveInstrumentSearchResults: setInstrumentSearchResults,
                 selectedInstrument: selectedInstrument,
                 saveSelectedInstrument: setSelectedInstrument,
+                saveRequestParameters: setRequestParameters
             }}>
             <Container style={{width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
                 <Row style={{width:'100%', paddingLeft:'15px', paddingRight:'15px'}}>
