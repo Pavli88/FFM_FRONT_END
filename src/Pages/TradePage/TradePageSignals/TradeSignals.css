@@ -1,0 +1,16 @@
+.signal-row{
+    border-bottom: #6c757d;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    padding: 10px;
+}
+
+.time{
+    font-size: 10px;
+    font-style: italic;
+}
+
+.robot{
+    font-size: 12px;
+    font-weight: bold;
+}

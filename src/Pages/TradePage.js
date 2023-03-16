@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button'
 
 import TradeTableData from "./TradePage/TradeTableData";
 import TradeExecutor from "./TradePage/TradeExecutor";
+import TradeSignals from "./TradePage/TradePageSignals/TradeSignals";
 
 import React from "react";
 import {useContext, useState} from "react";
@@ -40,12 +41,26 @@ const TradePage = () => {
         <Container className={'border'}
                    style={{width: "100%", height: window.innerHeight, padding: '20px'}}
                    fluid>
-            <Row style={{height: '500px'}}>
+            <Row style={{height: '900px', padding: 0}}>
                 <Col sm={8}>
                     <TradeTableData env={env} server={server}/>
                 </Col>
-                <Col sm={4}>
-                    <TradeExecutor server={server}/>
+                <Col sm={4} style={{padding:0}}>
+                    <Row style={{height: '100%'}}>
+                        <Col>
+                            <Row style={{height: '50%'}}>
+                                <TradeExecutor server={server}/>
+                            </Row>
+                            <Row style={{height: '50%'}}>
+                                <TradeSignals/>
+                            </Row>
+                        </Col>
+                        <Col>
+                            <Row style={{height: '100%'}}>
+                                <TradeSignals/>
+                            </Row>
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </Container>

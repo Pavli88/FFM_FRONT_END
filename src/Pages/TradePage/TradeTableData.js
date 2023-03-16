@@ -15,7 +15,6 @@ import TradeContext from "./TradePageContext/TradePageContext";
 
 const RobotTradesCard = (props) => {
     const [isActive, setIsActive] = useState(false);
-    console.log(props.data)
     const lastTrade = useContext(TradeContext)['lastTrade'];
     const saveLastTrade = useContext(TradeContext)['saveLastTrade'];
     const CloseTrade = (brokerId, robotId, tradeId) => {

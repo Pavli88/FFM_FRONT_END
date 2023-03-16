@@ -11,6 +11,7 @@ const InstrumentResuts = (props) => {
     const saveSelectedInstrument = useContext(InstrumentSearchContext)['saveSelectedInstrument']
     const instruments = props.data.map((data) => <tr key={data['id']} onClick={() => saveSelectedInstrument(data)}>
         <td>{data['name']}</td>
+        <td>{data['id']}</td>
         <td>{data['code']}</td>
         <td>{data['country']}</td>
         <td>{data['currency']}</td>
@@ -24,6 +25,7 @@ const InstrumentResuts = (props) => {
                     <thead className="table-header-row">
                     <tr>
                         <td style={{border: '0px'}}>Name</td>
+                        <td style={{border: '0px'}}>ID</td>
                         <td style={{border: '0px'}}>Code</td>
                         <td style={{border: '0px'}}>Country</td>
                         <td style={{border: '0px'}}>Currency</td>

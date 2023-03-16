@@ -1,4 +1,4 @@
-import PortfolioNewTransaction from "./PortfolioNewTransaction";
+import PortfolioNewTransaction from "../../SubPages/PortfolioTransactions/PortfolioNewTransaction";
 
 import PortfolioBuy from "../../PortfolioBuy";
 import {useEffect, useState} from "react";
@@ -59,48 +59,45 @@ const PortfolioTransactions = (props) => {
     }, [props]
     );
     return (
-        <>
-            <Card className="card">
-                <Row style={{width: '100%', margin: '0px'}}>
-                    <Col sm={2}>
-                        <Card.Title className="card-header-first">Transactions</Card.Title>
-                    </Col>
-                    <Col>
-                        <Button onClick={function () {
-                            if (rowData['id'] === '') {
-                                alert('Please select a transaction to edit!');
-                            } else {
-                                setShowModal(true);
-                                setModalType('edit')
-                            }
-                            ;
-                        }}>Edit Transaction</Button>
-                    </Col>
-                </Row>
-                <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
-                    <Table>
-                        <thead className="table-header-first">
-                        <tr>
-                            <td className="table-header-row">Portfolio</td>
-                            <td className="table-header-row">Quantity</td>
-                            <td className="table-header-row">Price</td>
-                            <td className="table-header-row">Market Value</td>
-                            <td className="table-header-row">Trade Date</td>
-                            <td className="table-header-row">Instrument</td>
-                            <td className="table-header-row">Instrument Type</td>
-                            <td className="table-header-row">Source</td>
-                            <td className="table-header-row">Currency</td>
-                            <td className="table-header-row">Type</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {portTransData}
-                        </tbody>
-                    </Table>
-                </div>
-            </Card>
-        </>
-
+        <Card className="card">
+            <Row style={{width: '100%', margin: '0px'}}>
+                <Col sm={2}>
+                    <Card.Title className="card-header-first">Transactions</Card.Title>
+                </Col>
+                <Col>
+                    <Button onClick={function () {
+                        if (rowData['id'] === '') {
+                            alert('Please select a transaction to edit!');
+                        } else {
+                            setShowModal(true);
+                            setModalType('edit')
+                        }
+                        ;
+                    }}>Edit Transaction</Button>
+                </Col>
+            </Row>
+            <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
+                <Table>
+                    <thead className="table-header-first">
+                    <tr>
+                        <td className="table-header-row">Portfolio</td>
+                        <td className="table-header-row">Quantity</td>
+                        <td className="table-header-row">Price</td>
+                        <td className="table-header-row">Market Value</td>
+                        <td className="table-header-row">Trade Date</td>
+                        <td className="table-header-row">Instrument</td>
+                        <td className="table-header-row">Instrument Type</td>
+                        <td className="table-header-row">Source</td>
+                        <td className="table-header-row">Currency</td>
+                        <td className="table-header-row">Type</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {portTransData}
+                    </tbody>
+                </Table>
+            </div>
+        </Card>
     );
 };
 

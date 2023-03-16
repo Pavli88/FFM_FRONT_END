@@ -65,11 +65,6 @@ const Navigation = (props) => {
                 <Dropdown.Divider/>
                 <Dropdown.Item onSelect={userLogout}>Sign Out</Dropdown.Item>
             </DropdownButton>
-            {/*<Form inline style={{margin: '5px'}}>*/}
-            {/*    <FormControl type="text" placeholder="Search" className="mr-sm-2"/>*/}
-            {/*    <Button variant="outline-info">Search</Button>*/}
-            {/*</Form>*/}
-
             <NewBrokerAccount show={showNewAccount} hide={() => setShowNewAccount(false)} server={server}/>
             <NewBroker show={brokerModalStatus} hide={() => setBrokerModalStatus(false)} server={server}/>
         </Navbar>

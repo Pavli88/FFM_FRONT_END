@@ -6,51 +6,100 @@ import {BiX} from "react-icons/bi";
 import {useState} from "react";
 import Table from "react-bootstrap/Table";
 
-const PortfolioSecTradeParams = (props) => {
-    const [isActive, setIsActive] = useState(false);
-    console.log(props.data)
-    const parameters = props.data.map((record)=>
-        <tr key={record['id']} style={{height:'40px'}}>
-            <td style={{fontSize: '12px', verticalAlign:"middle", height:'40px'}}>{record['sec']}</td>
-            <td style={{fontSize: 12, verticalAlign:"middle", height:'40px'}}>100</td>
-            <td style={{fontSize: 12, verticalAlign:"middle", height:'40px'}}>AAPL</td>
-            {/*<td style={{padding: '0px', paddingTop:'4px'}}><Button onClick={() => CloseTrade(record['broker_id'], record['robot'], record['id'])} style={{background:'lightgrey', border:"none"}} size="sm"><BiX style={{color:'black'}}/></Button></td>*/}
-        </tr>)
+import PortfolioTradeRoutingNew from "./PortfolioTradeRoutingNew/PortfolioTradeRoutingNew";
+import CardWithHeader from "../../../../../Widgets/Charts/CardWithHeader";
+import {BsDash, BsPlus} from "react-icons/bs";
 
-    const security =
-        <div style={{paddingTop:"5px", paddingBottom: '5px'}}>
-            <Card style={{width: '100%'}}>
-                <div style={{overflowY: 'scroll', overflowX: 'hidden', height: '100%'}}>
-                    <Table>
-                        <thead>
-                        <tr>
-                            <th style={{verticalAlign: "middle"}}>Broker</th>
-                            <th style={{verticalAlign: "middle"}}>Account Number</th>
-                            <th style={{verticalAlign: "middle"}}>Ticker</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {parameters}
-                        </tbody>
-                    </Table>
-                </div>
-            </Card>
+const PortfolioTradeRouting = (props) => {
+    const [newRoutingModalStatus, setNewRoutingModalStatus] = useState(false)
+    const header = <div style={{display: "flex"}}>
+        <div style={{width: '90%'}}><p style={{margin: 0, height: '100%', verticalAlign: "middle"}}>Security Trade Routing</p>
         </div>
+        <div style={{margin: 5}}>
+            <button style={{border: 0}} onClick={()=>setNewRoutingModalStatus(true)}><BsPlus style={{fontSize: 24}}/>
+            </button>
+        </div>
+        <div style={{margin: 5}}>
+            <button style={{border: 0}} ><BsDash style={{fontSize: 24}}/></button>
+        </div>
+    </div>
+    return (
+        <CardWithHeader headerContent={header}>
+            <div style={{overflow:"scroll"}}>
+                <table style={{width: '100%', height: '100%'}}>
+                <tbody style={{width: '100%'}}>
 
-    return(
-        <div>
-            <Card style={{height: '40px'}} onClick={() => isActive === false ? setIsActive(true) : setIsActive(false)}>
-                <Row style={{padding:'0px'}}>
-                    <Col md="auto" style={{paddingLeft: '15px'}}>
-                        <p style={{color: "#343632", height:'100%', margin:'auto', paddingTop:'10px', fontSize: '12px'}}>Instrument</p>
-                    </Col>
-                    <Col md="auto" style={{height:'100%', paddingLeft: '5px', width:'180px'}} >
-                        <p style={{color:"#6d7069", height:'100%', margin:'auto', paddingTop:'10px', fontSize: '12px'}}>Test Security</p>
-                    </Col>
-                </Row>
-            </Card>
-            {isActive ? security: null}
-        </div>
+                <tr>
+                    <td className={'signal-row'}>
+                        <div>
+                            Silver
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            Oanda
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            1234-1234-1234-5234
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            EUR_USD
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            Stop Based
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            0.04
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td className={'signal-row'}>
+                        <div>
+                            Gold
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            Trade Station
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            1234-1234-1234-5234
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            EUR_USD
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            Fix
+                        </div>
+                    </td>
+                    <td className={'signal-row'}>
+                        <div style={{width: '100%'}}>
+                            5
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+            </div>
+            <PortfolioTradeRoutingNew server={props.server} show={newRoutingModalStatus} hide={()=>setNewRoutingModalStatus(false)}/>
+        </CardWithHeader>
     )
 };
-export default PortfolioSecTradeParams;
+export default PortfolioTradeRouting;

@@ -38,7 +38,7 @@ import PortfolioRiskPage from "./PortfolioPage/SubPages/PortfolioRisk/PortfolioR
 import PortfolioHoldingsPage from "./PortfolioPage/SubPages/PortfolioHoldings/PortfolioHoldingsPage";
 import PortfolioDashBoardPage from "./PortfolioPage/SubPages/PortfolioDashboard/PortfolioDashBoardPage";
 import PortfolioSettingsPage from "./PortfolioPage/SubPages/PortfolioSettings/PortfolioSettingsPage";
-import PortfolioTransactionsPage from "./PortfolioPage/SubPages/PortfolioTransactions/PortfolioTransactionsPage";
+import PortfolioTransactionsPage from "./PortfolioPage/PortfolioTransactionsPage/PortfolioTransactionsPage";
 import PortfolioDataImport from "./PortfolioPage/SubPages/PortfolioImport/PortfolioDataImport";
 import PortfolioNewCashFlowEntry from "./PortfolioPage/SubPages/PortfolioTransactions/PortfolioNewCashFlow";
 import PortfolioBuy from "./PortfolioPage/PortfolioBuy";
@@ -84,20 +84,9 @@ const PortfolioPage = (props) => {
                         <MenuItem>Holdings
                             <Link to="/portfolio/holdings"/>
                         </MenuItem>
-                        <SubMenu title="Transactions">
-                            <MenuItem>Transaction Editor
-                                <Link to="/portfolio/transactions"/>
-                            </MenuItem>
-                            <MenuItem onClick={()=>setNewPortCashFlow(true)}>
-                                New Cash Transaction
-                            </MenuItem>
-                            <MenuItem onClick={()=>setShowNewTransactionModal(true)}>
-                                New Security Transaction
-                            </MenuItem>
-                            <MenuItem onClick={()=>setNewRobotTrade(true)}>
-                                New Robot Transaction
-                            </MenuItem>
-                        </SubMenu>
+                        <MenuItem>Transactions
+                            <Link to="/portfolio/transactions"/>
+                        </MenuItem>
                         <MenuItem>Risk
                             <Link to="/portfolio/risk"/>
                         </MenuItem>
@@ -141,7 +130,6 @@ const PortfolioPage = (props) => {
                 </Col>
             </Row>
 
-            // Modals
             <NewPortfolioForm show={showNewPortfolio} hide={() => setShowNewPortfolio(false)} server={server}/>
             <PortfolioBuy show={showNewRobotTrade} hide={() => setNewRobotTrade(false)} portfolio={portfolio} server={server} env={env}/>
             <PortfolioNewCashFlowEntry show={showNewPortCashFlow} hide={() => setNewPortCashFlow(false)} portfolio={portfolio} server={server}/>
@@ -149,6 +137,7 @@ const PortfolioPage = (props) => {
             <CashHoldingCalculation show={showCashCalc} hide={() => setCashCalc(false)} server={server} portfolio={portfolio}/>
             <PortfolioDataImport show={showImportModal} hide={() => setShowImportModal(false)} server={server}/>
             <PortfolioNewTransaction show={showNewTransactionModal} hide={() => setShowNewTransactionModal(false)} portfolio={portfolio} server={server}/>
+
         </Container>
     );
 };

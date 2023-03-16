@@ -3,6 +3,8 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 
+import CardWithHeader from "../../Widgets/Charts/CardWithHeader";
+
 // Context
 import RobotContext from "../../context/robot-context";
 import Button from "react-bootstrap/Button";
@@ -37,31 +39,32 @@ const TradeExecutor = (props) => {
     };
 
     return (
-        <Card style={{}} className="card">
-            <Card.Title className="card-header-first">Trade Execution</Card.Title>
-            <Form onSubmit={submitHandler} style={{width: '100%'}}>
-                <Form.Group>
+        <CardWithHeader headerContent={<p>Trades Execuion</p>}>
+            <Form onSubmit={submitHandler} style={{width: '100%', height:'100%'}}>
+                <div style={{padding: '5px'}}>
                     <Form.Label>Robot</Form.Label>
                     <Form.Control onChange={(e) => setSelectedRobotId(e.target.value)} as="select">
                         {robots}
                     </Form.Control>
-                </Form.Group>
-                <Form.Group>
+                </div>
+                <div style={{padding: '5px'}}>
                     <Form.Label>Side</Form.Label>
                     <Form.Control onChange={(e) => setSide(e.target.value)} as="select">
                         <option value={'BUY'}>BUY</option>
                         <option value={'SELL'}>SELL</option>
                     </Form.Control>
-                </Form.Group>
-                <Form.Group>
+                </div>
+                <div style={{padding: '5px'}}>
                     <Form.Label>Stop Loss</Form.Label>
                     <Form.Control onChange={(e) => setSl(e.target.value)} type="number" min={0.0}/>
-                </Form.Group>
+                </div>
             </Form>
-            <Button variant="primary" onClick={submitHandler}>
-                Execute
-            </Button>
-        </Card>
+            <div style={{padding: '5px'}}>
+                <Button variant="primary" onClick={submitHandler} style={{width: '100%'}}>
+                    Execute
+                </Button>
+            </div>
+        </CardWithHeader>
     );
 };
 
