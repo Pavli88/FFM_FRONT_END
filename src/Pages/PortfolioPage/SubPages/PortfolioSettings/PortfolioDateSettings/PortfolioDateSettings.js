@@ -1,7 +1,7 @@
 import CardWithHeader from "../../../../../Widgets/Charts/CardWithHeader";
 
 const PortfolioDateSettings = () => {
-     const header = <p>Dates</p>
+    const header = <p>Dates</p>
     return(
         <CardWithHeader headerContent={header}>
             <p>Creation Date</p>

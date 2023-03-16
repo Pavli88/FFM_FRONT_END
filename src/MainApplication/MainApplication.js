@@ -4,6 +4,7 @@ import EnvContext from "../context/env-context";
 import RobotContext from "../context/robot-context";
 import PortfolioContext from "../context/portfolio-context";
 import DateContext from "../context/date-context";
+import UserContext from "../context/user-context";
 import appConfig from "../config files/app-config";
 import BrokerContext from "../context/broker-context";
 import ReactNotification from "react-notifications-component";
@@ -25,18 +26,24 @@ const MainApplication = (props) => {
     const { server, defaultRobotEnvironment, currentDate, fistDayOfCurrentYear } = props.config;
     const { userName } = props.user;
     const history = useHistory();
-    console.log(server)
-    const [robotEnvData, setRobotEnvData] = useState(defaultRobotEnvironment);
-    const [portfolioData, setPortfolioData] = useState([]);
-    const [allRobotsData, setAllRobotsData] = useState([]);
-    const [selectedRobotData, setSelectedRobotData] = useState({});
+
+    const [portfolios, setPortfolios] = useState([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState('');
     const [newPortfolio, setNewPortfolio] = useState('');
+
+    const [robotEnvData, setRobotEnvData] = useState(defaultRobotEnvironment);
+    const [allRobotsData, setAllRobotsData] = useState([]);
+    const [selectedRobotData, setSelectedRobotData] = useState({});
     const [newRobot, setNewRobot] = useState('');
-    const [brokerData, setBrokerData] = useState([{'id': 1, 'broker': 'System', 'broker_code': 'ffm_system'}]);
-    const [entity, setEntity] = useState('Portfolio');
     const [robotStrategies, setRobotStrategyOptions] = useState([]);
 
+    const [brokerData, setBrokerData] = useState([{'id': 1, 'broker': 'System', 'broker_code': 'ffm_system'}]);
+    const [entity, setEntity] = useState('Portfolio');
+
+    const [accounts, setAccounts] = useState([]);
+    const [newAccount, setNewAccount] = useState(0)
+    // console.log(accounts)
+    // console.log(userName)
     const getEnvData = (env) => {
         setRobotEnvData(env);
     };
@@ -49,7 +56,7 @@ const MainApplication = (props) => {
 
     useEffect(() => {
             axios.get(server + 'portfolios/get_portfolio_data/all')
-                .then(response => setPortfolioData(response['data']))
+                .then(response => setPortfolios(response.data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
@@ -70,6 +77,19 @@ const MainApplication = (props) => {
                     console.error('Error Message:', error);
                 });
         }, [newRobot, robotEnvData]
+    );
+
+    useEffect(() => {
+            axios.get(server + 'accounts/get/accounts/', {
+                params: {
+                    owner: userName
+                }
+            })
+                .then(response => setAccounts(response.data))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, [newAccount]
     );
 
     const getRobotStrategies = async () => {
@@ -107,7 +127,7 @@ const MainApplication = (props) => {
 
                         }}>
                             <PortfolioContext.Provider value={{
-                                portfolios: portfolioData,
+                                portfolios: portfolios,
                                 selectedPortfolio: selectedPortfolio,
                                 selectPortfolio: setSelectedPortfolio,
                                 saveNewPortfolio: setNewPortfolio,
@@ -121,12 +141,19 @@ const MainApplication = (props) => {
                                     firstDayOfCurrentYear: fistDayOfCurrentYear
                                 }}>
                                     <BrokerContext.Provider value={{
-                                        brokerData: brokerData
+                                        brokerData: brokerData,
+                                        accounts: accounts,
+                                        newAccount: newAccount,
+                                        saveAccount: setNewAccount,
                                     }}>
-                                        <ReactNotification/>
+                                        <UserContext.Provider value={{
+                                            user: userName
+                                        }}>
+                                            <ReactNotification/>
 
-                                            <div style={{border: 1, borderColor:'grey', background:'grey'}}>
-                                                <Navigation onEnvChange={getEnvData} env={robotEnvData} user={userName}/>
+                                            <div style={{border: 1, borderColor: 'grey', background: 'grey'}}>
+                                                <Navigation onEnvChange={getEnvData} env={robotEnvData}
+                                                            user={userName}/>
                                             </div>
                                             <div style={{marginTop: 5}}>
                                                 <Switch>
@@ -161,6 +188,7 @@ const MainApplication = (props) => {
                                                     <Route path='*' element={<Redirect to='/dashboard'/>}/>
                                                 </Switch>
                                             </div>
+                                        </UserContext.Provider>
                                     </BrokerContext.Provider>
                                 </DateContext.Provider>
                             </PortfolioContext.Provider>

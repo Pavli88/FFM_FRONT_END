@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom'
 
 import {useContext, useEffect, useState} from "react";
 
-import NewBrokerAccount from "./NewBrokerAccount";
 import NewBroker from "../NavBar/NewBroker";
 import Notifications from "./Notifications";
 import NavRobot from "../NavBar/NavRobot";
@@ -51,12 +50,12 @@ const Navigation = (props) => {
                 <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/trade'}>Trade</Nav.Link>
                 <Nav.Link onClick={() => setProcessHandler(<NavCalculation/>)} as={Link}
                           to={'/calculations'}>Calculations</Nav.Link>
-                <NavDropdown title="Broker Accounts">
-                    <NavDropdown.Item onSelect={() => setShowNewAccount(true)}>New Account</NavDropdown.Item>
-                    <NavDropdown.Item onSelect={() => setBrokerModalStatus(true)}>New Broker</NavDropdown.Item>
-                    <NavDropdown.Item>Update</NavDropdown.Item>
-                    <NavDropdown.Item>Delete</NavDropdown.Item>
-                </NavDropdown>
+                {/*<NavDropdown title="Broker Accounts">*/}
+                {/*    <NavDropdown.Item onSelect={() => setShowNewAccount(true)}>New Account</NavDropdown.Item>*/}
+                {/*    <NavDropdown.Item onSelect={() => setBrokerModalStatus(true)}>New Broker</NavDropdown.Item>*/}
+                {/*    <NavDropdown.Item>Update</NavDropdown.Item>*/}
+                {/*    <NavDropdown.Item>Delete</NavDropdown.Item>*/}
+                {/*</NavDropdown>*/}
             </Nav>
             {processHandler}
             <Notifications server={server}/>
@@ -65,7 +64,6 @@ const Navigation = (props) => {
                 <Dropdown.Divider/>
                 <Dropdown.Item onSelect={userLogout}>Sign Out</Dropdown.Item>
             </DropdownButton>
-            <NewBrokerAccount show={showNewAccount} hide={() => setShowNewAccount(false)} server={server}/>
             <NewBroker show={brokerModalStatus} hide={() => setBrokerModalStatus(false)} server={server}/>
         </Navbar>
     );

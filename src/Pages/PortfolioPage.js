@@ -26,7 +26,7 @@ import "./PortfolioPage.css"
 
 // Contexts
 import RobotContext from "../context/robot-context";
-import NewBrokerAccount from "../components/NewBrokerAccount";
+import NewBrokerAccount from "./ProfilPage/BrokerAccounts/NewBrokerAccount";
 import RiskPage from "./RiskPage";
 import ServerContext from "../context/server-context";
 import EnvContext from "../context/env-context";
