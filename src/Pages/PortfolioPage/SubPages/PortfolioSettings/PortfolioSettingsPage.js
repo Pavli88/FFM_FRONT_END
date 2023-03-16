@@ -1,5 +1,9 @@
-import PortfolioSettings from "./PortfolioSettings";
 import PortfolioTradeRouting from "./PortfolioTradeRouting/PortfolioTradeRouting";
+import PortfolioRiskSettings from "./PortfolioRiskSettings/PortfolioRiskSettings";
+import PortfolioValuationSetting from "./PortfolioValuationSetting/PortfolioValuationSetting";
+import PortfolioGeneralSettings from "./PortfolioGeneralSettings/PortfolioGeneralSettings";
+import PortfolioOwnershipSettings from "./PortfolioOwnershipSettings/PortfolioOwnershipSettings";
+import PortfolioDateSettings from "./PortfolioDateSettings/PortfolioDateSettings";
 import Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
 
@@ -12,7 +16,23 @@ const PortfolioSettingsPage = (props) => {
     return (
         <Row style={{width:'100%'}}>
             <Col>
-                <PortfolioSettings/>
+                <Row>
+                    <Col>
+                        <PortfolioGeneralSettings/>
+                    </Col>
+                    <Col>
+                        <PortfolioOwnershipSettings/>
+                    </Col>
+                </Row>
+                <Row>
+                    <PortfolioDateSettings/>
+                </Row>
+                <Row>
+                    <PortfolioValuationSetting/>
+                </Row>
+                <Row>
+                    <PortfolioRiskSettings/>
+                </Row>
             </Col>
             <Col>
                 <PortfolioTradeRouting server={server}/>

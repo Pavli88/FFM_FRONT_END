@@ -61,7 +61,7 @@ const Navigation = (props) => {
             {processHandler}
             <Notifications server={server}/>
             <DropdownButton alignRight flip title={props.user} style={{borderRadius: '5px'}}>
-                <Dropdown.Item>Profil</Dropdown.Item>
+                <Dropdown.Item as={Link} to={'/profil'} >Profil</Dropdown.Item>
                 <Dropdown.Divider/>
                 <Dropdown.Item onSelect={userLogout}>Sign Out</Dropdown.Item>
             </DropdownButton>
