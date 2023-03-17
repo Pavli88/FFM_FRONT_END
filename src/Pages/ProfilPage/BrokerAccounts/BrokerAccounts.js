@@ -1,10 +1,13 @@
 import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
 import BrokerContext from "../../../context/broker-context";
-import {useContext, useState} from "react";
-import {BsDash, BsPlus} from "react-icons/bs";
+import {useContext} from "react";
+import {BsDash, BsTrash} from "react-icons/bs";
+import axios from "axios";
 
 const BrokerAccounts = (props) => {
     const { user, server} = props.parameters;
+    const saveAccount = useContext(BrokerContext).saveAccount;
+    const newAccount = useContext(BrokerContext).newAccount;
     const accounts = useContext(BrokerContext).accounts;
     const accountRows = accounts.map((data) => <tr key={data.id}>
         <td className={'table-row'}>
@@ -37,14 +40,31 @@ const BrokerAccounts = (props) => {
                 {data.env}
             </div>
         </td>
+        <td className={'table-row'}>
+            <button className={'delete-button'} onClick={() => deleteAccount(data.id)}>
+                <BsTrash/>
+            </button>
+        </td>
     </tr>
     )
 
+    const deleteAccount = (id) => {
+        axios.post(server + 'accounts/delete/', {
+            id: id
+        })
+            .then(function(response){
+                    if (response.data === 'Account is deleted'){
+                        saveAccount(newAccount + 1)
+                        alert(response.data)
+                    }
+                })
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
+
     const header = <div style={{display: "flex"}}>
         <div style={{width: '90%'}}><p style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>Accounts</p>
-        </div>
-        <div style={{margin: 5}}>
-            <button style={{border: 0}} ><BsDash style={{fontSize: 24}}/></button>
         </div>
     </div>
 

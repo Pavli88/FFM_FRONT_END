@@ -11,3 +11,13 @@
 .nav-tabs .nav-link {
   border: 0px solid transparent;
 }
+
+.delete-button{
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0px;
+    background: #e23a30;
+    width: 100%;
+    color: white;
+}

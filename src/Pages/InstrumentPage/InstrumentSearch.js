@@ -15,7 +15,6 @@ import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-c
 import BrokerContext from "../../context/broker-context";
 
 import InstrumentNew from "./InstrumentNew";
-import NewPortfolioForm from "../PortfolioPage/NewPortfolioForm";
 
 const InstrumentSearch = (props) => {
     const setResponseData = useContext(InstrumentSearchContext)['saveInstrumentSearchResults']

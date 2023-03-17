@@ -11,16 +11,16 @@ const NewBrokerAccount = (props) => {
     const { user, server} = props.parameters;
     const saveAccount = useContext(BrokerContext).saveAccount;
     const newAccount = useContext(BrokerContext).newAccount;
-    const [broker, setBroker] = useState('');
     const [env, setEnv] = useState('live');
     const [currency, setCurrency] = useState('USD');
     const accountNameRef = useRef();
     const accountNumberRef = useRef();
     const tokenRef = useRef();
+    const brokerNameRef = useRef();
 
     const submitHandler = () => {
         axios.post(server + 'accounts/new_account/', {
-            broker_name: broker,
+            broker_name: brokerNameRef.current.value,
             account_number: accountNumberRef.current.value,
             account_name: accountNameRef.current.value,
             env: env,
@@ -29,23 +29,19 @@ const NewBrokerAccount = (props) => {
             owner: user
         })
                 .then(function(response){
-
                     if (response.data === 'Account is created successfully!'){
                         saveAccount(newAccount + 1)
+                        alert(response.data)
+                    }else{
                         alert(response.data)
                     }
                 })
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        setBroker('');
         setEnv('live');
         setCurrency('USD');
         props.hide();
-    };
-
-    const brokerNameHandler = (event) => {
-        setBroker(event.target.value);
     };
 
     const envHandler = (event) => {
@@ -61,7 +57,7 @@ const NewBrokerAccount = (props) => {
             style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>New</p>
         </div>
         <Button variant="primary" onClick={submitHandler}>
-            Save
+            Create
         </Button>
     </div>
 
@@ -69,7 +65,7 @@ const NewBrokerAccount = (props) => {
         <CardWithHeader headerContent={header}>
                 <div style={{margin: 10}}>
                     <Form.Label>Broker</Form.Label>
-                    <Form.Control onChange={brokerNameHandler} type="text"/>
+                    <Form.Control ref={brokerNameRef} type="text"/>
                 </div>
                 <div style={{margin: 10}}>
                     <Form.Label>Account Name</Form.Label>

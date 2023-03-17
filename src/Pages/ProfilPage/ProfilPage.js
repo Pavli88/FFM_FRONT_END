@@ -9,11 +9,12 @@ import BrokerAccounts from "./BrokerAccounts/BrokerAccounts";
 import ProfilePortfolios from "./ProfilePortfolios/ProfilePortfolios";
 import NewBrokerAccount from "./BrokerAccounts/NewBrokerAccount";
 import PortfolioGroup from "./PortfolioGroup/PortfolioGroup";
+import NewPortfolio from "./ProfilePortfolios/NewPortfolio";
 
 import UserContext from "../../context/user-context";
 import ServerContext from "../../context/server-context";
 import { useContext } from "react";
-import Button from "react-bootstrap/Button";
+
 
 const ProfilPage = () => {
     const generalParameters = {
@@ -46,8 +47,8 @@ const ProfilPage = () => {
                     </Tab>
                     <Tab eventKey="portfolios" title="Portfolios">
                         <div style={{display: 'flex', width: '100%', height: '650px'}}>
-                            <div style={{width: '300px', marginLeft: 20, marginRight: 10}}>
-                                <PortfolioGroup/>
+                            <div style={{width: '500px', marginLeft: 20, marginRight: 10}}>
+                                <NewPortfolio/>
                             </div>
                             <div style={{width: '500px', marginLeft: 20, marginRight: 10}}>
                                 <PortfolioGroup/>

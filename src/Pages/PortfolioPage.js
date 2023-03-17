@@ -3,8 +3,6 @@ import {Route, Switch, Link} from "react-router-dom";
 
 import axios from "axios";
 
-import NewPortfolioForm from "./PortfolioPage/NewPortfolioForm";
-
 // Sidebar
 import { ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import 'react-pro-sidebar/dist/css/styles.css';
@@ -26,7 +24,6 @@ import "./PortfolioPage.css"
 
 // Contexts
 import RobotContext from "../context/robot-context";
-import NewBrokerAccount from "./ProfilPage/BrokerAccounts/NewBrokerAccount";
 import RiskPage from "./RiskPage";
 import ServerContext from "../context/server-context";
 import EnvContext from "../context/env-context";
@@ -129,8 +126,6 @@ const PortfolioPage = (props) => {
                     </Row>
                 </Col>
             </Row>
-
-            <NewPortfolioForm show={showNewPortfolio} hide={() => setShowNewPortfolio(false)} server={server}/>
             <PortfolioBuy show={showNewRobotTrade} hide={() => setNewRobotTrade(false)} portfolio={portfolio} server={server} env={env}/>
             <PortfolioNewCashFlowEntry show={showNewPortCashFlow} hide={() => setNewPortCashFlow(false)} portfolio={portfolio} server={server}/>
             <PositionCalculation show={showPosCalc} hide={() => setPosCalc(false)} server={server} portfolio={portfolio}/>
