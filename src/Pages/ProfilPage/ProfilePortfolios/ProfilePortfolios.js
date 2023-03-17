@@ -7,32 +7,32 @@ const ProfilePortfolios = () => {
     const portfolioData = useContext(PortfolioContext).portfolios;
     console.log(portfolioData)
     const portfolios = portfolioData.map((data) => <tr key={data.id}>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div>
                 {data.portfolio_name}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.portfolio_code}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.portfolio_type}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.currency}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.status}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.public}
             </div>
@@ -50,19 +50,14 @@ const ProfilePortfolios = () => {
             <button style={{border: 0}}><BsDash style={{fontSize: 24}}/></button>
         </div>
     </div>
-    return(
+    return (
         <CardWithHeader headerContent={header}>
-            <div style={{display: 'flex', height: '100%'}}>
-                <div style={{width: '30%', height: '100%'}}>
-
-                </div>
-                <div style={{width:'70%', height: '100%', overflow: "scroll"}}>
-                    <table style={{width: '100%', height: '100%'}}>
-                        <tbody style={{width: '100%'}}>
-                        {portfolios}
-                        </tbody>
-                    </table>
-                </div>
+            <div style={{height: '100%', overflow: "scroll"}}>
+                <table style={{width: '100%'}}>
+                    <tbody style={{width: '100%'}}>
+                    {portfolios}
+                    </tbody>
+                </table>
             </div>
         </CardWithHeader>
     )

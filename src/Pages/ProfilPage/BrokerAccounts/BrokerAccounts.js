@@ -1,40 +1,38 @@
 import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
-import NewBrokerAccount from "./NewBrokerAccount";
 import BrokerContext from "../../../context/broker-context";
 import {useContext, useState} from "react";
 import {BsDash, BsPlus} from "react-icons/bs";
 
 const BrokerAccounts = (props) => {
     const { user, server} = props.parameters;
-    const [showNewAccountModal, setShowNewAccountModal] = useState(false);
     const accounts = useContext(BrokerContext).accounts;
     const accountRows = accounts.map((data) => <tr key={data.id}>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div>
                 {data.broker_name}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.account_name}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.account_number}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.access_token}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.currency}
             </div>
         </td>
-        <td className={'signal-row'}>
+        <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.env}
             </div>
@@ -43,11 +41,7 @@ const BrokerAccounts = (props) => {
     )
 
     const header = <div style={{display: "flex"}}>
-        <div style={{width: '90%'}}><p style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>Broker Accounts</p>
-        </div>
-        <div style={{margin: 5}}>
-            <button style={{border: 0}} onClick={() => setShowNewAccountModal(true)}><BsPlus style={{fontSize: 24}}/>
-            </button>
+        <div style={{width: '90%'}}><p style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>Accounts</p>
         </div>
         <div style={{margin: 5}}>
             <button style={{border: 0}} ><BsDash style={{fontSize: 24}}/></button>
@@ -56,18 +50,13 @@ const BrokerAccounts = (props) => {
 
     return(
         <CardWithHeader headerContent={header}>
-            <div style={{overflow:"scroll"}}>
-                <table style={{width: '100%', height: '100%'}}>
+            <div style={{overflow:"scroll", height:'100%'}}>
+                <table style={{width: '100%'}}>
                 <tbody style={{width: '100%'}}>
                 {accountRows}
                 </tbody>
             </table>
             </div>
-            <NewBrokerAccount show={showNewAccountModal}
-                              hide={() => setShowNewAccountModal(false)}
-                              server={server}
-                              user={user}
-            />
         </CardWithHeader>
     )
 };

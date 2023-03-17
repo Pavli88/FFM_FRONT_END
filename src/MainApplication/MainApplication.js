@@ -22,6 +22,8 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Container from 'react-bootstrap/Container'
 
+import './MainApplication.css'
+
 const MainApplication = (props) => {
     const { server, defaultRobotEnvironment, currentDate, fistDayOfCurrentYear } = props.config;
     const { userName } = props.user;

@@ -30,32 +30,32 @@ const PortfolioTradeRouting = (props) => {
                 <tbody style={{width: '100%'}}>
 
                 <tr>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div>
                             Silver
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             Oanda
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             1234-1234-1234-5234
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             EUR_USD
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             Stop Based
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             0.04
                         </div>
@@ -63,32 +63,32 @@ const PortfolioTradeRouting = (props) => {
                 </tr>
 
                 <tr>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div>
                             Gold
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             Trade Station
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             1234-1234-1234-5234
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             EUR_USD
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             Fix
                         </div>
                     </td>
-                    <td className={'signal-row'}>
+                    <td className={'table-row'}>
                         <div style={{width: '100%'}}>
                             5
                         </div>

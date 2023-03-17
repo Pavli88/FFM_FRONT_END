@@ -1,12 +1,14 @@
-import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import {useState, useRef, useContext} from "react";
 
 import axios from "axios";
 import BrokerContext from "../../../context/broker-context";
+import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
+import {BsDash} from "react-icons/bs";
 
 const NewBrokerAccount = (props) => {
+    const { user, server} = props.parameters;
     const saveAccount = useContext(BrokerContext).saveAccount;
     const newAccount = useContext(BrokerContext).newAccount;
     const [broker, setBroker] = useState('');
@@ -15,19 +17,16 @@ const NewBrokerAccount = (props) => {
     const accountNameRef = useRef();
     const accountNumberRef = useRef();
     const tokenRef = useRef();
-    const onHide = () => {
-        props.hide();
-    };
 
     const submitHandler = () => {
-        axios.post(props.server + 'accounts/new_account/', {
+        axios.post(server + 'accounts/new_account/', {
             broker_name: broker,
             account_number: accountNumberRef.current.value,
             account_name: accountNameRef.current.value,
             env: env,
             token: tokenRef.current.value,
             currency: currency,
-            owner: props.user
+            owner: user
         })
                 .then(function(response){
 
@@ -57,52 +56,48 @@ const NewBrokerAccount = (props) => {
         setCurrency(event.target.value);
     };
 
+    const header = <div style={{display: "flex"}}>
+        <div style={{width: '90%'}}><p
+            style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>New</p>
+        </div>
+        <Button variant="primary" onClick={submitHandler}>
+            Save
+        </Button>
+    </div>
+
     return (
-        <Modal show={props.show} onHide={onHide} animation={false}>
-            <Modal.Header>
-                <Modal.Title>New Account</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <div>
+        <CardWithHeader headerContent={header}>
+                <div style={{margin: 10}}>
                     <Form.Label>Broker</Form.Label>
                     <Form.Control onChange={brokerNameHandler} type="text"/>
                 </div>
-                <div>
+                <div style={{margin: 10}}>
                     <Form.Label>Account Name</Form.Label>
                     <Form.Control ref={accountNameRef} type="text"/>
                 </div>
-                <div>
+                <div style={{margin: 10}}>
                     <Form.Label>Account Number</Form.Label>
                     <Form.Control ref={accountNumberRef} type="text"/>
                 </div>
-                <div>
+                <div style={{margin: 10}}>
                     <Form.Label>Token</Form.Label>
                     <Form.Control ref={tokenRef} type="text"/>
                 </div>
-                <div>
+                <div style={{margin: 10}}>
                     <Form.Label>Environment</Form.Label>
                     <Form.Control onChange={envHandler} as="select">
                         <option value={'live'}>Live</option>
                         <option value={'demo'}>Demo</option>
                     </Form.Control>
                 </div>
-                <div>
+                <div style={{margin: 10}}>
                     <Form.Label>Currency</Form.Label>
                     <Form.Control onChange={currencyHandler} as="select">
                         <option value={'USD'}>USD</option>
                         <option value={'EUR'}>EUR</option>
                     </Form.Control>
                 </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={onHide}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={submitHandler}>
-                    Save
-                </Button>
-            </Modal.Footer>
-        </Modal>
+        </CardWithHeader>
     );
 };
 
