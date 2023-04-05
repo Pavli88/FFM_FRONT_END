@@ -31,7 +31,7 @@ const MainApplication = (props) => {
 
     const [portfolios, setPortfolios] = useState([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState('');
-    const [newPortfolio, setNewPortfolio] = useState('');
+    const [newPortfolio, setNewPortfolio] = useState(0);
 
     const [robotEnvData, setRobotEnvData] = useState(defaultRobotEnvironment);
     const [allRobotsData, setAllRobotsData] = useState([]);

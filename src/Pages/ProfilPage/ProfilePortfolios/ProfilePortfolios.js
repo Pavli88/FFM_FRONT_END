@@ -52,7 +52,7 @@ const ProfilePortfolios = () => {
     </div>
     return (
         <CardWithHeader headerContent={header}>
-            <div style={{height: '100%', overflow: "scroll"}}>
+            <div style={{height: '100%', overflowY: "scroll"}}>
                 <table style={{width: '100%'}}>
                     <tbody style={{width: '100%'}}>
                     {portfolios}

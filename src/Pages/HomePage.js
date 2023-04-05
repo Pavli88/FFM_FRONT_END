@@ -122,8 +122,7 @@ const HomePage = (props) => {
         'data': pnlHistory['data'] === 'undefinded' ? [{'name': '', 'data': []}] : pnlHistory['data'],
         'colors': robotColors
     });
-    console.log(exposureData['ret_to_total'].reduce((a, b) => a + b, 0))
-    // console.log(pnlHistory['data'][pnlHistory['data'].length - 1])
+    
     const totalExposure = (Math.round(exposureData['ret_to_total'].reduce((a, b) => a + b, 0))*100)/100
     const exposureTitle = <div style={{display:'flex', height: '100%'}}>
         <p style={{margin: 0}}>Exposure</p>

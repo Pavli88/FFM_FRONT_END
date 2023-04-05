@@ -7,11 +7,27 @@ import PortfolioDateSettings from "./PortfolioDateSettings/PortfolioDateSettings
 import Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
 
-import {useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import ServerContext from "../../../../context/server-context";
+import axios from "axios";
 
 const PortfolioSettingsPage = (props) => {
     const server = useContext(ServerContext)['server'];
+    const [portfolioData, setPortfolioData] = useState([]);
+    console.log(portfolioData)
+    useEffect(() => {
+            axios.get(server + 'portfolios/get/portfolio/', {
+                params: {
+                    portfolio: props.portfolio
+                }
+            })
+                .then(response => setPortfolioData(response.data))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, [props.portfolio]
+    );
+
     return (
         <Row style={{width:'100%'}}>
             <Col>

@@ -10,6 +10,8 @@ import ProfilePortfolios from "./ProfilePortfolios/ProfilePortfolios";
 import NewBrokerAccount from "./BrokerAccounts/NewBrokerAccount";
 import PortfolioGroup from "./PortfolioGroup/PortfolioGroup";
 import NewPortfolio from "./ProfilePortfolios/NewPortfolio";
+import CashManagement from "./CashManagement/CashManagement";
+import CashBalances from "./CashBalances/CashBalances";
 
 import UserContext from "../../context/user-context";
 import ServerContext from "../../context/server-context";
@@ -26,17 +28,18 @@ const ProfilPage = () => {
         <Container
             style={{height: window.innerHeight, width: "100%", margin: '0px', padding: '0px'}}
             fluid>
-            <Row style={{height: '20%'}}>
-
-            </Row>
-            <div style={{width: '100%', height: '80%'}}>
+            <div style={{display: 'flex', height: '300px'}}>
+                <CashManagement/>
+                <CashBalances/>
+            </div>
+            <div style={{width: '100%', height: '600px'}}>
                 <Tabs
                     defaultActiveKey="accounts"
                     id="profile-tab"
                     className="mb-3"
                 >
                     <Tab eventKey="accounts" title="Broker Accounts">
-                        <div style={{display: 'flex', width: '100%', height: '650px'}}>
+                        <div style={{display: 'flex', width: '100%', height: '500px'}}>
                             <div style={{width: '300px', marginLeft: 20, marginRight: 10}}>
                                 <NewBrokerAccount parameters={{...generalParameters}}/>
                             </div>
@@ -46,9 +49,9 @@ const ProfilPage = () => {
                         </div>
                     </Tab>
                     <Tab eventKey="portfolios" title="Portfolios">
-                        <div style={{display: 'flex', width: '100%', height: '650px'}}>
+                        <div style={{display: 'flex', width: '100%', height: '500px'}}>
                             <div style={{width: '500px', marginLeft: 20, marginRight: 10}}>
-                                <NewPortfolio/>
+                                <NewPortfolio parameters={{...generalParameters}}/>
                             </div>
                             <div style={{width: '500px', marginLeft: 20, marginRight: 10}}>
                                 <PortfolioGroup/>

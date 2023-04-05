@@ -63,6 +63,7 @@ const NewBrokerAccount = (props) => {
 
     return (
         <CardWithHeader headerContent={header}>
+            <div>
                 <div style={{margin: 10}}>
                     <Form.Label>Broker</Form.Label>
                     <Form.Control ref={brokerNameRef} type="text"/>
@@ -93,6 +94,7 @@ const NewBrokerAccount = (props) => {
                         <option value={'EUR'}>EUR</option>
                     </Form.Control>
                 </div>
+            </div>
         </CardWithHeader>
     );
 };
