@@ -6,18 +6,17 @@ import {useState} from "react";
 
 
 const CashChart = (props) => {
-    const [exposureData, setExposureData] = useState({
-        'name': ['Cash flow'],
-        'subscriptions': [1000],
-        'redemptions': [2000]
+    const cashBalanceChartParameters = CashBalanceChartConfig({
+        'name': [props.data.currency],
+        'subscriptions': [props.data.Subscription],
+        'redemptions': [props.data.Redemption]
     });
-    const cashBalanceChartParameters = CashBalanceChartConfig(exposureData);
     const header = <div style={{display: 'flex'}}>
         <div>
             1000.45
         </div>
         <div style={{position: "absolute", right: 30}}>
-            USD
+            {props.data.currency}
         </div>
     </div>
     return (
@@ -27,13 +26,11 @@ const CashChart = (props) => {
     )
 };
 
-const CashBalances = () => {
-
+const CashBalances = (props) => {
+    const cashData = props.data.map((data)=><CashChart data={data}/>)
     return (
         <div className={'main-container'}>
-            <CashChart/>
-            <CashChart/>
-            <CashChart/>
+            {cashData}
         </div>
     )
 }

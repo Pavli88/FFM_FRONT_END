@@ -15,55 +15,77 @@ import CashBalances from "./CashBalances/CashBalances";
 
 import UserContext from "../../context/user-context";
 import ServerContext from "../../context/server-context";
-import { useContext } from "react";
+import CashflowContext from "./context/cashflow-context";
+import {useContext, useEffect, useState} from "react";
+import axios from "axios";
 
 
 const ProfilPage = () => {
+    const [newCashflow, setNewCashflow] = useState(0);
+    const [cashBalances, setCashbalances] = useState([]);
     const generalParameters = {
         user: useContext(UserContext).user,
         server: useContext(ServerContext).server
     };
 
-    return(
-        <Container
-            style={{height: window.innerHeight, width: "100%", margin: '0px', padding: '0px'}}
-            fluid>
-            <div style={{display: 'flex', height: '300px'}}>
-                <CashManagement/>
-                <CashBalances/>
-            </div>
-            <div style={{width: '100%', height: '600px'}}>
-                <Tabs
-                    defaultActiveKey="accounts"
-                    id="profile-tab"
-                    className="mb-3"
-                >
-                    <Tab eventKey="accounts" title="Broker Accounts">
-                        <div style={{display: 'flex', width: '100%', height: '500px'}}>
-                            <div style={{width: '300px', marginLeft: 20, marginRight: 10}}>
-                                <NewBrokerAccount parameters={{...generalParameters}}/>
+    useEffect(() => {
+            axios.get(generalParameters.server + 'portfolios/get/main_portfolio_cashflow/', {
+                params: {
+                    portfolio_code: 'MAIN_' + generalParameters.user.toUpperCase(),
+                }
+            })
+                .then(response => setCashbalances(response.data))
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }, [newCashflow]
+    );
+
+    return (
+        <CashflowContext.Provider value={{
+            cashFlowNumber : newCashflow,
+            saveNewCashflow: setNewCashflow,
+        }}>
+            <Container
+                style={{height: window.innerHeight, width: "100%", margin: '0px', padding: '0px'}}
+                fluid>
+                <div style={{display: 'flex', height: '300px'}}>
+                    <CashManagement parameters={{...generalParameters}}/>
+                    <CashBalances data={cashBalances}/>
+                </div>
+                <div style={{width: '100%', height: '600px'}}>
+                    <Tabs
+                        defaultActiveKey="accounts"
+                        id="profile-tab"
+                        className="mb-3"
+                    >
+                        <Tab eventKey="accounts" title="Broker Accounts">
+                            <div style={{display: 'flex', width: '100%', height: '500px'}}>
+                                <div style={{width: '300px', marginLeft: 20, marginRight: 10}}>
+                                    <NewBrokerAccount parameters={{...generalParameters}}/>
+                                </div>
+                                <div style={{width: '100%', marginLeft: 10, marginRight: 20}}>
+                                    <BrokerAccounts parameters={{...generalParameters}}/>
+                                </div>
                             </div>
-                            <div style={{width: '100%', marginLeft: 10, marginRight: 20}}>
-                                <BrokerAccounts parameters={{...generalParameters}}/>
+                        </Tab>
+                        <Tab eventKey="portfolios" title="Portfolios">
+                            <div style={{display: 'flex', width: '100%', height: '500px'}}>
+                                <div style={{width: '500px', marginLeft: 20, marginRight: 10}}>
+                                    <NewPortfolio parameters={{...generalParameters}}/>
+                                </div>
+                                <div style={{width: '500px', marginLeft: 20, marginRight: 10}}>
+                                    <PortfolioGroup/>
+                                </div>
+                                <div style={{width: '100%', marginLeft: 10, marginRight: 20}}>
+                                    <ProfilePortfolios/>
+                                </div>
                             </div>
-                        </div>
-                    </Tab>
-                    <Tab eventKey="portfolios" title="Portfolios">
-                        <div style={{display: 'flex', width: '100%', height: '500px'}}>
-                            <div style={{width: '500px', marginLeft: 20, marginRight: 10}}>
-                                <NewPortfolio parameters={{...generalParameters}}/>
-                            </div>
-                            <div style={{width: '500px', marginLeft: 20, marginRight: 10}}>
-                                <PortfolioGroup/>
-                            </div>
-                            <div style={{width: '100%', marginLeft: 10, marginRight: 20}}>
-                                <ProfilePortfolios/>
-                            </div>
-                        </div>
-                    </Tab>
-                </Tabs>
-            </div>
-        </Container>
+                        </Tab>
+                    </Tabs>
+                </div>
+            </Container>
+        </CashflowContext.Provider>
     )
 };
 export default ProfilPage;

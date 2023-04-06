@@ -5,7 +5,6 @@ import PortfolioContext from "../../../context/portfolio-context";
 
 const ProfilePortfolios = () => {
     const portfolioData = useContext(PortfolioContext).portfolios;
-    console.log(portfolioData)
     const portfolios = portfolioData.map((data) => <tr key={data.id}>
         <td className={'table-row'}>
             <div>

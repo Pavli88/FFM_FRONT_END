@@ -12,7 +12,6 @@ import NewBroker from "../NavBar/NewBroker";
 import Notifications from "./Notifications";
 import NavRobot from "../NavBar/NavRobot";
 import NavCalculation from "../NavBar/NavCalculation";
-import NavPortfolio from "../NavBar/NavPortfolio";
 
 // Context
 import ServerContext from "../context/server-context";
@@ -41,7 +40,7 @@ const Navigation = (props) => {
             <Nav className="mr-auto">
                 <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/home'}>Home</Nav.Link>
                 <Nav.Link as={Link} to={'/dashboard'}>Dashboard</Nav.Link>
-                <Nav.Link onClick={() => setProcessHandler(<NavPortfolio/>)} as={Link}
+                <Nav.Link as={Link}
                           to={'/portfolio/dashboard'}>Portfolio</Nav.Link>
                 <Nav.Link as={Link} to={'/robot/dashboard'}>Robot</Nav.Link>
                 <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/risk'}>Risk</Nav.Link>
@@ -50,12 +49,6 @@ const Navigation = (props) => {
                 <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/trade'}>Trade</Nav.Link>
                 <Nav.Link onClick={() => setProcessHandler(<NavCalculation/>)} as={Link}
                           to={'/calculations'}>Calculations</Nav.Link>
-                {/*<NavDropdown title="Broker Accounts">*/}
-                {/*    <NavDropdown.Item onSelect={() => setShowNewAccount(true)}>New Account</NavDropdown.Item>*/}
-                {/*    <NavDropdown.Item onSelect={() => setBrokerModalStatus(true)}>New Broker</NavDropdown.Item>*/}
-                {/*    <NavDropdown.Item>Update</NavDropdown.Item>*/}
-                {/*    <NavDropdown.Item>Delete</NavDropdown.Item>*/}
-                {/*</NavDropdown>*/}
             </Nav>
             {processHandler}
             <Notifications server={server}/>

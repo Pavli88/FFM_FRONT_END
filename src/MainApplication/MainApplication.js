@@ -57,7 +57,11 @@ const MainApplication = (props) => {
     const [endDate, setEndDate] = useState(date.toISOString().substr(0, 10));
 
     useEffect(() => {
-            axios.get(server + 'portfolios/get_portfolio_data/all')
+            axios.get(server + 'portfolios/get/portfolios/', {
+                params: {
+                    owner: userName
+                }
+            })
                 .then(response => setPortfolios(response.data))
                 .catch((error) => {
                     console.error('Error Message:', error);
