@@ -6,8 +6,6 @@ import React from "react";
 import RobotTransactionUpdateModal from "./RobotTransactionUpdateModal";
 import {useState} from "react";
 
-import ReactHTMLTableToExcel from 'react-html-table-to-excel';
-
 const RobotTransactionsTable = (props) => {
     const [selectedTransactionData, setSelectedTransactionData] = useState([]);
     const [modalStatus, setModalStatus] = useState(false);
@@ -45,13 +43,6 @@ const RobotTransactionsTable = (props) => {
             <Card.Title className="card-header-first">Transactions</Card.Title>
             <Card.Subtitle className="mb-2 text-muted"
                            style={{textAlign: 'left', fontSize: 10, paddingLeft: '15px'}}>
-                <ReactHTMLTableToExcel
-                    id="test-table-xls-button"
-                    className="download-table-xls-button"
-                    table="transaction-table"
-                    filename="transactions"
-                    sheet="transactions"
-                    buttonText="Export to Excel"/>
             </Card.Subtitle>
             <div style={{overflowY: 'scroll', overflowX: 'hidden', height: '100%'}}>
                 <Table id={'transaction-table'}>

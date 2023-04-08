@@ -1,7 +1,6 @@
 import Table from "react-bootstrap/Table";
 import React, {useContext, useEffect, useState} from "react";
 import Card from "react-bootstrap/Card";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import axios from "axios";
 
 const RobotCashFlowTable = (props) => {
@@ -22,13 +21,6 @@ const RobotCashFlowTable = (props) => {
         <Card className="card" style={{margin: '2px', height: '100%'}}>
                 <Card.Title className="card-header-first">Cash Flow</Card.Title>
             <Card.Subtitle className="mb-2 text-muted" style={{textAlign:'left', fontSize: 10, paddingLeft:'15px'}}>
-                <ReactHTMLTableToExcel
-                    id="test-table-xls-button"
-                    className="download-table-xls-button"
-                    table="cash-flow-table"
-                    filename="cash_flow"
-                    sheet="cash_flow"
-                    buttonText="Export to Excel"/>
             </Card.Subtitle>
                 <div style={{overflowY: 'scroll', overflowX: 'hidden', height:'100%'}}>
                     <Table id={'cash-flow-table'}>

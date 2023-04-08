@@ -1,7 +1,6 @@
 import Card from "react-bootstrap/Card";
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import Table from "react-bootstrap/Table";
 import React, {useContext, useEffect, useState} from "react";
 import axios from "axios";
