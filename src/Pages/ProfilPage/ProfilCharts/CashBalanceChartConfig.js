@@ -73,7 +73,12 @@ const CashBalanceChartConfig = (data) => {
                 {
                     name: 'Redemptions',
                     data: data['redemptions']
-                }
+                },
+                {
+                    name: 'Total',
+                    data: data['total']
+                },
+
             ]
         }
 }
