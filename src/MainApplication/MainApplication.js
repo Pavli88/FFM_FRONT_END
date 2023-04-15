@@ -10,13 +10,13 @@ import BrokerContext from "../context/broker-context";
 import ReactNotification from "react-notifications-component";
 import Navigation from "../components/NavBar";
 import {Route, Switch, Redirect, useHistory } from "react-router-dom";
-import RiskPage from "../Pages/RiskPage";
-import HomePage from "../Pages/HomePage";
-import TradePage from "../Pages/TradePage";
-import PortfolioPage from "../Pages/PortfolioPage";
+import RiskPage from "../Pages/RiskPage/RiskPage";
+import HomePage from "../Pages/HomePage/HomePage";
+import TradePage from "../Pages/TradePage/TradePage";
+import PortfolioPage from "../Pages/PortfolioPage/PortfolioPage";
 import CalculationsPage from "../Pages/CalculationsPage/CalculationsPage";
 import InstrumentPage from "../Pages/InstrumentPage/InstrumentPage";
-import RobotPage from "../Pages/RobotPage";
+import RobotPage from "../Pages/Robot/RobotPage";
 import ProfilPage from "../Pages/ProfilPage/ProfilPage";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
@@ -161,39 +161,37 @@ const MainApplication = (props) => {
                                                 <Navigation onEnvChange={getEnvData} env={robotEnvData}
                                                             user={userName}/>
                                             </div>
-                                            <div style={{marginTop: 5}}>
-                                                <Switch>
-                                                    <Route path="/risk">
-                                                        <RiskPage/>
-                                                    </Route>
-                                                    <Route path="/dashboard">
-                                                        <HomePage/>
-                                                    </Route>
-                                                    <Route path="/home">
-                                                        <HomePage/>
-                                                    </Route>
-                                                    <Route path="/trade">
-                                                        <TradePage/>
-                                                    </Route>
-                                                    <Route path="/portfolio">
-                                                        <PortfolioPage/>
-                                                    </Route>
-                                                    <Route path="/calculations">
-                                                        <CalculationsPage/>
-                                                    </Route>
-                                                    <Route path="/instruments">
-                                                        <InstrumentPage/>
-                                                    </Route>
-                                                    <Route path="/profil">
-                                                        <ProfilPage/>
-                                                    </Route>
-                                                    <Route path="/robot">
-                                                        <RobotPage/>
-                                                    </Route>
+                                            <Switch>
+                                                <Route path="/risk">
+                                                    <RiskPage/>
+                                                </Route>
+                                                <Route path="/dashboard">
+                                                    <HomePage/>
+                                                </Route>
+                                                <Route path="/home">
+                                                    <HomePage/>
+                                                </Route>
+                                                <Route path="/trade">
+                                                    <TradePage/>
+                                                </Route>
+                                                <Route path="/portfolio">
+                                                    <PortfolioPage/>
+                                                </Route>
+                                                <Route path="/calculations">
+                                                    <CalculationsPage/>
+                                                </Route>
+                                                <Route path="/instruments">
+                                                    <InstrumentPage/>
+                                                </Route>
+                                                <Route path="/profil">
+                                                    <ProfilPage/>
+                                                </Route>
+                                                <Route path="/robot">
+                                                    <RobotPage/>
+                                                </Route>
 
-                                                    <Route path='*' element={<Redirect to='/dashboard'/>}/>
-                                                </Switch>
-                                            </div>
+                                                <Route path='*' element={<Redirect to='/dashboard'/>}/>
+                                            </Switch>
                                         </UserContext.Provider>
                                     </BrokerContext.Provider>
                                 </DateContext.Provider>

@@ -1,10 +1,6 @@
 import Card from "react-bootstrap/Card";
 import Row from 'react-bootstrap/Row';
 import Chart from "react-apexcharts";
-
-import "../MainCSS.css"
-import {useEffect, useState} from "react";
-import axios from "axios";
 import Col from "react-bootstrap/Col";
 
 const RobotCashFlow = (props) => {

@@ -1,10 +1,5 @@
 import Card from "react-bootstrap/Card";
-import Row from 'react-bootstrap/Row';
 import Chart from "react-apexcharts";
-import Col from 'react-bootstrap/Col';
-
-
-import "../../../MainCSS.css"
 
 const RobotTrades = (props) => {
     // let losingTradeNumber = 0;
