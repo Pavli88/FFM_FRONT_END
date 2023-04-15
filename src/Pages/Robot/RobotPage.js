@@ -1,15 +1,15 @@
 import {useState, useEffect, useContext} from "react";
 
-import NavRobot from "../NavBar/NavRobot";
-import RobotTable from "./Robot/RobotTable";
-import RobotBalanceCalculation from "./Robot/Calculations/RobotBalanceCalculation";
-import RobotMonthlyReturnCalculation from "./Robot/Calculations/RobotMonthlyReturnCalculation";
+import NavRobot from "../../NavBar/NavRobot";
+import RobotTable from "./RobotTable";
+import RobotBalanceCalculation from "./Calculations/RobotBalanceCalculation";
+import RobotMonthlyReturnCalculation from "./Calculations/RobotMonthlyReturnCalculation";
 
-import RobotCashFlow from "./Robot/RobotCashFlow";
-import RobotProcesses from "./Robot/RobotProcesses";
+import RobotCashFlow from "./RobotCashFlow";
+import RobotProcesses from "./RobotProcesses";
 
 // Forms
-import RobotPricingForm from "./Robot/Calculations/RobotPricingForm";
+import RobotPricingForm from "./Calculations/RobotPricingForm";
 
 import axios from "axios";
 
@@ -18,11 +18,11 @@ import { ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import 'react-pro-sidebar/dist/css/styles.css';
 
 // Subpages
-import RobotDashBoardPage from "./Robot/SubPages/RobotDashboard/RobotDashBoardPage";
-import RobotTransactionsPage from "./Robot/SubPages/RobotTransactions/RobotTransactionsPage";
-import RobotRiskPage from "./Robot/SubPages/RobotRisk/RobotRiskPage";
-import RobotReturnPage from "./Robot/SubPages/RobotReturn/RobotReturnPage";
-import RobotSettingsPage from "./Robot/SubPages/RobotSettings/RobotSettingsPage";
+import RobotDashBoardPage from "./SubPages/RobotDashboard/RobotDashBoardPage";
+import RobotTransactionsPage from "./SubPages/RobotTransactions/RobotTransactionsPage";
+import RobotRiskPage from "./SubPages/RobotRisk/RobotRiskPage";
+import RobotReturnPage from "./SubPages/RobotReturn/RobotReturnPage";
+import RobotSettingsPage from "./SubPages/RobotSettings/RobotSettingsPage";
 
 // Bootstrap
 import Container from "react-bootstrap/Container";
@@ -31,11 +31,11 @@ import Row from 'react-bootstrap/Row';
 import Card from "react-bootstrap/Card";
 
 // Context
-import ServerContext from "../context/server-context";
-import RobotContext from "../context/robot-context";
+import ServerContext from "../../context/server-context";
+import RobotContext from "../../context/robot-context";
 
 import {Link, Route, Switch} from "react-router-dom";
-import DateContext from "../context/date-context";
+import DateContext from "../../context/date-context";
 
 // Icons
 import { BsFillPlusSquareFill, BsCalculator, BsCash, BsGrid3X2Gap, BsExclamationDiamond, BsBarChart, BsGear, BsCaretRight } from 'react-icons/bs';
@@ -51,9 +51,7 @@ const RobotPage = (props) => {
     const [showRobotBalanceCalc, setRobotBalanceCalc] = useState(false);
     const [showRobotMonthlyCalc, setRobotMonthlyCalc] = useState(false);
     return (
-        <Container
-            style={{height: window.innerHeight, width: "100%", margin: '0px', padding: '0px'}}
-            fluid>
+        <div className={'page-container'}>
             <Row style={{height: '90%'}}>
                 <Col sm={2} style={{paddingLeft:'0px'}}>
                     <ProSidebar backgroundColor='#FBFAFA'>
@@ -115,7 +113,7 @@ const RobotPage = (props) => {
             <RobotMonthlyReturnCalculation show={showRobotMonthlyCalc} hide={() => setRobotMonthlyCalc(false)}
                                            server={server}
                                            robotData={robotData}/>
-        </Container>
+        </div>
     );
 };
 

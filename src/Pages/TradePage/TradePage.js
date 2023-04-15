@@ -4,17 +4,17 @@ import Row from "react-bootstrap/Row";
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button'
 
-import TradeTableData from "./TradePage/TradeTableData";
-import TradeExecutor from "./TradePage/TradeExecutor";
-import TradeSignals from "./TradePage/TradePageSignals/TradeSignals";
+import TradeTableData from "./TradeTableData";
+import TradeExecutor from "./TradeExecutor";
+import TradeSignals from "./TradePageSignals/TradeSignals";
 
 import React from "react";
 import {useContext, useState} from "react";
 
 // Contexts
-import EnvContext from "../context/env-context";
-import ServerContext from "../context/server-context";
-import TradeContext from "./TradePage/TradePageContext/TradePageContext";
+import EnvContext from "../../context/env-context";
+import ServerContext from "../../context/server-context";
+import TradeContext from "./TradePageContext/TradePageContext";
 
 const TradePage = () => {
     const server = useContext(ServerContext)['server'];
@@ -38,9 +38,7 @@ const TradePage = () => {
     // };
 
     return (
-        <Container className={'border'}
-                   style={{width: "100%", height: window.innerHeight, padding: '20px'}}
-                   fluid>
+        <div className={'page-container'}>
             <Row style={{height: '900px', padding: 0}}>
                 <Col sm={8}>
                     <TradeTableData env={env} server={server}/>
@@ -63,7 +61,7 @@ const TradePage = () => {
                     </Row>
                 </Col>
             </Row>
-        </Container>
+        </div>
     );
 };
 

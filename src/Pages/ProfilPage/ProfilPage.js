@@ -46,9 +46,7 @@ const ProfilPage = () => {
             cashFlowNumber : newCashflow,
             saveNewCashflow: setNewCashflow,
         }}>
-            <Container
-                style={{height: window.innerHeight, width: "100%", margin: '0px', padding: '0px'}}
-                fluid>
+            <div className={'page-container'}>
                 <div style={{display: 'flex', height: '300px'}}>
                     <CashManagement parameters={{...generalParameters}}/>
                     <CashBalances data={cashBalances}/>
@@ -84,7 +82,7 @@ const ProfilPage = () => {
                         </Tab>
                     </Tabs>
                 </div>
-            </Container>
+            </div>
         </CashflowContext.Provider>
     )
 };

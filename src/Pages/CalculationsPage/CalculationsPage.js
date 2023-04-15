@@ -58,7 +58,7 @@ const CalculationsPage = (props) => {
             selectedDate: selectedDate,
             saveSelectedDate: setSelectedDate,
         }}>
-            <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
+            <div className={'page-container'}>
                 <Row className={"row"}>
                     <Col>
                         <CalculationOptions server={server} />
@@ -80,7 +80,7 @@ const CalculationsPage = (props) => {
                         <CalculationSecurityExceptions server={server} tableType={'Security'} calcDate={calcDate}/>
                     </Col>
                 </Row>
-            </Container>
+            </div>
         </CalculationContext.Provider>
     );
 };

@@ -1,38 +1,24 @@
-import Container from "react-bootstrap/Container";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Card from "react-bootstrap/Card";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import Button from 'react-bootstrap/Button'
-
 import axios from "axios";
 import {useContext, useEffect, useState, useRef} from "react";
-
-import HomeNavBar from "./HomePage/DashBoard/HomeNavBar";
-import ContributionPnl from "./HomePage/DashBoard/ContributionPnl";
-import PerfDashBoard from "./HomePage/PerfDashBoard";
-import BalanceDashBoard from "./HomePage/DashBoard/BalanceDashboard";
-
-// Chart Imports
-import ChartWidget from "../Widgets/Charts/ChartWidget";
-import ExposureChartConfig from "./HomePage/HomePageCharts/ExposureChartConfig";
-import ProfitsChartsConfig from "./HomePage/HomePageCharts/ProfitsChartsConfig";
-import DrawDownChartConfig from "./HomePage/HomePageCharts/DrawDownChartConfig";
-import PnlChartConfig from "./HomePage/HomePageCharts/PnlChartConfig";
-import PnlHistoryChartConfig from "./HomePage/HomePageCharts/PnlHistoryChartConfig";
-
-//CSS
+import HomeNavBar from "./DashBoard/HomeNavBar";
+import ContributionPnl from "./DashBoard/ContributionPnl";
+import PerfDashBoard from "./PerfDashBoard";
+import BalanceDashBoard from "./DashBoard/BalanceDashboard";
+import ChartWidget from "../../Widgets/Charts/ChartWidget";
+import ExposureChartConfig from "./HomePageCharts/ExposureChartConfig";
+import ProfitsChartsConfig from "./HomePageCharts/ProfitsChartsConfig";
+import DrawDownChartConfig from "./HomePageCharts/DrawDownChartConfig";
+import PnlChartConfig from "./HomePageCharts/PnlChartConfig";
+import PnlHistoryChartConfig from "./HomePageCharts/PnlHistoryChartConfig";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './HomePage.css';
-
-// Contexts
-import EnvContext from "../context/env-context";
-import ServerContext from "../context/server-context";
-import HomePageReportDateContext from "./HomePage/contexts/HomePageReportDateContext";
-import DateContext from "../context/date-context";
-
-// Icons
+import EnvContext from "../../context/env-context";
+import ServerContext from "../../context/server-context";
+import HomePageReportDateContext from "./contexts/HomePageReportDateContext";
+import DateContext from "../../context/date-context";
 import { BsCaretDownFill, BsCaretUpFill } from "react-icons/bs";
 
 
@@ -152,7 +138,7 @@ const HomePage = (props) => {
             requestParameters: requestParameters,
             saveRequestParameters: setRequestParameters,
         }}>
-            <Container style={{background: '#FBFAFA', width: "100%", height: window.innerHeight}} fluid>
+            <div className={'page-container'}>
                 <Row style={{paddingTop: '20px'}}>
                     <HomeNavBar {...metaData}/>
                 </Row>
@@ -229,7 +215,7 @@ const HomePage = (props) => {
                         </Tabs>
                     </Col>
                 </Row>
-            </Container>
+            </div>
         </HomePageReportDateContext.Provider>
     );
 };

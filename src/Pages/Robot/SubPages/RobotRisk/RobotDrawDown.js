@@ -1,13 +1,9 @@
 import Card from "react-bootstrap/Card";
-
-import "../../../MainCSS.css"
-import {useContext, useEffect, useState} from "react";
+import { useEffect, useState} from "react";
 import axios from "axios";
 import Chart from "react-apexcharts";
-
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import DateContext from "../../../../context/date-context";
 
 const RobotDrawDown = (props) => {
     const [chartData, setChartData] = useState([]);

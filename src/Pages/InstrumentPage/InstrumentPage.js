@@ -57,7 +57,7 @@ const InstrumentPage = () => {
                 saveSelectedInstrument: setSelectedInstrument,
                 saveRequestParameters: setRequestParameters
             }}>
-            <Container style={{width: "100%", height: window.innerHeight, padding: '0px'}} fluid>
+            <div className={"page-container"}>
                 <Row style={{width:'100%', paddingLeft:'15px', paddingRight:'15px'}}>
                     <InstrumentSearchBar/>
                 </Row>
@@ -72,7 +72,7 @@ const InstrumentPage = () => {
                 <Row style={{height: 500, width: '100%', paddingLeft:'15px', paddingRight:'15px', paddingTop: '15px'}}>
                     <InstrumentResuts data={instrumentSearchResults}/>
                 </Row>
-            </Container>
+            </div>
         </InstrumentSearchContext.Provider>
     );
 };

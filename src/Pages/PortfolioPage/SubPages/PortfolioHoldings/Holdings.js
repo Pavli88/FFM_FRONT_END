@@ -1,11 +1,6 @@
 import Card from "react-bootstrap/Card";
-import Container from 'react-bootstrap/Container'
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-
-// CSS
-import "../../../PortfolioPage.css"
-import "../../../MainCSS.css"
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
 import {useState} from "react";

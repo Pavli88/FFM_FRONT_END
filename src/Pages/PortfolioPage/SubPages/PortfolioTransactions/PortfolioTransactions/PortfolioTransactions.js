@@ -1,6 +1,3 @@
-import PortfolioNewTransaction from "../../SubPages/PortfolioTransactions/PortfolioNewTransaction";
-
-import PortfolioBuy from "../../PortfolioBuy";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import Table from "react-bootstrap/Table";
@@ -8,11 +5,6 @@ import Button from "react-bootstrap/Button";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from "react-bootstrap/Card";
-
-import "../../../PortfolioPage.css"
-import "../../../MainCSS.css"
-
-//CSS
 import './PortfolioTransactions.css'
 
 const PortfolioTransactions = (props) => {
