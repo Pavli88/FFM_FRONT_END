@@ -1,7 +1,7 @@
 .sidebar {
-    background: darkslategrey;
+    background: white;
     left: 0;
-    width: 250px;
+    width: 300px;
     height: 100%;
     display: flex;
     overflow: hidden;

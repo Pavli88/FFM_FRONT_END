@@ -51,23 +51,8 @@ const PortfolioTransactions = (props) => {
     }, [props]
     );
     return (
-        <Card className="card">
-            <Row style={{width: '100%', margin: '0px'}}>
-                <Col sm={2}>
-                    <Card.Title className="card-header-first">Transactions</Card.Title>
-                </Col>
-                <Col>
-                    <Button onClick={function () {
-                        if (rowData['id'] === '') {
-                            alert('Please select a transaction to edit!');
-                        } else {
-                            setShowModal(true);
-                            setModalType('edit')
-                        }
-                        ;
-                    }}>Edit Transaction</Button>
-                </Col>
-            </Row>
+        <Card>
+            <Card.Header>Transactions</Card.Header>
             <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
                 <Table>
                     <thead className="table-header-first">

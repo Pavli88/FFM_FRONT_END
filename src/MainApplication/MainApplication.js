@@ -8,7 +8,7 @@ import UserContext from "../context/user-context";
 import appConfig from "../config files/app-config";
 import BrokerContext from "../context/broker-context";
 import ReactNotification from "react-notifications-component";
-import Navigation from "../components/NavBar";
+import Navigation from "../NavBar/NavBar";
 import {Route, Switch, Redirect, useHistory } from "react-router-dom";
 import RiskPage from "../Pages/RiskPage/RiskPage";
 import HomePage from "../Pages/HomePage/HomePage";

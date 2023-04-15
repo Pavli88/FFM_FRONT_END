@@ -1,12 +1,8 @@
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {Navbar} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {store} from "react-notifications-component";
-import {forEach} from "react-bootstrap/ElementChildren";
-
-// Icons
 import { BsGraphDown, BsBell, BsCpu, BsExclamationTriangle} from 'react-icons/bs';
 
 const Notifications = (props) => {

@@ -6,7 +6,6 @@ const MainPage = (props) => {
     return (
         <Container fluid>
             <Row style={{width: '100%', marginTop: 5, padding: 0}}>
-                <h2>TEST COMMIT</h2>
                 <Col sm={10} style={{display:'flex'}}>
                     <div style={{margin: 2}}>
                         <h2 stlye={{margin:0, height:'100%'}}>Fractal</h2>

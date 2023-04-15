@@ -1,17 +1,10 @@
-import {Navbar, Nav, Container, Col} from 'react-bootstrap';
+import {Navbar, Nav } from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import 'bootstrap/dist/css/bootstrap.css'
-
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom'
-
 import {useContext, useEffect, useState} from "react";
-
-import NewBroker from "../NavBar/NewBroker";
-import Notifications from "./Notifications";
-import NavRobot from "../NavBar/NavRobot";
-import NavCalculation from "../NavBar/NavCalculation";
+import Notifications from "./Notifications/Notifications";
+import NavCalculation from "./NavCalculation";
 
 // Context
 import ServerContext from "../context/server-context";
@@ -21,7 +14,6 @@ import axios from "axios";
 const Navigation = (props) => {
     const server = useContext(ServerContext)['server'];
     const { setAuth } = useContext(AuthContext);
-    const [showNewAccount, setShowNewAccount] = useState(false);
     const [brokerModalStatus, setBrokerModalStatus] = useState(false);
     const [processHandler, setProcessHandler] = useState(<></>);
     const userLogout = () => {
@@ -33,22 +25,22 @@ const Navigation = (props) => {
         setAuth({userAllowedToLogin: false});
     };
     return (
-        <Navbar>
+        <Navbar className={'nav-bar'}>
             <Navbar.Brand href="react">
                 Fractal
             </Navbar.Brand>
             <Nav className="mr-auto">
-                <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/home'}>Home</Nav.Link>
-                <Nav.Link as={Link} to={'/dashboard'}>Dashboard</Nav.Link>
-                <Nav.Link as={Link}
-                          to={'/portfolio/dashboard'}>Portfolio</Nav.Link>
-                <Nav.Link as={Link} to={'/robot/dashboard'}>Robot</Nav.Link>
-                <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/risk'}>Risk</Nav.Link>
-                <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link}
-                          to={'/instruments'}>Instrument</Nav.Link>
-                <Nav.Link onClick={() => setProcessHandler(<></>)} as={Link} to={'/trade'}>Trade</Nav.Link>
-                <Nav.Link onClick={() => setProcessHandler(<NavCalculation/>)} as={Link}
-                          to={'/calculations'}>Calculations</Nav.Link>
+                <Link className={'nav-button'} onClick={() => setProcessHandler(<></>)} as={Link} to={'/home'}>Home</Link>
+                <Link className={'nav-button'} as={Link} to={'/dashboard'}>Dashboard</Link>
+                <Link className={'nav-button'} as={Link}
+                          to={'/portfolio/dashboard'}>Portfolio</Link>
+                <Link className={'nav-button'} as={Link} to={'/robot/dashboard'}>Robot</Link>
+                <Link className={'nav-button'} onClick={() => setProcessHandler(<></>)} as={Link} to={'/risk'}>Risk</Link>
+                <Link className={'nav-button'} onClick={() => setProcessHandler(<></>)} as={Link}
+                          to={'/instruments'}>Instrument</Link>
+                <Link className={'nav-button'} onClick={() => setProcessHandler(<></>)} as={Link} to={'/trade'}>Trade</Link>
+                <Link className={'nav-button'} onClick={() => setProcessHandler(<NavCalculation/>)} as={Link}
+                          to={'/calculations'}>Calculations</Link>
             </Nav>
             {processHandler}
             <Notifications server={server}/>
@@ -57,7 +49,6 @@ const Navigation = (props) => {
                 <Dropdown.Divider/>
                 <Dropdown.Item onSelect={userLogout}>Sign Out</Dropdown.Item>
             </DropdownButton>
-            <NewBroker show={brokerModalStatus} hide={() => setBrokerModalStatus(false)} server={server}/>
         </Navbar>
     );
 };

@@ -27,11 +27,11 @@ const PortfolioPage = (props) => {
             savePortfolio: setPortfolio,
         }}>
             <div className={'page-container'}>
-                <div className={'page-subContainer'}>
+                <div className={'page-subContainer'} >
                     <Sidebar sidebarData={PortfolioSidebarData}/>
-                    <Col style={{width: '50%'}}>
+                    <div style={{width: '100%'}}>
                         <PortfolioNavBar/>
-                        <Row style={{
+                        <div style={{
                             padding: '15px',
                             height: window.innerHeight,
                             width: '100%',
@@ -57,8 +57,8 @@ const PortfolioPage = (props) => {
                                     <PortfolioSettingsPage portfolio={portfolio}/>
                                 </Route>
                             </Switch>
-                        </Row>
-                    </Col>
+                        </div>
+                    </div>
                 </div>
                 <PortfolioDataImport show={showImportModal} hide={() => setShowImportModal(false)} server={server}/>
             </div>
