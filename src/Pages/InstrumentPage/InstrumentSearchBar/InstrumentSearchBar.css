@@ -1,0 +1,34 @@
+.instrument-search-bar-container{
+    width: 300px;
+    height: 100%;
+    padding: 15px;
+    background: white;
+}
+
+.instrument-search-input-field-container{
+    padding: 5px;
+}
+
+.instrument-search-input-field{
+    width: 100%;
+    height: 100%;
+}
+
+.instrument-search-bar-name{
+    width: auto;
+    padding: 10px;
+}
+
+.instrument-search-button-div{
+    padding-top: 10px
+}
+
+.instrument-search-label{
+    height: 50px;
+    width: 100%;
+    background: #0f6674;
+}
+
+.instrument-search-button{
+    width: 100%;
+}

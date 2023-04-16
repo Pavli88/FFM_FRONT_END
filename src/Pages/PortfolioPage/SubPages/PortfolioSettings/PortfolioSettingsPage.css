@@ -1,0 +1,13 @@
+.portfolio-settings-name-field{
+    width: 250px;
+}
+
+.portfolio-settings-input-field{
+
+}
+
+.portfolio-settings-page-container{
+    width: 100%;
+    height: 800px;
+    display: flex;
+}

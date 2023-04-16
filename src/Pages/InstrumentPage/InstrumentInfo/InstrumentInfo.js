@@ -5,27 +5,29 @@ import Card from "react-bootstrap/Card";
 import InstrumentInfoGeneral from "./InstrumentInfoGeneral/InstrumentInfoGeneral";
 
 const InstrumentInfo = (props) => {
-    return(
-        <Card className="card main-layout">
-            <Tabs style={{margin: '0px', padding: '10px'}}
-                  defaultActiveKey="general"
-                  className="mb-3"
-                  fill
-            >
-                <Tab eventKey="general" title="General" style={{ margin: '5px'}}>
-                    <InstrumentInfoGeneral/>
-                </Tab>
-                <Tab eventKey="fixed" title="Fixed Income">
+    return (
+        <div style={{width: '100%'}}>
+            <Card style={{height:'100%'}}>
+                <Tabs style={{margin: '0px', padding: '10px'}}
+                      defaultActiveKey="general"
+                      className="mb-3"
+                      fill
+                >
+                    <Tab eventKey="general" title="General" style={{margin: '5px'}}>
+                        <InstrumentInfoGeneral/>
+                    </Tab>
+                    <Tab eventKey="fixed" title="Fixed Income">
 
-                </Tab>
-                <Tab eventKey="settings" title="Settings">
+                    </Tab>
+                    <Tab eventKey="settings" title="Settings">
 
-                </Tab>
-                <Tab className={"tab-body"} eventKey="prices" title="Prices">
+                    </Tab>
+                    <Tab className={"tab-body"} eventKey="prices" title="Prices">
 
-                </Tab>
-            </Tabs>
-        </Card>
+                    </Tab>
+                </Tabs>
+            </Card>
+        </div>
     )
 };
 export default InstrumentInfo;

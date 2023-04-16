@@ -1,0 +1,9 @@
+.transactions-block-container{
+    width: 100%;
+    padding-left: 15px;
+}
+
+.transactions-entry-container{
+    width: 400px;
+    height: 100%;
+}

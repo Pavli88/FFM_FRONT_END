@@ -4,9 +4,6 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Link } from 'react-router-dom'
 import {useContext, useEffect, useState} from "react";
 import Notifications from "./Notifications/Notifications";
-import NavCalculation from "./NavCalculation";
-
-// Context
 import ServerContext from "../context/server-context";
 import AuthContext from "../context/AuthProvider";
 import axios from "axios";
@@ -35,14 +32,13 @@ const Navigation = (props) => {
                 <Link className={'nav-button'} as={Link}
                           to={'/portfolio/dashboard'}>Portfolio</Link>
                 <Link className={'nav-button'} as={Link} to={'/robot/dashboard'}>Robot</Link>
-                <Link className={'nav-button'} onClick={() => setProcessHandler(<></>)} as={Link} to={'/risk'}>Risk</Link>
-                <Link className={'nav-button'} onClick={() => setProcessHandler(<></>)} as={Link}
+                <Link className={'nav-button'} as={Link} to={'/risk'}>Risk</Link>
+                <Link className={'nav-button'} as={Link}
                           to={'/instruments'}>Instrument</Link>
-                <Link className={'nav-button'} onClick={() => setProcessHandler(<></>)} as={Link} to={'/trade'}>Trade</Link>
-                <Link className={'nav-button'} onClick={() => setProcessHandler(<NavCalculation/>)} as={Link}
+                <Link className={'nav-button'} as={Link} to={'/trade'}>Trade</Link>
+                <Link className={'nav-button'} as={Link}
                           to={'/calculations'}>Calculations</Link>
             </Nav>
-            {processHandler}
             <Notifications server={server}/>
             <DropdownButton alignRight flip title={props.user} style={{borderRadius: '5px'}}>
                 <Dropdown.Item as={Link} to={'/profil'} >Profil</Dropdown.Item>

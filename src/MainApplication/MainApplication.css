@@ -27,10 +27,60 @@
     border: none;
     font-size: 16px;
     font-weight: bold;
-    padding: 0px;
+    padding: 5px;
     background: #e23a30;
     width: 100%;
     color: white;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.delete-button:hover{
+    border: #e23a30;
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    color: #e23a30;
+}
+
+.terminate-button{
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+    background: #e0a800;
+    width: 100%;
+    color: white;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.terminate-button:hover{
+    border: #e0a800;
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    color: #e0a800;
+}
+
+.save-button{
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+    background: #1e7e34;
+    width: 100%;
+    color: white;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.save-button:hover{
+    border: #1e7e34;
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    color: #1e7e34;
 }
 
 .page-container {

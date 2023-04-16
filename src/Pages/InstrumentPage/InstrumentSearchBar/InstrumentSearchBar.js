@@ -1,4 +1,3 @@
-// Bootstrap
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Card from "react-bootstrap/Card";
@@ -7,9 +6,10 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Select from 'react-select'
 import {useState, useContext, useRef} from "react";
-
 import InstrumentNew from "../InstrumentNew";
 import InstrumentSearchContext from "../InstrumentPageContext/instrument-search-context";
+import './InstrumentSearchBar.css'
+
 const InstrumentSearchBar = () => {
     const saveRequestParameters = useContext(InstrumentSearchContext)['saveRequestParameters'];
     const nameRef = useRef();
@@ -68,80 +68,69 @@ const InstrumentSearchBar = () => {
         });
     };
 
-    return(
-        <Card style={{paddingTop: '0px', margin: '0px'}}>
-            <Row style={{height:'100%', padding:'5px'}}>
-                <Col style={{padding: '0px', height: '100%'}}>
-                    <Row style={{padding: '0px', height: '100%'}}>
-                        <Col md="auto" style={{paddingLeft: '5px'}}>
-                            <Nav.Link disabled>
-                                Name
-                            </Nav.Link>
-                        </Col>
-                        <Col md="auto">
-                            <Form.Control ref={nameRef} type="text"/>
-                        </Col>
-                        <Col md="auto" style={{paddingLeft: '5px'}}>
-                            <Nav.Link disabled>
-                                Country
-                            </Nav.Link>
-                        </Col>
-                        <Col md="auto" style={{width: 200}}>
-                            <Select
-                                isMulti
-                                options={countries}
-                                onChange={(e) => setSelectedCountries(e)}
-                            />
-                        </Col>
-                        <Col md="auto" style={{paddingLeft: '5px'}}>
-                            <Nav.Link disabled>
-                                Group
-                            </Nav.Link>
-                        </Col>
-                        <Col md="auto" style={{width: 150}}>
-                            <Select
-                                options={secGroup}
-                                isClearable
-                                onChange={(e) => e === null ? setSelectedGroup([]): setSelectedGroup(e)}
-                            />
-                        </Col>
-                        <Col md="auto" style={{paddingLeft: '5px'}}>
-                            <Nav.Link disabled>
-                                Type
-                            </Nav.Link>
-                        </Col>
-                        <Col md="auto" style={{width: 200}}>
-                            <Select
-                                isMulti
-                                options={
-                                selectedGroup.value === 'BND' ? bondType:
-                                    selectedGroup.value === 'CSH' ? cashType:
-                                        selectedGroup.value === 'CFD' ? cfdType: equityType}
-                                onChange={(e) => setSelectedTypes(e)}
-                            />
-                        </Col>
-                        <Col md="auto" style={{paddingLeft: '5px'}}>
-                            <Nav.Link disabled>
-                                Currency
-                            </Nav.Link>
-                        </Col>
-                        <Col md="auto" style={{width: 200}}>
-                            <Select
-                                isMulti
-                                options={currencies}
-                                onChange={(e) => setSelectedCurrencies(e)}
-                            />
-                        </Col>
-                        <Col>
-                            <Button onClick={fetchInstruments}>Get</Button>
-                        </Col>
-                        <Col>
-                            <InstrumentNew/>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
-        </Card>
+    return (
+        <div className={'instrument-search-bar-container'}>
+            {/*<div className={'instrument-search-label'}>Search</div>*/}
+            <div className={'instrument-search-bar-name'}>
+                Name
+            </div>
+            <div className={'instrument-search-input-field-container'}>
+                <Form.Control ref={nameRef} type="text" className={'instrument-search-input-field'}/>
+            </div>
+            <div className={'instrument-search-bar-name'}>
+                Country
+            </div>
+            <div className={'instrument-search-input-field-container'}>
+                <Select
+                    isMulti
+                    options={countries}
+                    onChange={(e) => setSelectedCountries(e)}
+                    className={'instrument-search-input-field'}
+                />
+            </div>
+            <div className={'instrument-search-bar-name'}>
+                Group
+            </div>
+            <div >
+                <Select
+                    options={secGroup}
+                    isClearable
+                    onChange={(e) => e === null ? setSelectedGroup([]) : setSelectedGroup(e)}
+                    className={'instrument-search-input-field'}
+                />
+            </div>
+            <div className={'instrument-search-bar-name'}>
+                Type
+            </div>
+            <div>
+                <Select
+                    isMulti
+                    options={
+                        selectedGroup.value === 'BND' ? bondType :
+                            selectedGroup.value === 'CSH' ? cashType :
+                                selectedGroup.value === 'CFD' ? cfdType : equityType}
+                    onChange={(e) => setSelectedTypes(e)}
+                    className={'instrument-search-input-field'}
+                />
+            </div>
+            <div className={'instrument-search-bar-name'}>
+                Currency
+            </div>
+            <div>
+                <Select
+                    isMulti
+                    options={currencies}
+                    onChange={(e) => setSelectedCurrencies(e)}
+                    className={'instrument-search-input-field'}
+                />
+            </div>
+            <div className={'instrument-search-button-div'}>
+                <Button onClick={fetchInstruments} className={'instrument-search-button'}>Get</Button>
+            </div>
+            <div className={'instrument-search-button-div'}>
+                <InstrumentNew className={'instrument-search-button'}/>
+            </div>
+        </div>
     );
 };
 export default InstrumentSearchBar;

@@ -94,8 +94,8 @@ const InstrumentNew = (props) => {
 
     return (
         <div>
-            <Button variant="primary" onClick={()=>setShowNewInstrumentModal(true)}>
-                New Security
+            <Button variant="primary" onClick={()=>setShowNewInstrumentModal(true)} style={{width: '100%'}}>
+                New Instrument
             </Button>
             <Modal show={showNewInstrumentModal} onHide={handleClose}>
                 <Modal.Header closeButton>

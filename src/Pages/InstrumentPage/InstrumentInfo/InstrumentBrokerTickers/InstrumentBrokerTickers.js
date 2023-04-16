@@ -42,10 +42,11 @@ const InstrumentBrokerTickers = (props) => {
     };
 
     return(
-        <Card className="card main-layout">
+        <div style={{width: 350, height: '100%', paddingLeft: 15}}>
+            <Card style={{height: '100%'}}>
             <Card.Header style={{paddingTop: 5, paddingBottom:5, paddingLeft:10, paddingRight:10, borderBottom: 0}}>
                 <div style={{display:"flex"}}>
-                    <div style={{width: '90%'}}><p style={{margin:0, height:'100%', verticalAlign: "middle"}}>Broker Tickers</p></div>
+                    <div style={{padding: 5}}>Broker Tickers</div>
                     <div style={{margin:5}}>
                         <button style={{border:0}} onClick={() => setShowNewTickerModal(true)}><BsPlus style={{fontSize:24}}/></button>
                     </div>
@@ -69,6 +70,8 @@ const InstrumentBrokerTickers = (props) => {
             </div>
             <InstrumentNewBrokerTicker id={props.id} server={props.server} show={showNewTickerModal} hide={()=>setShowNewTickerModal(false)}/>
         </Card>
+        </div>
+
     )
 };
 export default InstrumentBrokerTickers;

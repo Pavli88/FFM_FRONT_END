@@ -8,17 +8,17 @@ import PortfolioPageContext from "../context/portfolio-page-context";
 import {useContext, useRef} from "react";
 import './PortfolioNavBar.css'
 
-const PortfolioNavBar = () => {
+const PortfolioNavBar = (props) => {
     const savePortfolio = useContext(PortfolioPageContext).savePortfolio;
-    const portfolioRef = useRef();
+
     const fetchPortfolio = () => {
-        savePortfolio(portfolioRef.current.value);
+        props.fetch();
     };
 
     return (
         <div className={'portnav-bar-main'}>
             <Card>
-                <Row style={{height: '100%', padding: '5px'}}>
+                <div style={{height: '100%', padding: '5px'}}>
                     <Col style={{padding: '0px', height: '100%'}}>
                         <Row style={{padding: '0px', width: '100%', height: '100%'}}>
                             <Col md="auto" style={{paddingLeft: '5px'}}>
@@ -32,7 +32,7 @@ const PortfolioNavBar = () => {
                                     className="me-2"
                                     aria-label="Search"
                                     style={{height: '100%'}}
-                                    ref={portfolioRef}
+                                    onChange={(e) => savePortfolio(e.target.value)}
                                 />
                             </Col>
                             <Col md="auto">
@@ -40,7 +40,7 @@ const PortfolioNavBar = () => {
                             </Col>
                         </Row>
                     </Col>
-                </Row>
+                </div>
             </Card>
         </div>
     )

@@ -1,5 +1,4 @@
 const PnlHistoryChartConfig = (data) => {
-    console.log(data['data'])
     return {
         options: {
             chart: {

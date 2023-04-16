@@ -1,28 +1,12 @@
-import InstrumentSearch from "./InstrumentSearch";
-import InstrumentResultTable from "./InstrumentResultTable";
-import InstrumentSettings from "./InstrumentSettings/InstrumentSettings";
-import InstrumentDetails from "./InstrumentDetails";
-
-// Bootstrap
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container'
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import Row from 'react-bootstrap/Row';
-
-//CSS
 import "./InstrumentPage.css"
 import {useContext, useEffect, useState, useRef} from "react";
-import * as qs from 'qs'
-
 import InstrumentSearchBar from "./InstrumentSearchBar/InstrumentSearchBar";
 import InstrumentInfo from "./InstrumentInfo/InstrumentInfo";
 import InstrumentResuts from "./InstrumentResults/InstrumentResuts";
-import InstrumentBrokerTickers from "./InstrumentInfo/InstrumentBrokerTickers";
-
-//Contexts
+import InstrumentBrokerTickers from "./InstrumentInfo/InstrumentBrokerTickers/InstrumentBrokerTickers";
 import ServerContext from "../../context/server-context";
-import EnvContext from "../../context/env-context";
 import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-context";
 import axios from "axios";
 
@@ -58,20 +42,16 @@ const InstrumentPage = () => {
                 saveRequestParameters: setRequestParameters
             }}>
             <div className={"page-container"}>
-                <Row style={{width:'100%', paddingLeft:'15px', paddingRight:'15px'}}>
+                <div className={'instrument-page-container'}>
                     <InstrumentSearchBar/>
-                </Row>
-                <Row style={{height: 300, width: '100%', paddingLeft:'15px', paddingRight:'15px', paddingTop: '15px'}}>
-                    <Col sm={10} style={{padding:0, paddingRight: 15}}>
-                        <InstrumentInfo/>
-                    </Col>
-                    <Col sm={2} style={{padding:0}}>
-                        <InstrumentBrokerTickers server={server} id={selectedInstrument.id}/>
-                    </Col>
-                </Row>
-                <Row style={{height: 500, width: '100%', paddingLeft:'15px', paddingRight:'15px', paddingTop: '15px'}}>
-                    <InstrumentResuts data={instrumentSearchResults}/>
-                </Row>
+                    <div className={'instrument-page-results-container'}>
+                        <div style={{display: 'flex', paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 300}}>
+                            <InstrumentInfo/>
+                            <InstrumentBrokerTickers server={server} id={selectedInstrument.id}/>
+                        </div>
+                        <InstrumentResuts data={instrumentSearchResults}/>
+                    </div>
+                </div>
             </div>
         </InstrumentSearchContext.Provider>
     );

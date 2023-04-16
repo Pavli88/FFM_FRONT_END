@@ -1,12 +1,7 @@
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
-
-//CSS
 import "./InstrumentResultTable.css"
-
-//Context
 import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-context";
-
 import {useContext, useState} from "react";
 import axios from "axios";
 
