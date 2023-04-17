@@ -1,3 +1,15 @@
 .transactions-container{
-    height: 60%;
+    height: 100%;
+}
+
+.transactions-table-header{
+    padding: 5px;
+    font-size: 14px;
+}
+
+.entry-block{
+    border-top: solid;
+    border-top-width: 1px;
+    margin: 10px;
+    border-top-color: #e2e2e2;
 }

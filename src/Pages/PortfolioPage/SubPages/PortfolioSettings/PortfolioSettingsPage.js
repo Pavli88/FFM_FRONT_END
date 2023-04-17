@@ -9,31 +9,9 @@ import CardWithHeader from "../../../../Widgets/Charts/CardWithHeader";
 import axios from "axios";
 
 const PortfolioSettingsPage = (props) => {
-    const saveSelectedSubPageURL = useContext(PortfolioPageContext).saveSelectedPageURL;
-    const saveResponseData = useContext(PortfolioPageContext).saveResponseData;
-    const saveRequestParameters = useContext(PortfolioPageContext).saveRequestParameters;
-    const responseData = useContext(PortfolioPageContext).responseData;
-    const portfolio = useContext(PortfolioPageContext).portfolio;
     const server = useContext(ServerContext)['server'];
-    const data = responseData.length === 0 ? [{}]: responseData;
+    const data = useContext(PortfolioPageContext).portfolioData;
     const [postRequest, setPostRequest] = useState({});
-
-    useEffect(() => {
-        saveSelectedSubPageURL('portfolios/get/portfolios/');
-        saveResponseData([{}]);
-        }, []
-    );
-
-    useEffect(() => {
-            saveRequestParameters({portfolio_code: portfolio});
-        }, [portfolio]
-    );
-
-    useEffect(() => {
-        setPostRequest(data[0])
-        }, [data]
-    );
-
     const InputField = (props) => {
         return (
             <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>

@@ -19,33 +19,23 @@ import axios from "axios";
 
 const PortfolioPage = (props) => {
     const server = useContext(ServerContext)['server'];
-    const [selectedSubPageURL, setSelectedSubPageURL] = useState('portfolios/get/portfolios/');
-    const [portfolio, setPortfolio] = useState('');
+    const [selectedPortfolioData, setSelectedPortfolioData] = useState([{}]);
     const [showImportModal, setShowImportModal] = useState(false);
-    const [responseData, setResponseData] = useState([{}]);
-    const [requestParameters, setRequestParameters] = useState({});
-
-    const fetchData = () => {
-        axios.get(server + selectedSubPageURL, {
-            params: requestParameters
+    const fetchData = (portfolio) => {
+        axios.get(server + 'portfolios/get/portfolios/', {
+            params: {
+                portfolio_code: portfolio,
+            }
         })
-            .then(response => setResponseData(response.data))
+            .then(response => setSelectedPortfolioData(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
     };
-    /*console.log(portfolio)
-    console.log(selectedSubPageURL)
 
-    console.log(requestParameters)*/
     return (
         <PortfolioPageContext.Provider value={{
-            portfolio: portfolio,
-            savePortfolio: setPortfolio,
-            saveSelectedPageURL: setSelectedSubPageURL,
-            responseData: responseData,
-            saveResponseData: setResponseData,
-            saveRequestParameters: setRequestParameters,
+            portfolioData: selectedPortfolioData,
         }}>
             <div className={'page-container'}>
                 <div className={'page-subContainer'} >
@@ -63,19 +53,19 @@ const PortfolioPage = (props) => {
 
                                 </Route>
                                 <Route path="/portfolio/holdings">
-                                    <PortfolioHoldingsPage portfolio={portfolio} server={server}/>
+                                    <PortfolioHoldingsPage server={server}/>
                                 </Route>
                                 <Route path="/portfolio/transactions">
-                                    <PortfolioTransactionsPage portfolio={portfolio} server={server}/>
+                                    <PortfolioTransactionsPage server={server}/>
                                 </Route>
                                 <Route path="/portfolio/risk">
-                                    <PortfolioRiskPage portfolio={portfolio} server={server}/>
+                                    <PortfolioRiskPage server={server}/>
                                 </Route>
                                 <Route path="/portfolio/return">
 
                                 </Route>
                                 <Route path="/portfolio/settings">
-                                    <PortfolioSettingsPage portfolio={portfolio}/>
+                                    <PortfolioSettingsPage/>
                                 </Route>
                             </Switch>
                         </div>

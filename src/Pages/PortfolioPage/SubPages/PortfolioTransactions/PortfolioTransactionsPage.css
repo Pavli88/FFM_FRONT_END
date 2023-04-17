@@ -1,9 +1,11 @@
 .transactions-block-container{
     width: 100%;
     padding-left: 15px;
+    display: flex;
 }
 
 .transactions-entry-container{
-    width: 400px;
-    height: 100%;
+    width: 100%;
+    height: 400px;
+    padding-bottom: 15px;
 }

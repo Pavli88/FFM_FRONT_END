@@ -1,6 +1,7 @@
 .search-container{
-    height: 40%;
-    padding-bottom: 15px;
+    height: 400px;
+    width: 300px;
+    padding: 5px;
 }
 
 .search-card{

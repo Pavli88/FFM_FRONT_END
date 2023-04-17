@@ -3,6 +3,16 @@
     border-bottom-style: solid;
     border-bottom-width: 1px;
     padding: 10px;
+    font-size: 14px;
+    height: 50px;
+}
+
+.table-row-all{
+    background: white;
+}
+
+.table-row-all:hover{
+    background: #b1dfbb;
 }
 
 .nav-tabs {

@@ -6,43 +6,50 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import './PortfolioTransactionsPage.css'
 import PortfolioTransactionsFilter from "./PortfolioTransactionsFilter/PortfolioTransactionsFilter";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import PortfolioPageContext from "../../context/portfolio-page-context";
+import axios from "axios";
 
 
 const PortfolioTransactionsPage = (props) => {
-    const saveSelectedSubPageURL = useContext(PortfolioPageContext).saveSelectedPageURL;
-    const saveResponseData = useContext(PortfolioPageContext).saveResponseData;
-    useEffect(() => {
-        saveSelectedSubPageURL('portfolios/get/transactions/');
-        saveResponseData([{}]);
-        }, []
-    );
+    const [transactionsData, setTransactionsData] = useState([{}])
+    const fetchData = (parameters) => {
+        axios.get(props.server + 'portfolios/get/transactions/', parameters)
+            .then(response => setTransactionsData(response.data))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
     return (
-        <div style={{display: 'flex', height: '800px'}}>
-            <Card className={'transactions-entry-container'}>
-                <Card.Header>Transaction Entry</Card.Header>
-                <Tabs
-                    defaultActiveKey="security"
-                    id="profile-tab"
-                    className="mb-3"
-                    style={{paddingLeft: 10}}
-                >
-                    <Tab eventKey="security" title="Security">
-                        <div>
-                            <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server}/>
-                        </div>
-                    </Tab>
-                    <Tab eventKey="cash" title="Cash">
-                        <div>
-                            <PortfolioCashEntry/>
-                        </div>
-                    </Tab>
-                </Tabs>
-            </Card>
-            <div className={'transactions-block-container'}>
-                <PortfolioTransactionsFilter/>
-                <PortfolioTransactions portfolio={props.portfolio} server={props.server}/>
+        <div style={{display: "flex", height: '800px'}}>
+            <div style={{height: '100%', width: '400px'}}>
+                <Card style={{height: '100%'}}>
+                    <Card.Header>Search & Entry</Card.Header>
+                    <Tabs
+                        defaultActiveKey="search"
+                        id="profile-tab"
+                        style={{paddingLeft: 12, paddingTop: 5,marginBottom: 0}}
+                    >
+                        <Tab eventKey="search" title="Search">
+                            <div>
+                                <PortfolioTransactionsFilter fetch={fetchData}/>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="security" title="Security">
+                            <div>
+                                <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server}/>
+                            </div>
+                        </Tab>
+                        <Tab eventKey="cash" title="Cash">
+                            <div>
+                                <PortfolioCashEntry portfolio={props.portfolio} server={props.server}/>
+                            </div>
+                        </Tab>
+                    </Tabs>
+                </Card>
+            </div>
+            <div style={{height: '100%', width: '100%'}}>
+                <PortfolioTransactions data={transactionsData}/>
             </div>
         </div>
     );

@@ -6,7 +6,7 @@ import "./InstrumentResults.css"
 
 const InstrumentResuts = (props) => {
     const saveSelectedInstrument = useContext(InstrumentSearchContext)['saveSelectedInstrument']
-    const instruments = props.data.map((data) => <tr key={data['id']} onClick={() => saveSelectedInstrument(data)}>
+    const instruments = props.data.map((data) => <tr key={data['id']} onClick={() => saveSelectedInstrument(data)} className={'table-row-all'}>
         <td className={'table-row'}>{data['name']}</td>
         <td className={'table-row'}>{data['id']}</td>
         <td className={'table-row'}>{data['code']}</td>

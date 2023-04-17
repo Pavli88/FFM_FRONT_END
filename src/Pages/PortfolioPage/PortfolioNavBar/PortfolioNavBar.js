@@ -9,12 +9,10 @@ import {useContext, useRef} from "react";
 import './PortfolioNavBar.css'
 
 const PortfolioNavBar = (props) => {
-    const savePortfolio = useContext(PortfolioPageContext).savePortfolio;
-
+    const portfolioRef = useRef();
     const fetchPortfolio = () => {
-        props.fetch();
+        props.fetch(portfolioRef.current.value);
     };
-
     return (
         <div className={'portnav-bar-main'}>
             <Card>
@@ -32,7 +30,7 @@ const PortfolioNavBar = (props) => {
                                     className="me-2"
                                     aria-label="Search"
                                     style={{height: '100%'}}
-                                    onChange={(e) => savePortfolio(e.target.value)}
+                                    ref={portfolioRef}
                                 />
                             </Col>
                             <Col md="auto">
