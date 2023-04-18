@@ -28,37 +28,40 @@ const PortfolioCashEntry = (props) => {
                     console.error('Error Message:', error);
                 });
     };
-    return(
-        <div style={{padding: 5}}>
-            <div style={{margin: 10}}>
-                <Form.Label>Transaction Type</Form.Label>
-                <Form.Control ref={typeRef} as="select">
-                    <option value={'Subscription'}>Subscription</option>
-                    <option value={'Redemption'}>Redemption</option>
-                    <option value={'Dividend'}>Dividend</option>
-                    <option value={'Interest Received'}>Interest Received</option>
-                    <option value={'Interest Paid'}>Interest Paid</option>
-                    <option value={'Commission'}>Commission</option>
-                </Form.Control>
-            </div>
+    return (
+        <div>
+            <div style={{padding: 5}}>
+                <div style={{margin: 10}}>
+                    <Form.Label>Transaction Type</Form.Label>
+                    <Form.Control ref={typeRef} as="select">
+                        <option value={'Subscription'}>Subscription</option>
+                        <option value={'Redemption'}>Redemption</option>
+                        <option value={'Dividend'}>Dividend</option>
+                        <option value={'Interest Received'}>Interest Received</option>
+                        <option value={'Interest Paid'}>Interest Paid</option>
+                        <option value={'Commission'}>Commission</option>
+                    </Form.Control>
+                </div>
 
-            <div style={{margin: 10}}>
-                <Form.Label>Currency</Form.Label>
-                <Form.Control ref={currencyRef} as="select">
-                    <option value={'USD'}>USD</option>
-                    <option value={'EUR'}>EUR</option>
-                    <option value={'HUF'}>HUF</option>
-                </Form.Control>
-            </div>
+                <div style={{margin: 10}}>
+                    <Form.Label>Currency</Form.Label>
+                    <Form.Control ref={currencyRef} as="select">
+                        <option value={'USD'}>USD</option>
+                        <option value={'EUR'}>EUR</option>
+                        <option value={'HUF'}>HUF</option>
+                    </Form.Control>
+                </div>
 
-            <div style={{margin: 10}}>
-                <Form.Label>Date</Form.Label>
-                <Form.Control defaultValue={currentDate} type="date"/>
-            </div>
+                <div style={{margin: 10}}>
+                    <Form.Label>Date</Form.Label>
+                    <Form.Control defaultValue={currentDate} type="date"/>
+                </div>
 
-            <div style={{margin: 10}}>
-                <Form.Label>Quantity</Form.Label>
-                <Form.Control ref={quantityRef} type="number" required min={0.0}/>
+                <div style={{margin: 10}}>
+                    <Form.Label>Quantity</Form.Label>
+                    <Form.Control ref={quantityRef} type="number" required min={0.0}/>
+                </div>
+
             </div>
             <div style={{height: '60px', width: '100%', padding: 10, position: "absolute", bottom: 0}}>
                 <button onClick={submitHandler} className={'save-button'} type={'submit'}>Save</button>

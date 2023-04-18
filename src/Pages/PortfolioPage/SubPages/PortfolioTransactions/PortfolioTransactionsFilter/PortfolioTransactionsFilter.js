@@ -1,11 +1,12 @@
 import './PortfolioTransactionsFilter.css'
 import Form from "react-bootstrap/Form";
-import {useContext, useState} from "react";
+import {useContext, useRef, useState} from "react";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
 
 const PortfolioTransactionsFilter = (props) => {
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
-    const [transactionType, setTransactionType] = useState('Purchase');
+    const securityRef = useRef();
+    const [transactionType, setTransactionType] = useState('');
     const [transactionSubType, setTransactionSubType] = useState('Buy Open');
     const purchaseSubTypes = [
         <option value={'Buy Open'}>Buy Open</option>,
@@ -19,21 +20,30 @@ const PortfolioTransactionsFilter = (props) => {
         props.fetch({
             params: {
                 portfolio_code: portfolioData[0].portfolio_code,
+                transaction_type: transactionType,
+                security: securityRef.current.value,
             }
         });
     };
+    console.log(transactionType)
     return (
         <div>
             <div className={'search-container'}>
-            <div className={'entry-block'}>
+
+                <Form.Label style={{paddingBottom: 5}}>Security</Form.Label>
+                <Form.Control ref={securityRef} type="text"/>
+
                 <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
                 <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
+                    <option value={''}></option>
                     <option value={'Purchase'}>Purchase</option>
                     <option value={'Sale'}>Sale</option>
+                    <option value={'Subscription'}>Subscription</option>
+                    <option value={'Redemption'}>Redemption</option>
                 </Form.Control>
 
                 <div style={{paddingBottom: 5}}>
-                    <Form.Label style={{paddingBottom: 5}}>Sub Type</Form.Label>
+                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Sub Type</Form.Label>
                     <Form.Control onChange={(e) => setTransactionSubType(e.target.value)} as="select">
                         {transactionType === 'Purchase' ? purchaseSubTypes : saleSubTypes}
                     </Form.Control>
@@ -49,8 +59,6 @@ const PortfolioTransactionsFilter = (props) => {
                 <button onClick={submitHandler} className={'save-button'}>Search</button>
             </div>
         </div>
-        </div>
-
     )
 };
 export default PortfolioTransactionsFilter;

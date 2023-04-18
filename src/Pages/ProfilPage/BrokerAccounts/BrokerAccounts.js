@@ -9,7 +9,7 @@ const BrokerAccounts = (props) => {
     const saveAccount = useContext(BrokerContext).saveAccount;
     const newAccount = useContext(BrokerContext).newAccount;
     const accounts = useContext(BrokerContext).accounts;
-    const accountRows = accounts.map((data) => <tr key={data.id}>
+    const accountRows = accounts.map((data) => <tr key={data.id} className={'table-row-all'}>
         <td className={'table-row'}>
             <div>
                 {data.broker_name}

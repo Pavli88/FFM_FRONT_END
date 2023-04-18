@@ -22,9 +22,6 @@ const InstrumentInfo = (props) => {
                     <Tab eventKey="settings" title="Settings">
 
                     </Tab>
-                    <Tab className={"tab-body"} eventKey="prices" title="Prices">
-
-                    </Tab>
                 </Tabs>
             </Card>
         </div>

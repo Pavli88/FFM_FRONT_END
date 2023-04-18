@@ -3,19 +3,16 @@ import PortfolioTradeRoutingNew from "./PortfolioTradeRoutingNew/PortfolioTradeR
 import CardWithHeader from "../../../../../Widgets/Charts/CardWithHeader";
 import {BsDash, BsPlus} from "react-icons/bs";
 import './PortfolioTradeRouting.css'
+import PlusMinusButtonGroup from "../../../../../components/PlusMinusButtonGroup/PlusMinusButtonGroup";
 
 const PortfolioTradeRouting = (props) => {
     const [newRoutingModalStatus, setNewRoutingModalStatus] = useState(false)
-    const header = <div style={{display: "flex"}}>
-        <div>Security Trade Routing</div>
-        <div style={{margin: 5}}>
-            <button style={{border: 0}} onClick={()=>setNewRoutingModalStatus(true)}><BsPlus style={{fontSize: 24}}/>
-            </button>
+    const header =
+        <div style={{display: "flex"}}>
+            <div style={{padding: 5}}>Security Trade Routing</div>
+            <PlusMinusButtonGroup save={() => setNewRoutingModalStatus(true)}/>
         </div>
-        <div style={{margin: 5}}>
-            <button style={{border: 0}} ><BsDash style={{fontSize: 24}}/></button>
-        </div>
-    </div>
+
     return (
         <div className={'portfolio-trade-routing-container'}>
             <CardWithHeader headerContent={header}>

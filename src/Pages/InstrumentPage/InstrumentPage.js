@@ -1,5 +1,3 @@
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import "./InstrumentPage.css"
 import {useContext, useEffect, useState, useRef} from "react";
 import InstrumentSearchBar from "./InstrumentSearchBar/InstrumentSearchBar";
@@ -9,6 +7,7 @@ import InstrumentBrokerTickers from "./InstrumentInfo/InstrumentBrokerTickers/In
 import ServerContext from "../../context/server-context";
 import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-context";
 import axios from "axios";
+import InstrumentPrices from "./InstrumentInfo/InstrumentPrices/InstrumentPrices";
 
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
@@ -47,9 +46,12 @@ const InstrumentPage = () => {
                     <div className={'instrument-page-results-container'}>
                         <div style={{display: 'flex', paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 300}}>
                             <InstrumentInfo/>
+                            <InstrumentPrices/>
                             <InstrumentBrokerTickers server={server} id={selectedInstrument.id}/>
                         </div>
-                        <InstrumentResuts data={instrumentSearchResults}/>
+                        <div style={{padding: 15, height: 600}}>
+                            <InstrumentResuts data={instrumentSearchResults}/>
+                        </div>
                     </div>
                 </div>
             </div>

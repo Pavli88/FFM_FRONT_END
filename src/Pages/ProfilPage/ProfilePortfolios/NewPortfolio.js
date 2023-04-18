@@ -22,7 +22,7 @@ const NewPortfolio = (props) => {
         event.preventDefault();
         axios.post(server + 'portfolios/new/portfolio/', {
             port_name: portNameRef.current.value,
-            port_code: portCodeRef.current.value,
+            port_code: portTypeRef.current.value === 'Portfolio Group' ? portCodeRef.current.value + '_GROUP': portCodeRef.current.value,
             port_type: portTypeRef.current.value,
             port_currency: currencyRef.current.value,
             inception_date: dateRef.current.value,
@@ -43,16 +43,29 @@ const NewPortfolio = (props) => {
     };
 
     const header = <div style={{display: "flex"}}>
-        <div style={{width: '90%'}}><p style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>New</p>
+        <div style={{width: '90%'}}><p
+            style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>New</p>
         </div>
-        <Button variant="primary" onClick={submitHandler}>
+        <button className={'save-button'} onClick={submitHandler}>
             Create
-        </Button>
+        </button>
     </div>
 
     return (
         <CardWithHeader headerContent={header}>
             <div>
+
+                <div style={{margin: 10}}>
+                    <Form.Label>Portfolio Type</Form.Label>
+                    <Form.Control ref={portTypeRef} as="select">
+                        <option value={'Trade'}>Trade</option>
+                        <option value={'Savings'}>Savings</option>
+                        <option value={'Investment'}>Investment</option>
+                        <option value={'Test'}>Test</option>
+                        <option value={'Portfolio Group'}>Portfolio Group</option>
+                    </Form.Control>
+                </div>
+
                 <div style={{margin: 10}}>
                     <Form.Label>Portfolio Name</Form.Label>
                     <Form.Control ref={portNameRef} type="text" required/>
@@ -61,15 +74,6 @@ const NewPortfolio = (props) => {
                 <div style={{margin: 10}}>
                     <Form.Label>Portfolio Code</Form.Label>
                     <Form.Control ref={portCodeRef} type="text" required/>
-                </div>
-
-                <div style={{margin: 10}}>
-                    <Form.Label>Portfolio Type</Form.Label>
-                    <Form.Control ref={portTypeRef} as="select">
-                        <option value={'Trade'}>Trade</option>
-                        <option value={'Savings'}>Savings</option>
-                        <option value={'Investment'}>Investment</option>
-                    </Form.Control>
                 </div>
 
                 <div style={{margin: 10}}>

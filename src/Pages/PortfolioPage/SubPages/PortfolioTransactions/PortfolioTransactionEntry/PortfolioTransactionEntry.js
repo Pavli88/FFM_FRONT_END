@@ -9,6 +9,7 @@ const PortfolioTransactionEntry = (props) => {
     const currentDate = useContext(DateContext).currentDate;
     const [transactionType, setTransactionType] = useState('Purchase');
     const [transactionSubType, setTransactionSubType] = useState('Buy Open');
+    const [instrumentData, setInstrumentData] = useState({});
     const securityRef = useRef();
     const currencyRef = useRef();
     const dateRef = useRef();
@@ -24,7 +25,7 @@ const PortfolioTransactionEntry = (props) => {
         console.log(quantityRef.current.value, priceRef.current.value)
         axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfolioData[0].portfolio_code,
-            security: securityRef.current.value,
+            security: instrumentData.name,
             transaction_type: transactionType,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
@@ -39,6 +40,18 @@ const PortfolioTransactionEntry = (props) => {
                 });
     };
 
+    const getSecurity = () => {
+        axios.get(props.server + 'instruments/get/instrument/', {
+            params: {
+                id: securityRef.current.value,
+            }
+        })
+            .then(response => setInstrumentData(response.data[0]))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
+    console.log(instrumentData)
     const purchaseSubTypes = [
         <option value={'Buy Open'}>Buy Open</option>,
         <option value={'Sell Close'}>Sell Close</option>
@@ -81,7 +94,9 @@ const PortfolioTransactionEntry = (props) => {
 
                         <div style={{width: '60px'}}>
                             <button className={'save-button'}
-                                    style={{paddingTop: 7, paddingBottom: 7, paddingLeft: 7, paddingRight: 7}}>Get
+                                    style={{paddingTop: 7, paddingBottom: 7, paddingLeft: 7, paddingRight: 7}}
+                                    onClick={getSecurity}
+                            >Get
                             </button>
                         </div>
                     </div>
@@ -89,22 +104,22 @@ const PortfolioTransactionEntry = (props) => {
 
                 <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>Sec Name</Form.Label>
-                    <Form.Control ref={currencyRef} type="text" disabled/>
+                    <Form.Control value={instrumentData.name} type="text" disabled/>
                 </div>
 
                 <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>Sec Group</Form.Label>
-                    <Form.Control ref={currencyRef} type="text" disabled/>
+                    <Form.Control value={instrumentData.group} type="text" disabled/>
                 </div>
 
                 <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>Sec Type</Form.Label>
-                    <Form.Control ref={currencyRef} type="text" disabled/>
+                    <Form.Control value={instrumentData.type} type="text" disabled/>
                 </div>
 
                 <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>Currency</Form.Label>
-                    <Form.Control ref={currencyRef} type="text" disabled/>
+                    <Form.Control value={instrumentData.currency} type="text" disabled/>
                 </div>
 
                 <div style={{margin: 10}}>

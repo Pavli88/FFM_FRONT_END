@@ -2,3 +2,18 @@
     display: flex;
     height: 100%;
 }
+
+.portfolio-result-animation[status='1']{
+    animation: fadeOut 5s;
+}
+
+.portfolio-result-found{
+    font-size: 20px;
+    color: #19692c;
+    padding: 3px;
+}
+
+@keyframes fadeOut {
+  100% { opacity: 0; }
+  0% { opacity: 1; }
+}

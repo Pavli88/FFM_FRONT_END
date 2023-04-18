@@ -56,14 +56,14 @@ const NewBrokerAccount = (props) => {
         <div style={{width: '90%'}}><p
             style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>New</p>
         </div>
-        <Button variant="primary" onClick={submitHandler}>
+        <button className={'save-button'} onClick={submitHandler}>
             Create
-        </Button>
+        </button>
     </div>
 
     return (
         <CardWithHeader headerContent={header}>
-            <div>
+            <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
                 <div style={{margin: 10}}>
                     <Form.Label>Broker</Form.Label>
                     <Form.Control ref={brokerNameRef} type="text"/>

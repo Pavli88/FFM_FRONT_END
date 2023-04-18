@@ -1,18 +1,11 @@
-import NewBrokerAccount from "../BrokerAccounts/NewBrokerAccount";
+import PlusMinusButtonGroup from "../../../components/PlusMinusButtonGroup/PlusMinusButtonGroup";
 import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
 import {BsDash, BsPlus} from "react-icons/bs";
 
 const PortfolioGroup = () => {
     const header = <div style={{display: "flex"}}>
-        <div style={{width: '90%'}}><div style={{margin: 0, height: '100%', verticalAlign: "middle"}}>Portfolio Relationships</div>
-        </div>
-        <div style={{margin: 5}}>
-            <button style={{border: 0}}><BsPlus style={{fontSize: 24}}/>
-            </button>
-        </div>
-        <div style={{margin: 5}}>
-            <button style={{border: 0}} ><BsDash style={{fontSize: 24}}/></button>
-        </div>
+        <div style={{padding: 5}}>Portfolio Relationships</div>
+        <PlusMinusButtonGroup/>
     </div>
     return(
         <CardWithHeader headerContent={header}>

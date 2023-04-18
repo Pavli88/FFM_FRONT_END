@@ -16,28 +16,26 @@ const InstrumentResuts = (props) => {
         <td className={'table-row'}>{data['type']}</td>
     </tr>)
     return (
-        <div className={'instrument-results-container'}>
-            <Card>
-                <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
-                    <Table style={{width: '100%'}}>
-                        <thead className="table-header-row">
-                        <tr>
-                            <td style={{border: '0px'}}>Name</td>
-                            <td style={{border: '0px'}}>ID</td>
-                            <td style={{border: '0px'}}>Code</td>
-                            <td style={{border: '0px'}}>Country</td>
-                            <td style={{border: '0px'}}>Currency</td>
-                            <td style={{border: '0px'}}>Group</td>
-                            <td style={{border: '0px'}}>Type</td>
-                        </tr>
-                        </thead>
-                        <tbody style={{height: '100%', overflow: 'scroll'}}>
-                        {instruments}
-                        </tbody>
-                    </Table>
-                </div>
-            </Card>
-        </div>
+        <Card style={{height: '100%'}}>
+            <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
+                <Table style={{width: '100%'}}>
+                    <thead className="table-header-row">
+                    <tr>
+                        <td style={{border: '0px'}}>Name</td>
+                        <td style={{border: '0px'}}>ID</td>
+                        <td style={{border: '0px'}}>Code</td>
+                        <td style={{border: '0px'}}>Country</td>
+                        <td style={{border: '0px'}}>Currency</td>
+                        <td style={{border: '0px'}}>Group</td>
+                        <td style={{border: '0px'}}>Type</td>
+                    </tr>
+                    </thead>
+                    <tbody style={{height: '100%', overflow: 'scroll'}}>
+                    {instruments}
+                    </tbody>
+                </Table>
+            </div>
+        </Card>
     )
 };
 export default InstrumentResuts;

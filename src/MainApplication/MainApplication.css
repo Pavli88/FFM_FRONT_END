@@ -98,3 +98,10 @@
     height: 900px;
     background-color: #e2e2e2;
 }
+
+.plus-minus-buttons{
+    border: none;
+    border-radius: 4px;
+    background: #5a6268;
+    color: white;
+}

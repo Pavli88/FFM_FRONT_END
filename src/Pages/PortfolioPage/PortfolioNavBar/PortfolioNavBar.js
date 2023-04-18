@@ -5,10 +5,11 @@ import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import PortfolioPageContext from "../context/portfolio-page-context";
-import {useContext, useRef} from "react";
+import {useContext, useRef, useState} from "react";
 import './PortfolioNavBar.css'
 
 const PortfolioNavBar = (props) => {
+    const [textAnimation, setTextAnimation] = useState(0);
     const portfolioRef = useRef();
     const fetchPortfolio = () => {
         props.fetch(portfolioRef.current.value);
@@ -36,6 +37,14 @@ const PortfolioNavBar = (props) => {
                             <Col md="auto">
                                 <Button onClick={fetchPortfolio}>Get</Button>
                             </Col>
+                            {/*<Col md="auto">*/}
+                            {/*    <Button onClick={() => setTextAnimation(1)}>Get</Button>*/}
+                            {/*</Col>*/}
+                            {/*<div className={'portfolio-result-animation portfolio-result-found'}*/}
+                            {/*     status={textAnimation}*/}
+                            {/*     onAnimationEnd={() => setTextAnimation(0)}>*/}
+                            {/*    test*/}
+                            {/*</div>*/}
                         </Row>
                     </Col>
                 </div>
