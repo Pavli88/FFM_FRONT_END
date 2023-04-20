@@ -48,18 +48,6 @@ const PortfolioTransactionsFilter = (props) => {
                     <option value={'Redemption'}>Redemption</option>
                 </Form.Control>
 
-                {/*<div style={{paddingBottom: 5}}>*/}
-                {/*    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Sub Type</Form.Label>*/}
-                {/*    <Form.Control onChange={(e) => setTransactionSubType(e.target.value)} as="select">*/}
-                {/*        {transactionType === 'Purchase' ? purchaseSubTypes : saleSubTypes}*/}
-                {/*    </Form.Control>*/}
-                {/*</div>*/}
-
-                {/*{transactionSubType === 'Buy Close' ? <div style={{margin: 10}}>*/}
-                {/*    <Form.Label style={{paddingBottom: 5}}>Related Transaction ID</Form.Label>*/}
-                {/*    <Form.Control type="number"/>*/}
-                {/*</div> : ''}*/}
-
                 <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>From</Form.Label>
                 <Form.Control ref={startDateRef} defaultValue={''} type="date"/>
 

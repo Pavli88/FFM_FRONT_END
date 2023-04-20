@@ -1,6 +1,6 @@
-import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
 import './PortfolioTransactions.css'
+import { BiX } from 'react-icons/bi';
 
 const PortfolioTransactions = (props) => {
     console.log(props.data)
@@ -15,13 +15,12 @@ const PortfolioTransactions = (props) => {
         <td>{data.currency}</td>
         <td>{data.trading_cost}</td>
         <td >{data.transaction_type}</td>
-        <td>{data.sub_type}</td>
+        <td>{data.open_status}</td>
         <td>{data.transaction_link_code}</td>
         <td>{data.created_on}</td>
         <td>{data.trade_date}</td>
         <td>{data['is_active']}</td>
-        <td>{data['is_active']}</td>
-        <td>{data['is_active']}</td>
+        <td>{data.transaction_link_code === '' ? <div style={{padding: 0, width: 30}}><button className={'delete-button'}><BiX/></button></div>: ''}</td>
     </tr>)
     return (
         <div style={{height: '100%', paddingLeft: 15}}>
@@ -41,13 +40,12 @@ const PortfolioTransactions = (props) => {
                             <th>Currency</th>
                             <th>Cost</th>
                             <th>Type</th>
-                            <th>Sub Type</th>
+                            <th>Open/Closed</th>
                             <th>Related Transaction</th>
                             <th>Created On</th>
                             <th>Trade Date</th>
                             <th>Active</th>
-                            <th>Active</th>
-                            <th>Active</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>

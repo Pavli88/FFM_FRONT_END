@@ -7,19 +7,19 @@ import PortfolioPageContext from "../../../context/portfolio-page-context";
 const PortfolioTransactionEntry = (props) => {
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
+    const [relatedSelected, setRelatedSelected] = useState(false);
     const [transactionType, setTransactionType] = useState('Purchase');
-    const [transactionSubType, setTransactionSubType] = useState('Buy Open');
     const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
     const securityRef = useRef();
-    const currencyRef = useRef();
+    const openRef = useRef();
     const dateRef = useRef();
     const quantityRef = useRef();
     const priceRef = useRef();
     const costRef = useRef();
     const typeRef = useRef();
     const subTypeRef = useRef();
-    console.log(relatedID)
+    console.log(relatedSelected)
     const submitHandler = () => {
         console.log(props.server)
         console.log(transactionType)
@@ -33,8 +33,8 @@ const PortfolioTransactionEntry = (props) => {
             quantity: quantityRef.current.value,
             price: priceRef.current.value,
             currency: instrumentData.currency,
-            sub_type: transactionSubType,
             transaction_link_code: relatedID,
+            open_status: openRef.current.value,
 
         })
                 .then(response => console.log(response.data))
@@ -56,19 +56,29 @@ const PortfolioTransactionEntry = (props) => {
             });
     };
 
-    const purchaseSubTypes = [
-        <option value={'Buy Open'}>Buy Open</option>,
-        <option value={'Sell Close'}>Sell Close</option>
-    ]
-
-    const saleSubTypes = [
-        <option value={'Sell Open'}>Sell Open</option>,
-        <option value={'Buy Close'}>Buy Close</option>
-    ]
+    const relatedTransactionIDField = <div className={'entry-block'}>
+        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Related Transaction ID</Form.Label>
+        <div style={{width: '100%', paddingRight: 15}}>
+            <Form.Control value={relatedID} onChange={(e) => setRelatedID(e.target.value)} type="number"/>
+        </div>
+    </div>
 
     return (
         <div>
             <div style={{height: '610px', overflowY: 'scroll', padding: 5}}>
+
+                <div style={{paddingLeft: 10, display: "flex"}}>
+                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Related Transaction</Form.Label>
+                    <div style={{padding: 10}}>
+                        <input type="checkbox" onChange={(e) => {
+                            setRelatedSelected(e.target.checked)
+                            setRelatedID('')
+                        }} />
+                    </div>
+                </div>
+
+                {relatedSelected === true ? relatedTransactionIDField: ''}
+
                 <div className={'entry-block'}>
                     <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
                     <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
@@ -77,17 +87,13 @@ const PortfolioTransactionEntry = (props) => {
                     </Form.Control>
                 </div>
 
-                <div style={{margin: 10, paddingBottom: 5}}>
-                    <Form.Label style={{paddingBottom: 5}}>Sub Type</Form.Label>
-                    <Form.Control onChange={(e) => setTransactionSubType(e.target.value)} as="select">
-                        {transactionType === 'Purchase' ? purchaseSubTypes : saleSubTypes}
+                <div className={'entry-block'}>
+                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Open/Closed</Form.Label>
+                    <Form.Control ref={openRef} as="select">
+                        <option value={'Open'}>Open</option>
+                        <option value={'Closed'}>Closed</option>
                     </Form.Control>
                 </div>
-
-                {transactionSubType === 'Buy Close' ? <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Related Transaction ID</Form.Label>
-                    <Form.Control value={relatedID} onChange={(e) => setRelatedID(e.target.value)} type="number"/>
-                </div> : ''}
 
                 <div className={'entry-block'}>
                     <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Security ID</Form.Label>
