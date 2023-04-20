@@ -1,9 +1,19 @@
 import Card from "react-bootstrap/Card";
 import './PortfolioTransactions.css'
 import { BiX } from 'react-icons/bi';
+import axios from "axios";
 
 const PortfolioTransactions = (props) => {
-    console.log(props.data)
+    const deleteTransaction = (id) => {
+        axios.post(props.server + 'portfolios/delete/transaction/', {
+            id: id,
+        })
+            .then(response => alert(response.data.response))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+        // props.fetch()
+    };
     const portTransData = props.data.map((data) => <tr key={data.id} className={'table-row-all'}>
         <td>{data.id}</td>
         <td>{data.portfolio_code}</td>
@@ -20,7 +30,7 @@ const PortfolioTransactions = (props) => {
         <td>{data.created_on}</td>
         <td>{data.trade_date}</td>
         <td>{data['is_active']}</td>
-        <td>{data.transaction_link_code === '' ? <div style={{padding: 0, width: 30}}><button className={'delete-button'}><BiX/></button></div>: ''}</td>
+        <td>{data.transaction_link_code === '' ? <div style={{padding: 0, width: 30}}><button className={'delete-button'} onClick={() => deleteTransaction(data.id)}><BiX/></button></div>: ''}</td>
     </tr>)
     return (
         <div style={{height: '100%', paddingLeft: 15}}>

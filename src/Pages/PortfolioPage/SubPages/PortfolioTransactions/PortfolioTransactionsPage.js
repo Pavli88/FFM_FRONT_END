@@ -49,7 +49,7 @@ const PortfolioTransactionsPage = (props) => {
                 </Card>
             </div>
             <div style={{height: '100%', width: '80%'}}>
-                <PortfolioTransactions data={transactionsData}/>
+                <PortfolioTransactions data={transactionsData} server={props.server} fetch={fetchData}/>
             </div>
         </div>
     );

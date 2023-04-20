@@ -37,7 +37,7 @@ const PortfolioTransactionEntry = (props) => {
             open_status: openRef.current.value,
 
         })
-                .then(response => console.log(response.data))
+                .then(response => alert(response.data.response))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
