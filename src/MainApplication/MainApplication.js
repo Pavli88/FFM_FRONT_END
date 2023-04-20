@@ -113,7 +113,7 @@ const MainApplication = (props) => {
     );
 
     return (
-        <Container style={{background: '#FBFAFA', padding: '0px'}} fluid>
+        <Container style={{background: '#FBFAFA', padding: 0}} fluid>
             <ServerContext.Provider value={{server: server}}>
                 <EntityContext.Provider value={{
                     entity: entity,
@@ -161,37 +161,39 @@ const MainApplication = (props) => {
                                                 <Navigation onEnvChange={getEnvData} env={robotEnvData}
                                                             user={userName}/>
                                             </div>
-                                            <Switch>
-                                                <Route path="/risk">
-                                                    <RiskPage/>
-                                                </Route>
-                                                <Route path="/dashboard">
-                                                    <HomePage/>
-                                                </Route>
-                                                <Route path="/home">
-                                                    <HomePage/>
-                                                </Route>
-                                                <Route path="/trade">
-                                                    <TradePage/>
-                                                </Route>
-                                                <Route path="/portfolio">
-                                                    <PortfolioPage/>
-                                                </Route>
-                                                <Route path="/calculations">
-                                                    <CalculationsPage/>
-                                                </Route>
-                                                <Route path="/instruments">
-                                                    <InstrumentPage/>
-                                                </Route>
-                                                <Route path="/profil">
-                                                    <ProfilPage/>
-                                                </Route>
-                                                <Route path="/robot">
-                                                    <RobotPage/>
-                                                </Route>
+                                            <div style={{height: '80%', width: '100%', background: "green"}}>
+                                                <Switch>
+                                                    <Route path="/risk">
+                                                        <RiskPage/>
+                                                    </Route>
+                                                    <Route path="/dashboard">
+                                                        <HomePage/>
+                                                    </Route>
+                                                    <Route path="/home">
+                                                        <HomePage/>
+                                                    </Route>
+                                                    <Route path="/trade">
+                                                        <TradePage/>
+                                                    </Route>
+                                                    <Route path="/portfolio">
+                                                        <PortfolioPage/>
+                                                    </Route>
+                                                    <Route path="/calculations">
+                                                        <CalculationsPage/>
+                                                    </Route>
+                                                    <Route path="/instruments">
+                                                        <InstrumentPage/>
+                                                    </Route>
+                                                    <Route path="/profil">
+                                                        <ProfilPage/>
+                                                    </Route>
+                                                    <Route path="/robot">
+                                                        <RobotPage/>
+                                                    </Route>
 
-                                                <Route path='*' element={<Redirect to='/dashboard'/>}/>
-                                            </Switch>
+                                                    <Route path='*' element={<Redirect to='/dashboard'/>}/>
+                                                </Switch>
+                                            </div>
                                         </UserContext.Provider>
                                     </BrokerContext.Provider>
                                 </DateContext.Provider>

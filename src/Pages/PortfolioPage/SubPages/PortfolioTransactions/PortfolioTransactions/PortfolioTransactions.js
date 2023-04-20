@@ -3,48 +3,57 @@ import Card from "react-bootstrap/Card";
 import './PortfolioTransactions.css'
 
 const PortfolioTransactions = (props) => {
+    console.log(props.data)
     const portTransData = props.data.map((data) => <tr key={data.id} className={'table-row-all'}>
-        <td className={'table-row'}>{data.id}</td>
-        <td className={'table-row'}>{data.portfolio_code}</td>
-        <td className={'table-row'}>{data.security}</td>
-        <td className={'table-row'}>{data.quantity}</td>
-        <td className={'table-row'}>{data.price}</td>
-        <td className={'table-row'}>{data.mv}</td>
-        <td className={'table-row'}>{data.currency}</td>
-        <td className={'table-row'}>{data.trading_cost}</td>
-        <td className={'table-row'}>{data.transaction_type}</td>
-        <td className={'table-row'}>{data.transaction_link_code}</td>
-        <td className={'table-row'}>{data.created_on}</td>
-        <td className={'table-row'}>{data.trade_date}</td>
-        <td className={'table-row'}>{data['is_active']}</td>
+        <td>{data.id}</td>
+        <td>{data.portfolio_code}</td>
+        <td >{data.security}</td>
+        <td >{data.sec_group}</td>
+        <td>{data.quantity}</td>
+        <td>{data.price}</td>
+        <td>{data.mv}</td>
+        <td>{data.currency}</td>
+        <td>{data.trading_cost}</td>
+        <td >{data.transaction_type}</td>
+        <td>{data.sub_type}</td>
+        <td>{data.transaction_link_code}</td>
+        <td>{data.created_on}</td>
+        <td>{data.trade_date}</td>
+        <td>{data['is_active']}</td>
+        <td>{data['is_active']}</td>
+        <td>{data['is_active']}</td>
     </tr>)
     return (
         <div style={{height: '100%', paddingLeft: 15}}>
             <Card className={'transactions-container'}>
                 <Card.Header>Transactions</Card.Header>
-                <div style={{height: '100%', overflowY: 'scroll', overflowX: 'auto'}}>
-                    <Table >
+                <div style={{height: '100%', width: '100%', overflowY: 'scroll', overflowX: 'auto'}}>
+                    <table>
                         <thead>
                         <tr>
-                            <td className="transactions-table-header">ID</td>
-                            <td className="transactions-table-header" >Portfolio Code</td>
-                            <td className="transactions-table-header">Security</td>
-                            <td className="transactions-table-header">Quantity</td>
-                            <td className="transactions-table-header">Price</td>
-                            <td className="transactions-table-header">Market Value</td>
-                            <td className="transactions-table-header">Currency</td>
-                            <td className="transactions-table-header">Cost</td>
-                            <td className="transactions-table-header">Transaction Type</td>
-                            <td className="transactions-table-header">Related Transaction</td>
-                            <td className="transactions-table-header">Created On</td>
-                            <td className="transactions-table-header">Trade Date</td>
-                            <td className="transactions-table-header">Active</td>
+                            <th>ID</th>
+                            <th>Portfolio Code</th>
+                            <th>Security</th>
+                            <th>Sec Group</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Market Value</th>
+                            <th>Currency</th>
+                            <th>Cost</th>
+                            <th>Type</th>
+                            <th>Sub Type</th>
+                            <th>Related Transaction</th>
+                            <th>Created On</th>
+                            <th>Trade Date</th>
+                            <th>Active</th>
+                            <th>Active</th>
+                            <th>Active</th>
                         </tr>
                         </thead>
                         <tbody>
                         {portTransData}
                         </tbody>
-                    </Table>
+                    </table>
                 </div>
             </Card>
         </div>

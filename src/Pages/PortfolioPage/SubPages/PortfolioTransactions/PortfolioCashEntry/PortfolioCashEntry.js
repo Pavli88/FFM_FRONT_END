@@ -9,6 +9,7 @@ import PortfolioPageContext from "../../../context/portfolio-page-context";
 const PortfolioCashEntry = (props) => {
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
+    const dateRef = useRef();
     const typeRef = useRef();
     const currencyRef = useRef();
     const quantityRef = useRef();
@@ -17,10 +18,11 @@ const PortfolioCashEntry = (props) => {
             portfolio_code: portfolioData[0].portfolio_code,
             security: 'Cash',
             transaction_type: typeRef.current.value,
-            // trade_date: dateRef.current.value,
+            trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
             price: 1,
             currency: currencyRef.current.value,
+            sec_group: 'Cash',
             // sub_type: transactionSubType,
         })
                 .then(response => console.log(response.data))
@@ -54,7 +56,7 @@ const PortfolioCashEntry = (props) => {
 
                 <div style={{margin: 10}}>
                     <Form.Label>Date</Form.Label>
-                    <Form.Control defaultValue={currentDate} type="date"/>
+                    <Form.Control ref={dateRef} defaultValue={currentDate} type="date"/>
                 </div>
 
                 <div style={{margin: 10}}>

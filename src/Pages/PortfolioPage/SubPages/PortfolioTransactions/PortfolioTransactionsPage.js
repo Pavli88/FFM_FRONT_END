@@ -21,8 +21,8 @@ const PortfolioTransactionsPage = (props) => {
             });
     };
     return (
-        <div style={{display: "flex", height: '800px'}}>
-            <div style={{height: '100%', width: '400px'}}>
+        <div style={{display: "flex", height: '800px', width: '100%', padding: 15}}>
+            <div style={{height: '100%', width: '20%'}}>
                 <Card style={{height: '100%'}}>
                     <Card.Header>Search & Entry</Card.Header>
                     <Tabs
@@ -48,7 +48,7 @@ const PortfolioTransactionsPage = (props) => {
                     </Tabs>
                 </Card>
             </div>
-            <div style={{height: '100%', width: '100%'}}>
+            <div style={{height: '100%', width: '80%'}}>
                 <PortfolioTransactions data={transactionsData}/>
             </div>
         </div>

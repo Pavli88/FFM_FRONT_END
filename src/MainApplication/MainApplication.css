@@ -1,10 +1,27 @@
-.table-row{
-    border-bottom: #b3b7bb;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    padding: 10px;
+table{
+    table-layout: auto;
+    width: 100%;
+    text-align: left;
+}
+
+th{
+    font-size: 14px;
+    padding: 5px 10px;
+    white-space:nowrap
+}
+
+thead{
+    height: 50px;
+}
+
+td{
+    border: 1px solid #ccc;
+    border-right: none;
+    border-left: none;
+    padding: 5px 10px;
     font-size: 14px;
     height: 50px;
+    white-space:nowrap
 }
 
 .table-row-all{

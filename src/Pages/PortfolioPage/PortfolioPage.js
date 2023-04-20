@@ -39,15 +39,11 @@ const PortfolioPage = (props) => {
         }}>
             <div className={'page-container'}>
                 <div className={'page-subContainer'} >
-                    <Sidebar sidebarData={PortfolioSidebarData}/>
-                    <div style={{width: '100%'}}>
+                    <div style={{width: '15%'}}>
+                        <Sidebar sidebarData={PortfolioSidebarData}/>
+                    </div>
+                    <div style={{width: '85%'}}>
                         <PortfolioNavBar fetch={fetchData}/>
-                        <div style={{
-                            padding: '15px',
-                            height: window.innerHeight,
-                            width: '100%',
-                            margin: '0px'
-                        }}>
                             <Switch>
                                 <Route path="/portfolio/dashboard">
 
@@ -68,7 +64,6 @@ const PortfolioPage = (props) => {
                                     <PortfolioSettingsPage/>
                                 </Route>
                             </Switch>
-                        </div>
                     </div>
                 </div>
                 <PortfolioDataImport show={showImportModal} hide={() => setShowImportModal(false)} server={server}/>

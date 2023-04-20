@@ -9,6 +9,7 @@ const PortfolioTransactionEntry = (props) => {
     const currentDate = useContext(DateContext).currentDate;
     const [transactionType, setTransactionType] = useState('Purchase');
     const [transactionSubType, setTransactionSubType] = useState('Buy Open');
+    const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
     const securityRef = useRef();
     const currencyRef = useRef();
@@ -18,7 +19,7 @@ const PortfolioTransactionEntry = (props) => {
     const costRef = useRef();
     const typeRef = useRef();
     const subTypeRef = useRef();
-
+    console.log(relatedID)
     const submitHandler = () => {
         console.log(props.server)
         console.log(transactionType)
@@ -26,18 +27,21 @@ const PortfolioTransactionEntry = (props) => {
         axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfolioData[0].portfolio_code,
             security: instrumentData.name,
+            sec_group: instrumentData.group,
             transaction_type: transactionType,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
             price: priceRef.current.value,
-            currency: 'HUF',
+            currency: instrumentData.currency,
             sub_type: transactionSubType,
+            transaction_link_code: relatedID,
 
         })
                 .then(response => console.log(response.data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
+        setRelatedID('')
     };
 
     const getSecurity = () => {
@@ -51,7 +55,7 @@ const PortfolioTransactionEntry = (props) => {
                 console.error('Error Message:', error);
             });
     };
-    console.log(instrumentData)
+
     const purchaseSubTypes = [
         <option value={'Buy Open'}>Buy Open</option>,
         <option value={'Sell Close'}>Sell Close</option>
@@ -82,7 +86,7 @@ const PortfolioTransactionEntry = (props) => {
 
                 {transactionSubType === 'Buy Close' ? <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>Related Transaction ID</Form.Label>
-                    <Form.Control ref={currencyRef} type="number"/>
+                    <Form.Control value={relatedID} onChange={(e) => setRelatedID(e.target.value)} type="number"/>
                 </div> : ''}
 
                 <div className={'entry-block'}>

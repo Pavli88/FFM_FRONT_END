@@ -2,10 +2,14 @@ import './PortfolioTransactionsFilter.css'
 import Form from "react-bootstrap/Form";
 import {useContext, useRef, useState} from "react";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
+import DateContext from "../../../../../context/date-context";
 
 const PortfolioTransactionsFilter = (props) => {
+    const currentDate = useContext(DateContext).currentDate;
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const securityRef = useRef();
+    const startDateRef = useRef();
+    const endDateRef = useRef();
     const [transactionType, setTransactionType] = useState('');
     const [transactionSubType, setTransactionSubType] = useState('Buy Open');
     const purchaseSubTypes = [
@@ -22,6 +26,8 @@ const PortfolioTransactionsFilter = (props) => {
                 portfolio_code: portfolioData[0].portfolio_code,
                 transaction_type: transactionType,
                 security: securityRef.current.value,
+                trade_date__gte: startDateRef.current.value,
+                trade_date__lte: endDateRef.current.value,
             }
         });
     };
@@ -42,17 +48,23 @@ const PortfolioTransactionsFilter = (props) => {
                     <option value={'Redemption'}>Redemption</option>
                 </Form.Control>
 
-                <div style={{paddingBottom: 5}}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Sub Type</Form.Label>
-                    <Form.Control onChange={(e) => setTransactionSubType(e.target.value)} as="select">
-                        {transactionType === 'Purchase' ? purchaseSubTypes : saleSubTypes}
-                    </Form.Control>
-                </div>
+                {/*<div style={{paddingBottom: 5}}>*/}
+                {/*    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Sub Type</Form.Label>*/}
+                {/*    <Form.Control onChange={(e) => setTransactionSubType(e.target.value)} as="select">*/}
+                {/*        {transactionType === 'Purchase' ? purchaseSubTypes : saleSubTypes}*/}
+                {/*    </Form.Control>*/}
+                {/*</div>*/}
 
-                {transactionSubType === 'Buy Close' ? <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Related Transaction ID</Form.Label>
-                    <Form.Control type="number"/>
-                </div> : ''}
+                {/*{transactionSubType === 'Buy Close' ? <div style={{margin: 10}}>*/}
+                {/*    <Form.Label style={{paddingBottom: 5}}>Related Transaction ID</Form.Label>*/}
+                {/*    <Form.Control type="number"/>*/}
+                {/*</div> : ''}*/}
+
+                <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>From</Form.Label>
+                <Form.Control ref={startDateRef} defaultValue={''} type="date"/>
+
+                <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>To</Form.Label>
+                <Form.Control ref={endDateRef} defaultValue={''} type="date"/>
 
             </div>
             <div style={{height: '60px', width: '100%', padding: 10, position: "absolute", bottom: 0}}>
