@@ -13,8 +13,24 @@ const OpenTransactions = (props) => {
             });
     }, [])
 
-    const closeAllTransactions = () => {
-
+    const closeAllTransactions = (data) => {
+        console.log(data)
+        axios.post(props.server + 'trade_page/portfolio/close_transaction/', {
+            id: data.id,
+            portfolio_code: data.portfolio_code,
+            transaction_link_code: data.id,
+            quantity: data.quantity,
+            sec_group: data.sec_group,
+            security: data.security,
+            currency: data.currency,
+            price: data.price,
+            transaction_type: data.transaction_type === 'Purchase' ? 'Sale': 'Purchase',
+            open_status: 'Close Out'
+        })
+            .then(data => alert(data.data.response))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
     }
 
     const openTransactions = openTransactionsData.map((data) => <tr key={data.id} className={'table-row-all'}>
@@ -28,7 +44,7 @@ const OpenTransactions = (props) => {
         <td>{data.price}</td>
         <td>{data.mv}</td>
         <td >{<div><button className={'terminate-button'} onClick={() => closeAllTransactions(data.id)}><BiX/></button></div>}</td>
-        <td>{<div><button className={'delete-button'} onClick={() => closeAllTransactions(data.id)}><BiX/></button></div>}</td>
+        <td>{<div><button className={'delete-button'} onClick={() => closeAllTransactions(data)}><BiX/></button></div>}</td>
     </tr>)
 
     return(

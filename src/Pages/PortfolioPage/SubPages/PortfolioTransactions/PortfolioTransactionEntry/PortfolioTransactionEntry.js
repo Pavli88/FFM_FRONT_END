@@ -95,6 +95,7 @@ const PortfolioTransactionEntry = (props) => {
                     <Form.Control ref={openRef} as="select">
                         <option value={'Open'}>Open</option>
                         <option value={'Closed'}>Closed</option>
+                        <option value={'Close Out'}>Close Out</option>
                     </Form.Control>
                 </div>
 
