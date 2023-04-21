@@ -1,5 +1,4 @@
 import {useContext, useState} from "react";
-import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 
@@ -39,8 +38,9 @@ const TradeExecutor = (props) => {
     };
 
     return (
-        <CardWithHeader headerContent={<p>Trades Execuion</p>}>
-            <Form onSubmit={submitHandler} style={{width: '100%', height:'100%'}}>
+        <div style={{width: '100%', paddingLeft: 15}}>
+            <CardWithHeader headerContent={'Trades Execuion'}>
+            <div style={{width: '100%', height:'100%'}}>
                 <div style={{padding: '5px'}}>
                     <Form.Label>Robot</Form.Label>
                     <Form.Control onChange={(e) => setSelectedRobotId(e.target.value)} as="select">
@@ -58,13 +58,14 @@ const TradeExecutor = (props) => {
                     <Form.Label>Stop Loss</Form.Label>
                     <Form.Control onChange={(e) => setSl(e.target.value)} type="number" min={0.0}/>
                 </div>
-            </Form>
+            </div>
             <div style={{padding: '5px'}}>
                 <Button variant="primary" onClick={submitHandler} style={{width: '100%'}}>
                     Execute
                 </Button>
             </div>
         </CardWithHeader>
+        </div>
     );
 };
 

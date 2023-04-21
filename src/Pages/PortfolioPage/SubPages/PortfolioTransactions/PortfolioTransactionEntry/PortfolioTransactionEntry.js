@@ -11,29 +11,22 @@ const PortfolioTransactionEntry = (props) => {
     const [transactionType, setTransactionType] = useState('Purchase');
     const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
-    const securityRef = useRef();
     const openRef = useRef();
     const dateRef = useRef();
     const quantityRef = useRef();
     const priceRef = useRef();
-    const costRef = useRef();
-    const typeRef = useRef();
-    const subTypeRef = useRef();
-    console.log(relatedSelected)
+
     const submitHandler = () => {
-        console.log(props.server)
-        console.log(transactionType)
-        console.log(quantityRef.current.value, priceRef.current.value)
         axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfolioData[0].portfolio_code,
-            security: instrumentData.name,
-            sec_group: instrumentData.group,
+            security: relatedSelected === false ? instrumentData.name: instrumentData.security,
+            sec_group: relatedSelected === false ? instrumentData.group: instrumentData.sec_group,
             transaction_type: transactionType,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
             price: priceRef.current.value,
             currency: instrumentData.currency,
-            transaction_link_code: relatedID,
+            transaction_link_code: relatedSelected ? relatedID: '',
             open_status: openRef.current.value,
 
         })
@@ -45,9 +38,10 @@ const PortfolioTransactionEntry = (props) => {
     };
 
     const getSecurity = () => {
-        axios.get(props.server + 'instruments/get/instrument/', {
+        const url = relatedSelected ? 'portfolios/get/transactions/': 'instruments/get/instrument/'
+        axios.get(props.server + url, {
             params: {
-                id: securityRef.current.value,
+                id: relatedID,
             }
         })
             .then(response => setInstrumentData(response.data[0]))
@@ -55,13 +49,6 @@ const PortfolioTransactionEntry = (props) => {
                 console.error('Error Message:', error);
             });
     };
-
-    const relatedTransactionIDField = <div className={'entry-block'}>
-        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Related Transaction ID</Form.Label>
-        <div style={{width: '100%', paddingRight: 15}}>
-            <Form.Control value={relatedID} onChange={(e) => setRelatedID(e.target.value)} type="number"/>
-        </div>
-    </div>
 
     return (
         <div>
@@ -73,11 +60,27 @@ const PortfolioTransactionEntry = (props) => {
                         <input type="checkbox" onChange={(e) => {
                             setRelatedSelected(e.target.checked)
                             setRelatedID('')
+                            setInstrumentData({})
                         }} />
                     </div>
                 </div>
 
-                {relatedSelected === true ? relatedTransactionIDField: ''}
+                <div className={'entry-block'}>
+                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>{relatedSelected ? 'Transaction': 'Security'} ID</Form.Label>
+                    <div style={{display: "flex"}}>
+                        <div style={{width: '100%', paddingRight: 15}}>
+                            <Form.Control value={relatedID} onChange={(e) => setRelatedID(e.target.value)}
+                                          type="number"/>
+                        </div>
+                        <div style={{width: '60px'}}>
+                            <button className={'save-button'}
+                                    style={{paddingTop: 7, paddingBottom: 7, paddingLeft: 7, paddingRight: 7}}
+                                    onClick={getSecurity}
+                            >Get
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
                 <div className={'entry-block'}>
                     <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
@@ -95,36 +98,14 @@ const PortfolioTransactionEntry = (props) => {
                     </Form.Control>
                 </div>
 
-                <div className={'entry-block'}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Security ID</Form.Label>
-                    <div style={{display: "flex"}}>
-                        <div style={{width: '100%', paddingRight: 15}}>
-                            <Form.Control ref={securityRef} type="text"/>
-                        </div>
-
-                        <div style={{width: '60px'}}>
-                            <button className={'save-button'}
-                                    style={{paddingTop: 7, paddingBottom: 7, paddingLeft: 7, paddingRight: 7}}
-                                    onClick={getSecurity}
-                            >Get
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>Sec Name</Form.Label>
-                    <Form.Control value={instrumentData.name} type="text" disabled/>
+                    <Form.Control value={relatedSelected ? instrumentData.security: instrumentData.name} type="text" disabled/>
                 </div>
 
                 <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>Sec Group</Form.Label>
-                    <Form.Control value={instrumentData.group} type="text" disabled/>
-                </div>
-
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Sec Type</Form.Label>
-                    <Form.Control value={instrumentData.type} type="text" disabled/>
+                    <Form.Control value={relatedSelected ? instrumentData.sec_group: instrumentData.group} type="text" disabled/>
                 </div>
 
                 <div style={{margin: 10}}>

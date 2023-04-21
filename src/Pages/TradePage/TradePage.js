@@ -1,13 +1,7 @@
-// React Bootstrap
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button'
-
 import TradeTableData from "./TradeTableData";
 import TradeExecutor from "./TradeExecutor";
 import TradeSignals from "./TradePageSignals/TradeSignals";
-
+import OpenTransactions from "./OpenTransactions/OpenTransactions";
 import React from "react";
 import {useContext, useState} from "react";
 
@@ -39,28 +33,32 @@ const TradePage = () => {
 
     return (
         <div className={'page-container'}>
-            <Row style={{height: '900px', padding: 0}}>
-                <Col sm={8}>
+            <div style={{height: '600px', padding: 15, display: "flex"}}>
+                <div style={{width:'50%'}}>
                     <TradeTableData env={env} server={server}/>
-                </Col>
-                <Col sm={4} style={{padding:0}}>
-                    <Row style={{height: '100%'}}>
-                        <Col>
-                            <Row style={{height: '50%'}}>
-                                <TradeExecutor server={server}/>
-                            </Row>
-                            <Row style={{height: '50%'}}>
-                                <TradeSignals/>
-                            </Row>
-                        </Col>
-                        <Col>
-                            <Row style={{height: '100%'}}>
-                                <TradeSignals/>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
+                </div>
+                <div style={{width: '50%'}}>
+                    <OpenTransactions server={server}/>
+                    <TradeExecutor server={server}/>
+                </div>
+                {/*<div style={{padding:0}}>*/}
+                {/*    <div style={{height: '100%'}}>*/}
+                {/*        <div>*/}
+                {/*            <div style={{height: '50%'}}>*/}
+                {/*                <TradeExecutor server={server}/>*/}
+                {/*            </div>*/}
+                {/*            <div style={{height: '50%'}}>*/}
+                {/*                <TradeSignals/>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*        <div>*/}
+                {/*            <div style={{height: '100%'}}>*/}
+                {/*                <TradeSignals/>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+            </div>
         </div>
     );
 };
