@@ -1,17 +1,11 @@
 import {useContext, useState} from "react";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-
 import CardWithHeader from "../../Widgets/Charts/CardWithHeader";
-
-// Context
 import RobotContext from "../../context/robot-context";
 import Button from "react-bootstrap/Button";
-import TradeContext from "./TradePageContext/TradePageContext";
 
 const TradeExecutor = (props) => {
-    const lastTrade = useContext(TradeContext)['lastTrade'];
-    const saveLastTrade = useContext(TradeContext)['saveLastTrade'];
     const allRobotsData = useContext(RobotContext)['allRobotsData'];
     const [selectedRobotId, setSelectedRobotId] = useState(allRobotsData[0]['id']);
     const [side, setSide] = useState('BUY');
@@ -27,7 +21,7 @@ const TradeExecutor = (props) => {
                 stop_level: sl,
             })
                 .then(response => {
-                    saveLastTrade(lastTrade + 1);
+                    // saveLastTrade(lastTrade + 1);
                     alert(response['data'])
                 })
                 .catch((error) => {

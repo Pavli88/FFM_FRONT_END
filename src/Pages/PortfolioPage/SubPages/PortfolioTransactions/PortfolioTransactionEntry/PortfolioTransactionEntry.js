@@ -19,7 +19,7 @@ const PortfolioTransactionEntry = (props) => {
     const submitHandler = () => {
         axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfolioData[0].portfolio_code,
-            security: relatedSelected === false ? instrumentData.name: instrumentData.security,
+            security: relatedSelected === false ? instrumentData.id: instrumentData.security,
             sec_group: relatedSelected === false ? instrumentData.group: instrumentData.sec_group,
             transaction_type: transactionType,
             trade_date: dateRef.current.value,

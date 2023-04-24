@@ -8,15 +8,11 @@ import Col from 'react-bootstrap/Col';
 import {Nav} from "react-bootstrap";
 import Form from 'react-bootstrap/Form';
 import { BiX } from 'react-icons/bi';
-
-// Context
 import EnvContext from "../../context/env-context";
-import TradeContext from "./TradePageContext/TradePageContext";
+
 
 const RobotTradesCard = (props) => {
     const [isActive, setIsActive] = useState(false);
-    const lastTrade = useContext(TradeContext)['lastTrade'];
-    const saveLastTrade = useContext(TradeContext)['saveLastTrade'];
     const CloseTrade = (brokerId, robotId, tradeId) => {
         axios.post(props.server + 'trade_page/close_trade/', {
             broker_id: brokerId,
@@ -25,7 +21,7 @@ const RobotTradesCard = (props) => {
         })
             .then(response => {
                 alert(response['data'])
-                saveLastTrade(lastTrade + 1);
+                // saveLastTrade(lastTrade + 1);
             })
             .catch((error) => {
                 console.error('Error Message:', error);
@@ -127,12 +123,10 @@ const TradeTableData = (props) => {
     );
 
     return (
-        <TradeContext.Provider value={{
-            lastTrade: lastTrade,
-            saveLastTrade: setLastTrade,
-        }}>
+        <>
             {responseData}
-        </TradeContext.Provider>
+        </>
+
     );
 };
 

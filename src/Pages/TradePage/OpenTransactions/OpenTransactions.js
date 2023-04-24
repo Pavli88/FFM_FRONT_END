@@ -1,17 +1,21 @@
 import Card from "react-bootstrap/Card";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {BiX} from "react-icons/bi";
+import TradeContext from "../context/trade-context";
 
 const OpenTransactions = (props) => {
+    const newTransactionID = useContext(TradeContext).newTransactionID;
+    const saveNewTransactionID = useContext(TradeContext).saveNewTrnsactionID;
     const [openTransactionsData, setOpenTransactionsData] =  useState([{}]);
+
     useEffect(() => {
         axios.get(props.server + 'portfolios/get/open_transactions/')
             .then(response => setOpenTransactionsData(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
-    }, [])
+    }, [newTransactionID])
 
     const closeAllTransactions = (data) => {
         console.log(data)
@@ -23,11 +27,14 @@ const OpenTransactions = (props) => {
             sec_group: data.sec_group,
             security: data.security,
             currency: data.currency,
-            price: data.price,
             transaction_type: data.transaction_type === 'Purchase' ? 'Sale': 'Purchase',
-            open_status: 'Close Out'
+            open_status: 'Close Out',
+            broker_id: data.broker_id,
         })
-            .then(data => alert(data.data.response))
+            .then(data => {
+                alert(data.data.response)
+                saveNewTransactionID(data.data.transaction_id)
+            })
             .catch((error) => {
                 console.error('Error Message:', error);
             });
@@ -43,6 +50,8 @@ const OpenTransactions = (props) => {
         <td>{data.quantity}</td>
         <td>{data.price}</td>
         <td>{data.mv}</td>
+        <td>{data.broker}</td>
+        <td>{data.broker_id}</td>
         <td >{<div><button className={'terminate-button'} onClick={() => closeAllTransactions(data.id)}><BiX/></button></div>}</td>
         <td>{<div><button className={'delete-button'} onClick={() => closeAllTransactions(data)}><BiX/></button></div>}</td>
     </tr>)
@@ -64,6 +73,8 @@ const OpenTransactions = (props) => {
                             <th>Quantity</th>
                             <th>Price</th>
                             <th>Market Value</th>
+                            <th>Broker</th>
+                            <th>Broker ID</th>
                             <th></th>
                             <th></th>
                         </tr>

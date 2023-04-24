@@ -29,6 +29,8 @@ const PortfolioTransactions = (props) => {
         <td>{data.transaction_link_code}</td>
         <td>{data.created_on}</td>
         <td>{data.trade_date}</td>
+        <td>{data.broker}</td>
+        <td>{data.broker_id}</td>
         <td>{data['is_active']}</td>
         <td>{data.transaction_link_code === '' ? <div style={{padding: 0, width: 30}}><button className={'delete-button'} onClick={() => deleteTransaction(data.id)}><BiX/></button></div>: ''}</td>
     </tr>)
@@ -54,6 +56,8 @@ const PortfolioTransactions = (props) => {
                             <th>Related Transaction</th>
                             <th>Created On</th>
                             <th>Trade Date</th>
+                            <th>Broker</th>
+                            <th>Broker ID</th>
                             <th>Active</th>
                             <th></th>
                         </tr>
