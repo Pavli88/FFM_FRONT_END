@@ -3,11 +3,15 @@ import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {BiX} from "react-icons/bi";
 import TradeContext from "../context/trade-context";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 const OpenTransactions = (props) => {
     const newTransactionID = useContext(TradeContext).newTransactionID;
     const saveNewTransactionID = useContext(TradeContext).saveNewTrnsactionID;
     const [openTransactionsData, setOpenTransactionsData] =  useState([{}]);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         axios.get(props.server + 'portfolios/get/open_transactions/')
@@ -17,27 +21,16 @@ const OpenTransactions = (props) => {
             });
     }, [newTransactionID])
 
-    const closeAllTransactions = (data) => {
+    const closeTransactions = (data) => {
         console.log(data)
-        axios.post(props.server + 'trade_page/portfolio/close_transaction/', {
-            id: data.id,
-            portfolio_code: data.portfolio_code,
-            transaction_link_code: data.id,
-            quantity: data.quantity,
-            sec_group: data.sec_group,
-            security: data.security,
-            currency: data.currency,
-            transaction_type: data.transaction_type === 'Purchase' ? 'Sale': 'Purchase',
-            open_status: 'Close Out',
-            broker_id: data.broker_id,
-        })
-            .then(data => {
-                alert(data.data.response)
-                saveNewTransactionID(data.data.transaction_id)
-            })
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
+        // axios.post(props.server + 'trade_page/portfolio/close_transaction/', data)
+        //     .then(data => {
+        //         alert(data.data.response)
+        //         saveNewTransactionID(data.data.transaction_id)
+        //     })
+        //     .catch((error) => {
+        //         console.error('Error Message:', error);
+        //     });
     }
 
     const openTransactions = openTransactionsData.map((data) => <tr key={data.id} className={'table-row-all'}>
@@ -50,10 +43,10 @@ const OpenTransactions = (props) => {
         <td>{data.quantity}</td>
         <td>{data.price}</td>
         <td>{data.mv}</td>
-        <td>{data.broker}</td>
+        <td>{data.account_id}</td>
         <td>{data.broker_id}</td>
-        <td >{<div><button className={'terminate-button'} onClick={() => closeAllTransactions(data.id)}><BiX/></button></div>}</td>
-        <td>{<div><button className={'delete-button'} onClick={() => closeAllTransactions(data)}><BiX/></button></div>}</td>
+        <td >{<div><button className={'terminate-button'} onClick={() => closeTransactions({...data, status: 'close_out'})}><BiX/></button></div>}</td>
+        <td>{<div><button className={'delete-button'} onClick={() => closeTransactions({...data, status: 'close_all'})}><BiX/></button></div>}</td>
     </tr>)
 
     return(
@@ -73,7 +66,7 @@ const OpenTransactions = (props) => {
                             <th>Quantity</th>
                             <th>Price</th>
                             <th>Market Value</th>
-                            <th>Broker</th>
+                            <th>Account ID</th>
                             <th>Broker ID</th>
                             <th></th>
                             <th></th>
@@ -85,6 +78,29 @@ const OpenTransactions = (props) => {
                     </table>
                 </div>
             </Card>
+            {/*<Modal show={showNewInstrumentModal} onHide={handleClose}>*/}
+            {/*    <Modal.Header closeButton>*/}
+            {/*        <Modal.Title>Close Unit</Modal.Title>*/}
+            {/*    </Modal.Header>*/}
+            {/*    <Modal.Body>*/}
+            {/*        <Form onSubmit={submitHandler} style={{width: '100%'}}>*/}
+            {/*            */}
+            {/*            <Form.Group>*/}
+            {/*                <Form.Label>Units</Form.Label>*/}
+            {/*                <Form.Control ref={tickerRef} type="text" required/>*/}
+            {/*            </Form.Group>*/}
+            {/*            */}
+            {/*        </Form>*/}
+            {/*    </Modal.Body>*/}
+            {/*    <Modal.Footer>*/}
+            {/*        <Button variant="secondary" onClick={handleClose}>*/}
+            {/*            Close*/}
+            {/*        </Button>*/}
+            {/*        <Button variant="primary" onClick={submitHandler}>*/}
+            {/*            Save*/}
+            {/*        </Button>*/}
+            {/*    </Modal.Footer>*/}
+            {/*</Modal>*/}
         </div>
     )
 };

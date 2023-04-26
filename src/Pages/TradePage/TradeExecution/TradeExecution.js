@@ -4,16 +4,23 @@ import axios from "axios";
 import {useContext, useState, useRef} from "react";
 import DateContext from "../../../context/date-context";
 import TradeContext from "../context/trade-context";
+import BrokerContext from "../../../context/broker-context";
+import UserContext from "../../../context/user-context";
 
 const TradeExecution = (props) => {
     const saveNewTransactionID = useContext(TradeContext).saveNewTrnsactionID;
     const currentDate = useContext(DateContext).currentDate;
+    const user = useContext(UserContext).user;
     const portCodeRef = useRef();
     const quantityRef = useRef();
+    const brokerRef = useRef();
+    const accountRef = useRef();
     const [side, setSide] = useState('Purchase');
     const [sl, setSl] = useState(1);
     const [securityID, setSecurityID] = useState();
     const [instrumentData, setInstrumentData] = useState({});
+    const [brokerTicker, setBrokerTicker] = useState({});
+    const [accountsData, setAccountsData] = useState([{}]);
 
     const submitHandler = (event) => {
         if (sl === 0.0) {
@@ -22,13 +29,10 @@ const TradeExecution = (props) => {
             axios.post(props.server + 'trade_page/new/transaction/', {
                 portfolio_code: portCodeRef.current.value,
                 security: instrumentData.id,
-                sec_group: instrumentData.group,
                 transaction_type: side,
-                trade_date: currentDate,
                 quantity: quantityRef.current.value,
-                currency: instrumentData.currency,
-                transaction_link_code: '',
-                open_status: 'Open',
+                account_id: accountRef.current.value,
+                ticker: brokerTicker.source_ticker,
             })
                 .then(response => {
                     alert(response.data.response)
@@ -47,11 +51,52 @@ const TradeExecution = (props) => {
                 id: securityID,
             }
         })
-            .then(response => setInstrumentData(response.data[0]))
+            .then(response => setInstrumentData(response.data[0] === undefined ? {}: response.data[0]))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+
+        axios.get(props.server + 'instruments/get/broker/tickers/', {
+            params: {
+                inst_code: securityID,
+                source: brokerRef.current.value,
+            }
+        })
+            .then(response => setBrokerTicker(response.data[0] === undefined ? {}: response.data[0]))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+
+    };
+
+    const brokers = useContext(BrokerContext).brokerData.map((data) =>
+        <option key={data.id} value={data.broker_code}>{data.broker}</option>
+    )
+
+    const accounts = accountsData.map((data, index) =>
+        <option key={data.id} value={data.id}>{data.account_name} | {data.account_number} | {data.env} | {data.currency}</option>
+    )
+
+    const getBrokerAccounts = () => {
+        axios.get(props.server + 'accounts/get_accounts/', {
+            params: {
+                broker_name: brokerRef.current.value,
+                owner: user,
+            }
+        })
+            .then(response => setAccountsData(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
     };
+
+    const brokerTickerExist = <div style={{margin: 10, color: 'red'}}>
+        Ticker is not assigned for this broker on the security
+    </div>
+
+    const securityExists = <div style={{margin: 10, color: 'red'}}>
+        Security ID does not exist
+    </div>
 
     return(
         <div style={{width: '100%', paddingLeft: 15}}>
@@ -60,6 +105,20 @@ const TradeExecution = (props) => {
                 <div style={{margin: 10}}>
                     <Form.Label>Portfolio Code</Form.Label>
                     <Form.Control ref={portCodeRef} type={'text'}/>
+                </div>
+
+                <div style={{margin: 10}}>
+                    <Form.Label>Broker</Form.Label>
+                    <Form.Control ref={brokerRef} onChange={getBrokerAccounts} as="select">
+                        {brokers}
+                    </Form.Control>
+                </div>
+
+                <div style={{margin: 10}}>
+                    <Form.Label>Account</Form.Label>
+                    <Form.Control ref={accountRef} as="select">
+                        {accounts}
+                    </Form.Control>
                 </div>
 
                 <div style={{margin: 10}}>
@@ -78,6 +137,15 @@ const TradeExecution = (props) => {
                         </div>
                     </div>
                 </div>
+
+                {(securityID > 0 && Object.keys(instrumentData).length === 0)  ? securityExists: ''}
+
+                <div style={{margin: 10}}>
+                    <Form.Label>Broker Ticker</Form.Label>
+                    <Form.Control value={brokerTicker.source_ticker} type={'text'} disabled/>
+                </div>
+
+                {(Object.keys(brokerTicker).length === 0 && Object.keys(instrumentData).length > 0)  ? brokerTickerExist: ''}
 
                 <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>Sec Name</Form.Label>

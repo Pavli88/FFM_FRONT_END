@@ -39,13 +39,12 @@ const MainApplication = (props) => {
     const [newRobot, setNewRobot] = useState('');
     const [robotStrategies, setRobotStrategyOptions] = useState([]);
 
-    const [brokerData, setBrokerData] = useState([{'id': 1, 'broker': 'System', 'broker_code': 'ffm_system'}]);
+    const [brokerData, setBrokerData] = useState([{}]);
     const [entity, setEntity] = useState('Portfolio');
 
     const [accounts, setAccounts] = useState([]);
     const [newAccount, setNewAccount] = useState(0)
-    // console.log(accounts)
-    // console.log(userName)
+
     const getEnvData = (env) => {
         setRobotEnvData(env);
     };

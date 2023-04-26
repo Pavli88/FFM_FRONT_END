@@ -1,8 +1,9 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {useRef} from "react";
+import {useContext, useRef} from "react";
 import axios from "axios";
+import BrokerContext from "../../../../context/broker-context";
 
 
 const InstrumentNewBrokerTicker = (props) => {
@@ -21,10 +22,15 @@ const InstrumentNewBrokerTicker = (props) => {
             });
         props.hide();
     };
+
+    const brokers = useContext(BrokerContext).brokerData.map((data) =>
+        <option key={data.id} value={data.broker_code}>{data.broker}</option>
+    )
+
     return(
         <Modal show={props.show} onHide={() => props.hide()} animation={false}>
             <Modal.Header closeButton>
-                <Modal.Title>New Broker Ticker</Modal.Title>
+                <Modal.Title>New Broker Ticker - {props.id}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={submitHandler} style={{width: '100%'}}>
@@ -32,12 +38,12 @@ const InstrumentNewBrokerTicker = (props) => {
                     <Form.Group>
                         <Form.Label>Broker</Form.Label>
                         <Form.Control ref={brokerRef} as="select">
-                            <option value={'oanda'}>Oanda</option>
+                            {brokers}
                         </Form.Control>
                     </Form.Group>
 
                     <Form.Group>
-                        <Form.Label>Strategy</Form.Label>
+                        <Form.Label>Ticker</Form.Label>
                         <Form.Control ref={tickerRef}></Form.Control>
                     </Form.Group>
 
