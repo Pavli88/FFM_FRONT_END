@@ -1,5 +1,5 @@
 import Card from "react-bootstrap/Card";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {BiX} from "react-icons/bi";
 import TradeContext from "../context/trade-context";
@@ -7,11 +7,41 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
+
+
+
+const UnitModal = (props) => {
+    const [newUnit, setNewUnit] = useState(0);
+    return (
+        <Modal show={props.show} onHide={props.hide}>
+            <Modal.Header closeButton>
+                <Modal.Title>Close Units - {props.data.portfolio_code} - {props.data.id}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div style={{width: '100%'}}>
+
+                    <Form.Group>
+                        <Form.Label>Units</Form.Label>
+                        <Form.Control onChange={(e) => setNewUnit(e.target.value)} type="number" min={0} max={props.data.quantity} required/>
+                    </Form.Group>
+
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => props.close({...props.data, quantity: newUnit, status: 'close_out'})}>
+                    Save
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    );
+};
+
 const OpenTransactions = (props) => {
     const newTransactionID = useContext(TradeContext).newTransactionID;
     const saveNewTransactionID = useContext(TradeContext).saveNewTrnsactionID;
     const [openTransactionsData, setOpenTransactionsData] =  useState([{}]);
     const [showModal, setShowModal] = useState(false);
+    const [transactionParams, setTransactionParams] = useState({});
 
     useEffect(() => {
         axios.get(props.server + 'portfolios/get/open_transactions/')
@@ -21,16 +51,9 @@ const OpenTransactions = (props) => {
             });
     }, [newTransactionID])
 
-    const closeTransactions = (data) => {
-        console.log(data)
-        // axios.post(props.server + 'trade_page/portfolio/close_transaction/', data)
-        //     .then(data => {
-        //         alert(data.data.response)
-        //         saveNewTransactionID(data.data.transaction_id)
-        //     })
-        //     .catch((error) => {
-        //         console.error('Error Message:', error);
-        //     });
+    const closeTransactions = async (data) => {
+        const response = await axios.post(props.server + 'trade_page/portfolio/close_transaction/', data)
+        saveNewTransactionID(response.data.transaction_id)
     }
 
     const openTransactions = openTransactionsData.map((data) => <tr key={data.id} className={'table-row-all'}>
@@ -45,8 +68,14 @@ const OpenTransactions = (props) => {
         <td>{data.mv}</td>
         <td>{data.account_id}</td>
         <td>{data.broker_id}</td>
-        <td >{<div><button className={'terminate-button'} onClick={() => closeTransactions({...data, status: 'close_out'})}><BiX/></button></div>}</td>
-        <td>{<div><button className={'delete-button'} onClick={() => closeTransactions({...data, status: 'close_all'})}><BiX/></button></div>}</td>
+        <td >{<div><button className={'terminate-button'} onClick={() => {
+            setTransactionParams(data)
+            setShowModal(true)
+        }}><BiX/></button>
+        </div>}</td>
+        <td>{<div>
+            <button className={'delete-button'} onClick={() => closeTransactions({...data, status: 'close_all'})}><BiX/></button>
+        </div>}</td>
     </tr>)
 
     return(
@@ -78,29 +107,10 @@ const OpenTransactions = (props) => {
                     </table>
                 </div>
             </Card>
-            {/*<Modal show={showNewInstrumentModal} onHide={handleClose}>*/}
-            {/*    <Modal.Header closeButton>*/}
-            {/*        <Modal.Title>Close Unit</Modal.Title>*/}
-            {/*    </Modal.Header>*/}
-            {/*    <Modal.Body>*/}
-            {/*        <Form onSubmit={submitHandler} style={{width: '100%'}}>*/}
-            {/*            */}
-            {/*            <Form.Group>*/}
-            {/*                <Form.Label>Units</Form.Label>*/}
-            {/*                <Form.Control ref={tickerRef} type="text" required/>*/}
-            {/*            </Form.Group>*/}
-            {/*            */}
-            {/*        </Form>*/}
-            {/*    </Modal.Body>*/}
-            {/*    <Modal.Footer>*/}
-            {/*        <Button variant="secondary" onClick={handleClose}>*/}
-            {/*            Close*/}
-            {/*        </Button>*/}
-            {/*        <Button variant="primary" onClick={submitHandler}>*/}
-            {/*            Save*/}
-            {/*        </Button>*/}
-            {/*    </Modal.Footer>*/}
-            {/*</Modal>*/}
+            <UnitModal show={showModal}
+                       hide={() => setShowModal(false)}
+                       data={transactionParams}
+                       close={closeTransactions}/>
         </div>
     )
 };
