@@ -15,6 +15,7 @@ const TradeExecution = (props) => {
     const quantityRef = useRef();
     const brokerRef = useRef();
     const accountRef = useRef();
+    const sideRef = useRef();
     const [side, setSide] = useState('Purchase');
     const [sl, setSl] = useState(1);
     const [securityID, setSecurityID] = useState();
@@ -29,7 +30,7 @@ const TradeExecution = (props) => {
             axios.post(props.server + 'trade_page/new/transaction/', {
                 portfolio_code: portCodeRef.current.value,
                 security: instrumentData.id,
-                transaction_type: side,
+                transaction_type: sideRef.current.value,
                 quantity: quantityRef.current.value,
                 account_id: accountRef.current.value,
                 ticker: brokerTicker.source_ticker,
@@ -68,7 +69,7 @@ const TradeExecution = (props) => {
             });
 
     };
-
+    console.log(side)
     const brokers = useContext(BrokerContext).brokerData.map((data) =>
         <option key={data.id} value={data.broker_code}>{data.broker}</option>
     )
@@ -164,9 +165,9 @@ const TradeExecution = (props) => {
 
                 <div style={{margin: 10}}>
                     <Form.Label>Side</Form.Label>
-                    <Form.Control onChange={(e) => setSide(e.target.value)} as="select">
-                        <option value={'Purchase'}>Purchase</option>
-                        <option value={'Sale'}>Sale</option>
+                    <Form.Control ref={sideRef} as="select">
+                        <option value={instrumentData.group === 'CFD' ? 'Asset In': 'Purchase'}>Purchase</option>
+                        <option value={instrumentData.group === 'CFD' ? 'Asset Out': 'Sale'}>Sale</option>
                     </Form.Control>
                 </div>
 
