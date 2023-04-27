@@ -87,6 +87,8 @@ const PortfolioTransactionEntry = (props) => {
                     <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
                         <option value={'Purchase'}>Purchase</option>
                         <option value={'Sale'}>Sale</option>
+                        <option value={'Asset In'}>Asset In</option>
+                        <option value={'Asset Out'}>Asset Out</option>
                     </Form.Control>
                 </div>
 

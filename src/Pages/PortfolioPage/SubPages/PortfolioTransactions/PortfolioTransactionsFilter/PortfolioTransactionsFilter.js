@@ -36,6 +36,9 @@ const PortfolioTransactionsFilter = (props) => {
         <div>
             <div className={'search-container'}>
 
+                {/*<Form.Label style={{paddingBottom: 5}}>Transaction ID</Form.Label>*/}
+                {/*<Form.Control ref={securityRef} type="text"/>*/}
+
                 <Form.Label style={{paddingBottom: 5}}>Security</Form.Label>
                 <Form.Control ref={securityRef} type="text"/>
 

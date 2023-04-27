@@ -17,6 +17,8 @@ const NewBrokerAccount = (props) => {
     const accountNumberRef = useRef();
     const tokenRef = useRef();
     const brokerNameRef = useRef();
+    const [marginAllowed, setMarginAllowed] = useState(0);
+    const [marginPercentage, setMarginPercentage] = useState(0.0);
 
     const submitHandler = () => {
         axios.post(server + 'accounts/new_account/', {
@@ -26,7 +28,9 @@ const NewBrokerAccount = (props) => {
             env: env,
             token: tokenRef.current.value,
             currency: currency,
-            owner: user
+            owner: user,
+            margin_account: marginAllowed,
+            margin_percentage: marginPercentage,
         })
                 .then(function(response){
                     if (response.data === 'Account is created successfully!'){
@@ -41,6 +45,8 @@ const NewBrokerAccount = (props) => {
                 });
         setEnv('live');
         setCurrency('USD');
+        setMarginAllowed(0);
+        setMarginPercentage(0.0)
         props.hide();
     };
 
@@ -59,6 +65,11 @@ const NewBrokerAccount = (props) => {
         <button className={'save-button'} onClick={submitHandler}>
             Create
         </button>
+    </div>
+
+    const marginPercentageDiv = <div style={{margin: 10}}>
+        <Form.Label>Margin Percentage</Form.Label>
+        <Form.Control onChange={(e) => setMarginPercentage(e.target.value)} type="number" min={0.0} step={0.05}/>
     </div>
 
     return (
@@ -94,6 +105,17 @@ const NewBrokerAccount = (props) => {
                         <option value={'EUR'}>EUR</option>
                     </Form.Control>
                 </div>
+
+                <div style={{margin: 10}}>
+                    <Form.Label>Margin Account</Form.Label>
+                    <Form.Control value={marginAllowed} onChange={(e) => setMarginAllowed(e.target.value)} as="select">
+                        <option value={0}>Disabled</option>
+                        <option value={1}>Allowed</option>
+                    </Form.Control>
+                </div>
+
+                {marginAllowed === '1' ? marginPercentageDiv: ''}
+
             </div>
         </CardWithHeader>
     );

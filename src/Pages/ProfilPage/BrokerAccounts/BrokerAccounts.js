@@ -9,6 +9,7 @@ const BrokerAccounts = (props) => {
     const saveAccount = useContext(BrokerContext).saveAccount;
     const newAccount = useContext(BrokerContext).newAccount;
     const accounts = useContext(BrokerContext).accounts;
+    console.log(accounts)
     const accountRows = accounts.map((data) => <tr key={data.id} className={'table-row-all'}>
         <td className={'table-row'}>
             <div>
@@ -38,6 +39,16 @@ const BrokerAccounts = (props) => {
         <td className={'table-row'}>
             <div style={{width: '100%'}}>
                 {data.env}
+            </div>
+        </td>
+        <td className={'table-row'}>
+            <div style={{width: '100%'}}>
+                {data['margin_account'] ? 'Margin Allowed': 'Margin Disabled'}
+            </div>
+        </td>
+        <td className={'table-row'}>
+            <div style={{width: '100%'}}>
+                {data['margin_percentage']}
             </div>
         </td>
         <td className={'table-row'}>
