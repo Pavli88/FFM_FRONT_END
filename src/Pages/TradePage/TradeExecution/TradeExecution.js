@@ -16,7 +16,6 @@ const TradeExecution = (props) => {
     const brokerRef = useRef();
     const accountRef = useRef();
     const sideRef = useRef();
-    const [side, setSide] = useState('Purchase');
     const [sl, setSl] = useState(1);
     const [securityID, setSecurityID] = useState();
     const [instrumentData, setInstrumentData] = useState({});
@@ -33,8 +32,6 @@ const TradeExecution = (props) => {
                 transaction_type: sideRef.current.value,
                 quantity: quantityRef.current.value,
                 account_id: accountRef.current.value,
-                ticker: brokerTicker.source_ticker,
-                margin: brokerTicker.margin,
             })
                 .then(response => {
                     alert(response.data.response)
@@ -167,8 +164,8 @@ const TradeExecution = (props) => {
                 <div style={{margin: 10}}>
                     <Form.Label>Side</Form.Label>
                     <Form.Control ref={sideRef} as="select">
-                        <option value={instrumentData.group === 'CFD' ? 'Asset In': 'Purchase'}>Purchase</option>
-                        <option value={instrumentData.group === 'CFD' ? 'Asset Out': 'Sale'}>Sale</option>
+                        <option value={'Purchase'}>Purchase</option>
+                        <option value={'Sale'}>Sale</option>
                     </Form.Control>
                 </div>
 
