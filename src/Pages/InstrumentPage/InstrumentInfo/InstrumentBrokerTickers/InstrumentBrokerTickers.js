@@ -3,7 +3,7 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import { BsPlus, BsDash } from "react-icons/bs";
 import InstrumentNewBrokerTicker from "./InstrumentNewBrokerTicker";
@@ -12,22 +12,28 @@ const InstrumentBrokerTickers = (props) => {
     const [showNewTickerModal, setShowNewTickerModal] = useState(false);
     const [tickers, setTickers] = useState([]);
     const [selectedTicker, setSelectedTicker] = useState();
+    const isMounted = useRef(false);
 
     const tickerRows = tickers.map((data) => <tr key={data.id} onClick={()=>setSelectedTicker(data.id)}>
         <td>{data.source}</td>
         <td>{data.source_ticker}</td>
+        <td>{data.margin}</td>
     </tr>)
 
     useEffect(() => {
+        if (isMounted.current) {
             axios.get(props.server + 'instruments/get/broker/tickers/', {
                 params: {
-                    id: props.id
+                    inst_code: props.id
                 }
             })
                 .then(data => setTickers(data.data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
+        } else {
+            isMounted.current = true;
+        }
         }, [props.id]
     );
 
@@ -63,12 +69,13 @@ const InstrumentBrokerTickers = (props) => {
                 </Card.Header>
                 <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
                     <Table style={{width: '100%'}}>
-                        {/*<thead className="table-header-row">*/}
-                        {/*<tr>*/}
-                        {/*    <td style={{border: '0px', verticalAlign: "middle"}}>Broker</td>*/}
-                        {/*    <td style={{border: '0px', verticalAlign: "middle"}}>Ticker</td>*/}
-                        {/*</tr>*/}
-                        {/*</thead>*/}
+                        <thead>
+                        <tr>
+                            <td>Broker</td>
+                            <td>Ticker</td>
+                            <td>Margin %</td>
+                        </tr>
+                        </thead>
                         <tbody style={{height: '100%', overflow: 'scroll'}}>
                         {tickerRows}
                         </tbody>

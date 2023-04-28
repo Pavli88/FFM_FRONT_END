@@ -9,12 +9,14 @@ import BrokerContext from "../../../../context/broker-context";
 const InstrumentNewBrokerTicker = (props) => {
     const brokerRef = useRef();
     const tickerRef = useRef();
+    const marginRef = useRef();
     const submitHandler = (event) => {
         event.preventDefault();
         axios.post(props.server + 'instruments/new/ticker/', {
             inst_code: props.id,
             source: brokerRef.current.value,
             source_ticker: tickerRef.current.value,
+            margin: marginRef.current.value,
         })
             .then(response => alert(response['data']))
             .catch((error) => {
@@ -45,6 +47,11 @@ const InstrumentNewBrokerTicker = (props) => {
                     <Form.Group>
                         <Form.Label>Ticker</Form.Label>
                         <Form.Control ref={tickerRef}></Form.Control>
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Margin %</Form.Label>
+                        <Form.Control ref={marginRef} min={0.0} step={0.05} type={'number'}></Form.Control>
                     </Form.Group>
 
                 </Form>

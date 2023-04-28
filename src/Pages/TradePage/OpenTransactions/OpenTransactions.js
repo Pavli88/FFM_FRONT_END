@@ -56,7 +56,7 @@ const OpenTransactions = (props) => {
         saveNewTransactionID(response.data.transaction_id)
     }
 
-    const openTransactions = openTransactionsData.map((data) => <tr key={data.id} className={'table-row-all'}>
+    const openTransactions = openTransactionsData.map((data) => <tr key={data.id} className={'table-row-all'} style={{color: data.quantity > 0 ? 'green': 'red'}}>
         <td>{data.id}</td>
         <td>{data.portfolio_code}</td>
         <td >{data.security}</td>

@@ -34,6 +34,7 @@ const TradeExecution = (props) => {
                 quantity: quantityRef.current.value,
                 account_id: accountRef.current.value,
                 ticker: brokerTicker.source_ticker,
+                margin: brokerTicker.margin,
             })
                 .then(response => {
                     alert(response.data.response)
@@ -69,7 +70,7 @@ const TradeExecution = (props) => {
             });
 
     };
-    console.log(side)
+
     const brokers = useContext(BrokerContext).brokerData.map((data) =>
         <option key={data.id} value={data.broker_code}>{data.broker}</option>
     )
