@@ -13,6 +13,11 @@ const BrokerAccounts = (props) => {
     const accountRows = accounts.map((data) => <tr key={data.id} className={'table-row-all'}>
         <td className={'table-row'}>
             <div>
+                {data.id}
+            </div>
+        </td>
+        <td className={'table-row'}>
+            <div>
                 {data.broker_name}
             </div>
         </td>

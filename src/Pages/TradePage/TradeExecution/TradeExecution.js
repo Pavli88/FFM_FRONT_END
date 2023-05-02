@@ -98,9 +98,9 @@ const TradeExecution = (props) => {
     </div>
 
     return(
-        <div style={{width: '100%', paddingLeft: 15}}>
+        <div style={{width: '100%', height: '100%', paddingLeft: 15}}>
             <CardWithHeader headerContent={'Trades Execuion'}>
-            <div style={{width: '100%', height:'100%'}}>
+            <div style={{width: '100%', height:'100%', overflow:"scroll"}}>
                 <div style={{margin: 10}}>
                     <Form.Label>Portfolio Code</Form.Label>
                     <Form.Control ref={portCodeRef} type={'text'}/>

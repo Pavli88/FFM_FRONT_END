@@ -42,19 +42,25 @@ const OpenTransactions = (props) => {
     const [openTransactionsData, setOpenTransactionsData] =  useState([{}]);
     const [showModal, setShowModal] = useState(false);
     const [transactionParams, setTransactionParams] = useState({});
+    const MINUTE_MS = 10000;
 
     useEffect(() => {
-        axios.get(props.server + 'portfolios/get/open_transactions/')
-            .then(response => setOpenTransactionsData(response.data))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
+        fetchTransactions()
+        const interval = setInterval(() => {
+            fetchTransactions()
+        }, MINUTE_MS);
+        return () => clearInterval(interval);
     }, [newTransactionID])
 
     const closeTransactions = async (data) => {
         const response = await axios.post(props.server + 'trade_page/portfolio/close_transaction/', data)
         saveNewTransactionID(response.data.transaction_id)
     }
+
+    const fetchTransactions = async() => {
+        const response = await axios.get(props.server + 'portfolios/get/open_transactions/')
+        setOpenTransactionsData(response.data)
+    };
 
     const openTransactions = openTransactionsData.map((data) => <tr key={data.id} className={'table-row-all'} style={{color: data.quantity > 0 ? 'green': 'red'}}>
         <td>{data.id}</td>
