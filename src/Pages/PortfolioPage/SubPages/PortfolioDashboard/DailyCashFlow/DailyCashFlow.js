@@ -1,17 +1,24 @@
 import ChartWidget from "../../../../../Widgets/Charts/ChartWidget";
 import DailyCashFlowChartConfig from "./DailyCashFlowChartConfig";
+import PortfolioPageContext from "../../../context/portfolio-page-context";
 import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
 import axios from "axios";
-import {useState} from "react";
+import {useContext, useState} from "react";
 
 const DailyCashFlow = (props) => {
+    const portfolioData = useContext(PortfolioPageContext).portfolioData;
+    // console.log(portfolioData)
     const [data, setData] = useState({'data': [], 'series': []});
     const fetchData = async() => {
-        const response = await axios.get(props.server + 'portfolios/daily_cashflow/')
+        const response = await axios.get(props.server + 'portfolios/daily_cashflow/', {
+            params: {
+                portfolio_code: portfolioData[0].portfolio_code
+            }
+        })
         setData(response.data)
     };
-
+    // console.log(data)
     const x = {
         options: {
             chart: {
@@ -21,7 +28,8 @@ const DailyCashFlow = (props) => {
             },
             xaxis: {
                 categories: data.dates,
-                labels: {show: false},
+                type: 'date',
+                labels: {show: true},
                 axisBorder: {
                     show: false,
                     color: '#78909C',
@@ -39,20 +47,6 @@ const DailyCashFlow = (props) => {
                     offsetY: 0
                 },
             },
-            // title: {
-            //     // text: "Total Drawdown",
-            //     align: 'left',
-            //     margin: 10,
-            //     offsetX: 0,
-            //     offsetY: 0,
-            //     floating: false,
-            //     style: {
-            //         fontSize: '14px',
-            //         fontWeight: 'bold',
-            //         fontFamily: undefined,
-            //         color: '#263238'
-            //     },
-            // },
             yaxis: [
                 {
                     labels: {
@@ -76,22 +70,27 @@ const DailyCashFlow = (props) => {
         series: data.series
         }
 
-    return(
-        <div style={{height: '400px'}}>
-            <button onClick={fetchData}>Fetch</button>
-            <Card className="card" style={{height: '100%', width: '100%', margin:'0px'}}>
-            <Card.Header>{'test'}</Card.Header>
-            <div style={{height:'100%'}}>
+    return (
+        <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
+            <Card.Header>
+                <div style={{display: 'flex'}}>
+                    <div>
+                        Cash Movements
+                    </div>
+                    <div>
+                        <button onClick={fetchData}>Fetch</button>
+                    </div>
+                </div>
+            </Card.Header>
+            <div style={{height: '100%'}}>
                 <Chart
-                options={x.options}
-                series={x.series}
-                type={'bar'}
-                width="100%"
-                height="100%"/>
+                    options={x.options}
+                    series={x.series}
+                    type={'bar'}
+                    width="100%"
+                    height="100%"/>
             </div>
         </Card>
-        </div>
-
     )
 };
 export default DailyCashFlow;

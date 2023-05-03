@@ -14,26 +14,17 @@ import {PortfolioSidebarData} from "./PortfolioSidebarData";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import './PortfolioPage.css'
 import axios from "axios";
+import Spinner from "react-bootstrap/Spinner";
 
 const PortfolioPage = (props) => {
     const server = useContext(ServerContext)['server'];
     const [selectedPortfolioData, setSelectedPortfolioData] = useState([{}]);
     const [showImportModal, setShowImportModal] = useState(false);
-    const fetchData = (portfolio) => {
-        axios.get(server + 'portfolios/get/portfolios/', {
-            params: {
-                portfolio_code: portfolio,
-            }
-        })
-            .then(response => setSelectedPortfolioData(response.data))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
-    };
 
     return (
         <PortfolioPageContext.Provider value={{
             portfolioData: selectedPortfolioData,
+            savePortfolioData: setSelectedPortfolioData,
         }}>
             <div className={'page-container'}>
                 <div className={'page-subContainer'} >
@@ -41,7 +32,7 @@ const PortfolioPage = (props) => {
                         <Sidebar sidebarData={PortfolioSidebarData}/>
                     </div>
                     <div style={{width: '85%'}}>
-                        <PortfolioNavBar fetch={fetchData}/>
+                        <PortfolioNavBar/>
                             <Switch>
                                 <Route path="/portfolio/dashboard">
                                     <PortfolioDashBoardPage server={server}/>

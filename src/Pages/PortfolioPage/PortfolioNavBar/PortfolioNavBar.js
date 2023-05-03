@@ -7,13 +7,48 @@ import Card from "react-bootstrap/Card";
 import PortfolioPageContext from "../context/portfolio-page-context";
 import {useContext, useRef, useState} from "react";
 import './PortfolioNavBar.css'
+import Spinner from 'react-bootstrap/Spinner';
+import axios from "axios";
+import ServerContext from "../../../context/server-context";
 
 const PortfolioNavBar = (props) => {
+    const server = useContext(ServerContext)['server'];
+    const savePortfolioData = useContext(PortfolioPageContext).savePortfolioData
+    const [loadStatus, setLoadStatus] = useState(false);
     const [textAnimation, setTextAnimation] = useState(0);
     const portfolioRef = useRef();
-    const fetchPortfolio = () => {
-        props.fetch(portfolioRef.current.value);
+
+    const fetchPortfolioData = (portfolio) => {
+        axios.get(server + 'portfolios/get/portfolios/', {
+            params: {
+                portfolio_code: portfolioRef.current.value,
+            }
+        })
+            .then(response => savePortfolioData(response.data))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
     };
+
+    const loadingButton = <div style={{position: "absolute", right: 5, height: '100%'}}>
+        <button style={{border: "none", height: '100%', borderRadius: 8}} disabled>
+            <div style={{display: "flex"}}>
+                <div>
+                    <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                    />
+                </div>
+                <div style={{padding: 2}}>
+                    Loading...
+                </div>
+            </div>
+        </button>
+    </div>
+
     return (
         <div className={'portnav-bar-main'}>
             <Card>
@@ -35,7 +70,7 @@ const PortfolioNavBar = (props) => {
                                 />
                             </Col>
                             <Col md="auto">
-                                <Button onClick={fetchPortfolio}>Get</Button>
+                                <Button onClick={fetchPortfolioData}>Get</Button>
                             </Col>
                             {/*<Col md="auto">*/}
                             {/*    <Button onClick={() => setTextAnimation(1)}>Get</Button>*/}
@@ -45,6 +80,7 @@ const PortfolioNavBar = (props) => {
                             {/*     onAnimationEnd={() => setTextAnimation(0)}>*/}
                             {/*    test*/}
                             {/*</div>*/}
+                            {loadStatus ? loadingButton: ''}
                         </Row>
                     </Col>
                 </div>
