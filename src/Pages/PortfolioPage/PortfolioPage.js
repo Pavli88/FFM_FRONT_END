@@ -1,10 +1,8 @@
 import {useContext, useEffect, useState} from "react";
 import {Route, Switch} from "react-router-dom";
 import 'react-pro-sidebar/dist/css/styles.css';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import ServerContext from "../../context/server-context";
-import EnvContext from "../../context/env-context";
+import PortfolioDashBoardPage from "./SubPages/PortfolioDashboard/PortfolioDashBoardPage";
 import PortfolioRiskPage from "./SubPages/PortfolioRisk/PortfolioRiskPage";
 import PortfolioHoldingsPage from "./SubPages/PortfolioHoldings/PortfolioHoldingsPage";
 import PortfolioSettingsPage from "./SubPages/PortfolioSettings/PortfolioSettingsPage";
@@ -46,7 +44,7 @@ const PortfolioPage = (props) => {
                         <PortfolioNavBar fetch={fetchData}/>
                             <Switch>
                                 <Route path="/portfolio/dashboard">
-
+                                    <PortfolioDashBoardPage server={server}/>
                                 </Route>
                                 <Route path="/portfolio/holdings">
                                     <PortfolioHoldingsPage server={server}/>
