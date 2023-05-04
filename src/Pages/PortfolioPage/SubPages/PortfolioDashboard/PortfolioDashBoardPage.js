@@ -48,12 +48,12 @@ const AvailableCash = (props) => {
 };
 
 const PortfolioDashBoardPage = (props) => {
-    const portfolioData = useContext(PortfolioPageContext).portfolioData;
+    const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     const [availableCash, setAvailableCash] = useState({})
     const fetchData = async() => {
         const response = await axios.get(props.server + 'portfolios/available_cash/', {
             params: {
-                portfolio_code: portfolioData[0].portfolio_code
+                portfolio_code: portfoliCode
             }
         })
         setAvailableCash(response.data)
@@ -61,7 +61,7 @@ const PortfolioDashBoardPage = (props) => {
 
     useEffect(() => {
         fetchData()
-    }, [portfolioData])
+    }, [portfoliCode])
     console.log(availableCash)
     return (
         <div style={{width: '100%', height: '100%', margin: '0px', padding: 15}}>

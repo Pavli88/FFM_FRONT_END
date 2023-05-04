@@ -83,12 +83,12 @@ const TradePage = () => {
             saveNewTrnsactionID: setNewTransactionID,
         }}>
             <div className={'page-container'}>
-                <button onClick={pricingStream}>Pricing Stream</button>
-                <div style={{width: '100%'}}>
-                    <TradeTableData env={env} server={server}/>
-                </div>
+                {/*<button onClick={pricingStream}>Pricing Stream</button>*/}
+                {/*<div style={{width: '100%'}}>*/}
+                {/*    <TradeTableData env={env} server={server}/>*/}
+                {/*</div>*/}
 
-                <div style={{height: '800px', padding: 15, display: "flex"}}>
+                <div style={{height: '900px', padding: 15, display: "flex"}}>
                     <div style={{width: '15%'}}>
                         <TradeSignals server={server}/>
                     </div>

@@ -1,22 +1,22 @@
 import React from "react";
-import { BsGrid3X2Gap, BsExclamationDiamond } from 'react-icons/bs';
+import { BsGear, BsExclamationDiamond, BsReverseLayoutTextSidebarReverse, BsColumns, BsGraphUp } from 'react-icons/bs';
 import { TiChartPieOutline } from "react-icons/ti";
 
 export const PortfolioSidebarData = [
   {
     title: "Dashboard",
     path: "/portfolio/dashboard",
-    icon: <TiChartPieOutline size={20}/>,
+    icon: <BsColumns size={20}/>,
   },
   {
     title: "Holdings",
     path: "/portfolio/holdings",
-    icon: <BsGrid3X2Gap size={20} className="rounded-circle"/>
+    icon: <TiChartPieOutline  size={20} className="rounded-circle"/>
   },
   {
     title: "Transactions",
     path: "/portfolio/transactions",
-    icon: <BsExclamationDiamond size={20}/>
+    icon: <BsReverseLayoutTextSidebarReverse size={20}/>
 
   },
   {
@@ -28,13 +28,13 @@ export const PortfolioSidebarData = [
   {
     title: "Return",
     path: "/portfolio/return",
-    icon: <BsExclamationDiamond size={20}/>
+    icon: <BsGraphUp size={20}/>
 
   },
   {
     title: "Settings",
     path: "/portfolio/settings",
-    icon: <BsExclamationDiamond size={20}/>
+    icon: <BsGear size={20}/>
 
   },
   {

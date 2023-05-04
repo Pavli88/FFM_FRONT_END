@@ -18,11 +18,14 @@ import Spinner from "react-bootstrap/Spinner";
 
 const PortfolioPage = (props) => {
     const server = useContext(ServerContext)['server'];
+    const [portfolioCode, setPortfolioCode] = useState();
     const [selectedPortfolioData, setSelectedPortfolioData] = useState([{}]);
     const [showImportModal, setShowImportModal] = useState(false);
-
+    console.log(portfolioCode)
     return (
         <PortfolioPageContext.Provider value={{
+            portfolioCode: portfolioCode,
+            savePortfolioCode: setPortfolioCode,
             portfolioData: selectedPortfolioData,
             savePortfolioData: setSelectedPortfolioData,
         }}>

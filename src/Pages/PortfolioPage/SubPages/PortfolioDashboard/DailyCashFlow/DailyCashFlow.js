@@ -7,13 +7,13 @@ import axios from "axios";
 import {useContext, useState} from "react";
 
 const DailyCashFlow = (props) => {
-    const portfolioData = useContext(PortfolioPageContext).portfolioData;
+    const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     // console.log(portfolioData)
     const [data, setData] = useState({'data': [], 'series': []});
     const fetchData = async() => {
         const response = await axios.get(props.server + 'portfolios/daily_cashflow/', {
             params: {
-                portfolio_code: portfolioData[0].portfolio_code
+                portfolio_code: portfoliCode
             }
         })
         setData(response.data)
