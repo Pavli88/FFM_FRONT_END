@@ -3,21 +3,24 @@ import {Nav} from "react-bootstrap";
 import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import {useContext, useRef} from "react";
+import {useContext, useRef, useState} from "react";
 import DateContext from "../../../../../context/date-context";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
+import Select from "react-select";
 const PortfolioCashEntry = (props) => {
-    const portfolioData = useContext(PortfolioPageContext).portfolioData;
+    const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     const currentDate = useContext(DateContext).currentDate;
+    const [relatedSelected, setRelatedSelected] = useState(false);
+    const [type, setType] = useState()
     const dateRef = useRef();
-    const typeRef = useRef();
     const currencyRef = useRef();
     const quantityRef = useRef();
+    console.log(type)
     const submitHandler = () => {
         axios.post(props.server + 'portfolios/new/transaction/', {
-            portfolio_code: portfolioData[0].portfolio_code,
+            portfolio_code: portfoliCode,
             security: 'Cash',
-            transaction_type: typeRef.current.value,
+            transaction_type: type,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
             price: 1,
@@ -25,24 +28,50 @@ const PortfolioCashEntry = (props) => {
             sec_group: 'Cash',
             // sub_type: transactionSubType,
         })
-                .then(response => console.log(response.data))
+                .then(response => alert(response.data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
     };
+
+    const typeOptionsFull = [
+        { value: 'Subscription', label: 'Subscription' },
+        { value: 'Redemption', label: 'Redemption' },
+        { value: 'Dividend', label: 'Dividend' },
+        { value: 'Interest Received', label: 'Interest Received' },
+        { value: 'Interest Paid', label: 'Interest Paid' },
+        { value: 'Commission', label: 'Commission' },
+    ]
+
+    const typeOptionsRelated = [
+        { value: 'Dividend', label: 'Dividend' },
+        { value: 'Interest Received', label: 'Interest Received' },
+        { value: 'Interest Paid', label: 'Interest Paid' },
+        { value: 'Commission', label: 'Commission' },
+    ]
+
     return (
         <div>
             <div style={{padding: 5}}>
+
+                <div style={{paddingLeft: 10, display: "flex"}}>
+                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Related Transaction</Form.Label>
+                    <div style={{padding: 10}}>
+                        <input type="checkbox" onChange={(e) => {
+                            setRelatedSelected(e.target.checked)
+                            // setRelatedID('')
+                            // setInstrumentData({})
+                        }} />
+                    </div>
+                </div>
+
                 <div style={{margin: 10}}>
                     <Form.Label>Transaction Type</Form.Label>
-                    <Form.Control ref={typeRef} as="select">
-                        <option value={'Subscription'}>Subscription</option>
-                        <option value={'Redemption'}>Redemption</option>
-                        <option value={'Dividend'}>Dividend</option>
-                        <option value={'Interest Received'}>Interest Received</option>
-                        <option value={'Interest Paid'}>Interest Paid</option>
-                        <option value={'Commission'}>Commission</option>
-                    </Form.Control>
+                    <Select style={{height: '100%'}}
+                            options={relatedSelected ? typeOptionsRelated: typeOptionsFull}
+                            onChange={(e) => setType(e.value)}
+                    >
+                    </Select>
                 </div>
 
                 <div style={{margin: 10}}>

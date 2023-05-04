@@ -1,17 +1,21 @@
 import './PortfolioTransactionsFilter.css'
 import Form from "react-bootstrap/Form";
-import {useContext, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
+import TransactionContext from "../context/transaction-context";
 import DateContext from "../../../../../context/date-context";
 
 const PortfolioTransactionsFilter = (props) => {
+    const newTransaction = useContext(TransactionContext).newTransaction;
     const currentDate = useContext(DateContext).currentDate;
-    const portfolioData = useContext(PortfolioPageContext).portfolioData;
+    const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
     const securityRef = useRef();
     const startDateRef = useRef();
     const endDateRef = useRef();
     const [transactionType, setTransactionType] = useState('');
     const [transactionSubType, setTransactionSubType] = useState('Buy Open');
+    // const firstUpdate = useRef(true);
+
     const purchaseSubTypes = [
         <option value={'Buy Open'}>Buy Open</option>,
         <option value={'Sell Close'}>Sell Close</option>
@@ -23,7 +27,7 @@ const PortfolioTransactionsFilter = (props) => {
     const submitHandler = () => {
         props.fetch({
             params: {
-                portfolio_code: portfolioData[0].portfolio_code,
+                portfolio_code: portfolioCode,
                 transaction_type: transactionType,
                 security: securityRef.current.value,
                 trade_date__gte: startDateRef.current.value,
@@ -31,7 +35,15 @@ const PortfolioTransactionsFilter = (props) => {
             }
         });
     };
-    console.log(transactionType)
+
+    // useEffect(() => {
+    //     if (firstUpdate.current) {
+    //         firstUpdate.current = false;
+    //     }else{
+    //         submitHandler()
+    //     };
+    // }, [newTransaction])
+
     return (
         <div>
             <div className={'search-container'}>

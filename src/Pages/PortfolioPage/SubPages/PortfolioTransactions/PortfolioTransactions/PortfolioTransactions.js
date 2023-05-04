@@ -2,8 +2,17 @@ import Card from "react-bootstrap/Card";
 import './PortfolioTransactions.css'
 import { BiX } from 'react-icons/bi';
 import axios from "axios";
+import {useState} from "react";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import {Nav} from "react-bootstrap";
+import Select from "react-select";
 
 const PortfolioTransactions = (props) => {
+    const [selectedTransaction, setSelectedTransaction] = useState({});
+    const [showModal, setShowModal] = useState(false);
+
     const deleteTransaction = (id) => {
         axios.post(props.server + 'portfolios/delete/transaction/', {
             id: id,
@@ -14,7 +23,23 @@ const PortfolioTransactions = (props) => {
             });
         // props.fetch()
     };
-    const portTransData = props.data.map((data) => <tr key={data.id} className={'table-row-all'}>
+
+    const updateTransaction = () =>  {
+        axios.post(props.server + 'portfolios/update/transaction/', selectedTransaction)
+            .then(response => alert(response.data.response))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
+
+    const portTransData = props.data.map((data) => <tr key={data.id} className={'table-row-all'}
+                                                       style={{cursor: data.sec_group === 'Cash' ? '': "pointer"}} onDoubleClick={() => {
+        if (data.sec_group != 'Cash') {
+            setSelectedTransaction(data)
+            setShowModal(true)
+        }
+
+    }}>
         <td>{data.id}</td>
         <td>{data.portfolio_code}</td>
         <td >{data.security}</td>
@@ -68,6 +93,42 @@ const PortfolioTransactions = (props) => {
                     </table>
                 </div>
             </Card>
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+            <Modal.Header closeButton>
+                <Modal.Title>Update Transaction</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div style={{width: '100%'}}>
+
+                    {selectedTransaction.sec_group === 'Cash' ? '': <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
+                        <div className={'portfolio-settings-name-field'}>
+                            <Nav.Link href="#" disabled>
+                                Open Status
+                            </Nav.Link>
+                        </div>
+                        <div style={{width: '100%'}}>
+                            <Select style={{height: '100%'}}
+                                    value={selectedTransaction.open_status}
+                                    options={[
+                                        { value: 'Open', label: 'Open'},
+                                        { value: 'Closed', label: 'Closed'}
+                                    ]}
+                                    placeholder={selectedTransaction.open_status}
+                                    onChange={(e) => setSelectedTransaction({...selectedTransaction, open_status: e.value})}
+                            >
+                            </Select>
+                        </div>
+                    </div>}
+
+
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={updateTransaction}>
+                    Save
+                </Button>
+            </Modal.Footer>
+        </Modal>
         </div>
     );
 };

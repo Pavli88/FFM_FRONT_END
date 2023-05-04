@@ -5,7 +5,7 @@ import DateContext from "../../../../../context/date-context";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
 
 const PortfolioTransactionEntry = (props) => {
-    const portfolioData = useContext(PortfolioPageContext).portfolioData;
+    const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
     const currentDate = useContext(DateContext).currentDate;
     const [relatedSelected, setRelatedSelected] = useState(false);
     const [transactionType, setTransactionType] = useState('Purchase');
@@ -18,7 +18,7 @@ const PortfolioTransactionEntry = (props) => {
 
     const submitHandler = () => {
         axios.post(props.server + 'portfolios/new/transaction/', {
-            portfolio_code: portfolioData[0].portfolio_code,
+            portfolio_code: portfolioCode,
             security: relatedSelected === false ? instrumentData.id: instrumentData.security,
             sec_group: relatedSelected === false ? instrumentData.group: instrumentData.sec_group,
             transaction_type: transactionType,
