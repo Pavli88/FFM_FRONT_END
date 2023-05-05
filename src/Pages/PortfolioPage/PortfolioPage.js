@@ -8,6 +8,7 @@ import PortfolioHoldingsPage from "./SubPages/PortfolioHoldings/PortfolioHolding
 import PortfolioSettingsPage from "./SubPages/PortfolioSettings/PortfolioSettingsPage";
 import PortfolioTransactionsPage from "./SubPages/PortfolioTransactions/PortfolioTransactionsPage";
 import PortfolioDataImport from "./SubPages/PortfolioImport/PortfolioDataImport";
+import PortfolioReturnPage from "./SubPages/PortfolioReturn/PortfolioReturnPage";
 import PortfolioNavBar from "./PortfolioNavBar/PortfolioNavBar";
 import PortfolioPageContext from "./context/portfolio-page-context";
 import {PortfolioSidebarData} from "./PortfolioSidebarData";
@@ -21,7 +22,7 @@ const PortfolioPage = (props) => {
     const [portfolioCode, setPortfolioCode] = useState();
     const [selectedPortfolioData, setSelectedPortfolioData] = useState([{}]);
     const [showImportModal, setShowImportModal] = useState(false);
-    console.log(portfolioCode)
+
     return (
         <PortfolioPageContext.Provider value={{
             portfolioCode: portfolioCode,
@@ -50,7 +51,7 @@ const PortfolioPage = (props) => {
                                     <PortfolioRiskPage server={server}/>
                                 </Route>
                                 <Route path="/portfolio/return">
-
+                                    <PortfolioReturnPage/>
                                 </Route>
                                 <Route path="/portfolio/settings">
                                     <PortfolioSettingsPage/>
