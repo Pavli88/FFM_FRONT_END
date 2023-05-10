@@ -10,11 +10,11 @@ const TradeSignals = (props) => {
     const MINUTE_MS = 10000;
 
     useEffect(() => {
-        fetchTradeMessages();
-        const interval = setInterval(() => {
-            fetchTradeMessages();
-        }, MINUTE_MS);
-        return () => clearInterval(interval);
+        // fetchTradeMessages();
+        // const interval = setInterval(() => {
+        //     fetchTradeMessages();
+        // }, MINUTE_MS);
+        // return () => clearInterval(interval);
     }, [])
 
     const fetchTradeMessages = async() => {

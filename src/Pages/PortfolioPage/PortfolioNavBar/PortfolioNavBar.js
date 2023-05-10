@@ -20,17 +20,17 @@ const PortfolioNavBar = (props) => {
     const [textAnimation, setTextAnimation] = useState(0);
     const portfolioRef = useRef();
 
-    // const fetchPortfolioData = (portfolio) => {
-    //     axios.get(server + 'portfolios/get/portfolios/', {
-    //         params: {
-    //             portfolio_code: portfolioRef.current.value,
-    //         }
-    //     })
-    //         .then(response => savePortfolioData(response.data))
-    //         .catch((error) => {
-    //             console.error('Error Message:', error);
-    //         });
-    // };
+    const fetchPortfolioData = (portfolio) => {
+        axios.get(server + 'portfolios/get/portfolios/', {
+            params: {
+                portfolio_code: portfolioRef.current.value,
+            }
+        })
+            .then(response => savePortfolioData(response.data[0]))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
 
     const loadingButton = <div style={{position: "absolute", right: 5, height: '100%'}}>
         <button style={{border: "none", height: '100%', borderRadius: 8}} disabled>
@@ -72,7 +72,11 @@ const PortfolioNavBar = (props) => {
                                 />
                             </Col>
                             <Col md="auto">
-                                <Button onClick={(e) => savePortfolioCode(portfolioRef.current.value)} style={{background: "white", color: "grey", borderColor: "grey"}}><BsArrowRepeat style={{fontSize: 20, fontWeight: "bold"}}/></Button>
+                                <Button onClick={(e) => {
+                                    savePortfolioCode(portfolioRef.current.value)
+                                    fetchPortfolioData()
+                                }} style={{background: "white", color: "grey", borderColor: "grey"}}><BsArrowRepeat
+                                    style={{fontSize: 20, fontWeight: "bold"}}/></Button>
                             </Col>
                             {/*<Col md="auto">*/}
                             {/*    <Button onClick={() => setTextAnimation(1)}>Get</Button>*/}

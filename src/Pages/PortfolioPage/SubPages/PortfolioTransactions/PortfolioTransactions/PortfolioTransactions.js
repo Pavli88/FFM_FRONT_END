@@ -2,12 +2,169 @@ import Card from "react-bootstrap/Card";
 import './PortfolioTransactions.css'
 import { BiX } from 'react-icons/bi';
 import axios from "axios";
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {Nav} from "react-bootstrap";
 import Select from "react-select";
+import { CSVLink, CSVDownload } from "react-csv";
+import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-icons/bs";
+import {useExpanded, useGroupBy, useTable} from "react-table";
+
+
+const TableGrouped = (props) => {
+    const data = useMemo(
+        () => props.data,
+        [props.data]
+    )
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: 'ID',
+                accessor: 'id',
+
+            },
+            {
+                Header: 'Linked Transaction',
+                accessor: 'transaction_link_code',
+
+            },
+            {
+                Header: 'Portfolio Code',
+                accessor: 'portfolio_code',
+
+            },
+            {
+                Header: 'Transaction Type',
+                accessor: 'transaction_type',
+            },
+            {
+                Header: 'Currency',
+                accessor: 'currency',
+            },
+            {
+                Header: 'Units',
+                accessor: 'quantity',
+            },
+            {
+                Header: 'Trade Price',
+                accessor: 'price',
+            },
+            {
+                Header: 'Sec Group',
+                accessor: 'sec_group',
+            },
+            {
+                Header: 'Market Value',
+                accessor: 'mv',
+            },
+            {
+                Header: 'Account ID',
+                accessor: 'account_id',
+            },
+            {
+                Header: 'Broker ID',
+                accessor: 'broker_id',
+            },
+            {
+                Header: 'Security',
+                accessor: 'security',
+            },
+        ],
+        []
+    )
+    const tableInstance = useTable(
+        {columns, data},
+        useGroupBy,
+        useExpanded)
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+        state: { groupBy, expanded },
+    } = tableInstance
+    const firstPageRows = rows.slice(0, 200)
+    return (
+
+            <table {...getTableProps()}>
+                <thead>
+                {
+                    headerGroups.map(headerGroup => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {
+                                headerGroup.headers.map(column => (
+                                    <th {...column.getHeaderProps()}>
+                                        {column.canGroupBy ? (
+                                            // If the column can be grouped, let's add a toggle
+                                            <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
+                      {column.isGrouped ? <BsDashSquare/>: <BsPlusSquare/>}
+                    </span>
+                                        ) : null}
+                                        {column.render('Header')}
+                                    </th>
+                                ))}
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                {firstPageRows.map((row, i) => {
+                    prepareRow(row)
+                    return (
+                        <tr {...row.getRowProps()}>
+                            {row.cells.map(cell => {
+                                console.log(cell)
+                                return (
+                                    <td
+                                        {...cell.getCellProps()}
+                                        style={{
+                                            fontWeight: cell.isGrouped
+                                                ? "bold"
+                                                : cell.isAggregated
+                                                    ? "bold"
+                                                    : cell.isPlaceholder
+                                                        ? '#ff000042'
+                                                        : 'white',
+                                        }}
+                                    >
+                                        {cell.isGrouped ? (
+                                            // If it's a grouped cell, add an expander and row count
+                                            <>
+                          <span {...row.getToggleRowExpandedProps()}>
+                            {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
+                          </span>{' '}
+                                                {cell.render('Cell')} ({row.subRows.length})
+                                            </>
+                                        ) : cell.isAggregated ? (
+                                            // If the cell is aggregated, use the Aggregated
+                                            // renderer for cell
+                                            cell.render('Aggregated')
+                                        ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                                            // Otherwise, just render the regular cell
+                                            cell.render('Cell')
+
+                                        )}
+                                    </td>
+
+                                )
+
+                            })
+
+                            }
+
+                        </tr>
+                    )
+                })}
+                </tbody>
+            </table>
+    );
+};
+
 
 const PortfolioTransactions = (props) => {
     const [selectedTransaction, setSelectedTransaction] = useState({});
@@ -23,7 +180,7 @@ const PortfolioTransactions = (props) => {
             });
         // props.fetch()
     };
-
+    console.log(props.data)
     const updateTransaction = () =>  {
         axios.post(props.server + 'portfolios/update/transaction/', selectedTransaction)
             .then(response => alert(response.data.response))
@@ -62,35 +219,14 @@ const PortfolioTransactions = (props) => {
     return (
         <div style={{height: '100%', paddingLeft: 15}}>
             <Card className={'transactions-container'}>
-                <Card.Header>Transactions</Card.Header>
+                <Card.Header>
+                    <div>
+                        <span>Transactions</span>
+                        <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
+                    </div>
+                </Card.Header>
                 <div style={{height: '100%', width: '100%', overflowY: 'scroll', overflowX: 'auto'}}>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Portfolio Code</th>
-                            <th>Security</th>
-                            <th>Sec Group</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Market Value</th>
-                            <th>Currency</th>
-                            <th>Cost</th>
-                            <th>Type</th>
-                            <th>Open/Closed</th>
-                            <th>Related Transaction</th>
-                            <th>Created On</th>
-                            <th>Trade Date</th>
-                            <th>Account ID</th>
-                            <th>Broker ID</th>
-                            <th>Active</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {portTransData}
-                        </tbody>
-                    </table>
+                    <TableGrouped data={props.data}/>
                 </div>
             </Card>
             <Modal show={showModal} onHide={() => setShowModal(false)}>

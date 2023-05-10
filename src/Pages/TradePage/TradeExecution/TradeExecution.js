@@ -26,12 +26,14 @@ const TradeExecution = (props) => {
         if (sl === 0.0) {
             alert('Stop loss cannot be zero!')
         } else {
-            axios.post(props.server + 'trade_page/new/transaction/', {
+            axios.post(props.server + 'trade_page/new/signal/', {
                 portfolio_code: portCodeRef.current.value,
+                account_id: accountRef.current.value,
                 security: instrumentData.id,
                 transaction_type: sideRef.current.value,
                 quantity: quantityRef.current.value,
-                account_id: accountRef.current.value,
+                status: '',
+
             })
                 .then(response => {
                     alert(response.data.response)

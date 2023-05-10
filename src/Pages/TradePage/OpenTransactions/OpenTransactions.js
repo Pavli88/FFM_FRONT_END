@@ -28,7 +28,7 @@ const UnitModal = (props) => {
                 </div>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="primary" onClick={() => props.close({...props.data, quantity: newUnit, status: 'close_out'})}>
+                <Button variant="primary" onClick={() => props.close({...props.data, quantity: newUnit, status: 'Close Out'})}>
                     Save
                 </Button>
             </Modal.Footer>
@@ -46,14 +46,14 @@ const OpenTransactions = (props) => {
 
     useEffect(() => {
         fetchTransactions()
-        const interval = setInterval(() => {
-            fetchTransactions()
-        }, MINUTE_MS);
-        return () => clearInterval(interval);
+        // const interval = setInterval(() => {
+        //     fetchTransactions()
+        // }, MINUTE_MS);
+        // return () => clearInterval(interval);
     }, [newTransactionID])
 
     const closeTransactions = async (data) => {
-        const response = await axios.post(props.server + 'trade_page/portfolio/close_transaction/', data)
+        const response = await axios.post(props.server + 'trade_page/new/signal/', data)
         saveNewTransactionID(response.data.transaction_id)
     }
 
@@ -80,7 +80,7 @@ const OpenTransactions = (props) => {
         }}><BiX/></button>
         </div>}</td>
         <td>{<div>
-            <button className={'delete-button'} onClick={() => closeTransactions({...data, status: 'close_all'})}><BiX/></button>
+            <button className={'delete-button'} onClick={() => closeTransactions({...data, transaction_type: 'Close'})}><BiX/></button>
         </div>}</td>
     </tr>)
 

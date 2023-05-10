@@ -7,15 +7,17 @@ import {useContext, useRef, useState} from "react";
 import DateContext from "../../../../../context/date-context";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
 import Select from "react-select";
+
 const PortfolioCashEntry = (props) => {
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
+    const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
     const [relatedSelected, setRelatedSelected] = useState(false);
     const [type, setType] = useState()
     const dateRef = useRef();
     const currencyRef = useRef();
     const quantityRef = useRef();
-    console.log(type)
+
     const submitHandler = () => {
         axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfoliCode,
@@ -85,7 +87,7 @@ const PortfolioCashEntry = (props) => {
 
                 <div style={{margin: 10}}>
                     <Form.Label>Date</Form.Label>
-                    <Form.Control ref={dateRef} defaultValue={currentDate} type="date"/>
+                    <Form.Control ref={dateRef} defaultValue={currentDate} type="date" min={portfolioData.inception_date}/>
                 </div>
 
                 <div style={{margin: 10}}>
