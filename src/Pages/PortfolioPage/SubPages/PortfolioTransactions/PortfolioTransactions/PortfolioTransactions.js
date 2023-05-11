@@ -14,6 +14,26 @@ import {useExpanded, useGroupBy, useTable} from "react-table";
 
 
 const TableGrouped = (props) => {
+    const [showModal, setShowModal] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState({});
+    console.log(selectedTransaction)
+    const deleteTransaction = (id) => {
+        axios.post(props.server + 'portfolios/delete/transaction/', {
+            id: id,
+        })
+            .then(response => alert(response.data.response))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+        // props.fetch()
+    };
+    const updateTransaction = () =>  {
+        axios.post(props.server + 'portfolios/update/transaction/', selectedTransaction)
+            .then(response => alert(response.data.response))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+    };
     const data = useMemo(
         () => props.data,
         [props.data]
@@ -45,6 +65,10 @@ const TableGrouped = (props) => {
                 accessor: 'currency',
             },
             {
+                Header: 'Status',
+                accessor: 'open_status',
+            },
+            {
                 Header: 'Units',
                 accessor: 'quantity',
             },
@@ -72,6 +96,14 @@ const TableGrouped = (props) => {
                 Header: 'Security',
                 accessor: 'security',
             },
+            {
+                Header: 'Trade Date',
+                accessor: 'trade_date',
+            },
+             {
+                Header: 'Active/Inactive',
+                accessor: 'is_active',
+            },
         ],
         []
     )
@@ -89,133 +121,202 @@ const TableGrouped = (props) => {
     } = tableInstance
     const firstPageRows = rows.slice(0, 200)
     return (
-
-            <table {...getTableProps()}>
-                <thead>
-                {
-                    headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {
-                                headerGroup.headers.map(column => (
-                                    <th {...column.getHeaderProps()}>
-                                        {column.canGroupBy ? (
-                                            // If the column can be grouped, let's add a toggle
-                                            <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
-                      {column.isGrouped ? <BsDashSquare/>: <BsPlusSquare/>}
+        <table {...getTableProps()}>
+            <thead>
+            {
+                headerGroups.map(headerGroup => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                        {
+                            headerGroup.headers.map(column => (
+                                <th {...column.getHeaderProps()}>
+                                    {column.canGroupBy ? (
+                                        // If the column can be grouped, let's add a toggle
+                                        <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
+                      {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
                     </span>
-                                        ) : null}
-                                        {column.render('Header')}
-                                    </th>
-                                ))}
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                {firstPageRows.map((row, i) => {
-                    prepareRow(row)
-                    return (
-                        <tr {...row.getRowProps()}>
-                            {row.cells.map(cell => {
-                                console.log(cell)
-                                return (
-                                    <td
-                                        {...cell.getCellProps()}
-                                        style={{
-                                            fontWeight: cell.isGrouped
+                                    ) : null}
+                                    {column.render('Header')}
+                                </th>
+                            ))}
+                        <th></th>
+                        <th></th>
+                    </tr>
+                ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+            {firstPageRows.map((row, i) => {
+                prepareRow(row)
+                // console.log(row)
+                return (
+                    <tr {...row.getRowProps()}
+                        style={{
+                            cursor: row.isGrouped ? '': row.original.open_status === '' ? '': 'pointer',
+                            background: row.isGrouped ? '#f2f4f4': 'white'
+                        }}
+
+                        onDoubleClick={() => {
+                            if (row.isGrouped) {
+                                console.log('grouped')
+                            } else {
+                                if (row.original.open_status !== '') {
+                                    console.log(row)
+                                    setShowModal(true)
+                                    setSelectedTransaction({
+                                        'quantity': row.original.quantity,
+                                        'price': row.original.price,
+                                        'id': row.original.id,
+                                        'open_status': row.original.open_status,
+                                        'trade_date': row.original.trade_date,
+                                        'portfolio_code': row.original.portfolio_code,
+                                        'currency': row.original.currency,
+                                    })
+                                }
+                            }
+                        }
+                        }
+
+                    >
+
+                        {row.cells.map(cell => {
+                            return (
+                                <td
+                                    {...cell.getCellProps()}
+                                    style={{
+                                        fontWeight: cell.isGrouped
+                                            ? "bold"
+                                            : cell.isAggregated
                                                 ? "bold"
-                                                : cell.isAggregated
-                                                    ? "bold"
-                                                    : cell.isPlaceholder
-                                                        ? '#ff000042'
-                                                        : 'white',
-                                        }}
-                                    >
-                                        {cell.isGrouped ? (
-                                            // If it's a grouped cell, add an expander and row count
-                                            <>
+                                                : cell.isPlaceholder
+                                                    ? '#ff000042'
+                                                    : 'white',
+                                    }}
+                                >
+                                    {cell.isGrouped ? (
+                                        // If it's a grouped cell, add an expander and row count
+                                        <>
                           <span {...row.getToggleRowExpandedProps()}>
                             {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
                           </span>{' '}
-                                                {cell.render('Cell')} ({row.subRows.length})
-                                            </>
-                                        ) : cell.isAggregated ? (
-                                            // If the cell is aggregated, use the Aggregated
-                                            // renderer for cell
-                                            cell.render('Aggregated')
-                                        ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
-                                            // Otherwise, just render the regular cell
-                                            cell.render('Cell')
+                                            {cell.render('Cell')} ({row.subRows.length})
+                                        </>
+                                    ) : cell.isAggregated ? (
+                                        // If the cell is aggregated, use the Aggregated
+                                        // renderer for cell
+                                        cell.render('Aggregated')
+                                    ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                                        // Otherwise, just render the regular cell
+                                        cell.render('Cell')
 
-                                        )}
-                                    </td>
+                                    )}
+                                </td>
+                            )
+                        })
+                        }
+                    </tr>
+                )
+            })}
+            </tbody>
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Update Transaction {selectedTransaction.id}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div style={{padding: '5px', width: '100%', height: '350px'}}>
 
-                                )
+                        <div style={{width: '100%'}}>
+                            <Form.Label>Open Status</Form.Label>
+                            <Select style={{height: '100%'}}
+                                    value={selectedTransaction.open_status}
+                                    options={[
+                                        {value: 'Open', label: 'Open'},
+                                        {value: 'Closed', label: 'Closed'}
+                                    ]}
+                                    placeholder={selectedTransaction.open_status}
+                                    onChange={(e) => setSelectedTransaction({
+                                        ...selectedTransaction,
+                                        open_status: e.value
+                                    })}
+                            >
+                            </Select>
+                        </div>
 
-                            })
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>Trade Date</Form.Label>
+                            <Form.Control defaultValue={selectedTransaction.trade_date}
+                                          type="date"
+                                          onChange={(e) => setSelectedTransaction({
+                                              ...selectedTransaction,
+                                              trade_date: e.target.value
+                                          })}
+                            />
+                        </div>
 
-                            }
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>Units</Form.Label>
+                            <Form.Control defaultValue={selectedTransaction.quantity}
+                                          type="number"
+                                          onChange={(e) => setSelectedTransaction({
+                                              ...selectedTransaction,
+                                              quantity: e.target.value
+                                          })}
+                            />
+                        </div>
 
-                        </tr>
-                    )
-                })}
-                </tbody>
-            </table>
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>Price</Form.Label>
+                            <Form.Control defaultValue={selectedTransaction.price}
+                                          type="number"
+                                          onChange={(e) => setSelectedTransaction({
+                                              ...selectedTransaction,
+                                              price: e.target.value
+                                          })}
+                            />
+                        </div>
+
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button className={'delete-button'} onClick={() => deleteTransaction()}>
+                        Delete
+                    </button>
+                    <button className={'save-button'} onClick={updateTransaction}>
+                        Save
+                    </button>
+                </Modal.Footer>
+            </Modal>
+        </table>
     );
 };
 
-
 const PortfolioTransactions = (props) => {
-    const [selectedTransaction, setSelectedTransaction] = useState({});
-    const [showModal, setShowModal] = useState(false);
 
-    const deleteTransaction = (id) => {
-        axios.post(props.server + 'portfolios/delete/transaction/', {
-            id: id,
-        })
-            .then(response => alert(response.data.response))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
-        // props.fetch()
-    };
-    console.log(props.data)
-    const updateTransaction = () =>  {
-        axios.post(props.server + 'portfolios/update/transaction/', selectedTransaction)
-            .then(response => alert(response.data.response))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
-    };
+    // const portTransData = props.data.map((data) => <tr key={data.id} className={'table-row-all'}
+    //                                                    style={{cursor: data.sec_group === 'Cash' ? '': "pointer"}} onDoubleClick={() => {
+    //     if (data.sec_group != 'Cash') {
+    //         setSelectedTransaction(data)
+    //         setShowModal(true)
+    //     }}
 
-    const portTransData = props.data.map((data) => <tr key={data.id} className={'table-row-all'}
-                                                       style={{cursor: data.sec_group === 'Cash' ? '': "pointer"}} onDoubleClick={() => {
-        if (data.sec_group != 'Cash') {
-            setSelectedTransaction(data)
-            setShowModal(true)
-        }
-
-    }}>
-        <td>{data.id}</td>
-        <td>{data.portfolio_code}</td>
-        <td >{data.security}</td>
-        <td >{data.sec_group}</td>
-        <td>{data.quantity}</td>
-        <td>{data.price}</td>
-        <td>{data.mv}</td>
-        <td>{data.currency}</td>
-        <td>{data.trading_cost}</td>
-        <td >{data.transaction_type}</td>
-        <td>{data.open_status}</td>
-        <td>{data.transaction_link_code}</td>
-        <td>{data.created_on}</td>
-        <td>{data.trade_date}</td>
-        <td>{data.account_id}</td>
-        <td>{data.broker_id}</td>
-        <td>{data['is_active']}</td>
-        <td>{data.transaction_link_code === '' ? <div style={{padding: 0, width: 30}}><button className={'delete-button'} onClick={() => deleteTransaction(data.id)}><BiX/></button></div>: ''}</td>
-    </tr>)
+    // }}>
+    //     <td>{data.id}</td>
+    //     <td>{data.portfolio_code}</td>
+    //     <td >{data.security}</td>
+    //     <td >{data.sec_group}</td>
+    //     <td>{data.quantity}</td>
+    //     <td>{data.price}</td>
+    //     <td>{data.mv}</td>
+    //     <td>{data.currency}</td>
+    //     <td>{data.trading_cost}</td>
+    //     <td >{data.transaction_type}</td>
+    //     <td>{data.open_status}</td>
+    //     <td>{data.transaction_link_code}</td>
+    //     <td>{data.created_on}</td>
+    //     <td>{data.trade_date}</td>
+    //     <td>{data.account_id}</td>
+    //     <td>{data.broker_id}</td>
+    //     <td>{data['is_active']}</td>
+    //     <td>{data.transaction_link_code === '' ? <div style={{padding: 0, width: 30}}><button className={'delete-button'} onClick={() => deleteTransaction(data.id)}><BiX/></button></div>: ''}</td>
+    // </tr>)
     return (
         <div style={{height: '100%', paddingLeft: 15}}>
             <Card className={'transactions-container'}>
@@ -226,45 +327,9 @@ const PortfolioTransactions = (props) => {
                     </div>
                 </Card.Header>
                 <div style={{height: '100%', width: '100%', overflowY: 'scroll', overflowX: 'auto'}}>
-                    <TableGrouped data={props.data}/>
+                    <TableGrouped data={props.data} server={props.server}/>
                 </div>
             </Card>
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-            <Modal.Header closeButton>
-                <Modal.Title>Update Transaction</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <div style={{width: '100%'}}>
-
-                    {selectedTransaction.sec_group === 'Cash' ? '': <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
-                        <div className={'portfolio-settings-name-field'}>
-                            <Nav.Link href="#" disabled>
-                                Open Status
-                            </Nav.Link>
-                        </div>
-                        <div style={{width: '100%'}}>
-                            <Select style={{height: '100%'}}
-                                    value={selectedTransaction.open_status}
-                                    options={[
-                                        { value: 'Open', label: 'Open'},
-                                        { value: 'Closed', label: 'Closed'}
-                                    ]}
-                                    placeholder={selectedTransaction.open_status}
-                                    onChange={(e) => setSelectedTransaction({...selectedTransaction, open_status: e.value})}
-                            >
-                            </Select>
-                        </div>
-                    </div>}
-
-
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={updateTransaction}>
-                    Save
-                </Button>
-            </Modal.Footer>
-        </Modal>
         </div>
     );
 };
