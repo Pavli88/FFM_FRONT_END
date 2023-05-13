@@ -9,7 +9,6 @@ const InstrumentResuts = (props) => {
     const instruments = props.data.map((data) => <tr key={data['id']} onClick={() => saveSelectedInstrument(data)} className={'table-row-all'}>
         <td>{data['id']}</td>
         <td>{data['name']}</td>
-        <td>{data['code']}</td>
         <td>{data['country']}</td>
         <td>{data['currency']}</td>
         <td>{data['group']}</td>
@@ -24,7 +23,6 @@ const InstrumentResuts = (props) => {
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Code</th>
                         <th>Country</th>
                         <th>Currency</th>
                         <th>Group</th>

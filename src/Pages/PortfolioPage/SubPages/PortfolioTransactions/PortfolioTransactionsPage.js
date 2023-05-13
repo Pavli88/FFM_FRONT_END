@@ -15,7 +15,7 @@ import axios from "axios";
 const PortfolioTransactionsPage = (props) => {
     const [transactionsData, setTransactionsData] = useState([{}])
     const [newTransaction, setNewTransaction] = useState(0);
-    console.log(typeof transactionsData)
+
     const fetchData = (parameters) => {
         axios.get(props.server + 'portfolios/get/transactions/', parameters)
             .then(response => setTransactionsData(response.data))

@@ -11,7 +11,6 @@ const PortfolioTransactionEntry = (props) => {
     const [transactionType, setTransactionType] = useState('Purchase');
     const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
-    const openRef = useRef();
     const dateRef = useRef();
     const quantityRef = useRef();
     const priceRef = useRef();
@@ -21,13 +20,12 @@ const PortfolioTransactionEntry = (props) => {
             portfolio_code: portfolioCode,
             security: relatedSelected === false ? instrumentData.id: instrumentData.security,
             sec_group: relatedSelected === false ? instrumentData.group: instrumentData.sec_group,
-            transaction_type: transactionType,
+            transaction_type: relatedSelected === false ? transactionType: instrumentData.transaction_type === 'Purchase' ? 'Sale' : 'Purchase',
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
             price: priceRef.current.value,
             currency: instrumentData.currency,
             transaction_link_code: relatedSelected ? relatedID: '',
-            open_status: openRef.current.value,
         })
                 .then(response => alert(response.data.response))
                 .catch((error) => {
@@ -81,22 +79,19 @@ const PortfolioTransactionEntry = (props) => {
                     </div>
                 </div>
 
-                <div className={'entry-block'}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
-                    <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
-                        <option value={'Purchase'}>Purchase</option>
-                        <option value={'Sale'}>Sale</option>
-                    </Form.Control>
-                </div>
-
-                <div className={'entry-block'}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Open/Closed</Form.Label>
-                    <Form.Control ref={openRef} as="select">
-                        <option value={'Open'}>Open</option>
-                        <option value={'Closed'}>Closed</option>
-                        <option value={'Close Out'}>Close Out</option>
-                    </Form.Control>
-                </div>
+                {relatedSelected ? <div style={{margin: 10}}>
+                        <Form.Label style={{paddingBottom: 5}}>Transaction Type</Form.Label>
+                        <Form.Control value={instrumentData.transaction_type === 'Purchase' ? 'Sale' : 'Purchase'} type="text"
+                                      disabled/>
+                    </div> :
+                    <div className={'entry-block'}>
+                        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
+                        <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
+                            <option value={'Purchase'}>Purchase</option>
+                            <option value={'Sale'}>Sale</option>
+                        </Form.Control>
+                    </div>
+                }
 
                 <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>Sec Name</Form.Label>

@@ -3,7 +3,7 @@ import {Nav} from "react-bootstrap";
 import FormControl from "react-bootstrap/FormControl";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import {useContext, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import DateContext from "../../../../../context/date-context";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
 import Select from "react-select";
@@ -13,20 +13,21 @@ const PortfolioCashEntry = (props) => {
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
     const [relatedSelected, setRelatedSelected] = useState(false);
+    const [currencies, setCurrencies] = useState([{}]);
+    const [selectedCurrency, setSelectedCurrency] = useState({});
     const [type, setType] = useState()
     const dateRef = useRef();
-    const currencyRef = useRef();
     const quantityRef = useRef();
 
     const submitHandler = () => {
         axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfoliCode,
-            security: 'Cash',
+            security: selectedCurrency.id,
             transaction_type: type,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
             price: 1,
-            currency: currencyRef.current.value,
+            currency: selectedCurrency.currency,
             sec_group: 'Cash',
             // sub_type: transactionSubType,
         })
@@ -35,6 +36,13 @@ const PortfolioCashEntry = (props) => {
                     console.error('Error Message:', error);
                 });
     };
+
+    useEffect(() => {
+        axios.post(props.server + 'instruments/get/instruments/', {
+                name: '',
+                group: ['Cash']
+            }).then(response => setCurrencies(response.data))
+    }, [])
 
     const typeOptionsFull = [
         { value: 'Subscription', label: 'Subscription' },
@@ -78,11 +86,13 @@ const PortfolioCashEntry = (props) => {
 
                 <div style={{margin: 10}}>
                     <Form.Label>Currency</Form.Label>
-                    <Form.Control ref={currencyRef} as="select">
-                        <option value={'USD'}>USD</option>
-                        <option value={'EUR'}>EUR</option>
-                        <option value={'HUF'}>HUF</option>
-                    </Form.Control>
+                    <Select style={{height: '100%'}}
+                            options={currencies.map(function (data) {
+                                return {value: data.id, label: data.currency}
+                            })}
+                            onChange={(e) => setSelectedCurrency({id: e.value, currency: e.label})}
+                    >
+                    </Select>
                 </div>
 
                 <div style={{margin: 10}}>

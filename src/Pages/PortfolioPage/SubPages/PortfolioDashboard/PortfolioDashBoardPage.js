@@ -62,7 +62,7 @@ const PortfolioDashBoardPage = (props) => {
     useEffect(() => {
         fetchData()
     }, [portfoliCode])
-    console.log(availableCash)
+
     return (
         <div style={{width: '100%', height: '100%', margin: '0px', padding: 15}}>
             <div style={{height: 300, width: '100%', display: 'flex'}}>

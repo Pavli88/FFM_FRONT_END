@@ -16,7 +16,7 @@ import {useExpanded, useGroupBy, useTable} from "react-table";
 const TableGrouped = (props) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedTransaction, setSelectedTransaction] = useState({});
-    console.log(selectedTransaction)
+
     const deleteTransaction = (id) => {
         axios.post(props.server + 'portfolios/delete/transaction/', {
             id: id,
@@ -25,7 +25,8 @@ const TableGrouped = (props) => {
             .catch((error) => {
                 console.error('Error Message:', error);
             });
-        // props.fetch()
+        setShowModal(false)
+        props.fetch()
     };
     const updateTransaction = () =>  {
         axios.post(props.server + 'portfolios/update/transaction/', selectedTransaction)
@@ -33,6 +34,7 @@ const TableGrouped = (props) => {
             .catch((error) => {
                 console.error('Error Message:', error);
             });
+        setShowModal(false)
     };
     const data = useMemo(
         () => props.data,
@@ -61,6 +63,14 @@ const TableGrouped = (props) => {
                 accessor: 'transaction_type',
             },
             {
+                Header: 'Security',
+                accessor: 'security',
+            },
+            {
+                Header: 'Sec Group',
+                accessor: 'sec_group',
+            },
+            {
                 Header: 'Currency',
                 accessor: 'currency',
             },
@@ -69,7 +79,7 @@ const TableGrouped = (props) => {
                 accessor: 'open_status',
             },
             {
-                Header: 'Units',
+                Header: 'Initial Units',
                 accessor: 'quantity',
             },
             {
@@ -77,12 +87,20 @@ const TableGrouped = (props) => {
                 accessor: 'price',
             },
             {
-                Header: 'Sec Group',
-                accessor: 'sec_group',
-            },
-            {
                 Header: 'Market Value',
                 accessor: 'mv',
+            },
+            {
+                Header: 'Net Cashflow',
+                accessor: 'net_cashflow',
+            },
+            {
+                Header: 'Margin Amount',
+                accessor: 'margin_balance',
+            },
+            {
+                Header: 'Realized PnL',
+                accessor: 'realized_pnl',
             },
             {
                 Header: 'Account ID',
@@ -91,10 +109,6 @@ const TableGrouped = (props) => {
             {
                 Header: 'Broker ID',
                 accessor: 'broker_id',
-            },
-            {
-                Header: 'Security',
-                accessor: 'security',
             },
             {
                 Header: 'Trade Date',
@@ -150,7 +164,7 @@ const TableGrouped = (props) => {
                 return (
                     <tr {...row.getRowProps()}
                         style={{
-                            cursor: row.isGrouped ? '': row.original.open_status === '' ? '': 'pointer',
+                            cursor: row.isGrouped ? '': 'pointer',
                             background: row.isGrouped ? '#f2f4f4': 'white'
                         }}
 
@@ -158,19 +172,8 @@ const TableGrouped = (props) => {
                             if (row.isGrouped) {
                                 console.log('grouped')
                             } else {
-                                if (row.original.open_status !== '') {
-                                    console.log(row)
-                                    setShowModal(true)
-                                    setSelectedTransaction({
-                                        'quantity': row.original.quantity,
-                                        'price': row.original.price,
-                                        'id': row.original.id,
-                                        'open_status': row.original.open_status,
-                                        'trade_date': row.original.trade_date,
-                                        'portfolio_code': row.original.portfolio_code,
-                                        'currency': row.original.currency,
-                                    })
-                                }
+                                setShowModal(true)
+                                setSelectedTransaction(row.original)
                             }
                         }
                         }
@@ -222,7 +225,7 @@ const TableGrouped = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <div style={{padding: '5px', width: '100%', height: '350px'}}>
-
+                        {selectedTransaction.sec_group === 'Cash' ? '':
                         <div style={{width: '100%'}}>
                             <Form.Label>Open Status</Form.Label>
                             <Select style={{height: '100%'}}
@@ -239,6 +242,7 @@ const TableGrouped = (props) => {
                             >
                             </Select>
                         </div>
+                        }
 
                         <div style={{width: '100%', marginTop: 15}}>
                             <Form.Label>Trade Date</Form.Label>
@@ -276,7 +280,7 @@ const TableGrouped = (props) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button className={'delete-button'} onClick={() => deleteTransaction()}>
+                    <button className={'delete-button'} onClick={() => deleteTransaction(selectedTransaction.id)}>
                         Delete
                     </button>
                     <button className={'save-button'} onClick={updateTransaction}>

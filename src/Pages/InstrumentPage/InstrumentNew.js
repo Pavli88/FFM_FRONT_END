@@ -13,7 +13,6 @@ const InstrumentNew = (props) => {
     const [selectedGroup, setSelectedGroup] = useState('BND');
     const server = useContext(ServerContext)['server'];
     const nameRef = useRef();
-    const tickerRef = useRef();
     const countryRef = useRef();
     const groupRef = useRef();
     const typeRef = useRef();
@@ -24,20 +23,8 @@ const InstrumentNew = (props) => {
     };
     const submitHandler = (event) => {
         event.preventDefault();
-        console.log(nameRef.current.value)
-        console.log(countryRef.current.value)
-        console.log(groupRef.current.value)
-        console.log(typeRef.current.value)
-        console.log(currencyRef.current.value)
-        const code = groupRef.current.value === 'CSH' ? groupRef.current.value + typeRef.current.value +
-            currencyRef.current.value : tickerRef.current.value.replace(' ', '').replace('/', '').toUpperCase() +
-            groupRef.current.value + typeRef.current.value + currencyRef.current.value
-        console.log(code)
-
         axios.post(server + 'instruments/new/', {
             name: nameRef.current.value,
-            ticker: tickerRef.current.value,
-            code: code,
             country: countryRef.current.value,
             group: groupRef.current.value,
             type: typeRef.current.value,
@@ -55,7 +42,7 @@ const InstrumentNew = (props) => {
 
     const secGroup = [
         {value: 'BND', label: 'Bond'},
-        {value: 'CSH', label:'Cash'},
+        {value: 'Cash', label:'Cash'},
         {value: 'CFD', label:'CFD'},
         {value: 'EQT', label: 'Equity'},
     ];
@@ -66,7 +53,7 @@ const InstrumentNew = (props) => {
     ];
 
     const cashType = [
-        {value:'CSH', label: 'Cash'},
+        {value:'Cash', label: 'Cash'},
     ];
 
     const cfdType = [
@@ -108,11 +95,6 @@ const InstrumentNew = (props) => {
                             <Form.Control ref={nameRef} type="text" required/>
                         </Form.Group>
 
-                        <Form.Group>
-                            <Form.Label>Ticker</Form.Label>
-                            <Form.Control ref={tickerRef} type="text" required/>
-                        </Form.Group>
-
                         <Form.Group className="form-group">
                             <Form.Label style={{textAlign: 'left'}}>Country of Issue</Form.Label>
                             <Form.Control ref={countryRef} as={'select'}>
@@ -131,7 +113,7 @@ const InstrumentNew = (props) => {
                             <Form.Label style={{textAlign: 'left'}}>Type</Form.Label>
                             <Form.Control ref={typeRef} as={'select'}>
                                 {selectedGroup === 'BND' ? optionGenerator(bondType) :
-                                    selectedGroup === 'CSH' ? optionGenerator(cashType) :
+                                    selectedGroup === 'Cash' ? optionGenerator(cashType) :
                                         selectedGroup === 'CFD' ? optionGenerator(cfdType) :
                                             optionGenerator(equityType)}
                             </Form.Control>
