@@ -46,7 +46,7 @@ const InstrumentPage = () => {
                     <div className={'instrument-page-results-container'}>
                         <div style={{display: 'flex', paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 300}}>
                             <InstrumentInfo/>
-                            <InstrumentPrices/>
+                            <InstrumentPrices server={server} id={selectedInstrument.id}/>
                             <InstrumentBrokerTickers server={server} id={selectedInstrument.id}/>
                         </div>
                         <div style={{padding: 15, height: 600}}>
