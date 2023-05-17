@@ -41,10 +41,11 @@ const InstrumentNew = (props) => {
     };
 
     const secGroup = [
-        {value: 'BND', label: 'Bond'},
+        {value: 'Bond', label: 'Bond'},
         {value: 'Cash', label:'Cash'},
         {value: 'CFD', label:'CFD'},
-        {value: 'EQT', label: 'Equity'},
+        {value: 'Equity', label: 'Equity'},
+        {value: 'Loan', label: 'Loan'},
     ];
 
     const bondType = [
@@ -54,17 +55,22 @@ const InstrumentNew = (props) => {
 
     const cashType = [
         {value:'Cash', label: 'Cash'},
+        {value:'Margin', label: 'Margin'},
     ];
 
     const cfdType = [
-        {value:'BND', label: 'Bond'},
+        {value:'Bond', label: 'Bond'},
         {value:'COM', label: 'Commodity'},
-        {value:'EQT', label: 'Equity'},
+        {value:'Equity', label: 'Equity'},
         {value:'FX', label: 'Fx'},
     ];
 
     const equityType = [
-        {value:'EQT', label: 'Equity'},
+        {value:'Equity', label: 'Equity'},
+    ];
+
+    const loanType = [
+        {value:'Leverage', label: 'Leverage'},
     ];
 
     const currencies = [
@@ -112,9 +118,10 @@ const InstrumentNew = (props) => {
                         <Form.Group className="form-group">
                             <Form.Label style={{textAlign: 'left'}}>Type</Form.Label>
                             <Form.Control ref={typeRef} as={'select'}>
-                                {selectedGroup === 'BND' ? optionGenerator(bondType) :
+                                {selectedGroup === 'Bond' ? optionGenerator(bondType) :
                                     selectedGroup === 'Cash' ? optionGenerator(cashType) :
                                         selectedGroup === 'CFD' ? optionGenerator(cfdType) :
+                                            selectedGroup === 'Loan' ? optionGenerator(loanType):
                                             optionGenerator(equityType)}
                             </Form.Control>
                         </Form.Group>
