@@ -7,27 +7,25 @@ import axios from "axios";
 import {useContext, useState} from "react";
 
 const DailyCashFlow = (props) => {
-    const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
-    // console.log(portfolioData)
-    const [data, setData] = useState({'data': [], 'series': []});
-    const fetchData = async() => {
-        const response = await axios.get(props.server + 'portfolios/daily_cashflow/', {
-            params: {
-                portfolio_code: portfoliCode
-            }
-        })
-        setData(response.data)
-    };
-    // console.log(data)
+    const dates = props.data.map((data) => data.date)
+    const cash = props.data.map((data) => data.cash_val)
+    const pos = props.data.map((data) => data.pos_val)
+    const short_liab = props.data.map((data) => data.short_liab * -1)
+
     const x = {
         options: {
             chart: {
                 toolbar: false,
                 type: 'bar',
                 stacked: true,
+                events: {
+                    click(event, chartContext, config) {
+            props.setHoldingDate(config.config.xaxis.categories[config.dataPointIndex])
+        }
+                }
             },
             xaxis: {
-                categories: data.dates,
+                categories: dates,
                 type: 'date',
                 labels: {show: true},
                 axisBorder: {
@@ -67,18 +65,28 @@ const DailyCashFlow = (props) => {
                 offsetY: 40
             },
         },
-        series: data.series
-        }
+        series: [
+            {
+                name: 'Cash',
+                data: cash
+            },
+            {
+                name: 'Asset Value',
+                data: pos
+            },
+            {
+                name: 'Short Liability',
+                data: short_liab
+            }
+        ]
+    }
 
     return (
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        Cash Movements
-                    </div>
-                    <div>
-                        <button onClick={fetchData}>Fetch</button>
+                        Nav
                     </div>
                 </div>
             </Card.Header>

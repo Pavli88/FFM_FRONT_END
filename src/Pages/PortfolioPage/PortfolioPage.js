@@ -41,9 +41,6 @@ const PortfolioPage = (props) => {
                                 <Route path="/portfolio/dashboard">
                                     <PortfolioDashBoardPage server={server}/>
                                 </Route>
-                                <Route path="/portfolio/holdings">
-                                    <PortfolioHoldingsPage server={server}/>
-                                </Route>
                                 <Route path="/portfolio/transactions">
                                     <PortfolioTransactionsPage server={server}/>
                                 </Route>
