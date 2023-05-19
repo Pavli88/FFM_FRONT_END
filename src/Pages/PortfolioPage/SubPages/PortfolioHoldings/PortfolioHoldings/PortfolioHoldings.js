@@ -84,7 +84,16 @@ const PortfolioHoldings = (props) => {
     const firstPageRows = rows.slice(0, 200)
     return (
         <Card className="card">
-            <Card.Header>Holdings</Card.Header>
+            <Card.Header>
+                <div style={{display: 'flex'}}>
+                    <div>
+                        Holdings at
+                    </div>
+                    <div style={{paddingLeft: 5}}>
+                        {props.date}
+                    </div>
+                </div>
+            </Card.Header>
             <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
                 <table {...getTableProps()}>
                     <thead>

@@ -1,24 +1,14 @@
-import ChartWidget from "../../../../../Widgets/Charts/ChartWidget";
-import DailyCashFlowChartConfig from "./DailyCashFlowChartConfig";
-import PortfolioPageContext from "../../../context/portfolio-page-context";
 import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
-import axios from "axios";
-import {useContext, useState} from "react";
 
-const DailyCashFlow = (props) => {
+const PortfolioNav = (props) => {
     const dates = props.data.map((data) => data.date)
-    const cash = props.data.map((data) => data.cash_val)
-    const pos = props.data.map((data) => data.pos_val)
-    const short_liab = props.data.map((data) => data.short_liab*-1)
     const nav = props.data.map((data) => data.total)
-
     const x = {
         options: {
             chart: {
                 toolbar: false,
-                stacked: true,
-                type: 'bar',
+                type: 'area',
                 events: {
                     click(event, chartContext, config) {
             props.setHoldingDate(config.config.xaxis.categories[config.dataPointIndex])
@@ -68,17 +58,9 @@ const DailyCashFlow = (props) => {
         },
         series: [
             {
-                name: 'Cash',
-                data: cash,
+                name: 'NAV',
+                data: nav,
             },
-            {
-                name: 'Asset Value',
-                data: pos,
-            },
-            {
-                name: 'Short Liability',
-                data: short_liab,
-            }
         ]
     }
 
@@ -87,7 +69,7 @@ const DailyCashFlow = (props) => {
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        Nav Composition
+                        Nav
                     </div>
                 </div>
             </Card.Header>
@@ -95,11 +77,11 @@ const DailyCashFlow = (props) => {
                 <Chart
                     options={x.options}
                     series={x.series}
-                    type={'bar'}
+                    type={'area'}
                     width="100%"
                     height="100%"/>
             </div>
         </Card>
-    )
+    );
 };
-export default DailyCashFlow;
+export default PortfolioNav;
