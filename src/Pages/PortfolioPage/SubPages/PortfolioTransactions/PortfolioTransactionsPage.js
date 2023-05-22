@@ -11,7 +11,6 @@ import PortfolioPageContext from "../../context/portfolio-page-context";
 import TransactionContext from "./context/transaction-context";
 import axios from "axios";
 
-
 const PortfolioTransactionsPage = (props) => {
     const [transactionsData, setTransactionsData] = useState([{}])
     const [newTransaction, setNewTransaction] = useState(0);
@@ -28,34 +27,11 @@ const PortfolioTransactionsPage = (props) => {
             newTransaction: newTransaction,
             saveNewTransaction: setNewTransaction,
         }}>
-            <div style={{display: "flex", height: '800px', width: '100%', padding: 15}}>
-                <div style={{height: '100%', width: '20%'}}>
-                    <Card style={{height: '100%'}}>
-                        <Card.Header>Search & Entry</Card.Header>
-                        <Tabs
-                            defaultActiveKey="search"
-                            id="profile-tab"
-                            style={{paddingLeft: 12, paddingTop: 5, marginBottom: 0}}
-                        >
-                            <Tab eventKey="search" title="Search">
-                                <div>
-                                    <PortfolioTransactionsFilter fetch={fetchData}/>
-                                </div>
-                            </Tab>
-                            <Tab eventKey="security" title="Security">
-                                <div>
-                                    <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server}/>
-                                </div>
-                            </Tab>
-                            <Tab eventKey="cash" title="Cash">
-                                <div>
-                                    <PortfolioCashEntry portfolio={props.portfolio} server={props.server}/>
-                                </div>
-                            </Tab>
-                        </Tabs>
-                    </Card>
+            <div style={{height: '800px', width: '100%', padding: 15}}>
+                <div>
+                    <PortfolioTransactionsFilter fetch={fetchData}/>
                 </div>
-                <div style={{height: '100%', width: '80%'}}>
+                <div style={{height: '700px', width: '100%', paddingTop: 15}}>
                     <PortfolioTransactions data={transactionsData} server={props.server} fetch={fetchData}/>
                 </div>
             </div>

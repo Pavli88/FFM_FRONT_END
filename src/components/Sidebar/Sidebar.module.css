@@ -5,6 +5,7 @@
     height: 100%;
     display: flex;
     overflow: hidden;
+    border-radius: 4px;
 }
 
 .sidebarWrap {

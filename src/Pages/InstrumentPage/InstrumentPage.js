@@ -42,7 +42,9 @@ const InstrumentPage = () => {
             }}>
             <div className={"page-container"}>
                 <div className={'instrument-page-container'}>
-                    <InstrumentSearchBar/>
+                    <div style={{paddingTop: 15, paddingLeft: 15}}>
+                        <InstrumentSearchBar/>
+                    </div>
                     <div className={'instrument-page-results-container'}>
                         <div style={{display: 'flex', paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 300}}>
                             <InstrumentInfo/>

@@ -308,6 +308,53 @@ const PortfolioSettingsPage = (props) => {
                     <div style={{width: '100%', paddingLeft: 15}}>
                         <CardWithHeader headerContent={'Valuation'}>
 
+                            <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
+                                <div className={'portfolio-settings-name-field'}>
+                                    <Nav.Link href="#" disabled>
+                                        Valuation Frequency
+                                    </Nav.Link>
+                                </div>
+                                <div style={{width: '100%'}}>
+                                    <Select style={{height: '100%'}}
+                                            value={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            options={[
+                                                {value: 'Daily', label: 'Daily'},
+                                                {value: 'Weekly', label: 'Weekly'},
+                                                {value: 'Monthly', label: 'Monthly'},
+                                            ]}
+                                            placeholder={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            onChange={(e) => setPortfolioData({
+                                                ...portfolioData,
+                                                public: e.value
+                                            })}
+                                    >
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
+                                <div className={'portfolio-settings-name-field'}>
+                                    <Nav.Link href="#" disabled>
+                                        Weekend Valuation
+                                    </Nav.Link>
+                                </div>
+                                <div style={{width: '100%'}}>
+                                    <Select style={{height: '100%'}}
+                                            value={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            options={[
+                                                {value: 1, label: 'Eneabled'},
+                                                {value: 0, label: 'Disabled'},
+                                            ]}
+                                            placeholder={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            onChange={(e) => setPortfolioData({
+                                                ...portfolioData,
+                                                public: e.value
+                                            })}
+                                    >
+                                    </Select>
+                                </div>
+                            </div>
+
                         </CardWithHeader>
                     </div>
                 </div>

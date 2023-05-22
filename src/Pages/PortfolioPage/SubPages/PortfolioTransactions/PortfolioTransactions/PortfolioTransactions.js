@@ -1,17 +1,17 @@
 import Card from "react-bootstrap/Card";
 import './PortfolioTransactions.css'
-import { BiX } from 'react-icons/bi';
 import axios from "axios";
 import {useMemo, useState} from "react";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import {Nav} from "react-bootstrap";
 import Select from "react-select";
 import { CSVLink, CSVDownload } from "react-csv";
-import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-icons/bs";
+import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare, BsChevronRight, BsChevronLeft} from "react-icons/bs";
 import {useExpanded, useGroupBy, useTable} from "react-table";
-
+import PortfolioTransactionEntry from "../PortfolioTransactionEntry/PortfolioTransactionEntry";
+import PortfolioCashEntry from "../PortfolioCashEntry/PortfolioCashEntry";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 
 const TableGrouped = (props) => {
     const [showModal, setShowModal] = useState(false);
@@ -115,7 +115,7 @@ const TableGrouped = (props) => {
                 accessor: 'trade_date',
             },
              {
-                Header: 'Active/Inactive',
+                Header: 'Open/Closed',
                 accessor: 'is_active',
             },
         ],
@@ -293,7 +293,7 @@ const TableGrouped = (props) => {
 };
 
 const PortfolioTransactions = (props) => {
-
+    const [showTransactionPanel, setShowTransactionPanel] = useState(false);
     // const portTransData = props.data.map((data) => <tr key={data.id} className={'table-row-all'}
     //                                                    style={{cursor: data.sec_group === 'Cash' ? '': "pointer"}} onDoubleClick={() => {
     //     if (data.sec_group != 'Cash') {
@@ -321,19 +321,44 @@ const PortfolioTransactions = (props) => {
     //     <td>{data['is_active']}</td>
     //     <td>{data.transaction_link_code === '' ? <div style={{padding: 0, width: 30}}><button className={'delete-button'} onClick={() => deleteTransaction(data.id)}><BiX/></button></div>: ''}</td>
     // </tr>)
+
+    const TransactionPanel = <div style={{height: '100%', width: '40%', paddingLeft: 15}}>
+        <Card style={{height: '100%'}}>
+            <Card.Header>Entry</Card.Header>
+            <Tabs
+                defaultActiveKey="security"
+                id="profile-tab"
+                style={{paddingLeft: 12, paddingTop: 5, marginBottom: 0}}
+            >
+                <Tab eventKey="security" title="Security">
+                    <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server}/>
+                </Tab>
+                <Tab eventKey="cash" title="Cash">
+                    <div>
+                        <PortfolioCashEntry portfolio={props.portfolio} server={props.server}/>
+                    </div>
+                </Tab>
+            </Tabs>
+        </Card>
+    </div>
+
     return (
-        <div style={{height: '100%', paddingLeft: 15}}>
+        <div style={{height: '100%', display: "flex"}}>
             <Card className={'transactions-container'}>
-                <Card.Header>
+                <Card.Header style={{display: "flex"}}>
                     <div>
                         <span>Transactions</span>
                         <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
+                    </div>
+                    <div style={{position: "absolute", right: 15}}>
+                        <button onClick={() => setShowTransactionPanel(value => !value)} className={'get-button'}>{showTransactionPanel ? <BsChevronLeft/>: <span>New Transaction<BsChevronRight/></span>}  </button>
                     </div>
                 </Card.Header>
                 <div style={{height: '100%', width: '100%', overflowY: 'scroll', overflowX: 'auto'}}>
                     <TableGrouped data={props.data} server={props.server}/>
                 </div>
             </Card>
+            {showTransactionPanel ? TransactionPanel: ''}
         </div>
     );
 };

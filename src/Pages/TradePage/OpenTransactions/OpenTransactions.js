@@ -59,10 +59,10 @@ const OpenTransactions = (props) => {
 
     const fetchTransactions = async() => {
         const response = await axios.get(props.server + 'portfolios/get/open_transactions/')
-        setOpenTransactionsData(response.data)
+        setOpenTransactionsData(JSON.parse(response.data))
     };
 
-    const openTransactions = openTransactionsData.map((data) => <tr key={data.id} className={'table-row-all'} style={{color: data.quantity > 0 ? 'green': 'red'}}>
+    const openTransactions = openTransactionsData.map((data) => <tr key={data.id} className={'table-row-all'}>
         <td>{data.id}</td>
         <td>{data.portfolio_code}</td>
         <td >{data.security}</td>
@@ -74,11 +74,11 @@ const OpenTransactions = (props) => {
         <td>{data.mv}</td>
         <td>{data.account_id}</td>
         <td>{data.broker_id}</td>
-        <td >{<div><button className={'terminate-button'} onClick={() => {
-            setTransactionParams(data)
-            setShowModal(true)
-        }}><BiX/></button>
-        </div>}</td>
+        {/*<td >{<div><button className={'terminate-button'} onClick={() => {*/}
+        {/*    setTransactionParams(data)*/}
+        {/*    setShowModal(true)*/}
+        {/*}}><BiX/></button>*/}
+        {/*</div>}</td>*/}
         <td>{<div>
             <button className={'delete-button'} onClick={() => closeTransactions({...data, transaction_type: 'Close'})}><BiX/></button>
         </div>}</td>

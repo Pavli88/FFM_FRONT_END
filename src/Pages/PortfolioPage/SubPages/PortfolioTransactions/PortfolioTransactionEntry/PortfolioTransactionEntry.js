@@ -49,7 +49,7 @@ const PortfolioTransactionEntry = (props) => {
 
     return (
         <div>
-            <div style={{height: '610px', overflowY: 'scroll', padding: 5}}>
+            <div style={{height: '500px', overflowY: 'scroll', padding: 5}}>
 
                 <div style={{paddingLeft: 10, display: "flex"}}>
                     <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Related Transaction</Form.Label>

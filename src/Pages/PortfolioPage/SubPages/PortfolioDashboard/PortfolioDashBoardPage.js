@@ -15,7 +15,6 @@ const PortfolioDashBoardPage = (props) => {
     const [navData, setNavData] = useState([{}])
     const [holdingDate, setHoldingDate] = useState();
     const [holdingData, setHoldingdata] = useState([{}])
-    const firstUpdate = useRef(true);
     const startDateRef = useRef();
 
     const fetchData = async() => {
@@ -39,17 +38,13 @@ const PortfolioDashBoardPage = (props) => {
     };
 
     useEffect(() => {
-        if (firstUpdate.current) {
-            firstUpdate.current = false;
-        } else {
+        if (portfoliCode != undefined) {
             fetchData()
         }
     }, [portfoliCode])
 
     useEffect(() => {
-        if (firstUpdate.current) {
-            firstUpdate.current = false;
-        } else {
+        if (portfoliCode != undefined) {
             fetchHoldingData()
         }
     }, [holdingDate])
@@ -67,17 +62,23 @@ const PortfolioDashBoardPage = (props) => {
 
             <div style={{paddingBottom: 15}}>
                 <Card>
-                    <div style={{display: "flex"}}>
-                        <div style={{padding: 5}}>
-                            <Nav.Link href="#" disabled>
+                    <div className={'search-container'}>
+
+                        <div>
+                            <span className={'input-label'}>
                                 Start Date
-                            </Nav.Link>
+                            </span>
                         </div>
-                        <div style={{padding: 5}}>
-                            <input type={'date'} style={{height: '100%'}} ref={startDateRef} defaultValue={firstDayOfYear}/>
+
+                        <div>
+                            <input type={'date'} ref={startDateRef}
+                                   defaultValue={firstDayOfYear}/>
                         </div>
-                        <div style={{width: 200, padding: 5}}>
-                            <button className={'save-button'} style={{background: "blue"}} onClick={runValuation}>Run Valuation</button>
+
+                        <div style={{width: 150, paddingLeft: 10}}>
+                            <button className={'get-button'} onClick={runValuation}>Run
+                                Valuation
+                            </button>
                         </div>
                     </div>
                 </Card>

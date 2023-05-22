@@ -16,6 +16,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import './PortfolioPage.css'
 import axios from "axios";
 import Spinner from "react-bootstrap/Spinner";
+import {Nav} from "react-bootstrap";
 
 const PortfolioPage = (props) => {
     const server = useContext(ServerContext)['server'];
@@ -32,28 +33,28 @@ const PortfolioPage = (props) => {
         }}>
             <div className={'page-container'}>
                 <div className={'page-subContainer'} >
-                    <div style={{width: '15%'}}>
+                    <div style={{width: '15%', paddingLeft: 15}}>
+                        <PortfolioNavBar/>
                         <Sidebar sidebarData={PortfolioSidebarData}/>
                     </div>
                     <div style={{width: '85%'}}>
-                        <PortfolioNavBar/>
-                            <Switch>
-                                <Route path="/portfolio/dashboard">
-                                    <PortfolioDashBoardPage server={server} portfolioData={selectedPortfolioData}/>
-                                </Route>
-                                <Route path="/portfolio/transactions">
-                                    <PortfolioTransactionsPage server={server}/>
-                                </Route>
-                                <Route path="/portfolio/risk">
-                                    <PortfolioRiskPage server={server}/>
-                                </Route>
-                                <Route path="/portfolio/return">
-                                    <PortfolioReturnPage/>
-                                </Route>
-                                <Route path="/portfolio/settings">
-                                    <PortfolioSettingsPage/>
-                                </Route>
-                            </Switch>
+                        <Switch>
+                            <Route path="/portfolio/dashboard">
+                                <PortfolioDashBoardPage server={server} portfolioData={selectedPortfolioData}/>
+                            </Route>
+                            <Route path="/portfolio/transactions">
+                                <PortfolioTransactionsPage server={server}/>
+                            </Route>
+                            <Route path="/portfolio/risk">
+                                <PortfolioRiskPage server={server}/>
+                            </Route>
+                            <Route path="/portfolio/return">
+                                <PortfolioReturnPage/>
+                            </Route>
+                            <Route path="/portfolio/settings">
+                                <PortfolioSettingsPage/>
+                            </Route>
+                        </Switch>
                     </div>
                 </div>
                 <PortfolioDataImport show={showImportModal} hide={() => setShowImportModal(false)} server={server}/>

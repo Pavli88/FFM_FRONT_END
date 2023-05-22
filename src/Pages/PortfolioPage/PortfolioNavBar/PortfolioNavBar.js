@@ -54,42 +54,36 @@ const PortfolioNavBar = (props) => {
     return (
         <div className={'portnav-bar-main'}>
             <Card>
-                <div style={{height: '100%', padding: '5px'}}>
-                    <Col style={{padding: '0px', height: '100%'}}>
-                        <Row style={{padding: '0px', width: '100%', height: '100%'}}>
-                            <Col md="auto" style={{paddingLeft: '5px'}}>
-                                <Nav.Link href="#" disabled>
-                                    Portfolio Code
-                                </Nav.Link>
-                            </Col>
-                            <Col md="auto">
-                                <FormControl
-                                    size="sm"
-                                    className="me-2"
-                                    aria-label="Search"
-                                    style={{height: '100%'}}
-                                    ref={portfolioRef}
-                                />
-                            </Col>
-                            <Col md="auto">
-                                <Button onClick={(e) => {
-                                    savePortfolioCode(portfolioRef.current.value)
-                                    fetchPortfolioData()
-                                }} style={{background: "white", color: "grey", borderColor: "grey"}}><BsArrowRepeat
-                                    style={{fontSize: 20, fontWeight: "bold"}}/></Button>
-                            </Col>
-                            {/*<Col md="auto">*/}
-                            {/*    <Button onClick={() => setTextAnimation(1)}>Get</Button>*/}
-                            {/*</Col>*/}
-                            {/*<div className={'portfolio-result-animation portfolio-result-found'}*/}
-                            {/*     status={textAnimation}*/}
-                            {/*     onAnimationEnd={() => setTextAnimation(0)}>*/}
-                            {/*    test*/}
-                            {/*</div>*/}
-                            {loadStatus ? loadingButton: ''}
-                        </Row>
-                    </Col>
+                <div style={{paddingLeft: 15, paddingTop: 5}}>
+                    <span className={'input-label'} style={{textAlign: "left"}}>
+                        Portfolio Code
+                    </span>
                 </div>
+                <div style={{display: "flex", paddingLeft: 15, paddingTop: 5, paddingBottom: 10, paddingRight: 15}}>
+                    <div style={{}}>
+                        <input
+                            type={'text'}
+                            ref={portfolioRef}
+                        />
+                    </div>
+                    <div style={{paddingLeft: 10}}>
+                        <button onClick={(e) => {
+                            savePortfolioCode(portfolioRef.current.value)
+                            fetchPortfolioData()
+                        }} className={'get-button'} style={{width: 40}}><BsArrowRepeat
+                        /></button>
+                    </div>
+                </div>
+
+                {/*<Col md="auto">*/}
+                {/*    <Button onClick={() => setTextAnimation(1)}>Get</Button>*/}
+                {/*</Col>*/}
+                {/*<div className={'portfolio-result-animation portfolio-result-found'}*/}
+                {/*     status={textAnimation}*/}
+                {/*     onAnimationEnd={() => setTextAnimation(0)}>*/}
+                {/*    test*/}
+                {/*</div>*/}
+                {loadStatus ? loadingButton : ''}
             </Card>
         </div>
     )

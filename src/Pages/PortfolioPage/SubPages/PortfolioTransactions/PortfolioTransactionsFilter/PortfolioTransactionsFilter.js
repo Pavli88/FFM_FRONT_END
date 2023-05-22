@@ -4,6 +4,10 @@ import {useContext, useEffect, useRef, useState} from "react";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
 import TransactionContext from "../context/transaction-context";
 import DateContext from "../../../../../context/date-context";
+import Card from "react-bootstrap/Card";
+import {Nav} from "react-bootstrap";
+import FormControl from "react-bootstrap/FormControl";
+
 
 const PortfolioTransactionsFilter = (props) => {
     const newTransaction = useContext(TransactionContext).newTransaction;
@@ -45,35 +49,62 @@ const PortfolioTransactionsFilter = (props) => {
     // }, [newTransaction])
 
     return (
-        <div>
+        <Card>
             <div className={'search-container'}>
 
                 {/*<Form.Label style={{paddingBottom: 5}}>Transaction ID</Form.Label>*/}
                 {/*<Form.Control ref={securityRef} type="text"/>*/}
+                <div>
+                    <span className={'input-label'}>
+                        Security
+                    </span>
+                </div>
+                <div>
+                    <input ref={securityRef} type="text" style={{width: 100}}/>
+                </div>
 
-                <Form.Label style={{paddingBottom: 5}}>Security</Form.Label>
-                <Form.Control ref={securityRef} type="text"/>
+                <div>
+                    <span className={'input-label'}>
+                        Transaction Type
+                    </span>
+                </div>
 
-                <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
-                <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
-                    <option value={''}></option>
-                    <option value={'Purchase'}>Purchase</option>
-                    <option value={'Sale'}>Sale</option>
-                    <option value={'Subscription'}>Subscription</option>
-                    <option value={'Redemption'}>Redemption</option>
-                </Form.Control>
+                <div>
+                    <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select"
+                                  style={{width: 200}}>
+                        <option value={''}></option>
+                        <option value={'Purchase'}>Purchase</option>
+                        <option value={'Sale'}>Sale</option>
+                        <option value={'Subscription'}>Subscription</option>
+                        <option value={'Redemption'}>Redemption</option>
+                    </Form.Control>
+                </div>
 
-                <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>From</Form.Label>
-                <Form.Control ref={startDateRef} defaultValue={''} type="date"/>
+                <div>
+                    <span className={'input-label'}>
+                        From
+                    </span>
+                </div>
 
-                <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>To</Form.Label>
-                <Form.Control ref={endDateRef} defaultValue={''} type="date"/>
+
+                <input ref={startDateRef} defaultValue={''} type="date" style={{width: 200}}/>
+
+
+                <div>
+                    <span className={'input-label'}>
+                        To
+                    </span>
+                </div>
+                <input ref={endDateRef} defaultValue={''} type="date" style={{width: 200}}/>
+
+
+                <div style={{paddingLeft: 10}}>
+                    <button onClick={submitHandler} className={'get-button'}>Search</button>
+                </div>
 
             </div>
-            <div style={{height: '60px', width: '100%', padding: 10, position: "absolute", bottom: 0}}>
-                <button onClick={submitHandler} className={'save-button'}>Search</button>
-            </div>
-        </div>
+
+        </Card>
     )
 };
 export default PortfolioTransactionsFilter;
