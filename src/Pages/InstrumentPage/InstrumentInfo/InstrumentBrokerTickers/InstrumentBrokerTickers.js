@@ -48,7 +48,7 @@ const InstrumentBrokerTickers = (props) => {
     };
 
     return (
-        <div style={{width: 450, height: '100%', paddingLeft: 15}}>
+        <div style={{width: '100%', height: '100%', paddingLeft: 15}}>
             <Card style={{height: '100%'}}>
                 <Card.Header
                     style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 10, paddingRight: 10, borderBottom: 0}}>

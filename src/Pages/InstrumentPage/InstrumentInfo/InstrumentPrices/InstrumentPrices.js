@@ -8,9 +8,11 @@ import Table from "react-bootstrap/Table";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-
+import DateContext from "../../../../context/date-context";
 
 const InstrumentPrices = (props) => {
+    const currentDate = useContext(DateContext).currentDate
+    const [queryDate, setQueryDate] = useState(currentDate);
     const [showModal, setShowModal] = useState(false);
     const isMounted = useRef(false);
     const [priceData, setPriceData] = useState([{}]);
@@ -20,11 +22,11 @@ const InstrumentPrices = (props) => {
 
     useEffect(() => {
             if (isMounted.current) {
-                fetchPrices();
+                fetchPrices(queryDate);
             } else {
                 isMounted.current = true;
             }
-        }, [props.instrument.id]
+        }, [props.instrument.id, queryDate]
     );
 
     const prices = priceData.map((data) => <tr key={data.id} onClick={() => setSelectedPrice(data.id)} style={{cursor: "pointer"}}>
@@ -40,12 +42,13 @@ const InstrumentPrices = (props) => {
             price: priceRef.current.value,
         })
         alert(response.data.response)
-        fetchPrices();
+        fetchPrices(queryDate);
     };
 
-    const fetchPrices = async() => {
+    const fetchPrices = async(date) => {
         const response = await axios.get(props.server + 'instruments/get/price/', {
             params: {
+                date__gte: date,
                 inst_code: props.instrument.id
             }
         })
@@ -61,12 +64,15 @@ const InstrumentPrices = (props) => {
     };
 
     return (
-        <div style={{width: 700, height: '100%', paddingLeft: 15}}>
+        <div style={{width: '100%', height: '100%', paddingLeft: 15}}>
             <Card style={{height: '100%'}}>
                 <Card.Header
                     style={{paddingTop: 5, paddingBottom: 5, paddingLeft: 10, paddingRight: 10, borderBottom: 0}}>
                     <div style={{display: "flex"}}>
-                        <div style={{padding: 5}}>Prices</div>
+                        <div style={{padding: 5}}>Prices from</div>
+                        <div style={{width: 200, paddingLeft: 5}}>
+                            <input defaultValue={currentDate} type={'date'} onChange={(e) => setQueryDate(e.target.value)}/>
+                        </div>
                         <PlusMinusButtonGroup save={() => setShowModal(true)} delete={deletePrice}/>
                     </div>
                 </Card.Header>
@@ -95,7 +101,7 @@ const InstrumentPrices = (props) => {
 
                     <Form.Group>
                         <Form.Label>Date</Form.Label>
-                        <Form.Control ref={dateRef} type={'date'}></Form.Control>
+                        <Form.Control ref={dateRef} defaultValue={currentDate} type={'date'}></Form.Control>
                     </Form.Group>
 
                     <Form.Group>

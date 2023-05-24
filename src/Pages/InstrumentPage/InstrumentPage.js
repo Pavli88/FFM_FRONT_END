@@ -42,19 +42,15 @@ const InstrumentPage = () => {
             }}>
             <div className={"page-container"}>
                 <div className={'instrument-page-container'}>
-                    <div style={{paddingTop: 15, paddingLeft: 15}}>
+                    <div style={{paddingTop: 15, paddingLeft: 15, paddingBottom: 15}}>
                         <InstrumentSearchBar/>
                     </div>
-                    <div className={'instrument-page-results-container'}>
-                        <div style={{display: 'flex', paddingTop: 15, paddingLeft: 15, paddingRight: 15, height: 300}}>
-                            <InstrumentInfo/>
-                            <InstrumentPrices server={server} instrument={selectedInstrument}/>
-                            <InstrumentBrokerTickers server={server} id={selectedInstrument.id}/>
-                        </div>
-                        <div style={{padding: 15, height: 600}}>
-                            <InstrumentResuts data={instrumentSearchResults}/>
-                        </div>
+
+                    <div style={{padding: 15, width:'100%', height: '100%'}}>
+                        <InstrumentResuts data={instrumentSearchResults} server={server}
+                                          instrument={selectedInstrument}/>
                     </div>
+
                 </div>
             </div>
         </InstrumentSearchContext.Provider>

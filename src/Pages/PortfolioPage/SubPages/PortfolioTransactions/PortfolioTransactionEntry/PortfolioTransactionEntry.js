@@ -6,6 +6,7 @@ import PortfolioPageContext from "../../../context/portfolio-page-context";
 
 const PortfolioTransactionEntry = (props) => {
     const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
+    const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
     const [relatedSelected, setRelatedSelected] = useState(false);
     const [transactionType, setTransactionType] = useState('Purchase');
@@ -16,7 +17,10 @@ const PortfolioTransactionEntry = (props) => {
     const priceRef = useRef();
 
     const submitHandler = () => {
-        axios.post(props.server + 'portfolios/new/transaction/', {
+        if (portfolioData.currency !== instrumentData.currency){
+            alert('Portfolio currency is ' + portfolioData.currency + ' and the instrument currency is ' + instrumentData.currency + '. Instrument currency must match with portoflio currency!')
+        }else{
+            axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfolioCode,
             security: relatedSelected === false ? instrumentData.id: instrumentData.security,
             sec_group: relatedSelected === false ? instrumentData.group: instrumentData.sec_group,
@@ -32,6 +36,7 @@ const PortfolioTransactionEntry = (props) => {
                     console.error('Error Message:', error);
                 });
         setRelatedID('')
+        }
     };
 
     const getSecurity = () => {

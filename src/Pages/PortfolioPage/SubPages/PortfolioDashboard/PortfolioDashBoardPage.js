@@ -68,8 +68,8 @@ const PortfolioDashBoardPage = (props) => {
     }, [showCashFlowPanel])
 
     const runValuation = async () => {
-        if (props.portfolioData.status === 'Not Funded') {
-            alert('Portfolio is not funded. Valuation is not possible.')
+        if (props.portfolioData.status !== 'Funded') {
+            alert('Portfolio is not in active funded status. Valuation is not possible.')
         } else {
             if (startDateRef.current.value < props.portfolioData.inception_date) {
                 alert('Valuation date is less than portfolio inception date. Valuation is not possible.')
@@ -78,6 +78,7 @@ const PortfolioDashBoardPage = (props) => {
                     start_date: startDateRef.current.value,
                     portfolio_code: portfoliCode
                 })
+                alert(response.data.response)
                 fetchData()
             }
         }

@@ -192,12 +192,12 @@ const PortfolioSettingsPage = (props) => {
                                 </div>
                                 <div style={{width: '100%'}}>
                                     <Select style={{height: '100%'}}
-                                            value={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            value={portfolioData.public === true ? 'Public': 'Private'}
                                             options={[
                                                 {value: 1, label: 'Public'},
                                                 {value: 0, label: 'Private'},
                                             ]}
-                                            placeholder={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            placeholder={portfolioData.public === true ? 'Public': 'Private'}
                                             onChange={(e) => setPortfolioData({
                                                 ...portfolioData,
                                                 public: e.value
@@ -316,16 +316,16 @@ const PortfolioSettingsPage = (props) => {
                                 </div>
                                 <div style={{width: '100%'}}>
                                     <Select style={{height: '100%'}}
-                                            value={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            value={portfolioData.valuation_frequency}
                                             options={[
                                                 {value: 'Daily', label: 'Daily'},
                                                 {value: 'Weekly', label: 'Weekly'},
                                                 {value: 'Monthly', label: 'Monthly'},
                                             ]}
-                                            placeholder={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            placeholder={portfolioData.valuation_frequency}
                                             onChange={(e) => setPortfolioData({
                                                 ...portfolioData,
-                                                public: e.value
+                                                valuation_frequency: e.value
                                             })}
                                     >
                                     </Select>
@@ -340,15 +340,15 @@ const PortfolioSettingsPage = (props) => {
                                 </div>
                                 <div style={{width: '100%'}}>
                                     <Select style={{height: '100%'}}
-                                            value={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            value={portfolioData.weekend_valuation === true ? 'Eneabled': 'Disabled'}
                                             options={[
                                                 {value: 1, label: 'Eneabled'},
                                                 {value: 0, label: 'Disabled'},
                                             ]}
-                                            placeholder={portfolioData.public === 1 ? 'Public': 'Private'}
+                                            placeholder={portfolioData.weekend_valuation === true ? 'Eneabled': 'Disabled'}
                                             onChange={(e) => setPortfolioData({
                                                 ...portfolioData,
-                                                public: e.value
+                                                weekend_valuation: e.value
                                             })}
                                     >
                                     </Select>
