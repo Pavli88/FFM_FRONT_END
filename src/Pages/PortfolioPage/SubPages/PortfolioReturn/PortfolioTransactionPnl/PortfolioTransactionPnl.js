@@ -4,15 +4,15 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 
 const PortfolioTransactionPnl = (props) => {
-    const data = props.data.map(data=>data.pnl)
-    const label = props.data.map(data=>data.name)
+    // const data = props.data.map(data=>data.pnl)
+    // const label = props.data.map(data=>data.name)
 
     const chartConfig = {
         options: {
             chart: {
                 toolbar: false,
                 id: 'pofits-chart',
-                type: 'bar'
+                type: 'line'
             },
             colors: [function (value) {
                 if (value['value'] < 0) {
@@ -22,7 +22,7 @@ const PortfolioTransactionPnl = (props) => {
                 }
             }],
             xaxis: {
-                categories: label,
+                // categories: label,
                 labels: {
                     show: true,
                     style: {
@@ -80,7 +80,7 @@ const PortfolioTransactionPnl = (props) => {
         series: [
             {
                 name: 'Profit',
-                data: data
+                data: props.data
             },
         ]
     }
@@ -89,7 +89,7 @@ const PortfolioTransactionPnl = (props) => {
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        Transaction Pnl
+                        Cumulative Pnl
                     </div>
                 </div>
             </Card.Header>
@@ -97,7 +97,7 @@ const PortfolioTransactionPnl = (props) => {
                 <Chart
                     options={chartConfig.options}
                     series={chartConfig.series}
-                    type={'bar'}
+                    type={'line'}
                     width="100%"
                     height="100%"/>
             </div>

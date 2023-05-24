@@ -60,10 +60,10 @@ const InstrumentSearchBar = () => {
     const fetchInstruments = () => {
         saveRequestParameters({
             name: nameRef.current.value,
-            country: selectedCountries.map(data=>data.value),
-            group: selectedGroup.value,
-            type: selectedTypes.map(data=>data.value),
-            currency: selectedCurrencies.map(data=>data.value)
+            // country: selectedCountries.map(data=>data.value),
+            // group: selectedGroup.value,
+            // type: selectedTypes.map(data=>data.value),
+            // currency: selectedCurrencies.map(data=>data.value)
 
         });
     };

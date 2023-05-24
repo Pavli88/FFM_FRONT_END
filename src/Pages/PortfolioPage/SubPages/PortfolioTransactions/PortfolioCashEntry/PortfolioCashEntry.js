@@ -29,7 +29,7 @@ const PortfolioCashEntry = (props) => {
             price: 1,
             currency: selectedCurrency.currency,
             sec_group: 'Cash',
-            // sub_type: transactionSubType,
+            status: portfolioData.status,
         })
                 .then(response => alert(response.data))
                 .catch((error) => {
@@ -39,8 +39,9 @@ const PortfolioCashEntry = (props) => {
 
     useEffect(() => {
         axios.post(props.server + 'instruments/get/instruments/', {
-                name: '',
-                group: ['Cash']
+                // name: '',
+                currency: portfolioData.currency,
+                group: 'Cash'
             }).then(response => setCurrencies(response.data))
     }, [])
 

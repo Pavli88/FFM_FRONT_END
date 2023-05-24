@@ -7,6 +7,7 @@ import PortfolioHoldings from "../PortfolioHoldings/PortfolioHoldings/PortfolioH
 import Card from "react-bootstrap/Card";
 import {Nav} from "react-bootstrap";
 import PortfolioNav from "./PortfolioNav/PortfolioNav";
+import CashFlow from "./CashFlow/CashFlow";
 
 
 const PortfolioDashBoardPage = (props) => {
@@ -16,6 +17,8 @@ const PortfolioDashBoardPage = (props) => {
     const [holdingDate, setHoldingDate] = useState();
     const [holdingData, setHoldingdata] = useState([{}])
     const startDateRef = useRef();
+    const [showCashFlowPanel, setShowCashflowPanel] = useState(false);
+    const [cfData, setCfData] = useState({dates: [], series: [{}]});
 
     const fetchData = async() => {
         const response = await axios.get(props.server + 'portfolios/get/nav/', {
@@ -37,24 +40,47 @@ const PortfolioDashBoardPage = (props) => {
         setHoldingdata(response.data)
     };
 
+    const fetchCFData = async() => {
+        const response = await axios.get(props.server + 'portfolios/get/cashflow/', {
+            params: {
+                portfolio_code: portfoliCode
+            }
+        })
+        setCfData(response.data)
+    };
+
     useEffect(() => {
-        if (portfoliCode != undefined) {
+        if (portfoliCode !== undefined) {
             fetchData()
         }
     }, [portfoliCode])
 
     useEffect(() => {
-        if (portfoliCode != undefined) {
+        if (portfoliCode !== undefined) {
             fetchHoldingData()
         }
     }, [holdingDate])
 
+    useEffect(() => {
+        if (showCashFlowPanel === true) {
+            fetchCFData();
+        }
+    }, [showCashFlowPanel])
+
     const runValuation = async () => {
-        const response = await axios.post(props.server + 'portfolios/calculate/holding/', {
-            start_date: startDateRef.current.value,
-            portfolio_code: portfoliCode
-        })
-        fetchData()
+        if (props.portfolioData.status === 'Not Funded') {
+            alert('Portfolio is not funded. Valuation is not possible.')
+        } else {
+            if (startDateRef.current.value < props.portfolioData.inception_date) {
+                alert('Valuation date is less than portfolio inception date. Valuation is not possible.')
+            } else {
+                const response = await axios.post(props.server + 'portfolios/calculate/holding/', {
+                    start_date: startDateRef.current.value,
+                    portfolio_code: portfoliCode
+                })
+                fetchData()
+            }
+        }
     };
 
     return (
@@ -66,13 +92,13 @@ const PortfolioDashBoardPage = (props) => {
 
                         <div>
                             <span className={'input-label'}>
-                                Start Date
+                                Valuation Start Date
                             </span>
                         </div>
 
                         <div>
                             <input type={'date'} ref={startDateRef}
-                                   defaultValue={firstDayOfYear}/>
+                                   defaultValue={props.portfolioData.inception_date}/>
                         </div>
 
                         <div style={{width: 150, paddingLeft: 10}}>
@@ -85,13 +111,14 @@ const PortfolioDashBoardPage = (props) => {
             </div>
 
             <div style={{height: 300, width: '100%', display: 'flex'}}>
-                <div style={{width: '50%', height: '100%', paddingRight: 15}}>
-                    <PortfolioNav data={navData}/>
+                <div style={{width: '100%', height: '100%', paddingRight: 15}}>
+                    <PortfolioNav data={navData} showCF={() => setShowCashflowPanel(value => !value)} buttonStatus={showCashFlowPanel}/>
                 </div>
 
-                <div style={{width: '50%', height: '100%'}}>
-                    <DailyCashFlow server={props.server} data={navData}
-                                   setHoldingDate={(date) => setHoldingDate(date)}/>
+                <div style={{width: '100%', height: '100%', paddingRight: 15}}>
+                    {showCashFlowPanel ? <CashFlow data={cfData}/> : <DailyCashFlow server={props.server} data={navData}
+                                                                      setHoldingDate={(date) => setHoldingDate(date)}/>}
+
                 </div>
 
             </div>

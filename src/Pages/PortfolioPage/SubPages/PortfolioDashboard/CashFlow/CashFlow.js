@@ -1,19 +1,15 @@
 import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
 
-const PortfolioNav = (props) => {
-    const dates = props.data.map((data) => data.date)
-    const nav = props.data.map((data) => data.total)
+const CashFlow = (props) => {
+    const { dates, series } = props.data;
+    console.log(dates, series)
     const x = {
         options: {
             chart: {
                 toolbar: false,
-                type: 'area',
-                events: {
-                    click(event, chartContext, config) {
-            props.setHoldingDate(config.config.xaxis.categories[config.dataPointIndex])
-        }
-                }
+                stacked: true,
+                type: 'bar',
             },
             xaxis: {
                 categories: dates,
@@ -56,23 +52,14 @@ const PortfolioNav = (props) => {
                 offsetY: 40
             },
         },
-        series: [
-            {
-                name: 'NAV',
-                data: nav,
-            },
-        ]
+        series: series,
     }
-
-    return (
+    return(
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        Nav
-                    </div>
-                    <div style={{position: "absolute", right: 15}}>
-                        <button className={'get-button'} onClick={() => props.showCF()}>{props.buttonStatus ? 'NAV Composition': 'Cashflow'}</button>
+                        Cash Flow
                     </div>
                 </div>
             </Card.Header>
@@ -80,11 +67,11 @@ const PortfolioNav = (props) => {
                 <Chart
                     options={x.options}
                     series={x.series}
-                    type={'area'}
+                    type={'bar'}
                     width="100%"
                     height="100%"/>
             </div>
         </Card>
-    );
+    )
 };
-export default PortfolioNav;
+export default CashFlow;

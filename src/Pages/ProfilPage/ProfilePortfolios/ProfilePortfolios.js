@@ -27,7 +27,7 @@ const ProfilePortfolios = () => {
             </div>
         </td>
         <td className={'table-row'}>
-            <div style={{width: '100%'}}>
+            <div style={{width: '100%', color: data.status === 'Not Funded' ? 'red': data.status === 'Funded' ? 'green': 'orange'}}>
                 {data.status}
             </div>
         </td>

@@ -25,7 +25,7 @@ const PortfolioTransactionEntry = (props) => {
             quantity: quantityRef.current.value,
             price: priceRef.current.value,
             currency: instrumentData.currency,
-            transaction_link_code: relatedSelected ? relatedID: '',
+            transaction_link_code: relatedSelected ? relatedID: 0,
         })
                 .then(response => alert(response.data.response))
                 .catch((error) => {

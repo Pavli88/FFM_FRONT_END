@@ -32,12 +32,26 @@ const PortfolioPage = (props) => {
             savePortfolioData: setSelectedPortfolioData,
         }}>
             <div className={'page-container'}>
-                <div className={'page-subContainer'} >
+                <div className={'page-subContainer'}>
                     <div style={{width: '15%', paddingLeft: 15}}>
                         <PortfolioNavBar/>
                         <Sidebar sidebarData={PortfolioSidebarData}/>
                     </div>
                     <div style={{width: '85%'}}>
+                        <div style={{
+                            display: "flex",
+                            paddingTop: 15,
+                            paddingLeft: 15,
+                            paddingBottom: 0,
+                            fontSize: 20,
+                            fontWeight: "bold"
+                        }}>
+                            <span style={{paddingLeft: 5}}>{selectedPortfolioData.portfolio_name}</span>
+                            <span style={{paddingLeft: 5, paddingTop:6, fontSize:14}}>{selectedPortfolioData.portfolio_type}</span>
+                            <span style={{paddingLeft: 5, paddingTop:6, fontSize:14 }}>{selectedPortfolioData.currency}</span>
+                            <span style={{paddingLeft: 5, paddingTop:6, fontSize:14, color: selectedPortfolioData.status === 'Not Funded' ? 'red': selectedPortfolioData.status === 'Funded' ? 'green': 'orange'}}>{selectedPortfolioData.status}</span>
+                        </div>
+
                         <Switch>
                             <Route path="/portfolio/dashboard">
                                 <PortfolioDashBoardPage server={server} portfolioData={selectedPortfolioData}/>
