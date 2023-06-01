@@ -16,6 +16,7 @@ const PortfolioDashBoardPage = (props) => {
     const [navData, setNavData] = useState([{}])
     const [holdingDate, setHoldingDate] = useState();
     const [holdingData, setHoldingdata] = useState([{}])
+    const [startDate, setStartDate] = useState(props.portfolioData.inception_date);
     const startDateRef = useRef();
     const [showCashFlowPanel, setShowCashflowPanel] = useState(false);
     const [cfData, setCfData] = useState({dates: [], series: [{}]});
@@ -23,7 +24,7 @@ const PortfolioDashBoardPage = (props) => {
     const fetchData = async() => {
         const response = await axios.get(props.server + 'portfolios/get/nav/', {
             params: {
-                date__gte: '2023-01-01',
+                date__gte: startDate,
                 portfolio_code: portfoliCode
             }
         })
@@ -53,7 +54,7 @@ const PortfolioDashBoardPage = (props) => {
         if (portfoliCode !== undefined) {
             fetchData()
         }
-    }, [portfoliCode])
+    }, [portfoliCode, startDate])
 
     useEffect(() => {
         if (portfoliCode !== undefined) {
@@ -99,7 +100,7 @@ const PortfolioDashBoardPage = (props) => {
 
                         <div>
                             <input type={'date'} ref={startDateRef}
-                                   defaultValue={props.portfolioData.inception_date}/>
+                                   defaultValue={startDate} onChange={(e) => setStartDate(e.target.value)}/>
                         </div>
 
                         <div style={{width: 150, paddingLeft: 10}}>
@@ -116,7 +117,7 @@ const PortfolioDashBoardPage = (props) => {
                     <PortfolioNav data={navData} showCF={() => setShowCashflowPanel(value => !value)} buttonStatus={showCashFlowPanel}/>
                 </div>
 
-                <div style={{width: '100%', height: '100%', paddingRight: 15}}>
+                <div style={{width: '100%', height: '100%'}}>
                     {showCashFlowPanel ? <CashFlow data={cfData}/> : <DailyCashFlow server={props.server} data={navData}
                                                                       setHoldingDate={(date) => setHoldingDate(date)}/>}
 

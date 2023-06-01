@@ -12,7 +12,6 @@ import axios from "axios";
 
 const TradePage = () => {
     const server = useContext(ServerContext)['server'];
-    const env = useContext(EnvContext)['environment'];
     const [newTransactionID, setNewTransactionID] = useState(0);
     const MINUTE_MS = 10000;
 

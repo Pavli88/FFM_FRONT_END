@@ -1,11 +1,11 @@
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
 import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-icons/bs";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Select from "react-select";
-import {useExpanded, useGroupBy, useTable} from "react-table";
+import {useExpanded, useGroupBy, useTable } from "react-table";
 
 const PortfolioHoldings = (props) => {
     const data = useMemo(
@@ -16,19 +16,24 @@ const PortfolioHoldings = (props) => {
     const columns = useMemo(
         () => [
             {
-                Header: 'ID',
-                accessor: 'id',
+                Header: 'Tran ID',
+                accessor: 'transaction_id',
+                disableGroupBy: true,
 
             },
             {
-                Header: 'Instrument',
-                accessor: 'name',
+                Header: 'Name',
+                accessor: 'instrument_name',
+
+            },
+            {
+                Header: 'Inst ID',
+                accessor: 'instrument_id',
 
             },
             {
                 Header: 'Group',
                 accessor: 'group',
-
             },
             {
                 Header: 'Type',
@@ -39,32 +44,58 @@ const PortfolioHoldings = (props) => {
                 accessor: 'currency',
             },
             {
-                Header: 'Country',
-                accessor: 'country',
+                Header: 'Tran Type',
+                accessor: 'transaction_type',
             },
             {
-                Header: 'Beginning Position',
+                Header: 'Trade Date',
+                accessor: 'trade_date',
+                disableGroupBy: true,
+            },
+            {
+                Header: 'Beg Pos',
                 accessor: 'beginning_pos',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
             },
             {
-                Header: 'Ending Position',
+                Header: 'End Pos',
                 accessor: 'ending_pos',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
             },
             {
-                Header: 'Movement',
-                accessor: 'pos_movement',
+                Header: 'Change',
+                accessor: 'change',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
             },
             {
-                Header: 'Price',
-                accessor: 'price',
+                Header: 'Trade Price',
+                accessor: 'trade_price',
+                disableGroupBy: true,
             },
             {
-                Header: 'Beginning Market Value',
+                Header: 'Valuation Price',
+                accessor: 'valuation_price',
+                disableGroupBy: true,
+            },
+            {
+                Header: 'Beg Market Value',
                 accessor: 'beginning_mv',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
             },
             {
-                Header: 'Ending Market Value',
+                Header: 'End Market Value',
                 accessor: 'ending_mv',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
             },
         ],
         []
@@ -78,12 +109,18 @@ const PortfolioHoldings = (props) => {
         getTableBodyProps,
         headerGroups,
         rows,
+        setGroupBy,
         prepareRow,
-        state: {groupBy, expanded},
+        state: {groupBy},
     } = tableInstance
     const firstPageRows = rows.slice(0, 200)
+
+    useEffect(() => {
+        setGroupBy(['instrument_name'])
+    }, [props.data])
+
     return (
-        <Card className="card">
+        <Card style={{height: 450}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
@@ -94,7 +131,7 @@ const PortfolioHoldings = (props) => {
                     </div>
                 </div>
             </Card.Header>
-            <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
+            <div style={{height: '100%',overflowY: 'scroll'}}>
                 <table {...getTableProps()}>
                     <thead>
                     {
@@ -112,8 +149,6 @@ const PortfolioHoldings = (props) => {
                                             {column.render('Header')}
                                         </th>
                                     ))}
-                                <th></th>
-                                <th></th>
                             </tr>
                         ))}
                     </thead>
@@ -152,6 +187,7 @@ const PortfolioHoldings = (props) => {
                                                         : cell.isPlaceholder
                                                             ? '#ff000042'
                                                             : 'white',
+                                                color: cell.column.Header === 'Change' && cell.value < 0 ? 'red' : cell.column.Header === 'Change' && cell.value > 0 ? 'green' : 'black',
                                             }}
                                         >
                                             {cell.isGrouped ? (

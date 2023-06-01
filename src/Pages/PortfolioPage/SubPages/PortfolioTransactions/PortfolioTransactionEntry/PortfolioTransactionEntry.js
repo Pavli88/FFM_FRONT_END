@@ -24,7 +24,7 @@ const PortfolioTransactionEntry = (props) => {
             portfolio_code: portfolioCode,
             security: relatedSelected === false ? instrumentData.id: instrumentData.security,
             sec_group: relatedSelected === false ? instrumentData.group: instrumentData.sec_group,
-            transaction_type: relatedSelected === false ? transactionType: instrumentData.transaction_type === 'Purchase' ? 'Sale' : 'Purchase',
+            transaction_type: relatedSelected === false ? transactionType: instrumentData.transaction_type === 'Purchase' ? 'Sale' : instrumentData.sec_group === 'CFD' & instrumentData.transaction_type === 'Sale' ? 'Sale': 'Purchase',
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
             price: priceRef.current.value,
@@ -86,7 +86,7 @@ const PortfolioTransactionEntry = (props) => {
 
                 {relatedSelected ? <div style={{margin: 10}}>
                         <Form.Label style={{paddingBottom: 5}}>Transaction Type</Form.Label>
-                        <Form.Control value={instrumentData.transaction_type === 'Purchase' ? 'Sale' : 'Purchase'} type="text"
+                        <Form.Control value={instrumentData.transaction_type === 'Purchase' ? 'Sale' : instrumentData.sec_group === 'CFD' & instrumentData.transaction_type === 'Sale' ? 'Sale': 'Purchase'} type="text"
                                       disabled/>
                     </div> :
                     <div className={'entry-block'}>

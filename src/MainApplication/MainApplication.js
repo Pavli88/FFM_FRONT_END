@@ -16,6 +16,7 @@ import TradePage from "../Pages/TradePage/TradePage";
 import PortfolioPage from "../Pages/PortfolioPage/PortfolioPage";
 import CalculationsPage from "../Pages/CalculationsPage/CalculationsPage";
 import InstrumentPage from "../Pages/InstrumentPage/InstrumentPage";
+import DashBoardPage from "../Pages/DashBoardPage/DashBoardPage";
 import RobotPage from "../Pages/Robot/RobotPage";
 import ProfilPage from "../Pages/ProfilPage/ProfilPage";
 import React, {useEffect, useState} from "react";
@@ -166,7 +167,7 @@ const MainApplication = (props) => {
                                                         <RiskPage/>
                                                     </Route>
                                                     <Route path="/dashboard">
-                                                        <HomePage/>
+                                                        <DashBoardPage/>
                                                     </Route>
                                                     <Route path="/home">
                                                         <HomePage/>
