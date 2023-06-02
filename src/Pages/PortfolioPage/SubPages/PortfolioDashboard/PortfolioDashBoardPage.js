@@ -20,6 +20,7 @@ const PortfolioDashBoardPage = (props) => {
     const startDateRef = useRef();
     const [showCashFlowPanel, setShowCashflowPanel] = useState(false);
     const [cfData, setCfData] = useState({dates: [], series: [{}]});
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchData = async() => {
         const response = await axios.get(props.server + 'portfolios/get/nav/', {
@@ -75,15 +76,30 @@ const PortfolioDashBoardPage = (props) => {
             if (startDateRef.current.value < props.portfolioData.inception_date) {
                 alert('Valuation date is less than portfolio inception date. Valuation is not possible.')
             } else {
+                setIsLoading(true)
                 const response = await axios.post(props.server + 'portfolios/calculate/holding/', {
                     start_date: startDateRef.current.value,
                     portfolio_code: portfoliCode
                 })
+                setIsLoading(false)
                 alert(response.data.response)
                 fetchData()
+
             }
         }
     };
+
+    const spinner =
+
+        <div style={{ display: "flex", position: "absolute", right: 15}}>
+            <div className="spinner-border text-primary" role="status" >
+                <span className="sr-only">Loading...</span>
+            </div>
+            <span className={'input-label'}>
+                Calculating...
+            </span>
+        </div>
+
 
     return (
         <div style={{width: '100%', height: '100%', margin: '0px', padding: 15}}>
@@ -108,6 +124,9 @@ const PortfolioDashBoardPage = (props) => {
                                 Valuation
                             </button>
                         </div>
+
+                        {isLoading ? spinner: ''}
+
                     </div>
                 </Card>
             </div>

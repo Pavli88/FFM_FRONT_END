@@ -97,6 +97,13 @@ const PortfolioHoldings = (props) => {
                 disableGroupBy: true,
                 Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
             },
+            {
+                Header: 'P&L',
+                accessor: 'pnl',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
+            },
         ],
         []
     )
@@ -187,7 +194,7 @@ const PortfolioHoldings = (props) => {
                                                         : cell.isPlaceholder
                                                             ? '#ff000042'
                                                             : 'white',
-                                                color: cell.column.Header === 'Change' && cell.value < 0 ? 'red' : cell.column.Header === 'Change' && cell.value > 0 ? 'green' : 'black',
+                                                color: (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value < 0 ? 'red' : (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value > 0 ? 'green' : 'black',
                                             }}
                                         >
                                             {cell.isGrouped ? (

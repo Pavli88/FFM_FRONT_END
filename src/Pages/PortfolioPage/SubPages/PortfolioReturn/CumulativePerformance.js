@@ -1,10 +1,9 @@
 import Card from "react-bootstrap/Card";
+import {CSVLink} from "react-csv";
 import Chart from "react-apexcharts";
-import { CSVLink, CSVDownload } from "react-csv";
 
-const PortfolioNav = (props) => {
+const CumulativePerformance = (props) => {
     const dates = props.data.map((data) => data.date)
-    const nav = props.data.map((data) => data.total)
     const x = {
         options: {
             chart: {
@@ -59,22 +58,19 @@ const PortfolioNav = (props) => {
         },
         series: [
             {
-                name: 'NAV',
-                data: nav,
+                name: 'Performance',
+                data: props.returns,
             },
         ]
     }
 
-    return (
+    return(
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        <span>Nav</span>
+                        <span>Cumulative Performance %</span>
                         <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
-                    </div>
-                    <div style={{position: "absolute", right: 15}}>
-                        <button className={'get-button'} onClick={() => props.showCF()}>{props.buttonStatus ? 'NAV Composition': 'Cashflow'}</button>
                     </div>
                 </div>
             </Card.Header>
@@ -87,6 +83,6 @@ const PortfolioNav = (props) => {
                     height="100%"/>
             </div>
         </Card>
-    );
+    )
 };
-export default PortfolioNav;
+export default CumulativePerformance;
