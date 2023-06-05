@@ -61,7 +61,7 @@ const NewInstrumentPriceModal = (props) => {
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Price</Form.Label>
-                            <Form.Control ref={priceRef} type="text"/>
+                            <Form.Control ref={priceRef} type="number"/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Dater</Form.Label>

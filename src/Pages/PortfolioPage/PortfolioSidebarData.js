@@ -32,10 +32,4 @@ export const PortfolioSidebarData = [
     icon: <BsGear size={20}/>
 
   },
-  {
-    title: "Import",
-    path: "",
-    icon: <BsExclamationDiamond size={20}/>
-
-  }
 ];

@@ -19,6 +19,7 @@ import InstrumentPage from "../Pages/InstrumentPage/InstrumentPage";
 import DashBoardPage from "../Pages/DashBoardPage/DashBoardPage";
 import RobotPage from "../Pages/Robot/RobotPage";
 import ProfilPage from "../Pages/ProfilPage/ProfilPage";
+import DataPage from "../Pages/DataPage/DataPage";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Container from 'react-bootstrap/Container'
@@ -174,6 +175,9 @@ const MainApplication = (props) => {
                                                     </Route>
                                                     <Route path="/trade">
                                                         <TradePage/>
+                                                    </Route>
+                                                    <Route path="/data">
+                                                        <DataPage/>
                                                     </Route>
                                                     <Route path="/portfolio">
                                                         <PortfolioPage/>

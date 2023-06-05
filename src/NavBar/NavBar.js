@@ -38,6 +38,7 @@ const Navigation = (props) => {
                 <Link className={'nav-button'} as={Link} to={'/trade'}>Trade</Link>
                 <Link className={'nav-button'} as={Link}
                           to={'/calculations'}>Calculations</Link>
+                <Link className={'nav-button'} as={Link} to={'/data'}>Data</Link>
             </Nav>
             <Notifications server={server}/>
             <DropdownButton alignRight flip title={props.user} style={{borderRadius: '5px'}}>
