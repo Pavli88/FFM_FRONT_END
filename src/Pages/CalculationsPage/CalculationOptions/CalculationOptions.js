@@ -9,7 +9,6 @@ const CalculationOptions = (props) => {
     const currentDate = useContext(DateContext).currentDate;
     const startDateRef = useRef();
     const [process, setProcess] = useState();
-    const [parameters, setParameters] = useState({'url': '',})
 
     const startDateDiv = <div style={{paddingLeft: 15, display: "flex"}}>
         <div style={{paddingTop: 0, width: 150}}>

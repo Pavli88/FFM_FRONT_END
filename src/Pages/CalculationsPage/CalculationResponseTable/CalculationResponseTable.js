@@ -57,7 +57,7 @@ const CalculationResponseTable = (props) => {
     const firstPageRows = rows.slice(0, 200)
 
     return(
-        <Card>
+        <Card style={{height: '100%'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>

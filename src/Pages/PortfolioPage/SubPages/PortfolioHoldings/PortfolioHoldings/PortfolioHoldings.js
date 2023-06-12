@@ -179,7 +179,6 @@ const PortfolioHoldings = (props) => {
                                 //     }
                                 // }
                                 // }
-
                             >
 
                                 {row.cells.map(cell => {

@@ -6,6 +6,8 @@ import CalculationContext from "./CalculationPageContext/calculation-context";
 import DateContext from "../../context/date-context";
 import {useContext, useEffect, useState} from "react";
 import axios from "axios";
+import Modal from "react-bootstrap/Modal";
+import Spinner from "react-bootstrap/Spinner";
 
 const CalculationsPage = (props) => {
     const server = useContext(ServerContext)['server'];
@@ -14,6 +16,7 @@ const CalculationsPage = (props) => {
     const [selectedPortfolios, setSelectedPortfolios] = useState([]);
     const [portfolios, setPortfolios] = useState([{}]);
     const [calcResponse, setCalcResponse] = useState([{}]);
+    const [showModal, setShowModal] = useState(false);
 
     const fetchPortfolios = async() => {
         const response = await axios.get(server + 'portfolios/get/portfolios/'
@@ -26,11 +29,13 @@ const CalculationsPage = (props) => {
     }, [])
 
     const runCalculation = async(parameters) => {
+        setShowModal(true)
         const response = await axios.post(server + parameters.url, {...parameters.params,
             portfolios: selectedPortfolios
             }
         )
         setCalcResponse(response.data)
+        setShowModal(false)
     };
 
     return (
@@ -44,7 +49,7 @@ const CalculationsPage = (props) => {
         }}>
             <div className={'page-container'}>
                 <CalculationOptions run={runCalculation}/>
-                <div style={{display: "flex"}}>
+                <div style={{display: "flex", height: 800}}>
                     <div style={{paddingBottom: 15, paddingLeft: 15, paddingRight: 15, width: '30%', height: '100%'}}>
                         <CalculationPortfoliosTable data={portfolios} />
                     </div>
@@ -54,6 +59,22 @@ const CalculationsPage = (props) => {
                     </div>
                 </div>
             </div>
+            <Modal show={showModal}>
+                <Modal.Body>
+                    <div style={{display: "flex"}}>
+                    <Spinner
+                        as="span"
+                        animation="border"
+                        role="primary"
+                        aria-hidden="true"
+                    />
+                        <div className={'input-label'}>
+                            Calculating...
+                        </div>
+                </div>
+
+                </Modal.Body>
+            </Modal>
         </CalculationContext.Provider>
     );
 };

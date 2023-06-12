@@ -92,13 +92,7 @@ const TradePage = () => {
                         <TradeSignals server={server}/>
                     </div>
 
-                    <div style={{width: '20%'}}>
-                        <TradeExecution server={server}/>
-                    </div>
-
-                    <div style={{width: '65%'}}>
-                        <OpenTransactions server={server}/>
-                    </div>
+                    <OpenTransactions server={server}/>
 
                 </div>
             </div>

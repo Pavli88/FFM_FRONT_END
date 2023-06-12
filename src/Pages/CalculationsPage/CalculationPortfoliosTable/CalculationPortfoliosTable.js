@@ -37,7 +37,7 @@ const CalculationPortfoliosTable = (props) => {
         </td>
     </tr>)
     return (
-        <Card>
+        <Card style={{height: '100%'}}>
             <Card.Header>
                 Portfolios
             </Card.Header>

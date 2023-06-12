@@ -1,17 +1,24 @@
 import Card from "react-bootstrap/Card";
-import {useContext, useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useMemo, useRef, useState} from "react";
 import axios from "axios";
 import {BiX} from "react-icons/bi";
 import TradeContext from "../context/trade-context";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-
-
+import TradeExecution from "../TradeExecution/TradeExecution";
+import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-icons/bs";
+import {useExpanded, useGroupBy, useTable} from "react-table";
 
 
 const UnitModal = (props) => {
     const [newUnit, setNewUnit] = useState(0);
+    console.log(props.data)
+    const closeTransactions = async (data) => {
+        const response = await axios.post(props.server + 'trade_page/new/signal/', data)
+        // saveNewTransactionID(response.data.transaction_id)
+        alert('Transaction is closed')
+    }
+
     return (
         <Modal show={props.show} onHide={props.hide}>
             <Modal.Header closeButton>
@@ -28,9 +35,31 @@ const UnitModal = (props) => {
                 </div>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="primary" onClick={() => props.close({...props.data, quantity: newUnit, status: 'Close Out'})}>
-                    Save
-                </Button>
+                <div style={{width: '100%'}}>
+                    <button className={'terminate-button'}
+                            onClick={() => closeTransactions({
+                                'transaction_type': 'Close Out',
+                                'portfolio_code': props.data.portfolio_code,
+                                'account_id': props.data.account_id,
+                                'security': props.data.security,
+                                'id': props.data.id,
+                                'quantity': newUnit,
+                            })}>
+                        Close Out
+                    </button>
+                </div>
+                <div style={{width: '100%'}}>
+                    <button className={'delete-button'}
+                            onClick={() => closeTransactions({
+                                'transaction_type': 'Close',
+                                'portfolio_code': props.data.portfolio_code,
+                                'account_id': props.data.account_id,
+                                'security': props.data.security,
+                                'id': props.data.id,
+                            })}>
+                        Close All
+                    </button>
+                </div>
             </Modal.Footer>
         </Modal>
     );
@@ -41,7 +70,7 @@ const OpenTransactions = (props) => {
     const saveNewTransactionID = useContext(TradeContext).saveNewTrnsactionID;
     const [openTransactionsData, setOpenTransactionsData] =  useState([{}]);
     const [showModal, setShowModal] = useState(false);
-    const [transactionParams, setTransactionParams] = useState({});
+    const [selectedTransaction, setSelectedTransaction] = useState({});
     const MINUTE_MS = 10000;
 
     useEffect(() => {
@@ -52,72 +81,198 @@ const OpenTransactions = (props) => {
         // return () => clearInterval(interval);
     }, [newTransactionID])
 
-    const closeTransactions = async (data) => {
-        const response = await axios.post(props.server + 'trade_page/new/signal/', data)
-        saveNewTransactionID(response.data.transaction_id)
-    }
-
     const fetchTransactions = async() => {
         const response = await axios.get(props.server + 'portfolios/get/open_transactions/')
         setOpenTransactionsData(JSON.parse(response.data))
     };
 
-    const openTransactions = openTransactionsData.map((data) => <tr key={data.id} className={'table-row-all'}>
-        <td>{data.id}</td>
-        <td>{data.portfolio_code}</td>
-        <td >{data.security}</td>
-        <td >{data.sec_group}</td>
-        <td>{data.currency}</td>
-        <td>{data.transaction_type}</td>
-        <td>{data.quantity}</td>
-        <td>{data.price}</td>
-        <td>{data.mv}</td>
-        <td>{data.account_id}</td>
-        <td>{data.broker_id}</td>
-        {/*<td >{<div><button className={'terminate-button'} onClick={() => {*/}
-        {/*    setTransactionParams(data)*/}
-        {/*    setShowModal(true)*/}
-        {/*}}><BiX/></button>*/}
-        {/*</div>}</td>*/}
-        <td>{<div>
-            <button className={'delete-button'} onClick={() => closeTransactions({...data, transaction_type: 'Close'})}><BiX/></button>
-        </div>}</td>
-    </tr>)
+    const data = useMemo(
+        () => openTransactionsData,
+        [openTransactionsData]
+    )
 
-    return(
-        <div style={{height: '100%', paddingLeft: 15}}>
-            <Card className={'transactions-container'}>
-                <Card.Header>Open Transactions</Card.Header>
-                <div style={{height: '100%', width: '100%', overflowY: 'scroll', overflowX: 'auto'}}>
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Portfolio Code</th>
-                            <th>Security</th>
-                            <th>Sec Group</th>
-                            <th>Currency</th>
-                            <th>Type</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Market Value</th>
-                            <th>Account ID</th>
-                            <th>Broker ID</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {openTransactions}
-                        </tbody>
-                    </table>
+    const columns = useMemo(
+        () => [
+            {
+                Header: 'Portfolio Code',
+                accessor: 'portfolio_code',
+
+            },
+            {
+                Header: 'Security',
+                accessor: 'security',
+
+            },
+            {
+                Header: 'Group',
+                accessor: 'sec_group',
+            },
+            {
+                Header: 'Currency',
+                accessor: 'currency',
+            },
+            {
+                Header: 'Tran Type',
+                accessor: 'transaction_type',
+            },
+            {
+                Header: 'Quantity',
+                accessor: 'quantity',
+                disableGroupBy: true,
+            },
+            {
+                Header: 'Price',
+                accessor: 'price',
+                disableGroupBy: true,
+            },
+            {
+                Header: 'Market Value',
+                accessor: 'mv',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
+            },
+            {
+                Header: 'Transaction ID',
+                accessor: 'id',
+                disableGroupBy: true,
+
+            },
+            {
+                Header: 'Account ID',
+                accessor: 'account_id',
+                disableGroupBy: true,
+            },
+            {
+                Header: 'Broker ID',
+                accessor: 'broker_id',
+                disableGroupBy: true,
+            },
+        ],
+        []
+    )
+    const tableInstance = useTable(
+        {columns, data},
+        useGroupBy,
+        useExpanded)
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        setGroupBy,
+        prepareRow,
+        state: {groupBy},
+    } = tableInstance
+    const firstPageRows = rows.slice(0, 200)
+
+    useEffect(() => {
+        setGroupBy(['portfolio_code'])
+    }, [openTransactionsData])
+
+    return (
+            <div style={{height: '100%', width: '100%', paddingLeft: 15, display: "flex"}}>
+                <Card style={{width: '100%'}}>
+                    <Card.Header>Open Transactions</Card.Header>
+
+                    <div style={{height: '100%', overflowY: 'scroll'}}>
+                        <table {...getTableProps()}>
+                            <thead>
+                            {
+                                headerGroups.map(headerGroup => (
+                                    <tr {...headerGroup.getHeaderGroupProps()}>
+                                        {
+                                            headerGroup.headers.map(column => (
+                                                <th {...column.getHeaderProps()}>
+                                                    {column.canGroupBy ? (
+                                                        // If the column can be grouped, let's add a toggle
+                                                        <span {...column.getGroupByToggleProps()}
+                                                              style={{paddingRight: 5}}>
+                      {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
+                    </span>
+                                                    ) : null}
+                                                    {column.render('Header')}
+                                                </th>
+                                            ))}
+                                    </tr>
+                                ))}
+                            </thead>
+                            <tbody {...getTableBodyProps()}>
+                            {firstPageRows.map((row, i) => {
+                                prepareRow(row)
+                                // console.log(row)
+                                return (
+                                    <tr {...row.getRowProps()}
+                                        style={{
+                                            cursor: row.isGrouped ? '' : 'pointer',
+                                            background: row.isGrouped ? '#f2f4f4' : 'white'
+                                        }}
+
+                                        onDoubleClick={() => {
+                                            if (row.isGrouped) {
+                                                console.log('grouped')
+                                            } else {
+                                                setShowModal(true)
+                                                console.log(row.original)
+                                                setSelectedTransaction(row.original)
+                                            }
+                                        }
+                                        }
+                                        className={'table-row-all'}
+                                    >
+                                        {row.cells.map(cell => {
+                                            return (
+                                                <td
+                                                    {...cell.getCellProps()}
+                                                    style={{
+                                                        fontWeight: cell.isGrouped
+                                                            ? "bold"
+                                                            : cell.isAggregated
+                                                                ? "bold"
+                                                                : cell.isPlaceholder
+                                                                    ? '#ff000042'
+                                                                    : 'white',
+                                                        // color: (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value < 0 ? 'red' : (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value > 0 ? 'green' : 'black',
+                                                    }}
+                                                >
+                                                    {cell.isGrouped ? (
+                                                        // If it's a grouped cell, add an expander and row count
+                                                        <>
+                          <span {...row.getToggleRowExpandedProps()}>
+                            {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
+                          </span>{' '}
+                                                            {cell.render('Cell')} ({row.subRows.length})
+                                                        </>
+                                                    ) : cell.isAggregated ? (
+                                                        // If the cell is aggregated, use the Aggregated
+                                                        // renderer for cell
+                                                        cell.render('Aggregated')
+                                                    ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                                                        // Otherwise, just render the regular cell
+                                                        cell.render('Cell')
+
+                                                    )}
+                                                </td>
+                                            )
+                                        })
+                                        }
+                                    </tr>
+                                )
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </Card>
+                <div style={{width: '20%'}}>
+                    <TradeExecution server={props.server}/>
                 </div>
-            </Card>
-            <UnitModal show={showModal}
-                       hide={() => setShowModal(false)}
-                       data={transactionParams}
-                       close={closeTransactions}/>
-        </div>
+                <UnitModal show={showModal}
+                           hide={() => setShowModal(false)}
+                           data={selectedTransaction}
+                           server={props.server}/>
+            </div>
+
     )
 };
 export default OpenTransactions;
