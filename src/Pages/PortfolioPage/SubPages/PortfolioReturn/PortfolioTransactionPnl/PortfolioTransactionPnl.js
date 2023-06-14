@@ -12,19 +12,20 @@ const PortfolioTransactionPnl = (props) => {
             chart: {
                 toolbar: false,
                 id: 'pofits-chart',
-                type: 'line'
+                type: 'area'
             },
-            colors: [function (value) {
-                if (value['value'] < 0) {
-                    return '#E32227'
-                } else {
-                    return '#007500'
-                }
-            }],
+            // colors: [function(value){
+            //     console.log(value)
+            //     if (value["value"] < 0){
+            //         return '#E32227'
+            //     }else {
+            //         return '#007500'
+            //     }
+            // }],
             xaxis: {
                 // categories: label,
                 labels: {
-                    show: true,
+                    show: false,
                     style: {
                         colors: [],
                         fontSize: '8px',
@@ -84,6 +85,7 @@ const PortfolioTransactionPnl = (props) => {
             },
         ]
     }
+    const lastRecord = Math.round(props.data[props.data.length - 1] * 100) / 100
     return(
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
@@ -91,13 +93,18 @@ const PortfolioTransactionPnl = (props) => {
                     <div>
                         Cumulative Pnl
                     </div>
+                    <span style={{
+                            color: lastRecord < 0 ? 'red': 'green',
+                            position: "absolute",
+                            right: 15
+                        }}>{lastRecord} {props.currency}</span>
                 </div>
             </Card.Header>
             <div style={{height: '100%'}}>
                 <Chart
                     options={chartConfig.options}
                     series={chartConfig.series}
-                    type={'line'}
+                    type={'area'}
                     width="100%"
                     height="100%"/>
             </div>

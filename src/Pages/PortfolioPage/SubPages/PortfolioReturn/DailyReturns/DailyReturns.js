@@ -2,19 +2,22 @@ import Card from "react-bootstrap/Card";
 import {CSVLink} from "react-csv";
 import Chart from "react-apexcharts";
 
-const CumulativePerformance = (props) => {
+const DailyReturns = (props) => {
+    const returns = props.data.map((data) => data.period_return * 100)
     const dates = props.data.map((data) => data.date)
     const x = {
         options: {
             chart: {
                 toolbar: false,
                 type: 'area',
-                events: {
-                    click(event, chartContext, config) {
-            props.setHoldingDate(config.config.xaxis.categories[config.dataPointIndex])
-        }
-                }
             },
+            colors: [function(value){
+                if (value["value"] < 0){
+                    return '#E32227'
+                }else {
+                    return '#007500'
+                }
+            }],
             xaxis: {
                 categories: dates,
                 type: 'date',
@@ -59,23 +62,17 @@ const CumulativePerformance = (props) => {
         series: [
             {
                 name: 'Performance',
-                data: props.returns,
+                data: returns,
             },
         ]
     }
-    const lastRecord = Math.round(props.returns[props.returns.length - 1] * 100)/100
     return(
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        <span>Cumulative Performance</span>
+                        <span>Daily Returns</span>
                         <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
-                        <span style={{
-                            color: lastRecord < 0 ? 'red': 'green',
-                            position: "absolute",
-                            right: 15
-                        }}>{lastRecord} %</span>
                     </div>
                 </div>
             </Card.Header>
@@ -83,11 +80,11 @@ const CumulativePerformance = (props) => {
                 <Chart
                     options={x.options}
                     series={x.series}
-                    type={'area'}
+                    type={'bar'}
                     width="100%"
                     height="100%"/>
             </div>
         </Card>
     )
 };
-export default CumulativePerformance;
+export default DailyReturns;
