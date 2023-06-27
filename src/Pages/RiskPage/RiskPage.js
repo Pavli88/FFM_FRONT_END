@@ -10,7 +10,6 @@ import { BsCaretDownFill, BsPlusSquare, BsCaretUpFill, BsDashSquare } from "reac
 
 
 const RiskPage = (props) => {
-
     const server = useContext(ServerContext)['server'];
     const [showImportModal, setShowImportModal] = useState(false);
     const [response, setResponse] = useState([])

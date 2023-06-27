@@ -8,7 +8,7 @@ import Card from "react-bootstrap/Card";
 import {Nav} from "react-bootstrap";
 import PortfolioNav from "./PortfolioNav/PortfolioNav";
 import CashFlow from "./CashFlow/CashFlow";
-
+import CashBalance from "./CashBalance/CashBalance";
 
 const PortfolioDashBoardPage = (props) => {
     const firstDayOfYear = useContext(DateContext).firstDayOfCurrentYear;
@@ -18,7 +18,7 @@ const PortfolioDashBoardPage = (props) => {
     const [holdingData, setHoldingdata] = useState([{}])
     const [startDate, setStartDate] = useState(props.portfolioData.inception_date);
     const startDateRef = useRef();
-    const [showCashFlowPanel, setShowCashflowPanel] = useState(false);
+    const [showCashFlowPanel, setShowCashflowPanel] = useState('NAV');
     const [cfData, setCfData] = useState({dates: [], series: [{}]});
     const [isLoading, setIsLoading] = useState(false);
 
@@ -64,7 +64,7 @@ const PortfolioDashBoardPage = (props) => {
     }, [holdingDate])
 
     useEffect(() => {
-        if (showCashFlowPanel === true) {
+        if (showCashFlowPanel === 'CF') {
             fetchCFData();
         }
     }, [showCashFlowPanel])
@@ -133,12 +133,12 @@ const PortfolioDashBoardPage = (props) => {
 
             <div style={{height: 300, width: '100%', display: 'flex'}}>
                 <div style={{width: '100%', height: '100%', paddingRight: 15}}>
-                    <PortfolioNav data={navData} showCF={() => setShowCashflowPanel(value => !value)} buttonStatus={showCashFlowPanel}/>
+                    <PortfolioNav data={navData} showCF={(data) => setShowCashflowPanel(data)}/>
                 </div>
 
                 <div style={{width: '100%', height: '100%'}}>
-                    {showCashFlowPanel ? <CashFlow data={cfData}/> : <DailyCashFlow server={props.server} data={navData}
-                                                                      setHoldingDate={(date) => setHoldingDate(date)}/>}
+                    {showCashFlowPanel === 'NAV' ? <DailyCashFlow server={props.server} data={navData}
+                                                                  setHoldingDate={(date) => setHoldingDate(date)}/> : showCashFlowPanel === 'CF' ? <CashFlow data={cfData}/> : <CashBalance data={navData} setHoldingDate={(date) => setHoldingDate(date)}/>}
 
                 </div>
 

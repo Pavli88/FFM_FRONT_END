@@ -1,15 +1,20 @@
 import Card from "react-bootstrap/Card";
+import {CSVLink} from "react-csv";
 import Chart from "react-apexcharts";
-import { CSVLink, CSVDownload } from "react-csv";
 
-const PortfolioNav = (props) => {
+const CashBalance = (props) => {
     const dates = props.data.map((data) => data.date)
-    const nav = props.data.map((data) => data.total)
+    const nav = props.data.map((data) => (data.cash_val/data.total) * 100)
     const x = {
         options: {
             chart: {
                 toolbar: false,
                 type: 'area',
+        //         events: {
+        //             click(event, chartContext, config) {
+        //     console.log(config, chartContext)
+        // }
+        //         }
             },
             xaxis: {
                 categories: dates,
@@ -54,28 +59,16 @@ const PortfolioNav = (props) => {
         },
         series: [
             {
-                name: 'NAV',
+                name: 'Cash Balance',
                 data: nav,
             },
         ]
     }
-
-    return (
-        <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
+    return (<Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        <span>Nav</span>
-                        <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
-                    </div>
-                    <div style={{position: "absolute", right: 220}}>
-                        <button className={'get-button'} onClick={() => props.showCF('NAV')}>NAV Composition</button>
-                    </div>
-                    <div style={{position: "absolute", right: 135}}>
-                        <button className={'get-button'} onClick={() => props.showCF('CF')}>Cashflow</button>
-                    </div>
-                    <div style={{position: "absolute", right: 15}}>
-                        <button className={'get-button'} onClick={() => props.showCF('CB')}>Cash Balance</button>
+                        <span>Cash Balance %</span>
                     </div>
                 </div>
             </Card.Header>
@@ -87,7 +80,6 @@ const PortfolioNav = (props) => {
                     width="100%"
                     height="100%"/>
             </div>
-        </Card>
-    );
+        </Card>)
 };
-export default PortfolioNav;
+export default CashBalance;
