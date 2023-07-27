@@ -109,40 +109,44 @@ const PortfolioReturnPage = () => {
                 </Card>
             </div>
 
-            <div style={{paddingBottom: 15}}>
-                <MonthlyReturns/>
-            </div>
 
-            <div style={{display: 'flex'}}>
-                <div style={{width: '50%',height: 300, paddingRight: 15}}>
-                    <CumulativePerformance data={navData} returns={findCumulativeMultiply(returnsRounded).map((data) => (data - 1)*100)}/>
+            <div style={{height: '760px', overflowY: "scroll"}}>
+                <div style={{paddingBottom: 15}}>
+                    <MonthlyReturns/>
                 </div>
-                <div style={{width: '50%',height: 300}}>
-                    <DailyReturns data={navData}/>
-                </div>
-            </div>
 
-            <div style={{display: 'flex'}}>
-                <div style={{width: '50%',height: 400, paddingRight: 15, paddingTop: 15}}>
-                    <PortfolioTransactionPnl data={findCumulativeSum(pnlResults)} currency={portfolioData.currency}/>
-                </div>
-                <div style={{width: '50%', display: "flex"}}>
-                    <div style={{width: '100%', height: 400, paddingRight: 15, paddingTop: 15}}>
-                        <AggregatedPnl name={'P&L by Security'}
-                                       xAxis={pnlBreakdowns.by_name.map((data) => data.name)}
-                                       yAxis={pnlBreakdowns.by_name.map((data) => data.realized_pnl)}/>
+                <div style={{display: 'flex'}}>
+                    <div style={{width: '50%', height: 300, paddingRight: 15}}>
+                        <CumulativePerformance data={navData}
+                                               returns={findCumulativeMultiply(returnsRounded).map((data) => (data - 1) * 100)}/>
                     </div>
-                    <div style={{width: '100%', height: 400, paddingRight: 15, paddingTop: 15}}>
-                        <AggregatedPnl name={'P&L by Group'}
-                        xAxis={pnlBreakdowns.by_group.map((data) => data.group)}
-                                       yAxis={pnlBreakdowns.by_group.map((data) => data.realized_pnl)}/>
-                    </div>
-                    <div style={{width: '100%', height: 400, paddingTop: 15}}>
-                        <AggregatedPnl name={'P&L by Type'} xAxis={pnlBreakdowns.by_type.map((data) => data.type)}
-                                       yAxis={pnlBreakdowns.by_type.map((data) => data.realized_pnl)}/>
+                    <div style={{width: '50%', height: 300}}>
+                        <DailyReturns data={navData}/>
                     </div>
                 </div>
 
+                <div style={{display: 'flex'}}>
+                    <div style={{width: '50%', height: 400, paddingRight: 15, paddingTop: 15}}>
+                        <PortfolioTransactionPnl data={findCumulativeSum(pnlResults)}
+                                                 currency={portfolioData.currency}/>
+                    </div>
+                    <div style={{width: '50%', display: "flex"}}>
+                        <div style={{width: '100%', height: 400, paddingRight: 15, paddingTop: 15}}>
+                            <AggregatedPnl name={'P&L by Security'}
+                                           xAxis={pnlBreakdowns.by_name.map((data) => data.name)}
+                                           yAxis={pnlBreakdowns.by_name.map((data) => data.realized_pnl)}/>
+                        </div>
+                        <div style={{width: '100%', height: 400, paddingRight: 15, paddingTop: 15}}>
+                            <AggregatedPnl name={'P&L by Group'}
+                                           xAxis={pnlBreakdowns.by_group.map((data) => data.group)}
+                                           yAxis={pnlBreakdowns.by_group.map((data) => data.realized_pnl)}/>
+                        </div>
+                        <div style={{width: '100%', height: 400, paddingTop: 15}}>
+                            <AggregatedPnl name={'P&L by Type'} xAxis={pnlBreakdowns.by_type.map((data) => data.type)}
+                                           yAxis={pnlBreakdowns.by_type.map((data) => data.realized_pnl)}/>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>

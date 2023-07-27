@@ -1,8 +1,96 @@
 import Card from "react-bootstrap/Card";
+import {useState} from "react";
 const MonthlyReturns = (props) => {
+    const [showReturns, setShowReturns] = useState(false);
+
+    const returnResults = <tbody>
+                    <tr>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            0.5
+                        </td>
+                        <td>
+                            -1.2
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                    </tr>
+                <tr>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            0.5
+                        </td>
+                        <td>
+                            -1.2
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                        <td>
+                            2023
+                        </td>
+                    </tr>
+                </tbody>
+
     return(
         <Card>
-            <table>
+            <table onClick={() => setShowReturns(!showReturns)} style={{cursor: "pointer"}}>
                 <thead>
                     <tr>
                         <td>
@@ -46,49 +134,7 @@ const MonthlyReturns = (props) => {
                         </td>
                     </tr>
                 </thead>
-                <tbody>
-                    {/*<tr>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        0.5*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        -1.2*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*    <td>*/}
-                    {/*        2023*/}
-                    {/*    </td>*/}
-                    {/*</tr>*/}
-                </tbody>
+                {showReturns ? returnResults: ''}
             </table>
         </Card>
     )

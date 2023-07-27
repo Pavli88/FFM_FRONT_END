@@ -46,6 +46,7 @@ const InstrumentNew = (props) => {
         {value: 'CFD', label:'CFD'},
         {value: 'Equity', label: 'Equity'},
         {value: 'Loan', label: 'Loan'},
+        {value: 'Option', label: 'Option'},
     ];
 
     const bondType = [
@@ -67,6 +68,12 @@ const InstrumentNew = (props) => {
 
     const equityType = [
         {value:'Equity', label: 'Equity'},
+    ];
+
+    const optionType = [
+        {value:'Equity', label: 'Equity'},
+        {value:'FX', label: 'FX'},
+        {value:'Index', label: 'Index'},
     ];
 
     const loanType = [
@@ -122,6 +129,7 @@ const InstrumentNew = (props) => {
                                     selectedGroup === 'Cash' ? optionGenerator(cashType) :
                                         selectedGroup === 'CFD' ? optionGenerator(cfdType) :
                                             selectedGroup === 'Loan' ? optionGenerator(loanType):
+                                                selectedGroup === 'Option' ? optionGenerator(optionType):
                                             optionGenerator(equityType)}
                             </Form.Control>
                         </Form.Group>

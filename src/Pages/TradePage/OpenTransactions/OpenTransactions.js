@@ -12,7 +12,6 @@ import {useExpanded, useGroupBy, useTable} from "react-table";
 
 const UnitModal = (props) => {
     const [newUnit, setNewUnit] = useState(0);
-    console.log(props.data)
     const closeTransactions = async (data) => {
         const response = await axios.post(props.server + 'trade_page/new/signal/', data)
         // saveNewTransactionID(response.data.transaction_id)
@@ -57,7 +56,31 @@ const UnitModal = (props) => {
                                 'security': props.data.security,
                                 'id': props.data.id,
                             })}>
-                        Close All
+                        Close
+                    </button>
+                </div>
+                <div style={{width: '100%'}}>
+                    <button className={'delete-button'}
+                            onClick={() => closeTransactions({
+                                'transaction_type': 'Close All',
+                                'portfolio_code': props.data.portfolio_code,
+                                'account_id': props.data.account_id,
+                                'security': props.data.security,
+                                'id': props.data.id,
+                            })}>
+                        Close All Trades
+                    </button>
+                </div>
+                <div style={{width: '100%'}}>
+                    <button className={'delete-button'}
+                            onClick={() => closeTransactions({
+                                'transaction_type': 'Liquidate',
+                                'portfolio_code': props.data.portfolio_code,
+                                'account_id': props.data.account_id,
+                                'security': props.data.security,
+                                'id': props.data.id,
+                            })}>
+                        Liquidate Portfolio
                     </button>
                 </div>
             </Modal.Footer>
@@ -100,6 +123,11 @@ const OpenTransactions = (props) => {
             },
             {
                 Header: 'Security',
+                accessor: 'name',
+
+            },
+            {
+                Header: 'Security ID',
                 accessor: 'security',
 
             },
@@ -167,7 +195,7 @@ const OpenTransactions = (props) => {
     const firstPageRows = rows.slice(0, 200)
 
     useEffect(() => {
-        setGroupBy(['portfolio_code'])
+        setGroupBy(['portfolio_code', 'name']);
     }, [openTransactionsData])
 
     return (
@@ -213,7 +241,6 @@ const OpenTransactions = (props) => {
                                                 console.log('grouped')
                                             } else {
                                                 setShowModal(true)
-                                                console.log(row.original)
                                                 setSelectedTransaction(row.original)
                                             }
                                         }

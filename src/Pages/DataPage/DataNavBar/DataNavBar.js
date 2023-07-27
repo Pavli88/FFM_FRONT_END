@@ -66,7 +66,10 @@ const DataNavBar = (props) => {
                     <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
                         <Select
                             options={[
-                                {value: 'Prices', label: 'Prices'}
+                                {value: 'Prices', label: 'Prices'},
+                                {value: 'NAV', label: 'NAV'},
+                                {value: 'Instrument', label: 'Instrument'},
+                                {value: 'Transactions', label: 'Transactions'},
                             ]}
                             isClearable
                             // onChange={(e) => e === null ? setSelectedGroup([]) : setSelectedGroup(e)}

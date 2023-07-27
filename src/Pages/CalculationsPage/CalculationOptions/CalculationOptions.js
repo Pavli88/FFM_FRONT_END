@@ -19,6 +19,25 @@ const CalculationOptions = (props) => {
         <input ref={startDateRef} type={"date"} defaultValue={currentDate}/>
     </div>
 
+    const returnPeriods = <div style={{paddingLeft: 15, paddingTop: 0, width: 400}}>
+        <Select
+            options={[
+                {value: '1mo', label: '1 Month'},
+                {value: '3mo', label: '3 Months'},
+                {value: '6mo', label: '6 Months'},
+                {value: '1y', label: '1 Year'},
+                {value: 'mtd', label: 'Mtd'},
+                {value: 'qtd', label: 'Qtd'},
+                {value: 'ytd', label: 'Ytd'},
+            ]}
+            isClearable
+            isMulti
+            // onChange={(e) => setProcess(e.value)}
+            className={'instrument-search-input-field'}
+
+        />
+    </div>
+
     return (
         <div style={{padding: 15}}>
             <Card>
@@ -42,7 +61,8 @@ const CalculationOptions = (props) => {
                         />
                     </div>
 
-                    {process === 'valuation' ? startDateDiv: ''}
+                    {process === 'valuation' || process === 'total_return' ? startDateDiv: ''}
+                    {process === 'total_return' ? returnPeriods: ''}
 
                     <div style={{paddingLeft: 10, paddingTop: 0, paddingBottom: 0}}>
                         <button className={'get-button'} onClick={() => props.run({

@@ -111,6 +111,18 @@ td{
     color: #1e7e34;
 }
 
+.normal-button{
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+    background: #1e587e;
+    width: 100%;
+    color: white;
+    height: 100%;
+    border-radius: 4px;
+}
+
 .page-container {
     width: 100%;
     height: 900px;
