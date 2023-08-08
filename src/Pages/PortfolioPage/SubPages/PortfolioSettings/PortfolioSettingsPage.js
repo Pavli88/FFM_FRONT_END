@@ -169,12 +169,12 @@ const PortfolioSettingsPage = (props) => {
                                     </div>
                                 <div style={{width: '100%'}}>
                                     <Select style={{height: '100%'}}
-                                            value={portfolioData.is_automated === 1 ? 'Enabled': 'Disabled'}
+                                            value={portfolioData.is_automated === true ? 'Enabled': 'Disabled'}
                                             options={[
-                                                {value: 1, label: 'Enabled'},
-                                                {value: 0, label: 'Disabled'},
+                                                {value: true, label: 'Enabled'},
+                                                {value: false, label: 'Disabled'},
                                             ]}
-                                            placeholder={portfolioData.is_automated === 1 ? 'Enabled': 'Disabled'}
+                                            placeholder={portfolioData.is_automated === true ? 'Enabled': 'Disabled'}
                                             onChange={(e) => setPortfolioData({
                                                 ...portfolioData,
                                                 is_automated: e.value
@@ -192,12 +192,12 @@ const PortfolioSettingsPage = (props) => {
                                 </div>
                                 <div style={{width: '100%'}}>
                                     <Select style={{height: '100%'}}
-                                            value={portfolioData.public === true ? 'Public': 'Private'}
+                                            value={portfolioData.public === 1 ? 'Public': 'Private'}
                                             options={[
                                                 {value: 1, label: 'Public'},
                                                 {value: 0, label: 'Private'},
                                             ]}
-                                            placeholder={portfolioData.public === true ? 'Public': 'Private'}
+                                            placeholder={portfolioData.public === 1 ? 'Public': 'Private'}
                                             onChange={(e) => setPortfolioData({
                                                 ...portfolioData,
                                                 public: e.value
@@ -340,15 +340,38 @@ const PortfolioSettingsPage = (props) => {
                                 </div>
                                 <div style={{width: '100%'}}>
                                     <Select style={{height: '100%'}}
-                                            value={portfolioData.weekend_valuation === true ? 'Eneabled': 'Disabled'}
+                                            value={portfolioData.weekend_valuation === 1 ? 'Eneabled': 'Disabled'}
                                             options={[
                                                 {value: 1, label: 'Eneabled'},
                                                 {value: 0, label: 'Disabled'},
                                             ]}
-                                            placeholder={portfolioData.weekend_valuation === true ? 'Eneabled': 'Disabled'}
+                                            placeholder={portfolioData.weekend_valuation === 1 ? 'Eneabled': 'Disabled'}
                                             onChange={(e) => setPortfolioData({
                                                 ...portfolioData,
                                                 weekend_valuation: e.value
+                                            })}
+                                    >
+                                    </Select>
+                                </div>
+                            </div>
+
+                            <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
+                                <div className={'portfolio-settings-name-field'}>
+                                    <Nav.Link href="#" disabled>
+                                        Holding Calculation
+                                    </Nav.Link>
+                                </div>
+                                <div style={{width: '100%'}}>
+                                    <Select style={{height: '100%'}}
+                                            value={portfolioData.calc_holding === true ? 'Eneabled': 'Disabled'}
+                                            options={[
+                                                {value: true, label: 'Eneabled'},
+                                                {value: false, label: 'Disabled'},
+                                            ]}
+                                            placeholder={portfolioData.calc_holding === true ? 'Eneabled': 'Disabled'}
+                                            onChange={(e) => setPortfolioData({
+                                                ...portfolioData,
+                                                calc_holding: e.value
                                             })}
                                     >
                                     </Select>

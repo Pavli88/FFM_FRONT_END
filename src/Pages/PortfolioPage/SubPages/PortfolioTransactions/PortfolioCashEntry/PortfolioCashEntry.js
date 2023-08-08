@@ -48,8 +48,6 @@ const PortfolioCashEntry = (props) => {
     const typeOptionsFull = [
         { value: 'Subscription', label: 'Subscription' },
         { value: 'Redemption', label: 'Redemption' },
-        { value: 'Dividend', label: 'Dividend' },
-        { value: 'Interest Received', label: 'Interest Received' },
         { value: 'Interest Paid', label: 'Interest Paid' },
         { value: 'Commission', label: 'Commission' },
     ]

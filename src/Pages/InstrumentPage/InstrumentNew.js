@@ -68,6 +68,7 @@ const InstrumentNew = (props) => {
 
     const equityType = [
         {value:'Equity', label: 'Equity'},
+        {value:'Fund', label: 'Fund'},
     ];
 
     const optionType = [

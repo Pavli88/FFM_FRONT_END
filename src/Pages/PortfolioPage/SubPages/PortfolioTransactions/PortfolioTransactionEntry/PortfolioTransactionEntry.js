@@ -9,6 +9,7 @@ const PortfolioTransactionEntry = (props) => {
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
     const [relatedSelected, setRelatedSelected] = useState(false);
+    const [cashTranSelected, setCashTranSelected] = useState(false);
     const [transactionType, setTransactionType] = useState('Purchase');
     const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
@@ -21,15 +22,16 @@ const PortfolioTransactionEntry = (props) => {
             alert('Portfolio currency is ' + portfolioData.currency + ' and the instrument currency is ' + instrumentData.currency + '. Instrument currency must match with portoflio currency!')
         }else{
             axios.post(props.server + 'portfolios/new/transaction/', {
-            portfolio_code: portfolioCode,
-            security: relatedSelected === false ? instrumentData.id: instrumentData.security,
-            sec_group: relatedSelected === false ? instrumentData.group: instrumentData.sec_group,
-            transaction_type: relatedSelected === false ? transactionType: instrumentData.transaction_type === 'Purchase' ? 'Sale' : instrumentData.sec_group === 'CFD' & instrumentData.transaction_type === 'Sale' ? 'Sale': 'Purchase',
-            trade_date: dateRef.current.value,
-            quantity: quantityRef.current.value,
-            price: priceRef.current.value,
-            currency: instrumentData.currency,
-            transaction_link_code: relatedSelected ? relatedID: 0,
+                portfolio_code: portfolioCode,
+                security: relatedSelected === false ? instrumentData.id : instrumentData.security,
+                sec_group: cashTranSelected ? 'Cash' : relatedSelected === false ? instrumentData.group : instrumentData.sec_group,
+                transaction_type: relatedSelected === false || cashTranSelected ? transactionType : instrumentData.transaction_type === 'Purchase' ? 'Sale' : instrumentData.sec_group === 'CFD' && instrumentData.transaction_type === 'Sale' ? 'Sale' : 'Purchase',
+                trade_date: dateRef.current.value,
+                quantity: quantityRef.current.value,
+                price: priceRef.current.value,
+                currency: instrumentData.currency,
+                status: '',
+                transaction_link_code: relatedSelected ? relatedID : 0,
         })
                 .then(response => alert(response.data.response))
                 .catch((error) => {
@@ -67,6 +69,17 @@ const PortfolioTransactionEntry = (props) => {
                     </div>
                 </div>
 
+                {relatedSelected ? <div style={{paddingLeft: 10, display: "flex"}}>
+                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Cash Transaction</Form.Label>
+                    <div style={{padding: 10}}>
+                        <input type="checkbox" onChange={(e) => {
+                            setCashTranSelected(e.target.checked)
+                            setTransactionType('Dividend')
+                        }}/>
+                    </div>
+                </div>: ''
+                }
+
                 <div className={'entry-block'}>
                     <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>{relatedSelected ? 'Transaction': 'Security'} ID</Form.Label>
                     <div style={{display: "flex"}}>
@@ -84,11 +97,17 @@ const PortfolioTransactionEntry = (props) => {
                     </div>
                 </div>
 
-                {relatedSelected ? <div style={{margin: 10}}>
+                {relatedSelected && cashTranSelected === false ? <div style={{margin: 10}}>
                         <Form.Label style={{paddingBottom: 5}}>Transaction Type</Form.Label>
                         <Form.Control value={instrumentData.transaction_type === 'Purchase' ? 'Sale' : instrumentData.sec_group === 'CFD' & instrumentData.transaction_type === 'Sale' ? 'Sale': 'Purchase'} type="text"
                                       disabled/>
-                    </div> :
+                    </div> : relatedSelected && cashTranSelected ? <div className={'entry-block'}>
+                        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
+                        <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
+                            <option value={'Dividend'}>Dividend</option>
+                            <option value={'Interest Received'}>Interest Received</option>
+                        </Form.Control>
+                    </div>:
                     <div className={'entry-block'}>
                         <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
                         <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
