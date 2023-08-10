@@ -58,11 +58,12 @@ const NewPortfolio = (props) => {
                 <div style={{margin: 10}}>
                     <Form.Label>Portfolio Type</Form.Label>
                     <Form.Control ref={portTypeRef} as="select">
+                        <option value={'Automated'}>Automated</option>
+                        <option value={'Investment'}>Investment</option>
+                        <option value={'Portfolio Group'}>Portfolio Group</option>
+                        <option value={'Test'}>Test</option>
                         <option value={'Trade'}>Trade</option>
                         <option value={'Savings'}>Savings</option>
-                        <option value={'Investment'}>Investment</option>
-                        <option value={'Test'}>Test</option>
-                        <option value={'Portfolio Group'}>Portfolio Group</option>
                     </Form.Control>
                 </div>
 
