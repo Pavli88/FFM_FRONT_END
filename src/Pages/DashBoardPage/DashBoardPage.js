@@ -3,12 +3,14 @@ import {useContext, useEffect, useState} from "react";
 import ServerContext from "../../context/server-context";
 import DashBoardNavWidget from "./DashBoardNavWidget/DashBoardNavWidget";
 import DateContext from "../../context/date-context";
-
+import DashBoardTotalPnl from "./DashBoardTotalPnl/DashBoardTotalPnl";
 const DashBoardPage = () => {
     const server = useContext(ServerContext)['server'];
     const currentDate = useContext(DateContext).currentDate;
     const [portfolioNavData, setPortfolioNavData] = useState([]);
     const [groupedNav, setGroupedNav] = useState([]);
+    const [totalPnl, setTotalPnl] = useState([]);
+
     const fetchPortfolioNav = async() => {
         const response = await axios.get(server + 'portfolios/get/portfolio_nav/', {
             params: {
@@ -27,9 +29,15 @@ const DashBoardPage = () => {
         setGroupedNav(response.data)
     };
 
+    const fetchTotalPnl = async() => {
+        const response = await axios.get(server + 'portfolios/get/total_pnl/', )
+        setTotalPnl(response.data)
+    };
+
     useEffect(() => {
        fetchPortfolioNav();
        fetchPortfolioGroupedNav();
+       fetchTotalPnl();
     }, [])
 
     const navs = portfolioNavData.map((data) => Math.round(data.total*100)/100)
@@ -38,8 +46,15 @@ const DashBoardPage = () => {
     const portTypes = groupedNav.map((data) => data.portfolio_type)
     return(
         <div className={'page-container'}>
-            <DashBoardNavWidget x={navs} y={portCodes}/>
-            <DashBoardNavWidget x={groupedNavs} y={portTypes}/>
+            <div style={{display: "flex"}}>
+                <div>
+                    <DashBoardNavWidget x={navs} y={portCodes}/>
+                    <DashBoardNavWidget x={groupedNavs} y={portTypes}/>
+                </div>
+                <div>
+                    <DashBoardTotalPnl data={totalPnl}/>
+                </div>
+            </div>
         </div>
     )
 };
