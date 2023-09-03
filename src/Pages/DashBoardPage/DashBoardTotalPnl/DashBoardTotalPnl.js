@@ -6,8 +6,8 @@ import InstrumentBrokerTickers
 
 const DashBoardTotalPnl = (props) => {
     const pnls = props.data.map((data) => <tr key={data['id']} className={'table-row-all'}>
-        <td>{Math.round(data['total']*100)/100}</td>
-        <td>{data['currency']}</td>
+        <td style={{color: data['total'] > 0.0 ? "green":"red"}}>{Math.round(data['total']*100)/100}</td>
+        <td>{data['portfolio_code']}</td>
     </tr>)
     return(
         <div style={{paddingTop: 15}}>

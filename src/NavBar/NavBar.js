@@ -31,7 +31,6 @@ const Navigation = (props) => {
                 <Link className={'nav-button'} as={Link} to={'/dashboard'}>Dashboard</Link>
                 <Link className={'nav-button'} as={Link}
                           to={'/portfolio/dashboard'}>Portfolio</Link>
-                <Link className={'nav-button'} as={Link} to={'/robot/dashboard'}>Robot</Link>
                 <Link className={'nav-button'} as={Link} to={'/risk'}>Risk</Link>
                 <Link className={'nav-button'} as={Link}
                           to={'/instruments'}>Instrument</Link>

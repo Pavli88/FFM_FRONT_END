@@ -191,10 +191,6 @@ const MainApplication = (props) => {
                                                     <Route path="/profil">
                                                         <ProfilPage/>
                                                     </Route>
-                                                    <Route path="/robot">
-                                                        <RobotPage/>
-                                                    </Route>
-
                                                     <Route path='*' element={<Redirect to='/dashboard'/>}/>
                                                 </Switch>
                                             </div>

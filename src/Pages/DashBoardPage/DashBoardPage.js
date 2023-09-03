@@ -48,8 +48,8 @@ const DashBoardPage = () => {
         <div className={'page-container'}>
             <div style={{display: "flex"}}>
                 <div>
-                    <DashBoardNavWidget x={navs} y={portCodes}/>
-                    <DashBoardNavWidget x={groupedNavs} y={portTypes}/>
+                    <DashBoardNavWidget x={navs} y={portCodes} title={'Portfolios'}/>
+                    <DashBoardNavWidget x={groupedNavs} y={portTypes} title={'Portfolio Type'}/>
                 </div>
                 <div>
                     <DashBoardTotalPnl data={totalPnl}/>

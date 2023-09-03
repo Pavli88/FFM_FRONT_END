@@ -9,16 +9,8 @@ const DashBoardNavWidget = (props) => {
                 toolbar: false,
                 type: 'area',
             },
-            colors: [function(value){
-                if (value["value"] < 0){
-                    return '#E32227'
-                }else {
-                    return '#007500'
-                }
-            }],
             xaxis: {
                 categories: props.y,
-                type: 'date',
                 labels: {show: true},
                 axisBorder: {
                     show: false,
@@ -69,18 +61,9 @@ const DashBoardNavWidget = (props) => {
         options: {
             chart: {
                 toolbar: false,
-                type: 'donut',
+                type: 'pie',
             },
-            colors: [function(value){
-                if (value["value"] < 0){
-                    return '#E32227'
-                }else {
-                    return '#007500'
-                }
-            }],
             xaxis: {
-                categories: props.y,
-                type: 'date',
                 labels: {show: true},
                 axisBorder: {
                     show: false,
@@ -99,15 +82,6 @@ const DashBoardNavWidget = (props) => {
                     offsetY: 0
                 },
             },
-            yaxis: [
-                {
-                    labels: {
-                        formatter: function (val) {
-                            return val.toFixed(2);
-                        }
-                    },
-                },
-            ],
             dataLabels: {
                 enabled: true
             },
@@ -118,55 +92,42 @@ const DashBoardNavWidget = (props) => {
                 position: 'right',
                 offsetY: 40
             },
+            labels: props.y
         },
-        series: [
-            {
-                name: 'NAV',
-                data: props.x,
-            },
-        ]
+        series: props.x
     }
 
     return (
         <div style={{display: "flex", height: '400px', width: '1000px', padding: 15}}>
-            <div style={{width: '50%', paddingRight: 15}}>
+            <div style={{width: '100%', paddingRight: 15}}>
                 <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
                     <Card.Header>
                         <div style={{display: 'flex'}}>
                             <div>
-                                <span>NAV by Portfolios</span>
+                                <span>NAV by {props.title}</span>
                             </div>
                             <div style={{position: "absolute", right: 15}}>
                                     <span>{props.x.reduce((a, b) => a + b, 0)}</span>
                                 </div>
                         </div>
                     </Card.Header>
-                    <div style={{height: '100%'}}>
-                        <Chart
-                            options={x.options}
-                            series={x.series}
-                            type={'bar'}
-                            width="100%"
-                            height="100%"/>
-                    </div>
-                </Card>
-            </div>
-            <div style={{width: '50%'}}>
-                <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
-                    <Card.Header>
-                        <div style={{display: 'flex'}}>
-                            <div>
-                                <span>NAV by Portfolios</span>
-                            </div>
+                    <div style={{display: "flex", height: '100%'}}>
+                        <div style={{height: '100%', width: '50%'}}>
+                            <Chart
+                                options={x.options}
+                                series={x.series}
+                                type={'bar'}
+                                width="100%"
+                                height="100%"/>
                         </div>
-                    </Card.Header>
-                    <div style={{height: '100%'}}>
-                        <Chart
-                            options={y.options}
-                            series={y.series}
-                            type={'donut'}
-                            width="100%"
-                            height="100%"/>
+                        <div style={{height: '100%', width: '50%'}}>
+                            <Chart
+                                options={y.options}
+                                series={y.series}
+                                type={'pie'}
+                                width="100%"
+                                height="100%"/>
+                        </div>
                     </div>
                 </Card>
             </div>
