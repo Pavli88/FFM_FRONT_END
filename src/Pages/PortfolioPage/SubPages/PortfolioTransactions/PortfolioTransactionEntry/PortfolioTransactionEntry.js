@@ -13,6 +13,8 @@ const PortfolioTransactionEntry = (props) => {
     const [transactionType, setTransactionType] = useState('Purchase');
     const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
+    const [optionSelected, setOptionSelected] = useState(false);
+    const [optionType, setOptionType] = useState("C");
     const dateRef = useRef();
     const quantityRef = useRef();
     const priceRef = useRef();
@@ -33,6 +35,7 @@ const PortfolioTransactionEntry = (props) => {
                 status: '',
                 is_active: 0,
                 transaction_link_code: relatedSelected ? relatedID : 0,
+                option: relatedSelected ? instrumentData['option']: optionSelected === false ? "": optionType
         })
                 .then(response => alert(response.data.response))
                 .catch((error) => {
@@ -69,6 +72,16 @@ const PortfolioTransactionEntry = (props) => {
                         }} />
                     </div>
                 </div>
+
+                {relatedSelected ? '' : <div style={{paddingLeft: 10, display: "flex"}}>
+                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Option</Form.Label>
+                    <div style={{padding: 10}}>
+                        <input type="checkbox" onChange={(e) => {
+                            setOptionSelected(e.target.checked)
+                            setOptionType('C')
+                        }} />
+                    </div>
+                </div>}
 
                 {relatedSelected ? <div style={{paddingLeft: 10, display: "flex"}}>
                     <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Cash Transaction</Form.Label>
@@ -116,6 +129,15 @@ const PortfolioTransactionEntry = (props) => {
                             <option value={'Sale'}>Sale</option>
                         </Form.Control>
                     </div>
+                }
+
+                {optionSelected ? <div className={'entry-block'}>
+                        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Option Type</Form.Label>
+                        <Form.Control onChange={(e) => setOptionType(e.target.value)} as="select">
+                            <option value={'C'}>Call</option>
+                            <option value={'P'}>Put</option>
+                        </Form.Control>
+                    </div>: ""
                 }
 
                 <div style={{margin: 10}}>

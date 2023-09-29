@@ -118,6 +118,10 @@ const TableGrouped = (props) => {
                 Header: 'Open/Closed',
                 accessor: 'is_active',
             },
+             {
+                Header: 'Option',
+                accessor: 'option',
+            },
         ],
         []
     )
