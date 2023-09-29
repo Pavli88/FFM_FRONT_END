@@ -4,13 +4,14 @@ import axios from "axios";
 import ServerContext from "../../../../context/server-context";
 import PortfolioPageContext from "../../context/portfolio-page-context";
 import PortfolioDrawdown from "./PortfolioDrawdown/PortfolioDrawdown";
-
+import PortfolioHoldingDrawdown from "./PortfolioHoldingDrawDown/PortfolioHoldingDrawDown";
 
 const PortfolioRiskPage = (props) => {
     const server = useContext(ServerContext)['server'];
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     const [exposureData, setExposureData] = useState({dates: [], series:[{name:'', data: []}]});
     const [drawDownData, setDrawDownData] = useState({'data': []});
+    const [holdingDrawDown, setHoldingDrawDown] = useState([]);
 
     const fetchExposures = async () => {
         const response = await axios.get(server + 'portfolios/get/exposures/', {
@@ -32,18 +33,38 @@ const PortfolioRiskPage = (props) => {
         setDrawDownData(response.data)
     };
 
+    const fetchNavData = async() => {
+        const response = await axios.get(server + 'portfolios/get/nav/', {
+            params: {
+                date__gte: "2023-01-01",
+                portfolio_code: portfoliCode
+            }
+        })
+        setHoldingDrawDown(response.data)
+
+    };
+
+    const hD= holdingDrawDown.map(data => data['total'] === 0 ? 0: ((data['holding_nav'] / data['total']) -1) * 100)
+    const hDDate = holdingDrawDown.map(data => data['date'])
+
     useEffect(() => {
         fetchExposures();
         fetchDrawdown();
+        fetchNavData();
     }, [])
 
     return (
         <div style={{height: '800px', width: '100%', padding: 15}}>
-            <div style={{height:'50%'}}>
+            <div style={{height: '50%'}}>
                 <PositionExposure data={exposureData}/>
             </div>
-            <div style={{height:'50%', paddingTop: 15}}>
-                <PortfolioDrawdown data={drawDownData['data']} dates={drawDownData['dates']}/>
+            <div style={{display: "flex", height: '50%', width: "100%"}}>
+                <div style={{width: "100%",paddingTop: 15}}>
+                    <PortfolioDrawdown data={drawDownData['data']} dates={drawDownData['dates']}/>
+                </div>
+                <div style={{width: "100%", paddingTop: 15, paddingLeft: 15}}>
+                    <PortfolioHoldingDrawdown data={hD} dates={hDDate}/>
+                </div>
             </div>
         </div>
     );

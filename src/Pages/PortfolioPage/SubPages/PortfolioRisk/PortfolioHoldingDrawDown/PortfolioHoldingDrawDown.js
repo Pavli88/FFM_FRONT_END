@@ -1,7 +1,7 @@
 import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
 
-const PortfolioDrawdown = (props) => {
+const PortfolioHoldingDrawdown = (props) => {
 
     const chartConfig = {
         options: {
@@ -81,20 +81,29 @@ const PortfolioDrawdown = (props) => {
             },
         ]
     }
-    const lastRecord = Math.round(props.data[props.data.length - 1] * 100) / 100
+    const lastRecord = Math.round(props.data[props.data.length - 1] * 100) / 100;
+    const maxDD = Math.round(Math.min(...props.data) * 100)/100;
 
     return(
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        Realized Drawdown
+                        Holding Drawdown
                     </div>
+                    <span style={{
+                            color: lastRecord < 0 ? 'red': 'green',
+                            paddingLeft: 15
+                        }}>{lastRecord} %</span>
+                     <span style={{
+                            position: "absolute",
+                            right: 90
+                        }}>Max Drawdown</span>
                     <span style={{
                             color: lastRecord < 0 ? 'red': 'green',
                             position: "absolute",
                             right: 15
-                        }}>{lastRecord} %</span>
+                        }}>{maxDD} %</span>
                 </div>
             </Card.Header>
             <div style={{height: '100%'}}>
@@ -108,4 +117,4 @@ const PortfolioDrawdown = (props) => {
         </Card>
     )
 };
-export default PortfolioDrawdown;
+export default PortfolioHoldingDrawdown;
