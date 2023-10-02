@@ -115,10 +115,6 @@ const TableGrouped = (props) => {
                 accessor: 'trade_date',
             },
              {
-                Header: 'Open/Closed',
-                accessor: 'is_active',
-            },
-             {
                 Header: 'Option',
                 accessor: 'option',
             },
@@ -241,7 +237,8 @@ const TableGrouped = (props) => {
                                     placeholder={selectedTransaction.open_status}
                                     onChange={(e) => setSelectedTransaction({
                                         ...selectedTransaction,
-                                        open_status: e.value
+                                        open_status: e.value,
+                                        is_active: e.value === 'Open'
                                     })}
                             >
                             </Select>
@@ -276,7 +273,7 @@ const TableGrouped = (props) => {
                                           type="number"
                                           onChange={(e) => setSelectedTransaction({
                                               ...selectedTransaction,
-                                              price: e.target.value
+                                              price: e.target.value,
                                           })}
                             />
                         </div>

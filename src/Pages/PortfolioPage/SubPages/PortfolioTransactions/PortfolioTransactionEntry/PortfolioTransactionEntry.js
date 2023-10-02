@@ -14,6 +14,7 @@ const PortfolioTransactionEntry = (props) => {
     const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
     const [optionSelected, setOptionSelected] = useState(false);
+    const [transactionStatus, setTransactionStatus] = useState(false);
     const [optionType, setOptionType] = useState("C");
     const dateRef = useRef();
     const quantityRef = useRef();
@@ -33,7 +34,8 @@ const PortfolioTransactionEntry = (props) => {
                 price: priceRef.current.value,
                 currency: instrumentData.currency,
                 status: '',
-                is_active: 0,
+                is_active: transactionStatus,
+                open_status: transactionStatus ? 'Open': 'Closed',
                 transaction_link_code: relatedSelected ? relatedID : 0,
                 option: relatedSelected ? instrumentData['option']: optionSelected === false ? "": optionType
         })
@@ -61,6 +63,15 @@ const PortfolioTransactionEntry = (props) => {
     return (
         <div>
             <div style={{height: '500px', overflowY: 'scroll', padding: 5}}>
+
+                <div style={{paddingLeft: 10, display: "flex"}}>
+                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Open Transaction</Form.Label>
+                    <div style={{padding: 10}}>
+                        <input type="checkbox" onChange={(e) => {
+                            setTransactionStatus(e.target.checked)
+                        }} />
+                    </div>
+                </div>
 
                 <div style={{paddingLeft: 10, display: "flex"}}>
                     <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Related Transaction</Form.Label>

@@ -56,7 +56,7 @@ const PortfolioTransactionsFilter = (props) => {
                 {/*<Form.Control ref={securityRef} type="text"/>*/}
                 <div>
                     <span className={'input-label'}>
-                        Security
+                        Security ID
                     </span>
                 </div>
                 <div>
