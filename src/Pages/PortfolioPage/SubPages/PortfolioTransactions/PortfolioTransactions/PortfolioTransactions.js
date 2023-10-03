@@ -87,20 +87,32 @@ const TableGrouped = (props) => {
                 accessor: 'price',
             },
             {
-                Header: 'Market Value',
+                Header: 'Base MV',
                 accessor: 'mv',
             },
             {
-                Header: 'Net Cashflow',
+                Header: 'Local MV',
+                accessor: 'local_mv',
+            },
+            {
+                Header: 'Base CF',
                 accessor: 'net_cashflow',
+            },
+            {
+                Header: 'Local CF',
+                accessor: 'local_cashflow',
             },
             {
                 Header: 'Margin Amount',
                 accessor: 'margin_balance',
             },
             {
-                Header: 'Realized PnL',
+                Header: 'Base PnL',
                 accessor: 'realized_pnl',
+            },
+             {
+                Header: 'Local PnL',
+                accessor: 'local_pnl',
             },
             {
                 Header: 'Account ID',
