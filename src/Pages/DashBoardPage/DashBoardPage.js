@@ -4,12 +4,15 @@ import ServerContext from "../../context/server-context";
 import DashBoardNavWidget from "./DashBoardNavWidget/DashBoardNavWidget";
 import DateContext from "../../context/date-context";
 import DashBoardTotalPnl from "./DashBoardTotalPnl/DashBoardTotalPnl";
+import DashBoardPerformance from "./DashBoardPerformance/DashBoardPerformance";
+
 const DashBoardPage = () => {
     const server = useContext(ServerContext)['server'];
     const currentDate = useContext(DateContext).currentDate;
     const [portfolioNavData, setPortfolioNavData] = useState([]);
     const [groupedNav, setGroupedNav] = useState([]);
     const [totalPnl, setTotalPnl] = useState([]);
+    const [performanceData, setPerformanceData] = useState([]);
 
     const fetchPortfolioNav = async() => {
         const response = await axios.get(server + 'portfolios/get/portfolio_nav/', {
@@ -29,6 +32,15 @@ const DashBoardPage = () => {
         setGroupedNav(response.data)
     };
 
+    const fetchPerfDashBoard = async() => {
+        const response = await axios.get(server + 'portfolios/get/perf_dashboard/', {
+            params: {
+                date: currentDate,
+            }
+        })
+        setPerformanceData(response.data)
+    };
+
     const fetchTotalPnl = async() => {
         const response = await axios.get(server + 'portfolios/get/total_pnl/', )
         setTotalPnl(response.data)
@@ -38,6 +50,7 @@ const DashBoardPage = () => {
        fetchPortfolioNav();
        fetchPortfolioGroupedNav();
        fetchTotalPnl();
+       fetchPerfDashBoard();
     }, [])
 
     const navs = portfolioNavData.map((data) => Math.round(data.total*100)/100)
@@ -53,6 +66,9 @@ const DashBoardPage = () => {
                 </div>
                 <div>
                     <DashBoardTotalPnl data={totalPnl}/>
+                </div>
+                <div style={{paddingLeft: 15}}>
+                    <DashBoardPerformance data={performanceData}/>
                 </div>
             </div>
         </div>
