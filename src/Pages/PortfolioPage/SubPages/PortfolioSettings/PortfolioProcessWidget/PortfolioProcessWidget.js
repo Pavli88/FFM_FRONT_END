@@ -15,7 +15,7 @@ const PortfolioProcessWidget = (props) => {
                         {props.valuation}
                     </Tab>
                     <Tab eventKey="total_return" title="Total Return">
-
+                        {props.performance}
                     </Tab>
                     <Tab eventKey="attribution" title="Attribution">
 

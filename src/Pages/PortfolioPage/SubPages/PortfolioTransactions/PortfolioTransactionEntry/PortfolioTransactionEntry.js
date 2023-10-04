@@ -181,6 +181,11 @@ const PortfolioTransactionEntry = (props) => {
                     <Form.Control ref={priceRef} type="number" min={0.0}/>
                 </div>
 
+                <div style={{margin: 10}}>
+                    <Form.Label style={{paddingBottom: 5}}>FX Rate</Form.Label>
+                    <Form.Control ref={quantityRef} type="number"/>
+                </div>
+
             </div>
             <div style={{height: '60px', width: '100%', padding: 10, position: "absolute", bottom: 0}}>
                 <button onClick={submitHandler} className={'save-button'}>Save</button>

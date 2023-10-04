@@ -9,6 +9,9 @@ const CalculationOptions = (props) => {
     const currentDate = useContext(DateContext).currentDate;
     const startDateRef = useRef();
     const [process, setProcess] = useState();
+    const [parameters, setParameters] = useState({
+        'date': currentDate
+    });
 
     const startDateDiv = <div style={{paddingLeft: 15, display: "flex"}}>
         <div style={{paddingTop: 0, width: 150}}>
@@ -16,27 +19,34 @@ const CalculationOptions = (props) => {
                             Start Date
                         </span>
         </div>
-        <input ref={startDateRef} type={"date"} defaultValue={currentDate}/>
+        <input type={"date"} defaultValue={currentDate} onChange={(e) => setParameters({...parameters, 'date': e.target.value})}/>
     </div>
 
     const returnPeriods = <div style={{paddingLeft: 15, paddingTop: 0, width: 400}}>
         <Select
             options={[
-                {value: '1mo', label: '1 Month'},
-                {value: '3mo', label: '3 Months'},
-                {value: '6mo', label: '6 Months'},
+                {value: '1m', label: '1 Month'},
+                {value: '3m', label: '3 Months'},
+                {value: '6m', label: '6 Months'},
                 {value: '1y', label: '1 Year'},
                 {value: 'mtd', label: 'Mtd'},
                 {value: 'qtd', label: 'Qtd'},
                 {value: 'ytd', label: 'Ytd'},
+                {value: 'si', label: 'Since Inception'},
             ]}
             isClearable
             isMulti
-            // onChange={(e) => setProcess(e.value)}
+            onChange={(e) => setParameters({...parameters, 'periods':e.map(data => data['value'])})}
             className={'instrument-search-input-field'}
 
         />
     </div>
+
+    const urls = {
+        'valuation': 'calculate/valuation/',
+        'total_return': 'calculate/total_return/',
+        'attribution': 'calculate/attribution/'
+    }
 
     return (
         <div style={{padding: 15}}>
@@ -55,7 +65,12 @@ const CalculationOptions = (props) => {
                                 {value: 'attribution', label: 'Attribution'}
                             ]}
                             isClearable
-                            onChange={(e) => setProcess(e.value)}
+                            onChange={function (e) {
+                                setProcess(e.value)
+                                setParameters({
+                                    'date': currentDate
+                                })
+                            }}
                             className={'instrument-search-input-field'}
 
                         />
@@ -66,8 +81,8 @@ const CalculationOptions = (props) => {
 
                     <div style={{paddingLeft: 10, paddingTop: 0, paddingBottom: 0}}>
                         <button className={'get-button'} onClick={() => props.run({
-                            'url': 'calculate/valuation/',
-                            params: {'date': startDateRef.current.value}
+                            'url': urls[process],
+                            params: parameters
                         })}>Run
                         </button>
                     </div>

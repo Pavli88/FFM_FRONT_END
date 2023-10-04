@@ -87,6 +87,10 @@ const TableGrouped = (props) => {
                 accessor: 'price',
             },
             {
+                Header: 'FX Rate',
+                accessor: 'fx_rate',
+            },
+            {
                 Header: 'Base MV',
                 accessor: 'mv',
             },
@@ -107,12 +111,16 @@ const TableGrouped = (props) => {
                 accessor: 'margin_balance',
             },
             {
-                Header: 'Base PnL',
+                Header: 'Base P&L',
                 accessor: 'realized_pnl',
             },
              {
-                Header: 'Local PnL',
+                Header: 'Local P&L',
                 accessor: 'local_pnl',
+            },
+             {
+                Header: 'FX P&L',
+                accessor: 'fx_pnl',
             },
             {
                 Header: 'Account ID',

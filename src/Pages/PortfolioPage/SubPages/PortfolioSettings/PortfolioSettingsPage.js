@@ -133,6 +133,26 @@ const PortfolioSettingsPage = (props) => {
         </div>
     </div>
 
+    const performanceParameters = <div>
+        <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
+            <div className={'portfolio-settings-name-field'}>
+                <Nav.Link href="#" disabled>
+                    Performance Start Date
+                </Nav.Link>
+            </div>
+            <div style={{width: '100%'}}>
+                <div style={{width: '100%'}}>
+                    <Form.Control
+                        type={'date'}
+                        style={{height: '100%'}}
+                        value={portfolioData.perf_start_date}
+                        onChange={(e) => setPortfolioData({...portfolioData, 'perf_start_date': e.target.value})}
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
     return (
         <div className={'portfolio-settings-page-container'}>
 
@@ -397,7 +417,7 @@ const PortfolioSettingsPage = (props) => {
                 </div>
 
                 <div style={{width: '70%', paddingLeft: 8}}>
-                    <PortfolioProcessWidget valuation={valuationParameters}/>
+                    <PortfolioProcessWidget valuation={valuationParameters} performance={performanceParameters}/>
                 </div>
             </div>
         </div>

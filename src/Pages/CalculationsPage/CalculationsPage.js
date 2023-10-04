@@ -28,14 +28,24 @@ const CalculationsPage = (props) => {
         fetchPortfolios()
     }, [])
 
-    const runCalculation = async(parameters) => {
-        setShowModal(true)
-        const response = await axios.post(server + parameters.url, {...parameters.params,
-            portfolios: selectedPortfolios
+    const runCalculation = async (parameters) => {
+        console.log(parameters)
+        if (parameters.url === undefined) {
+            alert('Please select a process')
+        } else {
+            if (selectedPortfolios.length === 0) {
+                alert('Select portfolios for calculation')
+            } else {
+                // setShowModal(true)
+                const response = await axios.post(server + parameters.url, {
+                        ...parameters.params,
+                        portfolios: selectedPortfolios
+                    }
+                )
+                setCalcResponse(response.data)
+                setShowModal(false)
             }
-        )
-        setCalcResponse(response.data)
-        setShowModal(false)
+        }
     };
 
     return (

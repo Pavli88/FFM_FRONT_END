@@ -5,8 +5,7 @@ import PortfolioPageContext from "../../../context/portfolio-page-context";
 import TransactionContext from "../context/transaction-context";
 import DateContext from "../../../../../context/date-context";
 import Card from "react-bootstrap/Card";
-import {Nav} from "react-bootstrap";
-import FormControl from "react-bootstrap/FormControl";
+import PortfolioTransactionEntry from "../PortfolioTransactionEntry/PortfolioTransactionEntry";
 
 
 const PortfolioTransactionsFilter = (props) => {
@@ -102,7 +101,13 @@ const PortfolioTransactionsFilter = (props) => {
                     <button onClick={submitHandler} className={'get-button'}>Search</button>
                 </div>
 
+                <div style={{paddingLeft: 10, position: "absolute", right: 5}}>
+                    <button className={'get-button'}>New Transaction</button>
+                </div>
+
             </div>
+
+
 
         </Card>
     )
