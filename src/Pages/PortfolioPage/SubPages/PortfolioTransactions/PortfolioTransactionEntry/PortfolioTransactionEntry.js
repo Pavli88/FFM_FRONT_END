@@ -19,6 +19,7 @@ const PortfolioTransactionEntry = (props) => {
     const dateRef = useRef();
     const quantityRef = useRef();
     const priceRef = useRef();
+    const fxRef = useRef();
 
     const submitHandler = () => {
         if (portfolioData.currency !== instrumentData.currency){
@@ -37,7 +38,8 @@ const PortfolioTransactionEntry = (props) => {
                 is_active: transactionStatus,
                 open_status: transactionStatus ? 'Open': 'Closed',
                 transaction_link_code: relatedSelected ? relatedID : 0,
-                option: relatedSelected ? instrumentData['option']: optionSelected === false ? "": optionType
+                option: relatedSelected ? instrumentData['option']: optionSelected === false ? "": optionType,
+                fx_rate: fxRef.current.value
         })
                 .then(response => alert(response.data.response))
                 .catch((error) => {
@@ -183,7 +185,7 @@ const PortfolioTransactionEntry = (props) => {
 
                 <div style={{margin: 10}}>
                     <Form.Label style={{paddingBottom: 5}}>FX Rate</Form.Label>
-                    <Form.Control ref={quantityRef} type="number"/>
+                    <Form.Control ref={fxRef} type="number" defaultValue={1.0}/>
                 </div>
 
             </div>

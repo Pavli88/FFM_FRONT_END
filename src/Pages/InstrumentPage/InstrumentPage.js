@@ -8,6 +8,7 @@ import ServerContext from "../../context/server-context";
 import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-context";
 import axios from "axios";
 import InstrumentPrices from "./InstrumentInfo/InstrumentPrices/InstrumentPrices";
+import InstrumentPricing from "./InstrumentPricing/InstrumentPricing";
 
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
@@ -44,6 +45,7 @@ const InstrumentPage = () => {
                 <div className={'instrument-page-container'}>
                     <div style={{paddingTop: 15, paddingLeft: 15, paddingBottom: 15}}>
                         <InstrumentSearchBar/>
+                        <InstrumentPricing/>
                     </div>
 
                     <div style={{padding: 15, width:'100%', height: '100%'}}>
