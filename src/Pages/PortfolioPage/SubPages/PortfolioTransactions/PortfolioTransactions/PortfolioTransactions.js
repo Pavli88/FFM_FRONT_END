@@ -12,14 +12,17 @@ import PortfolioTransactionEntry from "../PortfolioTransactionEntry/PortfolioTra
 import PortfolioCashEntry from "../PortfolioCashEntry/PortfolioCashEntry";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import {BsPlusLg, BsPencil, BsTrash} from "react-icons/bs";
 
 const TableGrouped = (props) => {
     const [showModal, setShowModal] = useState(false);
+    const [showLinkedModal, setShowLinkedModal] = useState(false);
     const [selectedTransaction, setSelectedTransaction] = useState({});
+    const [linkedTransaction, setLinkedTransaction] = useState({});
 
     const deleteTransaction = (id) => {
         axios.post(props.server + 'portfolios/delete/transaction/', {
-            id: id,
+            id: id['original']['id'],
         })
             .then(response => alert(response.data.response))
             .catch((error) => {
@@ -40,6 +43,22 @@ const TableGrouped = (props) => {
         () => props.data,
         [props.data]
     )
+
+    const removeKey = () => {
+        setLinkedTransaction(current => {
+            const {id, ...rest} = current;
+            return rest;
+        });
+    };
+
+    const newLinkedTransaction = () => {
+        axios.post(props.server + 'portfolios/new/transaction/', linkedTransaction)
+            .then(response => alert(response.data.response))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+        setShowLinkedModal(false)
+    };
 
     const columns = useMemo(
         () => [
@@ -138,6 +157,7 @@ const TableGrouped = (props) => {
                 Header: 'Option',
                 accessor: 'option',
             },
+
         ],
         []
     )
@@ -154,6 +174,7 @@ const TableGrouped = (props) => {
         state: { groupBy, expanded },
     } = tableInstance
     const firstPageRows = rows.slice(0, 200)
+
     return (
         <table {...getTableProps()}>
             <thead>
@@ -162,7 +183,7 @@ const TableGrouped = (props) => {
                     <tr {...headerGroup.getHeaderGroupProps()}>
                         {
                             headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps()}>
+                                <th {...column.getHeaderProps()} style={{fontSize: 12}}>
                                     {column.canGroupBy ? (
                                         // If the column can be grouped, let's add a toggle
                                         <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
@@ -172,36 +193,23 @@ const TableGrouped = (props) => {
                                     {column.render('Header')}
                                 </th>
                             ))}
-                        <th></th>
-                        <th></th>
                     </tr>
                 ))}
             </thead>
             <tbody {...getTableBodyProps()}>
             {firstPageRows.map((row, i) => {
                 prepareRow(row)
-                // console.log(row)
+
                 return (
                     <tr {...row.getRowProps()}
                         style={{
-                            cursor: row.isGrouped ? '': 'pointer',
-                            background: row.isGrouped ? '#f2f4f4': 'white'
+                            background: row.isGrouped ? '#f2f4f4': 'white',
                         }}
 
-                        onDoubleClick={() => {
-                            if (row.isGrouped) {
-                                console.log('grouped')
-                            } else {
-                                setShowModal(true)
-                                setSelectedTransaction(row.original)
-                            }
-                        }
-                        }
-
                     >
-
                         {row.cells.map(cell => {
                             return (
+                                // This generates each individual cells
                                 <td
                                     {...cell.getCellProps()}
                                     style={{
@@ -212,6 +220,7 @@ const TableGrouped = (props) => {
                                                 : cell.isPlaceholder
                                                     ? '#ff000042'
                                                     : 'white',
+                                        fontSize: 12,
                                     }}
                                 >
                                     {cell.isGrouped ? (
@@ -235,6 +244,41 @@ const TableGrouped = (props) => {
                             )
                         })
                         }
+
+                        {row.isGrouped ? '' : <td className={'sticky-column'}>
+                            <div style={{display: "flex"}}>
+                                {row.original.transaction_link_code === 0 && row.original.transaction_type !== 'Subscription' && row.original.transaction_type !== 'Redemption' ?
+                                <div style={{padding: 2}}>
+                                    <button className={'normal-button'} onClick={() => {
+                                        setShowLinkedModal(true)
+                                        setLinkedTransaction({
+                                            ...row.original,
+                                            'transaction_link_code': row.original.id,
+                                            'transaction_type': row.original.transaction_type === 'Purchase' ? 'Sale' : row.original.sec_group === 'CFD' && row.original.transaction_type === 'Sale' ? 'Sale' : 'Purchase',
+                                            'open_status': 'Closed',
+                                            'is_active': 0,
+                                        })
+                                        removeKey()
+                                    }}>
+                                        <BsPlusLg/>
+                                    </button>
+                                </div>: ''}
+                                <div style={{padding: 2}}>
+                                    <button className={'normal-button'} onClick={() => {
+                                        setShowModal(true)
+                                        setSelectedTransaction(row.original)
+                                    }}>
+                                        <BsPencil/>
+                                    </button>
+                                </div>
+                                <div style={{padding: 2}}>
+                                    <button className={'delete-button'} onClick={() => deleteTransaction(row)}>
+                                        <BsTrash/>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </td>}
                     </tr>
                 )
             })}
@@ -244,7 +288,7 @@ const TableGrouped = (props) => {
                     <Modal.Title>Update Transaction {selectedTransaction.id}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <div style={{padding: '5px', width: '100%', height: '350px'}}>
+                    <div style={{padding: '5px', width: '100%'}}>
                         {selectedTransaction.sec_group === 'Cash' ? '':
                         <div style={{width: '100%'}}>
                             <Form.Label>Open Status</Form.Label>
@@ -258,7 +302,7 @@ const TableGrouped = (props) => {
                                     onChange={(e) => setSelectedTransaction({
                                         ...selectedTransaction,
                                         open_status: e.value,
-                                        is_active: e.value === 'Open'
+                                        is_active: e.value === 'Open' ? 1: 0
                                     })}
                             >
                             </Select>
@@ -278,11 +322,11 @@ const TableGrouped = (props) => {
 
                         <div style={{width: '100%', marginTop: 15}}>
                             <Form.Label>Units</Form.Label>
-                            <Form.Control defaultValue={selectedTransaction.quantity}
+                            <Form.Control defaultValue={Math.abs(selectedTransaction.quantity)}
                                           type="number"
                                           onChange={(e) => setSelectedTransaction({
                                               ...selectedTransaction,
-                                              quantity: e.target.value
+                                              quantity: Math.abs(e.target.value)
                                           })}
                             />
                         </div>
@@ -298,71 +342,119 @@ const TableGrouped = (props) => {
                             />
                         </div>
 
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>FX Rate</Form.Label>
+                            <Form.Control defaultValue={selectedTransaction.fx_rate}
+                                          type="number"
+                                          onChange={(e) => setSelectedTransaction({
+                                              ...selectedTransaction,
+                                              fx_rate: e.target.value,
+                                          })}
+                            />
+                        </div>
+
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button className={'delete-button'} onClick={() => deleteTransaction(selectedTransaction.id)}>
-                        Delete
-                    </button>
                     <button className={'save-button'} onClick={updateTransaction}>
                         Save
                     </button>
                 </Modal.Footer>
             </Modal>
+
+            {/*Related Transaction Entry*/}
+            <Modal show={showLinkedModal} onHide={() => setShowLinkedModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>New Linked Transaction</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div style={{padding: '5px', width: '100%'}}>
+
+                        <div style={{width: '100%'}}>
+                            <Form.Label>Parent Transaction</Form.Label>
+                            <Form.Control defaultValue={linkedTransaction.transaction_link_code}
+                                          type="text"
+                                          disabled={true}
+                            />
+                        </div>
+
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>Open Status</Form.Label>
+                            <Form.Control defaultValue={'Closed'}
+                                          type="text"
+                                          disabled={true}
+                            />
+                        </div>
+
+
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>Transaction Type</Form.Label>
+                            <Form.Control defaultValue={linkedTransaction.transaction_type}
+                                          type="text"
+                                          disabled={true}
+                            />
+                        </div>
+
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>Trade Date</Form.Label>
+                            <Form.Control defaultValue={selectedTransaction.trade_date}
+                                          type="date"
+                                          onChange={(e) => setLinkedTransaction({
+                                              ...linkedTransaction,
+                                              trade_date: e.target.value
+                                          })}
+                            />
+                        </div>
+
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>Quantity</Form.Label>
+                            <Form.Control placeholder={selectedTransaction.quantity}
+                                          type="number"
+                                          onChange={(e) => setLinkedTransaction({
+                                              ...linkedTransaction,
+                                              quantity: e.target.value
+                                          })}
+                            />
+                        </div>
+
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>Price</Form.Label>
+                            <Form.Control defaultValue={selectedTransaction.price}
+                                          type="number"
+                                          onChange={(e) => setLinkedTransaction({
+                                              ...linkedTransaction,
+                                              price: e.target.value,
+                                          })}
+                            />
+                        </div>
+
+                        <div style={{width: '100%', marginTop: 15}}>
+                            <Form.Label>FX Rate</Form.Label>
+                            <Form.Control defaultValue={selectedTransaction.price}
+                                          type="number"
+                                          onChange={(e) => setLinkedTransaction({
+                                              ...linkedTransaction,
+                                              fx_rate: e.target.value,
+                                          })}
+                            />
+                        </div>
+
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button className={'save-button'} onClick={newLinkedTransaction}>
+                        Save
+                    </button>
+                </Modal.Footer>
+            </Modal>
+
         </table>
     );
 };
 
 const PortfolioTransactions = (props) => {
     const [showTransactionPanel, setShowTransactionPanel] = useState(false);
-    // const portTransData = props.data.map((data) => <tr key={data.id} className={'table-row-all'}
-    //                                                    style={{cursor: data.sec_group === 'Cash' ? '': "pointer"}} onDoubleClick={() => {
-    //     if (data.sec_group != 'Cash') {
-    //         setSelectedTransaction(data)
-    //         setShowModal(true)
-    //     }}
-
-    // }}>
-    //     <td>{data.id}</td>
-    //     <td>{data.portfolio_code}</td>
-    //     <td >{data.security}</td>
-    //     <td >{data.sec_group}</td>
-    //     <td>{data.quantity}</td>
-    //     <td>{data.price}</td>
-    //     <td>{data.mv}</td>
-    //     <td>{data.currency}</td>
-    //     <td>{data.trading_cost}</td>
-    //     <td >{data.transaction_type}</td>
-    //     <td>{data.open_status}</td>
-    //     <td>{data.transaction_link_code}</td>
-    //     <td>{data.created_on}</td>
-    //     <td>{data.trade_date}</td>
-    //     <td>{data.account_id}</td>
-    //     <td>{data.broker_id}</td>
-    //     <td>{data['is_active']}</td>
-    //     <td>{data.transaction_link_code === '' ? <div style={{padding: 0, width: 30}}><button className={'delete-button'} onClick={() => deleteTransaction(data.id)}><BiX/></button></div>: ''}</td>
-    // </tr>)
-
-    const TransactionPanel = <div style={{height: '100%', width: '40%', paddingLeft: 15}}>
-        <Card style={{height: '100%'}}>
-            <Card.Header>Entry</Card.Header>
-            <Tabs
-                defaultActiveKey="security"
-                id="profile-tab"
-                style={{paddingLeft: 12, paddingTop: 5, marginBottom: 0}}
-            >
-                <Tab eventKey="security" title="Security">
-                    <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server}/>
-                </Tab>
-                <Tab eventKey="cash" title="Cash">
-                    <div>
-                        <PortfolioCashEntry portfolio={props.portfolio} server={props.server}/>
-                    </div>
-                </Tab>
-            </Tabs>
-        </Card>
-    </div>
-
+    const [showCashPanel, setShowCashPanel] = useState(false);
     return (
         <div style={{height: '100%', display: "flex"}}>
             <Card className={'transactions-container'}>
@@ -371,15 +463,29 @@ const PortfolioTransactions = (props) => {
                         <span>Transactions</span>
                         <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
                     </div>
+                    <div style={{position: "absolute", right: 100}}>
+                        <button onClick={() => setShowTransactionPanel(value => !value)}
+                                className={'normal-button'} style={{fontSize: 12}}><span style={{paddingRight: 5}}>Transaction</span>
+                            <BsPlusLg/>
+                        </button>
+                    </div>
                     <div style={{position: "absolute", right: 15}}>
-                        <button onClick={() => setShowTransactionPanel(value => !value)} className={'get-button'}>{showTransactionPanel ? <BsChevronLeft/>: <span>New Transaction<BsChevronRight/></span>}  </button>
+                        <button onClick={() => setShowCashPanel(value => !value)}
+                                className={'normal-button'} style={{fontSize: 12}}><span style={{paddingRight: 5}}>Cashflow</span>
+                            <BsPlusLg/>
+                        </button>
                     </div>
                 </Card.Header>
-                <div style={{height: '100%', width: '100%', overflowY: 'scroll', overflowX: 'auto'}}>
+                <div
+                    style={{height: '100%', width: '100%', overflowY: 'auto', overflowX: 'auto', position: 'relative'}}>
                     <TableGrouped data={props.data} server={props.server}/>
                 </div>
             </Card>
-            {showTransactionPanel ? TransactionPanel: ''}
+
+            <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server} show={showTransactionPanel} close={() => setShowTransactionPanel(false)}/>
+
+            <PortfolioCashEntry portfolio={props.portfolio} server={props.server} show={showCashPanel} close={() => setShowCashPanel(false)}/>
+
         </div>
     );
 };

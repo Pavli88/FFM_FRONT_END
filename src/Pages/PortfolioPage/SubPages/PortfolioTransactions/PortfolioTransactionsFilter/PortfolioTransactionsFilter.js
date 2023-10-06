@@ -17,7 +17,7 @@ const PortfolioTransactionsFilter = (props) => {
     const endDateRef = useRef();
     const [transactionType, setTransactionType] = useState('');
     const [transactionSubType, setTransactionSubType] = useState('Buy Open');
-    // const firstUpdate = useRef(true);
+    const [openStatus, setOpenStatus] = useState(false)
 
     const purchaseSubTypes = [
         <option value={'Buy Open'}>Buy Open</option>,
@@ -35,6 +35,7 @@ const PortfolioTransactionsFilter = (props) => {
                 security: securityRef.current.value,
                 trade_date__gte: startDateRef.current.value,
                 trade_date__lte: endDateRef.current.value,
+                is_active: openStatus ? 1 : '',
             }
         });
     };
@@ -51,8 +52,16 @@ const PortfolioTransactionsFilter = (props) => {
         <Card>
             <div className={'search-container'}>
 
-                {/*<Form.Label style={{paddingBottom: 5}}>Transaction ID</Form.Label>*/}
-                {/*<Form.Control ref={securityRef} type="text"/>*/}
+                <div>
+                    <span className={'input-label'}>
+                        Open Transactions
+                    </span>
+                </div>
+
+                <div style={{width:30}}>
+                    <input type={'checkbox'} style={{position: "absolute",top: 18, width: 30, paddingTop: 15, paddingBottom: 5}} onClick={() => setOpenStatus(!openStatus)}/>
+                </div>
+
                 <div>
                     <span className={'input-label'}>
                         Security ID
@@ -96,19 +105,11 @@ const PortfolioTransactionsFilter = (props) => {
                 </div>
                 <input ref={endDateRef} defaultValue={''} type="date" style={{width: 200}}/>
 
-
                 <div style={{paddingLeft: 10}}>
-                    <button onClick={submitHandler} className={'get-button'}>Search</button>
-                </div>
-
-                <div style={{paddingLeft: 10, position: "absolute", right: 5}}>
-                    <button className={'get-button'}>New Transaction</button>
+                    <button onClick={submitHandler} className={'normal-button'} style={{fontSize: 12}}>Search</button>
                 </div>
 
             </div>
-
-
-
         </Card>
     )
 };

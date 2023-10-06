@@ -1,4 +1,5 @@
 import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import {useContext, useRef, useState} from "react";
 import DateContext from "../../../../../context/date-context";
@@ -22,9 +23,9 @@ const PortfolioTransactionEntry = (props) => {
     const fxRef = useRef();
 
     const submitHandler = () => {
-        if (portfolioData.currency !== instrumentData.currency){
+        if (portfolioData.currency !== instrumentData.currency) {
             alert('Portfolio currency is ' + portfolioData.currency + ' and the instrument currency is ' + instrumentData.currency + '. Instrument currency must match with portoflio currency!')
-        }else{
+        } else {
             axios.post(props.server + 'portfolios/new/transaction/', {
                 portfolio_code: portfolioCode,
                 security: relatedSelected === false ? instrumentData.id : instrumentData.security,
@@ -36,16 +37,17 @@ const PortfolioTransactionEntry = (props) => {
                 currency: instrumentData.currency,
                 status: '',
                 is_active: transactionStatus,
-                open_status: transactionStatus ? 'Open': 'Closed',
+                open_status: transactionStatus ? 'Open' : 'Closed',
                 transaction_link_code: relatedSelected ? relatedID : 0,
-                option: relatedSelected ? instrumentData['option']: optionSelected === false ? "": optionType,
+                option: relatedSelected ? instrumentData['option'] : optionSelected === false ? "" : optionType,
                 fx_rate: fxRef.current.value
-        })
+            })
                 .then(response => alert(response.data.response))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        setRelatedID('')
+            setRelatedID('')
+            props.close()
         }
     };
 
@@ -63,78 +65,53 @@ const PortfolioTransactionEntry = (props) => {
     };
 
     return (
-        <div>
-            <div style={{height: '500px', overflowY: 'scroll', padding: 5}}>
+        <Modal show={props.show} onHide={() => props.close()}>
+            <Modal.Header closeButton>
+                <Modal.Title>New Transaction</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
 
-                <div style={{paddingLeft: 10, display: "flex"}}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Open Transaction</Form.Label>
-                    <div style={{padding: 10}}>
-                        <input type="checkbox" onChange={(e) => {
-                            setTransactionStatus(e.target.checked)
-                        }} />
-                    </div>
-                </div>
-
-                <div style={{paddingLeft: 10, display: "flex"}}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Related Transaction</Form.Label>
-                    <div style={{padding: 10}}>
-                        <input type="checkbox" onChange={(e) => {
-                            setRelatedSelected(e.target.checked)
-                            setRelatedID('')
-                            setInstrumentData({})
-                        }} />
-                    </div>
-                </div>
-
-                {relatedSelected ? '' : <div style={{paddingLeft: 10, display: "flex"}}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Option</Form.Label>
-                    <div style={{padding: 10}}>
-                        <input type="checkbox" onChange={(e) => {
-                            setOptionSelected(e.target.checked)
-                            setOptionType('C')
-                        }} />
-                    </div>
-                </div>}
-
-                {relatedSelected ? <div style={{paddingLeft: 10, display: "flex"}}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Cash Transaction</Form.Label>
-                    <div style={{padding: 10}}>
-                        <input type="checkbox" onChange={(e) => {
-                            setCashTranSelected(e.target.checked)
-                            setTransactionType('Dividend')
-                        }}/>
-                    </div>
-                </div>: ''
-                }
-
-                <div className={'entry-block'}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>{relatedSelected ? 'Transaction': 'Security'} ID</Form.Label>
-                    <div style={{display: "flex"}}>
-                        <div style={{width: '100%', paddingRight: 15}}>
-                            <Form.Control value={relatedID} onChange={(e) => setRelatedID(e.target.value)}
-                                          type="number"/>
+                    <div style={{display: 'flex'}}>
+                        <div style={{paddingLeft: 10, display: "flex"}}>
+                            <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Open Transaction</Form.Label>
+                            <div style={{padding: 10}}>
+                                <input type="checkbox" onChange={(e) => {
+                                    setTransactionStatus(e.target.checked)
+                                }}/>
+                            </div>
                         </div>
-                        <div style={{width: '60px'}}>
-                            <button className={'save-button'}
-                                    style={{paddingTop: 7, paddingBottom: 7, paddingLeft: 7, paddingRight: 7}}
-                                    onClick={getSecurity}
-                            >Get
-                            </button>
+                        <div style={{paddingLeft: 10, display: "flex"}}>
+                            <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Option</Form.Label>
+                            <div style={{padding: 10}}>
+                                <input type="checkbox" onChange={(e) => {
+                                    setOptionSelected(e.target.checked)
+                                    setOptionType('C')
+                                }}/>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {relatedSelected && cashTranSelected === false ? <div style={{margin: 10}}>
-                        <Form.Label style={{paddingBottom: 5}}>Transaction Type</Form.Label>
-                        <Form.Control value={instrumentData.transaction_type === 'Purchase' ? 'Sale' : instrumentData.sec_group === 'CFD' & instrumentData.transaction_type === 'Sale' ? 'Sale': 'Purchase'} type="text"
-                                      disabled/>
-                    </div> : relatedSelected && cashTranSelected ? <div className={'entry-block'}>
-                        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
-                        <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
-                            <option value={'Dividend'}>Dividend</option>
-                            <option value={'Interest Received'}>Interest Received</option>
-                        </Form.Control>
-                    </div>:
+                    <div className={'entry-block'}>
+                        <Form.Label style={{
+                            paddingBottom: 5,
+                            paddingTop: 10
+                        }}>Security ID</Form.Label>
+                        <div style={{display: "flex"}}>
+                            <div style={{width: '100%', paddingRight: 15}}>
+                                <Form.Control value={relatedID} onChange={(e) => setRelatedID(e.target.value)}
+                                              type="number"/>
+                            </div>
+                            <div style={{width: '60px'}}>
+                                <button className={'normal-button'}
+                                        style={{paddingTop: 7, paddingBottom: 7, paddingLeft: 7, paddingRight: 7}}
+                                        onClick={getSecurity}
+                                >Get
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className={'entry-block'}>
                         <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
                         <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
@@ -142,57 +119,59 @@ const PortfolioTransactionEntry = (props) => {
                             <option value={'Sale'}>Sale</option>
                         </Form.Control>
                     </div>
-                }
 
-                {optionSelected ? <div className={'entry-block'}>
+
+                    {optionSelected ? <div className={'entry-block'}>
                         <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Option Type</Form.Label>
                         <Form.Control onChange={(e) => setOptionType(e.target.value)} as="select">
                             <option value={'C'}>Call</option>
                             <option value={'P'}>Put</option>
                         </Form.Control>
-                    </div>: ""
-                }
+                    </div> : ""
+                    }
 
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Sec Name</Form.Label>
-                    <Form.Control value={relatedSelected ? instrumentData.security: instrumentData.name} type="text" disabled/>
+                    <div style={{margin: 10}}>
+                        <Form.Label style={{paddingBottom: 5}}>Sec Name</Form.Label>
+                        <Form.Control value={relatedSelected ? instrumentData.security : instrumentData.name}
+                                      type="text" disabled/>
+                    </div>
+
+                    <div style={{margin: 10}}>
+                        <Form.Label style={{paddingBottom: 5}}>Sec Group</Form.Label>
+                        <Form.Control value={relatedSelected ? instrumentData.sec_group : instrumentData.group}
+                                      type="text" disabled/>
+                    </div>
+
+                    <div style={{margin: 10}}>
+                        <Form.Label style={{paddingBottom: 5}}>Currency</Form.Label>
+                        <Form.Control value={instrumentData.currency} type="text" disabled/>
+                    </div>
+
+                    <div style={{margin: 10}}>
+                        <Form.Label style={{paddingBottom: 5}}>Date</Form.Label>
+                        <Form.Control ref={dateRef} defaultValue={currentDate} type="date"/>
+                    </div>
+
+                    <div style={{margin: 10}}>
+                        <Form.Label style={{paddingBottom: 5}}>Quantity</Form.Label>
+                        <Form.Control ref={quantityRef} type="number"/>
+                    </div>
+
+                    <div style={{margin: 10}}>
+                        <Form.Label style={{paddingBottom: 5}}>Price</Form.Label>
+                        <Form.Control ref={priceRef} type="number" min={0.0}/>
+                    </div>
+
+                    <div style={{margin: 10}}>
+                        <Form.Label style={{paddingBottom: 5}}>FX Rate</Form.Label>
+                        <Form.Control ref={fxRef} type="number" defaultValue={1.0}/>
+                    </div>
                 </div>
-
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Sec Group</Form.Label>
-                    <Form.Control value={relatedSelected ? instrumentData.sec_group: instrumentData.group} type="text" disabled/>
-                </div>
-
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Currency</Form.Label>
-                    <Form.Control value={instrumentData.currency} type="text" disabled/>
-                </div>
-
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Date</Form.Label>
-                    <Form.Control ref={dateRef} defaultValue={currentDate} type="date"/>
-                </div>
-
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Quantity</Form.Label>
-                    <Form.Control ref={quantityRef} type="number"/>
-                </div>
-
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Price</Form.Label>
-                    <Form.Control ref={priceRef} type="number" min={0.0}/>
-                </div>
-
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>FX Rate</Form.Label>
-                    <Form.Control ref={fxRef} type="number" defaultValue={1.0}/>
-                </div>
-
-            </div>
-            <div style={{height: '60px', width: '100%', padding: 10, position: "absolute", bottom: 0}}>
-                <button onClick={submitHandler} className={'save-button'}>Save</button>
-            </div>
-        </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <button onClick={submitHandler} className={'normal-button'}>Save</button>
+            </Modal.Footer>
+        </Modal>
     )
 };
 export default PortfolioTransactionEntry;

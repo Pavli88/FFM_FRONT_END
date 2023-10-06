@@ -1,6 +1,4 @@
-import Card from "react-bootstrap/Card";
-import {Nav} from "react-bootstrap";
-import FormControl from "react-bootstrap/FormControl";
+import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import {useContext, useEffect, useRef, useState} from "react";
@@ -29,12 +27,14 @@ const PortfolioCashEntry = (props) => {
             price: 1,
             currency: selectedCurrency.currency,
             sec_group: 'Cash',
-            status: portfolioData.status,
+            is_active: 0,
+            status: 'Closed',
         })
-                .then(response => alert(response.data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
+            .then(response => alert(response.data))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+        props.close()
     };
 
     useEffect(() => {
@@ -60,19 +60,11 @@ const PortfolioCashEntry = (props) => {
     ]
 
     return (
-        <div>
-            <div style={{padding: 5}}>
-
-                <div style={{paddingLeft: 10, display: "flex"}}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Related Transaction</Form.Label>
-                    <div style={{padding: 10}}>
-                        <input type="checkbox" onChange={(e) => {
-                            setRelatedSelected(e.target.checked)
-                            // setRelatedID('')
-                            // setInstrumentData({})
-                        }} />
-                    </div>
-                </div>
+        <Modal show={props.show} onHide={() => props.close()}>
+            <Modal.Header closeButton>
+                <Modal.Title>New Cashflow</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
 
                 <div style={{margin: 10}}>
                     <Form.Label>Transaction Type</Form.Label>
@@ -104,11 +96,11 @@ const PortfolioCashEntry = (props) => {
                     <Form.Control ref={quantityRef} type="number" required min={0.0}/>
                 </div>
 
-            </div>
-            <div style={{height: '60px', width: '100%', padding: 10, position: "absolute", bottom: 0}}>
-                <button onClick={submitHandler} className={'save-button'} type={'submit'}>Save</button>
-            </div>
-        </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <button onClick={submitHandler} className={'normal-button'} type={'submit'}>Save</button>
+            </Modal.Footer>
+        </Modal>
     )
 };
 export default PortfolioCashEntry;

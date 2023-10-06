@@ -13,3 +13,17 @@
     margin: 10px;
     border-top-color: #e2e2e2;
 }
+
+.sticky-column {
+    &:last-child {
+        position: sticky;
+        right: 0px;
+        z-index: 2;
+        width: 200px;
+        background: white;
+        border: 1px solid #ccc;
+        border-right: none;
+        border-left: none;
+        white-space:nowrap
+    }
+}

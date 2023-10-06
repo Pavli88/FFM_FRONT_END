@@ -31,7 +31,7 @@ const PortfolioTransactionsPage = (props) => {
                 <div>
                     <PortfolioTransactionsFilter fetch={fetchData}/>
                 </div>
-                <div style={{height: '700px', width: '100%', paddingTop: 15}}>
+                <div style={{height: '780px', width: '100%', paddingTop: 15}}>
                     <PortfolioTransactions data={transactionsData} server={props.server} fetch={fetchData}/>
                 </div>
             </div>
