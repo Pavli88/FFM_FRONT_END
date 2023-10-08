@@ -6,14 +6,12 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Select from "react-select";
 import { CSVLink, CSVDownload } from "react-csv";
-import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare, BsChevronRight, BsChevronLeft} from "react-icons/bs";
+import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-icons/bs";
 import {useExpanded, useGroupBy, useTable} from "react-table";
 import PortfolioTransactionEntry from "../PortfolioTransactionEntry/PortfolioTransactionEntry";
 import PortfolioCashEntry from "../PortfolioCashEntry/PortfolioCashEntry";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
 import {BsPlusLg, BsPencil, BsTrash} from "react-icons/bs";
-import PortfolioLinkedTransactionEntry from "../PortfolioTransactionEntry/PortfolioLinkedTransactionEntry";
+
 
 const TableGrouped = (props) => {
     const [showModal, setShowModal] = useState(false);

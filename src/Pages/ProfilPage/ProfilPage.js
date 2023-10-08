@@ -17,24 +17,10 @@ import axios from "axios";
 
 const ProfilPage = () => {
     const [newCashflow, setNewCashflow] = useState(0);
-    const [cashBalances, setCashbalances] = useState([]);
     const generalParameters = {
         user: useContext(UserContext).user,
         server: useContext(ServerContext).server
     };
-
-    useEffect(() => {
-            axios.get(generalParameters.server + 'portfolios/get/main_portfolio_cashflow/', {
-                params: {
-                    portfolio_code: 'MAIN_' + generalParameters.user.toUpperCase(),
-                }
-            })
-                .then(response => setCashbalances(response.data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [newCashflow]
-    );
 
     return (
         <CashflowContext.Provider value={{
@@ -42,10 +28,6 @@ const ProfilPage = () => {
             saveNewCashflow: setNewCashflow,
         }}>
             <div className={'page-container'}>
-                <div style={{display: 'flex', height: '300px'}}>
-                    <CashManagement parameters={{...generalParameters}}/>
-                    <CashBalances data={cashBalances}/>
-                </div>
                 <div style={{width: '100%', height: '600px', padding: 20}}>
                     <Card style={{width: '100%', height: '100%'}}>
                     <Tabs
