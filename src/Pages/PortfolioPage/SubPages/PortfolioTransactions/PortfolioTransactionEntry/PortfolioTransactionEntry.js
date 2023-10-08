@@ -9,8 +9,6 @@ const PortfolioTransactionEntry = (props) => {
     const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
-    const [relatedSelected, setRelatedSelected] = useState(false);
-    const [cashTranSelected, setCashTranSelected] = useState(false);
     const [transactionType, setTransactionType] = useState('Purchase');
     const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
@@ -21,38 +19,39 @@ const PortfolioTransactionEntry = (props) => {
     const quantityRef = useRef();
     const priceRef = useRef();
     const fxRef = useRef();
+    const brokerIdRef = useRef();
 
     const submitHandler = () => {
         if (portfolioData.currency !== instrumentData.currency) {
             alert('Portfolio currency is ' + portfolioData.currency + ' and the instrument currency is ' + instrumentData.currency + '. Instrument currency must match with portoflio currency!')
         } else {
-            axios.post(props.server + 'portfolios/new/transaction/', {
+            axios.post(props.server + 'portfolios/save/transaction/', {
                 portfolio_code: portfolioCode,
-                security: relatedSelected === false ? instrumentData.id : instrumentData.security,
-                sec_group: cashTranSelected ? 'Cash' : relatedSelected === false ? instrumentData.group : instrumentData.sec_group,
-                transaction_type: relatedSelected === false || cashTranSelected ? transactionType : instrumentData.transaction_type === 'Purchase' ? 'Sale' : instrumentData.sec_group === 'CFD' && instrumentData.transaction_type === 'Sale' ? 'Sale' : 'Purchase',
+                security: instrumentData.id,
+                sec_group: instrumentData.group,
+                transaction_type: transactionType,
                 trade_date: dateRef.current.value,
                 quantity: quantityRef.current.value,
                 price: priceRef.current.value,
                 currency: instrumentData.currency,
-                status: '',
                 is_active: transactionStatus,
                 open_status: transactionStatus ? 'Open' : 'Closed',
-                transaction_link_code: relatedSelected ? relatedID : 0,
-                option: relatedSelected ? instrumentData['option'] : optionSelected === false ? "" : optionType,
-                fx_rate: fxRef.current.value
+                transaction_link_code: 0,
+                option: optionSelected ? optionType: '',
+                fx_rate: fxRef.current.value,
+                broker_id: brokerIdRef.current.value
             })
                 .then(response => alert(response.data.response))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-            setRelatedID('')
+            setTransactionType('Purchase')
             props.close()
         }
     };
 
     const getSecurity = () => {
-        const url = relatedSelected ? 'portfolios/get/transactions/': 'instruments/get/instrument/'
+        const url = 'instruments/get/instrument/'
         axios.get(props.server + url, {
             params: {
                 id: relatedID,
@@ -132,13 +131,13 @@ const PortfolioTransactionEntry = (props) => {
 
                     <div style={{margin: 10}}>
                         <Form.Label style={{paddingBottom: 5}}>Sec Name</Form.Label>
-                        <Form.Control value={relatedSelected ? instrumentData.security : instrumentData.name}
+                        <Form.Control value={instrumentData.name}
                                       type="text" disabled/>
                     </div>
 
                     <div style={{margin: 10}}>
                         <Form.Label style={{paddingBottom: 5}}>Sec Group</Form.Label>
-                        <Form.Control value={relatedSelected ? instrumentData.sec_group : instrumentData.group}
+                        <Form.Control value={instrumentData.group}
                                       type="text" disabled/>
                     </div>
 
@@ -165,6 +164,11 @@ const PortfolioTransactionEntry = (props) => {
                     <div style={{margin: 10}}>
                         <Form.Label style={{paddingBottom: 5}}>FX Rate</Form.Label>
                         <Form.Control ref={fxRef} type="number" defaultValue={1.0}/>
+                    </div>
+
+                    <div style={{margin: 10}}>
+                        <Form.Label style={{paddingBottom: 5}}>Broker ID</Form.Label>
+                        <Form.Control ref={brokerIdRef} type="number" defaultValue={1.0}/>
                     </div>
                 </div>
             </Modal.Body>

@@ -13,6 +13,7 @@ import PortfolioCashEntry from "../PortfolioCashEntry/PortfolioCashEntry";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import {BsPlusLg, BsPencil, BsTrash} from "react-icons/bs";
+import PortfolioLinkedTransactionEntry from "../PortfolioTransactionEntry/PortfolioLinkedTransactionEntry";
 
 const TableGrouped = (props) => {
     const [showModal, setShowModal] = useState(false);
@@ -32,7 +33,8 @@ const TableGrouped = (props) => {
         props.fetch()
     };
     const updateTransaction = () =>  {
-        axios.post(props.server + 'portfolios/update/transaction/', selectedTransaction)
+        console.log(selectedTransaction)
+        axios.post(props.server + 'portfolios/save/transaction/', selectedTransaction)
             .then(response => alert(response.data.response))
             .catch((error) => {
                 console.error('Error Message:', error);
@@ -52,7 +54,7 @@ const TableGrouped = (props) => {
     };
 
     const newLinkedTransaction = () => {
-        axios.post(props.server + 'portfolios/new/transaction/', linkedTransaction)
+        axios.post(props.server + 'portfolios/save/transaction/', linkedTransaction)
             .then(response => alert(response.data.response))
             .catch((error) => {
                 console.error('Error Message:', error);
@@ -247,7 +249,7 @@ const TableGrouped = (props) => {
 
                         {row.isGrouped ? '' : <td className={'sticky-column'}>
                             <div style={{display: "flex"}}>
-                                {row.original.transaction_link_code === 0 && row.original.transaction_type !== 'Subscription' && row.original.transaction_type !== 'Redemption' ?
+                                {row.original.transaction_link_code === 0 && row.original.transaction_type !== 'Subscription' && row.original.transaction_type !== 'Redemption' && row.original.transaction_type !== 'Commission' ?
                                 <div style={{padding: 2}}>
                                     <button className={'normal-button'} onClick={() => {
                                         setShowLinkedModal(true)
@@ -353,6 +355,18 @@ const TableGrouped = (props) => {
                             />
                         </div>
 
+                        {selectedTransaction.sec_group === 'Cash' ? '' :
+                            <div style={{width: '100%', marginTop: 15}}>
+                                <Form.Label>Broker ID</Form.Label>
+                                <Form.Control defaultValue={selectedTransaction.broker_id}
+                                              type="number"
+                                              onChange={(e) => setSelectedTransaction({
+                                                  ...selectedTransaction,
+                                                  broker_id: e.target.value,
+                                              })}
+                                />
+                            </div>}
+
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
@@ -362,7 +376,6 @@ const TableGrouped = (props) => {
                 </Modal.Footer>
             </Modal>
 
-            {/*Related Transaction Entry*/}
             <Modal show={showLinkedModal} onHide={() => setShowLinkedModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>New Linked Transaction</Modal.Title>
@@ -447,7 +460,6 @@ const TableGrouped = (props) => {
                     </button>
                 </Modal.Footer>
             </Modal>
-
         </table>
     );
 };
@@ -483,7 +495,6 @@ const PortfolioTransactions = (props) => {
             </Card>
 
             <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server} show={showTransactionPanel} close={() => setShowTransactionPanel(false)}/>
-
             <PortfolioCashEntry portfolio={props.portfolio} server={props.server} show={showCashPanel} close={() => setShowCashPanel(false)}/>
 
         </div>

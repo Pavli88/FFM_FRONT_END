@@ -10,7 +10,6 @@ const PortfolioCashEntry = (props) => {
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
-    const [relatedSelected, setRelatedSelected] = useState(false);
     const [currencies, setCurrencies] = useState([{}]);
     const [selectedCurrency, setSelectedCurrency] = useState({});
     const [type, setType] = useState()
@@ -18,17 +17,13 @@ const PortfolioCashEntry = (props) => {
     const quantityRef = useRef();
 
     const submitHandler = () => {
-        axios.post(props.server + 'portfolios/new/transaction/', {
+        axios.post(props.server + 'portfolios/new/cashflow/', {
             portfolio_code: portfoliCode,
             security: selectedCurrency.id,
             transaction_type: type,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
-            price: 1,
-            currency: selectedCurrency.currency,
-            sec_group: 'Cash',
-            is_active: 0,
-            status: 'Closed',
+            currency: selectedCurrency.currency
         })
             .then(response => alert(response.data))
             .catch((error) => {
@@ -45,16 +40,9 @@ const PortfolioCashEntry = (props) => {
             }).then(response => setCurrencies(response.data))
     }, [])
 
-    const typeOptionsFull = [
+    const transactionType = [
         { value: 'Subscription', label: 'Subscription' },
         { value: 'Redemption', label: 'Redemption' },
-        { value: 'Interest Paid', label: 'Interest Paid' },
-        { value: 'Commission', label: 'Commission' },
-    ]
-
-    const typeOptionsRelated = [
-        { value: 'Dividend', label: 'Dividend' },
-        { value: 'Interest Received', label: 'Interest Received' },
         { value: 'Interest Paid', label: 'Interest Paid' },
         { value: 'Commission', label: 'Commission' },
     ]
@@ -69,7 +57,7 @@ const PortfolioCashEntry = (props) => {
                 <div style={{margin: 10}}>
                     <Form.Label>Transaction Type</Form.Label>
                     <Select style={{height: '100%'}}
-                            options={relatedSelected ? typeOptionsRelated: typeOptionsFull}
+                            options={transactionType}
                             onChange={(e) => setType(e.value)}
                     >
                     </Select>
