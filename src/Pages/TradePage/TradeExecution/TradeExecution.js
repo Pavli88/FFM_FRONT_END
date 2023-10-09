@@ -79,7 +79,7 @@ const TradeExecution = (props) => {
     )
 
     const getBrokerAccounts = () => {
-        axios.get(props.server + 'accounts/get_accounts/', {
+        axios.get(props.server + 'accounts/get/accounts/', {
             params: {
                 broker_name: brokerRef.current.value,
                 owner: user,

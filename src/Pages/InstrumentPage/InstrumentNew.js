@@ -82,15 +82,29 @@ const InstrumentNew = (props) => {
     ];
 
     const currencies = [
-        {value: 'USD', label:'USD'},
+        {value: 'USD', label: 'USD'},
         {value: 'EUR', label: 'EUR'},
-        {value: 'HUF', label: 'HUF'}
+        {value: 'HUF', label: 'HUF'},
+        {value: 'AUD', label: 'AUD'},
+        {value: 'NZD', label: 'NZD'},
+        {value: 'JPY', label: 'JPY'},
+        {value: 'HKD', label: 'HKD'},
+        {value: 'DKK', label: 'DKK'},
+        {value: 'SEK', label: 'SEK'},
+        {value: 'NOK', label: 'NOK'},
+        {value: 'CHF', label: 'CHF'},
+        {value: 'CAD', label: 'CAD'},
+        {value: 'GBP', label: 'GBP'},
+        {value: 'CZK', label: 'CZK'},
+        {value: 'PLN', label: 'PLN'},
+        {value: 'SGD', label: 'SGD'},
     ];
 
     const countries = [
-        {value: 'US', label:'United States'},
+        {value: 'US', label: 'United States'},
         {value: 'UK', label: 'United Kingdom'},
-        {value: 'HU', label: 'Hungary'}
+        {value: 'HU', label: 'Hungary'},
+        {value: 'NON', label: '-'},
     ];
 
     return (
