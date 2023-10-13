@@ -22,32 +22,28 @@ const PortfolioTransactionEntry = (props) => {
     const brokerIdRef = useRef();
 
     const submitHandler = () => {
-        if (portfolioData.currency !== instrumentData.currency) {
-            alert('Portfolio currency is ' + portfolioData.currency + ' and the instrument currency is ' + instrumentData.currency + '. Instrument currency must match with portoflio currency!')
-        } else {
-            axios.post(props.server + 'portfolios/save/transaction/', {
-                portfolio_code: portfolioCode,
-                security: instrumentData.id,
-                sec_group: instrumentData.group,
-                transaction_type: transactionType,
-                trade_date: dateRef.current.value,
-                quantity: quantityRef.current.value,
-                price: priceRef.current.value,
-                currency: instrumentData.currency,
-                is_active: transactionStatus,
-                open_status: transactionStatus ? 'Open' : 'Closed',
-                transaction_link_code: 0,
-                option: optionSelected ? optionType: '',
-                fx_rate: fxRef.current.value,
-                broker_id: brokerIdRef.current.value
-            })
-                .then(response => alert(response.data.response))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-            setTransactionType('Purchase')
-            props.close()
-        }
+        axios.post(props.server + 'portfolios/save/transaction/', {
+            portfolio_code: portfolioCode,
+            security: instrumentData.id,
+            sec_group: instrumentData.group,
+            transaction_type: transactionType,
+            trade_date: dateRef.current.value,
+            quantity: quantityRef.current.value,
+            price: priceRef.current.value,
+            currency: instrumentData.currency,
+            is_active: transactionStatus,
+            open_status: transactionStatus ? 'Open' : 'Closed',
+            transaction_link_code: 0,
+            option: optionSelected ? optionType : '',
+            fx_rate: fxRef.current.value,
+            broker_id: brokerIdRef.current.value
+        })
+            .then(response => alert(response.data.response))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
+        setTransactionType('Purchase')
+        props.close()
     };
 
     const getSecurity = () => {

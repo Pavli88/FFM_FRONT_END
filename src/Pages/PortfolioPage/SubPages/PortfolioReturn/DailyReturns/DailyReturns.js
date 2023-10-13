@@ -21,7 +21,7 @@ const DailyReturns = (props) => {
             xaxis: {
                 categories: dates,
                 type: 'date',
-                labels: {show: true},
+                labels: {show: false},
                 axisBorder: {
                     show: false,
                     color: '#78909C',

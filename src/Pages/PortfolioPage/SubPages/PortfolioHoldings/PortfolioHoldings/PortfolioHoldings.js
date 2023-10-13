@@ -84,22 +84,34 @@ const PortfolioHoldings = (props) => {
                 disableGroupBy: true,
             },
             {
-                Header: 'Beg Market Value',
+                Header: 'FX Rate',
+                accessor: 'fx_rate',
+                disableGroupBy: true,
+            },
+            {
+                Header: 'Beg MV',
                 accessor: 'beginning_mv',
                 aggregate: 'sum',
                 disableGroupBy: true,
                 Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
             },
             {
-                Header: 'End Market Value',
+                Header: 'End MV',
                 accessor: 'ending_mv',
                 aggregate: 'sum',
                 disableGroupBy: true,
                 Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
             },
             {
-                Header: 'P&L',
-                accessor: 'pnl',
+                Header: 'Leverage',
+                accessor: 'base_leverage',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
+            },
+            {
+                Header: 'Unrealized P&L',
+                accessor: 'unrealized_pnl',
                 aggregate: 'sum',
                 disableGroupBy: true,
                 Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,

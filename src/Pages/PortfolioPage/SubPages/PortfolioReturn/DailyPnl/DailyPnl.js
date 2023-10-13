@@ -2,13 +2,17 @@ import Card from "react-bootstrap/Card";
 import {CSVLink} from "react-csv";
 import Chart from "react-apexcharts";
 
-const CumulativePerformance = (props) => {
+const DailyPnl = (props) => {
     const dates = props.data.map((data) => data.date)
+    const realized = props.data.map((data) => data.pnl)
+    const unrealized = props.data.map((data) => data.unrealized_pnl)
+
     const x = {
         options: {
             chart: {
                 toolbar: false,
-                type: 'area',
+                stacked: true,
+                type: 'bar',
                 events: {
                     click(event, chartContext, config) {
             props.setHoldingDate(config.config.xaxis.categories[config.dataPointIndex])
@@ -58,24 +62,22 @@ const CumulativePerformance = (props) => {
         },
         series: [
             {
-                name: 'Performance',
-                data: props.returns,
+                name: 'Realized',
+                data: realized,
+            },
+            {
+                name: 'Unrealized',
+                data: unrealized,
             },
         ]
     }
-    const lastRecord = Math.round(props.returns[props.returns.length - 1] * 100)/100
-    return(
+
+    return (
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        <span>Cumulative Performance</span>
-                        <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
-                        <span style={{
-                            color: lastRecord < 0 ? 'red': 'green',
-                            position: "absolute",
-                            right: 15
-                        }}>{lastRecord} %</span>
+                        Daily P&L
                     </div>
                 </div>
             </Card.Header>
@@ -83,11 +85,11 @@ const CumulativePerformance = (props) => {
                 <Chart
                     options={x.options}
                     series={x.series}
-                    type={'area'}
+                    type={'bar'}
                     width="100%"
                     height="100%"/>
             </div>
         </Card>
     )
 };
-export default CumulativePerformance;
+export default DailyPnl;

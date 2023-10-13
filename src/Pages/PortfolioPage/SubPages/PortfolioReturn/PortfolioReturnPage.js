@@ -8,6 +8,7 @@ import PortfolioPageContext from "../../context/portfolio-page-context";
 import ServerContext from "../../../../context/server-context";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
+import DailyPnl from "./DailyPnl/DailyPnl";
 import {BsArrowRepeat} from "react-icons/bs";
 
 const PortfolioReturnPage = () => {
@@ -115,38 +116,48 @@ const PortfolioReturnPage = () => {
                     <MonthlyReturns/>
                 </div>
 
-                <div style={{display: 'flex'}}>
-                    <div style={{width: '50%', height: 300, paddingRight: 15}}>
-                        <CumulativePerformance data={navData}
-                                               returns={findCumulativeMultiply(returnsRounded).map((data) => (data - 1) * 100)}/>
+                <div style={{width: '100%', display: 'flex'}}>
+                    {/*Performance*/}
+                    <div style={{height: '100%', width: '50%'}}>
+                        <div style={{height: 300}}>
+                            <DailyReturns data={navData}/>
+                        </div>
+                        <div style={{height: 300, paddingTop: 15}}>
+                            <CumulativePerformance data={navData}
+                                                   returns={findCumulativeMultiply(returnsRounded).map((data) => (data - 1) * 100)}/>
+                        </div>
                     </div>
-                    <div style={{width: '50%', height: 300}}>
-                        <DailyReturns data={navData}/>
+                    {/*Profit*/}
+                    <div style={{height: '100%', width: '50%'}}>
+                        <div style={{height: 300, paddingLeft: 15, paddingRight: 15}}>
+                            <DailyPnl data={navData}/>
+                        </div>
+                        <div style={{height: 300, paddingLeft: 15, paddingRight: 15, paddingTop: 15}}>
+                            <PortfolioTransactionPnl data={findCumulativeSum(pnlResults)}
+                                                     currency={portfolioData.currency}/>
+                        </div>
+
+                        <div style={{width: '100%', display: "flex", paddingLeft: 15, paddingRight: 15}}>
+                            <div style={{width: '100%', height: 400, paddingRight: 15, paddingTop: 15}}>
+                                <AggregatedPnl name={'P&L by Security'}
+                                               xAxis={pnlBreakdowns.by_name.map((data) => data.name)}
+                                               yAxis={pnlBreakdowns.by_name.map((data) => data.realized_pnl)}/>
+                            </div>
+                            <div style={{width: '100%', height: 400, paddingRight: 15, paddingTop: 15}}>
+                                <AggregatedPnl name={'P&L by Group'}
+                                               xAxis={pnlBreakdowns.by_group.map((data) => data.group)}
+                                               yAxis={pnlBreakdowns.by_group.map((data) => data.realized_pnl)}/>
+                            </div>
+                            <div style={{width: '100%', height: 400, paddingTop: 15}}>
+                                <AggregatedPnl name={'P&L by Type'}
+                                               xAxis={pnlBreakdowns.by_type.map((data) => data.type)}
+                                               yAxis={pnlBreakdowns.by_type.map((data) => data.realized_pnl)}/>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                <div style={{display: 'flex'}}>
-                    <div style={{width: '50%', height: 400, paddingRight: 15, paddingTop: 15}}>
-                        <PortfolioTransactionPnl data={findCumulativeSum(pnlResults)}
-                                                 currency={portfolioData.currency}/>
-                    </div>
-                    <div style={{width: '50%', display: "flex"}}>
-                        <div style={{width: '100%', height: 400, paddingRight: 15, paddingTop: 15}}>
-                            <AggregatedPnl name={'P&L by Security'}
-                                           xAxis={pnlBreakdowns.by_name.map((data) => data.name)}
-                                           yAxis={pnlBreakdowns.by_name.map((data) => data.realized_pnl)}/>
-                        </div>
-                        <div style={{width: '100%', height: 400, paddingRight: 15, paddingTop: 15}}>
-                            <AggregatedPnl name={'P&L by Group'}
-                                           xAxis={pnlBreakdowns.by_group.map((data) => data.group)}
-                                           yAxis={pnlBreakdowns.by_group.map((data) => data.realized_pnl)}/>
-                        </div>
-                        <div style={{width: '100%', height: 400, paddingTop: 15}}>
-                            <AggregatedPnl name={'P&L by Type'} xAxis={pnlBreakdowns.by_type.map((data) => data.type)}
-                                           yAxis={pnlBreakdowns.by_type.map((data) => data.realized_pnl)}/>
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </div>
