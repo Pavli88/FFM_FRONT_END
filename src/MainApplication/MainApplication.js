@@ -17,7 +17,6 @@ import PortfolioPage from "../Pages/PortfolioPage/PortfolioPage";
 import CalculationsPage from "../Pages/CalculationsPage/CalculationsPage";
 import InstrumentPage from "../Pages/InstrumentPage/InstrumentPage";
 import DashBoardPage from "../Pages/DashBoardPage/DashBoardPage";
-import RobotPage from "../Pages/Robot/RobotPage";
 import ProfilPage from "../Pages/ProfilPage/ProfilPage";
 import DataPage from "../Pages/DataPage/DataPage";
 import React, {useEffect, useState} from "react";
@@ -27,7 +26,7 @@ import Container from 'react-bootstrap/Container'
 import './MainApplication.css'
 
 const MainApplication = (props) => {
-    const { server, defaultRobotEnvironment, currentDate, fistDayOfCurrentYear } = props.config;
+    const { server, currentDate, fistDayOfCurrentYear } = props.config;
     const { userName } = props.user;
     const history = useHistory();
 
@@ -35,21 +34,11 @@ const MainApplication = (props) => {
     const [selectedPortfolio, setSelectedPortfolio] = useState('');
     const [newPortfolio, setNewPortfolio] = useState(0);
 
-    const [robotEnvData, setRobotEnvData] = useState(defaultRobotEnvironment);
-    const [allRobotsData, setAllRobotsData] = useState([]);
-    const [selectedRobotData, setSelectedRobotData] = useState({});
-    const [newRobot, setNewRobot] = useState('');
-    const [robotStrategies, setRobotStrategyOptions] = useState([]);
-
     const [brokerData, setBrokerData] = useState([{}]);
     const [entity, setEntity] = useState('Portfolio');
 
     const [accounts, setAccounts] = useState([]);
     const [newAccount, setNewAccount] = useState(0)
-
-    const getEnvData = (env) => {
-        setRobotEnvData(env);
-    };
 
     // Date variables
     const date = new Date();
@@ -74,17 +63,6 @@ const MainApplication = (props) => {
                 });
         }, [newPortfolio]
     );
-    useEffect(() => {
-            axios.get(server + 'robots/get/robots/' + robotEnvData)
-                .then(function (response) {
-                    setAllRobotsData(response['data']);
-                    setSelectedRobotData(response['data'][0]);
-                })
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [newRobot, robotEnvData]
-    );
 
     useEffect(() => {
             axios.get(server + 'accounts/get/accounts/', {
@@ -99,20 +77,6 @@ const MainApplication = (props) => {
         }, [newAccount]
     );
 
-    const getRobotStrategies = async () => {
-        const responseStrategies = await axios.get(server + 'robots/get/strategies/',);
-        setRobotStrategyOptions(responseStrategies['data'].map((data) => ({
-            'value': data['id'],
-            'label': data['name']
-        })));
-    };
-
-    useEffect(() => {
-            history.push("/dashboard/");
-            getRobotStrategies();
-        }, []
-    );
-
     return (
         <Container style={{background: '#FBFAFA', padding: 0}} fluid>
             <ServerContext.Provider value={{server: server}}>
@@ -120,19 +84,7 @@ const MainApplication = (props) => {
                     entity: entity,
                     saveEntity: setEntity,
                 }}>
-                    <EnvContext.Provider value={{
-                        environment: robotEnvData,
-                        saveEnvironment: setRobotEnvData,
-                    }}>
-                        <RobotContext.Provider value={{
-                            allRobotsData: allRobotsData,
-                            selectedRobotData: selectedRobotData,
-                            selectRobot: setSelectedRobotData,
-                            saveNewRobot: setNewRobot,
-                            robotStrategies: robotStrategies,
-                            saveRobotStrategy: setRobotStrategyOptions
 
-                        }}>
                             <PortfolioContext.Provider value={{
                                 portfolios: portfolios,
                                 selectedPortfolio: selectedPortfolio,
@@ -159,8 +111,7 @@ const MainApplication = (props) => {
                                             <ReactNotification/>
 
                                             <div style={{border: 1, borderColor: 'grey', background: 'grey'}}>
-                                                <Navigation onEnvChange={getEnvData} env={robotEnvData}
-                                                            user={userName}/>
+                                                <Navigation user={userName}/>
                                             </div>
                                             <div style={{height: '80%', width: '100%', background: "green"}}>
                                                 <Switch>
@@ -198,8 +149,6 @@ const MainApplication = (props) => {
                                     </BrokerContext.Provider>
                                 </DateContext.Provider>
                             </PortfolioContext.Provider>
-                        </RobotContext.Provider>
-                    </EnvContext.Provider>
                 </EntityContext.Provider>
             </ServerContext.Provider>
         </Container>

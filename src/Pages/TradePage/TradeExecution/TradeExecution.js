@@ -33,6 +33,7 @@ const TradeExecution = (props) => {
                 transaction_type: sideRef.current.value,
                 quantity: quantityRef.current.value,
                 status: '',
+                manual: true,
 
             })
                 .then(response => {

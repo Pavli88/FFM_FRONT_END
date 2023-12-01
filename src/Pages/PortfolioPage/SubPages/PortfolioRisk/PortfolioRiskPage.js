@@ -9,19 +9,8 @@ import PortfolioHoldingDrawdown from "./PortfolioHoldingDrawDown/PortfolioHoldin
 const PortfolioRiskPage = (props) => {
     const server = useContext(ServerContext)['server'];
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
-    const [exposureData, setExposureData] = useState({dates: [], series:[{name:'', data: []}]});
     const [drawDownData, setDrawDownData] = useState({'data': []});
     const [holdingDrawDown, setHoldingDrawDown] = useState([]);
-
-    const fetchExposures = async () => {
-        const response = await axios.get(server + 'portfolios/get/exposures/', {
-            params: {
-                start_date: '2023-01-01',
-                portfolio_code: portfoliCode
-            }
-        })
-        setExposureData(response.data)
-    };
 
     const fetchDrawdown = async () => {
         const response = await axios.get(server + 'portfolios/get/drawdown/', {
@@ -48,15 +37,14 @@ const PortfolioRiskPage = (props) => {
     const hDDate = holdingDrawDown.map(data => data['date'])
 
     useEffect(() => {
-        fetchExposures();
         fetchDrawdown();
         fetchNavData();
-    }, [])
+    }, [portfoliCode])
 
     return (
         <div style={{height: '800px', width: '100%', padding: 15}}>
             <div style={{height: '50%'}}>
-                <PositionExposure data={exposureData}/>
+                <PositionExposure server={server}/>
             </div>
             <div style={{display: "flex", height: '50%', width: "100%"}}>
                 <div style={{width: "100%",paddingTop: 15}}>

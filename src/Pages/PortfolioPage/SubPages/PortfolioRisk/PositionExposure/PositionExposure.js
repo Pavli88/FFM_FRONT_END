@@ -1,21 +1,48 @@
 import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
+import ExposureHolding from "./ExposureHolding";
+import axios from "axios";
+import {useContext, useEffect, useState} from "react";
+import PortfolioPageContext from "../../../context/portfolio-page-context";
+import DateContext from "../../../../../context/date-context";
 
 const PositionExposure = (props) => {
+    const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
+    const currentDate = useContext(DateContext).currentDate;
+    const [holdingData, setHoldingdata] = useState([{}])
+    const [nav, setNav] = useState(0.0)
+    const [currentContribs, setCurrentContribs] = useState([]);
+
+    const fetchHoldingData = async() => {
+        const response = await axios.get(props.server + 'portfolios/get/exposures/', {
+            params: {
+                date: currentDate,
+                portfolio_code: portfoliCode
+            }
+        })
+        setHoldingdata(response.data.data)
+        setNav(response.data.nav)
+    };
+
+    useEffect(() => {
+        if (portfoliCode !== undefined) {
+            fetchHoldingData()
+        }
+    }, [portfoliCode])
+
+    const setContribs = (data) => {
+        setCurrentContribs(data)
+    };
+    console.log(currentContribs)
     const x = {
         options: {
             chart: {
                 toolbar: false,
-                stacked: true,
+                stacked: false,
                 type: 'bar',
-                events: {
-                    click(event, chartContext, config) {
-            props.setHoldingDate(config.config.xaxis.categories[config.dataPointIndex])
-        }
-                }
             },
             xaxis: {
-                categories: props.data.dates,
+                categories: currentContribs['names'],
                 type: 'date',
                 labels: {show: true},
                 axisBorder: {
@@ -55,19 +82,41 @@ const PositionExposure = (props) => {
                 offsetY: 40
             },
         },
-        series: props.data.series
+        series: [
+            {
+                name: 'Current',
+                data: currentContribs['contribs'],
+            },
+        ]
     }
 
-    return(
-        <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
-            <Card.Header>
-                <div style={{display: 'flex'}}>
-                    <div>
-                        Exposure by Instrument
+    return (
+        <div style={{display: 'flex', height: 400, paddingBottom: 15}}>
+            <div style={{height: '100%', width: '70%', margin: '0px', paddingRight: 15}}>
+                 <Card className="card" style={{height: '100%'}}>
+                <Card.Header>
+                    <div style={{display: 'flex'}}>
+                        <div>
+                            Exposure by Instrument
+                        </div>
+                        <div>
+                            {nav}
+                        </div>
                     </div>
-                </div>
-            </Card.Header>
-            <div style={{height: '100%'}}>
+                </Card.Header>
+                <ExposureHolding data={holdingData} contribs={setContribs}/>
+            </Card>
+            </div>
+
+            <Card className="card" style={{height: '100%', width: '30%', margin: '0px'}}>
+                <Card.Header>
+                    <div style={{display: 'flex'}}>
+                        <div>
+                            Simulation
+                        </div>
+                    </div>
+                </Card.Header>
+                <div style={{height: '100%'}}>
                 <Chart
                     options={x.options}
                     series={x.series}
@@ -75,7 +124,8 @@ const PositionExposure = (props) => {
                     width="100%"
                     height="100%"/>
             </div>
-        </Card>
+            </Card>
+        </div>
     )
 };
 export default PositionExposure;
