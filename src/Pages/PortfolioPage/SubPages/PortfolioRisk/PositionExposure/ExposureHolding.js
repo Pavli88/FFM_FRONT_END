@@ -100,6 +100,10 @@ const ExposureHolding = (props) => {
     }, [props.data])
 
 
+    const tableRow = (row) => {
+
+    };
+
     return (
         <div style={{height: '100%', overflowY: 'scroll'}}>
             <table {...getTableProps()}>

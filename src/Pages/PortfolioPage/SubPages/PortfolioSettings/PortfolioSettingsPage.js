@@ -63,7 +63,7 @@ const PortfolioSettingsPage = (props) => {
 
     const valuationParameters = <div style={{width: '100%', paddingTop: 15}}>
         <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
-            <div className={'portfolio-settings-name-field'}>
+            <div className={'portfolio-settings-name-field'} style={{width: 500}}>
                 <Nav.Link href="#" disabled>
                     Valuation Frequency
                 </Nav.Link>
@@ -87,7 +87,7 @@ const PortfolioSettingsPage = (props) => {
         </div>
 
         <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
-            <div className={'portfolio-settings-name-field'}>
+            <div className={'portfolio-settings-name-field'} style={{width: 500}}>
                 <Nav.Link href="#" disabled>
                     Weekend Valuation
                 </Nav.Link>
@@ -110,7 +110,7 @@ const PortfolioSettingsPage = (props) => {
         </div>
 
         <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
-            <div className={'portfolio-settings-name-field'}>
+            <div className={'portfolio-settings-name-field'} style={{width: 500}}>
                 <Nav.Link href="#" disabled>
                     Holding Calculation
                 </Nav.Link>
@@ -131,6 +131,21 @@ const PortfolioSettingsPage = (props) => {
                 </Select>
             </div>
         </div>
+
+        <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
+            <div className={'portfolio-settings-name-field'} style={{width: 500}}>
+                <Nav.Link href="#" disabled>
+                    Days of Missing Price Tolerance
+                </Nav.Link>
+            </div>
+            <div style={{width: '100%'}}>
+                <input placeholder={portfolioData.pricing_tolerance} type={'number'} onChange={(e) => setPortfolioData({
+                    ...portfolioData,
+                    pricing_tolerance: e.target.value
+                })}/>
+            </div>
+        </div>
+
     </div>
 
     const performanceParameters = <div>

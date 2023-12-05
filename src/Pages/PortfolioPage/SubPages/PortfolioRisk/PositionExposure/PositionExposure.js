@@ -3,8 +3,10 @@ import Chart from "react-apexcharts";
 import ExposureHolding from "./ExposureHolding";
 import axios from "axios";
 import {useContext, useEffect, useState} from "react";
+import { BsArrowRepeat } from "react-icons/bs";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
 import DateContext from "../../../../../context/date-context";
+import {CSVLink} from "react-csv";
 
 const PositionExposure = (props) => {
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
@@ -33,7 +35,7 @@ const PositionExposure = (props) => {
     const setContribs = (data) => {
         setCurrentContribs(data)
     };
-    console.log(currentContribs)
+
     const x = {
         options: {
             chart: {
@@ -100,8 +102,28 @@ const PositionExposure = (props) => {
                             Exposure by Instrument
                         </div>
                         <div>
-                            {nav}
+                            <CSVLink data={holdingData} style={{paddingLeft: 15}}>Download</CSVLink>
                         </div>
+
+                        <div style={{position: "absolute", right: 10, display: "flex"}}>
+                            <div style={{paddingRight: 15}}>
+                                Holding NAV
+                            </div>
+                            <div style={{paddingRight: 15}}>
+                                {nav}
+                            </div>
+                            <div style={{paddingRight: 15}}>
+                                Market Movement %
+                            </div>
+                            <div>
+                                <input style={{padding: 0, width: 60}} type={'number'} defaultValue={0.0} min={1.0}
+                                       step={0.5}/>
+                            </div>
+                            <div style={{paddingLeft: 15}}>
+                                <button className={'get-button'}><BsArrowRepeat></BsArrowRepeat></button>
+                            </div>
+                        </div>
+
                     </div>
                 </Card.Header>
                 <ExposureHolding data={holdingData} contribs={setContribs}/>
