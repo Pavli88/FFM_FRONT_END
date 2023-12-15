@@ -8,8 +8,24 @@ const DailyReturns = (props) => {
     const x = {
         options: {
             chart: {
-                toolbar: false,
+                toolbar: true,
                 type: 'area',
+                zoom: {
+                    enabled: true,
+                    type: 'x',
+                    autoScaleYaxis: false,
+                    zoomedArea: {
+                        fill: {
+                            color: '#90CAF9',
+                            opacity: 0.4
+                        },
+                        stroke: {
+                            color: '#0D47A1',
+                            opacity: 0.4,
+                            width: 1
+                        }
+                    }
+                }
             },
             colors: [function(value){
                 if (value["value"] < 0){

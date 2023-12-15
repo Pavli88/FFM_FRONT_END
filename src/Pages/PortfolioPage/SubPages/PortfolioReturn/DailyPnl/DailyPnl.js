@@ -10,7 +10,7 @@ const DailyPnl = (props) => {
     const x = {
         options: {
             chart: {
-                toolbar: false,
+                toolbar: true,
                 stacked: true,
                 type: 'bar',
                 events: {

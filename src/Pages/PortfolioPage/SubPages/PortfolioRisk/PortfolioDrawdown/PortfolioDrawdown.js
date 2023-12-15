@@ -21,7 +21,7 @@ const PortfolioDrawdown = (props) => {
             xaxis: {
                 categories: props.dates,
                 labels: {
-                    show: true,
+                    show: false,
                     style: {
                         colors: [],
                         fontSize: '8px',
@@ -31,7 +31,7 @@ const PortfolioDrawdown = (props) => {
                     },
                 },
                 axisBorder: {
-                    show: true,
+                    show: false,
                     color: '#78909C',
                     height: 1,
                     width: '100%',

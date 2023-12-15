@@ -113,7 +113,7 @@ const MainApplication = (props) => {
                                             <div style={{border: 1, borderColor: 'grey', background: 'grey'}}>
                                                 <Navigation user={userName}/>
                                             </div>
-                                            <div style={{height: '80%', width: '100%', background: "green"}}>
+                                            <div style={{height: 1000, width: '100%', overflow: "scroll"}}>
                                                 <Switch>
                                                     <Route path="/risk">
                                                         <RiskPage/>

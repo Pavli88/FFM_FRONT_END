@@ -42,18 +42,16 @@ const PortfolioRiskPage = (props) => {
     }, [portfoliCode])
 
     return (
-        <div style={{height: '800px', width: '100%', padding: 15}}>
-            <div style={{height: '50%'}}>
-                <PositionExposure server={server}/>
-            </div>
-            <div style={{display: "flex", height: '50%', width: "100%"}}>
-                <div style={{width: "100%",paddingTop: 15}}>
-                    <PortfolioDrawdown data={drawDownData['data']} dates={drawDownData['dates']}/>
-                </div>
-                <div style={{width: "100%", paddingTop: 15, paddingLeft: 15}}>
+        <div style={{height: '100%', width: '100%', padding: 15, overflowY: 'scroll'}}>
+            <div style={{height: 300, display: "flex", width: "100%", paddingBottom: 15}}>
+                <div style={{width: "100%"}}>
                     <PortfolioHoldingDrawdown data={hD} dates={hDDate}/>
                 </div>
+                <div style={{width: "100%", paddingLeft: 15}}>
+                    <PortfolioDrawdown data={drawDownData['data']} dates={drawDownData['dates']}/>
+                </div>
             </div>
+            <PositionExposure server={server}/>
         </div>
     );
 };
