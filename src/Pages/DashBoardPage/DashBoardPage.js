@@ -5,6 +5,7 @@ import DashBoardNavWidget from "./DashBoardNavWidget/DashBoardNavWidget";
 import DateContext from "../../context/date-context";
 import DashBoardTotalPnl from "./DashBoardTotalPnl/DashBoardTotalPnl";
 import DashBoardPerformance from "./DashBoardPerformance/DashBoardPerformance";
+import DashBoardMonthlyPnl from "./DashBoardMonthlyPnl/DashBoardMonthlyPnl";
 
 const DashBoardPage = () => {
     const server = useContext(ServerContext)['server'];
@@ -13,6 +14,7 @@ const DashBoardPage = () => {
     const [groupedNav, setGroupedNav] = useState([]);
     const [totalPnl, setTotalPnl] = useState([]);
     const [performanceData, setPerformanceData] = useState([]);
+    const [monthlyPnl, setMonthlyPnl] = useState([]);
 
     const fetchPortfolioNav = async() => {
         const response = await axios.get(server + 'portfolios/get/portfolio_nav/', {
@@ -46,11 +48,17 @@ const DashBoardPage = () => {
         setTotalPnl(response.data)
     };
 
+    const fetchMonthlyPnl = async() => {
+        const response = await axios.get(server + 'portfolios/get/monthly_pnl/', )
+        setMonthlyPnl(response.data)
+    };
+
     useEffect(() => {
        fetchPortfolioNav();
        fetchPortfolioGroupedNav();
        fetchTotalPnl();
        fetchPerfDashBoard();
+       fetchMonthlyPnl();
     }, [])
 
     const navs = portfolioNavData.map((data) => Math.round(data.total*100)/100)
@@ -64,11 +72,18 @@ const DashBoardPage = () => {
                     <DashBoardNavWidget x={navs} y={portCodes} title={'Portfolios'}/>
                     <DashBoardNavWidget x={groupedNavs} y={portTypes} title={'Portfolio Type'}/>
                 </div>
-                <div>
-                    <DashBoardTotalPnl data={totalPnl}/>
+                <div style={{height: 800}}>
+                    <div style={{height: '50%', paddingTop: 15}}>
+                         <DashBoardTotalPnl data={totalPnl}/>
+                    </div>
+                    <div style={{height: '50%', paddingTop: 15}}>
+                        <DashBoardMonthlyPnl data={monthlyPnl}/>
+                    </div>
                 </div>
                 <div style={{paddingLeft: 15}}>
-                    <DashBoardPerformance data={performanceData}/>
+                    <div style={{paddingBottom: 15}}>
+                        <DashBoardPerformance data={performanceData}/>
+                    </div>
                 </div>
             </div>
         </div>

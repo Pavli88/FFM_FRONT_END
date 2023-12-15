@@ -1,9 +1,9 @@
 import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
 
-const DashBoardTotalPnl = (props) => {
-    const funds = props.data.map((data) => data.portfolio_code)
-    const pnl = props.data.map((data) => data.total)
+const DashBoardMonthlyPnl = (props) => {
+    const dates = props.data.map((data) => data.date)
+    const pnl = props.data.map((data) => data.pnl)
 
     const x = {
         options: {
@@ -18,7 +18,7 @@ const DashBoardTotalPnl = (props) => {
                 }
             },
             xaxis: {
-                categories: funds,
+                categories: dates,
                 type: 'date',
                 labels: {
                     show: true,
@@ -80,10 +80,7 @@ const DashBoardTotalPnl = (props) => {
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        Total P&L by Funds
-                    </div>
-                    <div style={{position: "absolute", right: 15, color: pnl.reduce((a, b) => a + b, 0) > 0 ? 'green':'red'}}>
-                        {Math.round(pnl.reduce((a, b) => a + b, 0)*100)/100}
+                        P&L by Months
                     </div>
                 </div>
             </Card.Header>
@@ -98,4 +95,4 @@ const DashBoardTotalPnl = (props) => {
         </Card>
     );
 };
-export default DashBoardTotalPnl;
+export default DashBoardMonthlyPnl;
