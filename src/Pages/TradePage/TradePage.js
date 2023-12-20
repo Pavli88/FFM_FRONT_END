@@ -81,20 +81,26 @@ const TradePage = () => {
             newTransactionID: newTransactionID,
             saveNewTrnsactionID: setNewTransactionID,
         }}>
-            <div className={'page-container'}>
+            <div className={'page-container'} style={{overflow: "scroll", display: "flex"}}>
                 {/*<button onClick={pricingStream}>Pricing Stream</button>*/}
                 {/*<div style={{width: '100%'}}>*/}
                 {/*    <TradeTableData env={env} server={server}/>*/}
                 {/*</div>*/}
 
-                <div style={{height: '900px', padding: 15, display: "flex"}}>
-                    <div style={{width: '15%'}}>
+                <div style={{height: 900,width: '75%'}}>
+                    <div style={{height: 600, padding: 15, display: "flex"}}>
+                        <OpenTransactions server={server}/>
+
+                    </div>
+                    <div style={{height: 400, paddingLeft: 15, paddingRight: 15, paddingBottom: 100}}>
                         <TradeSignals server={server}/>
                     </div>
-
-                    <OpenTransactions server={server}/>
-
                 </div>
+
+                <div style={{height: 900, width: '25%', paddingTop: 15}}>
+                    <TradeExecution server={server}/>
+                </div>
+
             </div>
         </TradeContext.Provider>
     );

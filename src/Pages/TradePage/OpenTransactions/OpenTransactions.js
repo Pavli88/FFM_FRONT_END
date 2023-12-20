@@ -199,7 +199,7 @@ const OpenTransactions = (props) => {
     }, [openTransactionsData])
 
     return (
-            <div style={{height: '100%', width: '100%', paddingLeft: 15, display: "flex"}}>
+            <div style={{height: '100%', width: '100%', display: "flex"}}>
                 <Card style={{width: '100%'}}>
                     <Card.Header>Open Transactions</Card.Header>
 
@@ -228,12 +228,10 @@ const OpenTransactions = (props) => {
                             <tbody {...getTableBodyProps()}>
                             {firstPageRows.map((row, i) => {
                                 prepareRow(row)
-                                // console.log(row)
                                 return (
                                     <tr {...row.getRowProps()}
                                         style={{
                                             cursor: row.isGrouped ? '' : 'pointer',
-                                            background: row.isGrouped ? '#f2f4f4' : 'white'
                                         }}
 
                                         onDoubleClick={() => {
@@ -289,11 +287,7 @@ const OpenTransactions = (props) => {
                             </tbody>
                         </table>
                     </div>
-
                 </Card>
-                <div style={{width: '20%'}}>
-                    <TradeExecution server={props.server}/>
-                </div>
                 <UnitModal show={showModal}
                            hide={() => setShowModal(false)}
                            data={selectedTransaction}
