@@ -7,15 +7,19 @@ import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-
 const ExposureHolding = (props) => {
     const [rowList, setRowList] = useState([]);
     const [closePnl, setClosePnl] = useState(0.0);
+    const [selectedTranIDs, setSelectedTranIDs] = useState([]);
 
     const calc = (data, selectedRows) => {
-        const closePnlList = []
+        const closePnlList = [];
+        const tranList = [];
         selectedRows.forEach(function(record){
             const x = parseInt(record)
             data[x]['sim_contr_amended'] = 0.0
             closePnlList.push(data[x]['unrealized_pnl'])
+            tranList.push(data[x]['transaction_id'])
         } )
         setClosePnl(Math.round(closePnlList.reduce((a, b) => a + b, 0)*100)/100)
+        setSelectedTranIDs(tranList);
         return data
     };
 
@@ -162,7 +166,8 @@ const ExposureHolding = (props) => {
             'sim_contribs': simContribs,
             'sim_contribs_amended': simContribAmended,
             'sensitivity': sensitivity,
-            'close_pnl': closePnl
+            'close_pnl': closePnl,
+            'transaction_ids': selectedTranIDs
         })
     };
 

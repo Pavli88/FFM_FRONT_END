@@ -42,6 +42,15 @@ const PositionExposure = (props) => {
         setCurrentContribs(data)
     };
 
+    const closeSelectedTransactions = async () => {
+        const response = await axios.post(props.server + 'trade_page/new/signal/', {
+                ids: currentContribs['transaction_ids'],
+                transaction_type: 'risk_closure'
+            }
+        );
+        alert(response.data)
+    };
+
     const x = {
         options: {
             chart: {
@@ -197,6 +206,15 @@ const PositionExposure = (props) => {
                                     <div style={{paddingLeft: 15}}>
                                         <button className={'get-button'} onClick={() => fetchHoldingData()}>
                                             <BsArrowRepeat></BsArrowRepeat></button>
+                                    </div>
+                                    <div style={{paddingLeft: 15}}>
+                                        <button className={'get-button'} onClick={() => {
+                                            if (window.confirm('Do you want to close the selected transactions ?')){
+                                                closeSelectedTransactions()
+                                            };
+
+                                        }}>
+                                            Close Selected</button>
                                     </div>
                                 </div>
 
