@@ -4,18 +4,15 @@ import Chart from "react-apexcharts";
 const DashBoardTotalPnl = (props) => {
     const funds = props.data.map((data) => data.portfolio_code)
     const pnl = props.data.map((data) => data.total)
+    const netPnl = props.data.map((data) => data.net_pnl)
+    const cost = props.data.map((data) => data.cost)
 
     const x = {
         options: {
             chart: {
                 toolbar: true,
-                stacked: true,
+                stacked: false,
                 type: 'bar',
-                events: {
-                    click(event, chartContext, config) {
-            props.setHoldingDate(config.config.xaxis.categories[config.dataPointIndex])
-        }
-                }
             },
             xaxis: {
                 categories: funds,
@@ -63,14 +60,17 @@ const DashBoardTotalPnl = (props) => {
                 opacity: 1
             },
             legend: {
-                position: 'right',
-                offsetY: 40
+                show:false
             },
         },
         series: [
             {
-                name: 'P&L',
+                name: 'Gross P&L',
                 data: pnl,
+            },
+            {
+                name: 'Net P&L',
+                data: netPnl,
             },
         ]
     }
@@ -79,12 +79,45 @@ const DashBoardTotalPnl = (props) => {
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
-                    <div>
-                        Total P&L by Funds
+                    <div style={{width: '50%'}}>
+                        <div style={{fontSize: 12}}>
+                            Gross P&L
+                        </div>
+                        <div style={{
+                            // position: "absolute",
+                            right: 5,
+                            color: pnl.reduce((a, b) => a + b, 0) > 0 ? 'green' : 'red'
+                        }}>
+                            {Math.round(pnl.reduce((a, b) => a + b, 0) * 100) / 100}
+                        </div>
                     </div>
-                    <div style={{position: "absolute", right: 15, color: pnl.reduce((a, b) => a + b, 0) > 0 ? 'green':'red'}}>
-                        {Math.round(pnl.reduce((a, b) => a + b, 0)*100)/100}
+
+                    <div style={{width: '50%'}}>
+                        <div style={{fontSize: 12}}>
+                            Net P&L
+                        </div>
+                        <div style={{
+                            // position: "absolute",
+                            right: 5,
+                            color: netPnl.reduce((a, b) => a + b, 0) > 0 ? 'green' : 'red'
+                        }}>
+                            {Math.round(netPnl.reduce((a, b) => a + b, 0) * 100) / 100}
+                        </div>
                     </div>
+
+                    <div style={{width: '50%'}}>
+                        <div style={{fontSize: 12}}>
+                            Cost
+                        </div>
+                        <div style={{
+                            // position: "absolute",
+                            right: 5,
+                            color: cost.reduce((a, b) => a + b, 0) > 0 ? 'green' : 'red'
+                        }}>
+                            {Math.round(cost.reduce((a, b) => a + b, 0) * 100) / 100}
+                        </div>
+                    </div>
+
                 </div>
             </Card.Header>
             <div style={{height: '100%'}}>

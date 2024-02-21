@@ -185,7 +185,10 @@ const PositionExposure = (props) => {
                         <Card.Header>
                             <div style={{display: 'flex'}}>
                                 <div>
-                                    Exposure
+                                    Exposure at
+                                </div>
+                                <div style={{paddingLeft: 5}}>
+                                    {currentDate}
                                 </div>
                                 <div>
                                     <CSVLink data={holdingData} style={{paddingLeft: 15}}>Download</CSVLink>
