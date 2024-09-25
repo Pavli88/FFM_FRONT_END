@@ -6,6 +6,7 @@ import TransactionContext from "../context/transaction-context";
 import DateContext from "../../../../../context/date-context";
 import Card from "react-bootstrap/Card";
 import PortfolioTransactionEntry from "../PortfolioTransactionEntry/PortfolioTransactionEntry";
+import Select from "react-select";
 
 
 const PortfolioTransactionsFilter = (props) => {
@@ -15,10 +16,10 @@ const PortfolioTransactionsFilter = (props) => {
     const securityRef = useRef();
     const startDateRef = useRef();
     const endDateRef = useRef();
-    const [transactionType, setTransactionType] = useState('');
+    const [transactionType, setTransactionType] = useState([]);
     const [transactionSubType, setTransactionSubType] = useState('Buy Open');
     const [openStatus, setOpenStatus] = useState(false)
-
+    console.log(transactionType)
     const purchaseSubTypes = [
         <option value={'Buy Open'}>Buy Open</option>,
         <option value={'Sell Close'}>Sell Close</option>
@@ -29,15 +30,14 @@ const PortfolioTransactionsFilter = (props) => {
     ]
     const submitHandler = () => {
         props.fetch({
-            params: {
                 portfolio_code: portfolioCode,
-                transaction_type: transactionType,
-                security: securityRef.current.value,
+                transaction_type: transactionType.map(data=>data.value),
+                // security: securityRef.current.value,
                 trade_date__gte: startDateRef.current.value,
                 trade_date__lte: endDateRef.current.value,
-                is_active: openStatus ? 1 : '',
+                is_active: openStatus ? 1 : 0,
             }
-        });
+        );
     };
 
     // useEffect(() => {
@@ -49,8 +49,8 @@ const PortfolioTransactionsFilter = (props) => {
     // }, [newTransaction])
 
     return (
-        <Card>
-            <div className={'search-container'}>
+        <Card className={'search-container'}>
+            <div style={{display: "flex"}}>
 
                 <div>
                     <span className={'input-label'}>
@@ -78,14 +78,17 @@ const PortfolioTransactionsFilter = (props) => {
                 </div>
 
                 <div>
-                    <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select"
-                                  style={{width: 200}}>
-                        <option value={''}></option>
-                        <option value={'Purchase'}>Purchase</option>
-                        <option value={'Sale'}>Sale</option>
-                        <option value={'Subscription'}>Subscription</option>
-                        <option value={'Redemption'}>Redemption</option>
-                    </Form.Control>
+                    <Select
+                            isMulti
+                            options={[
+        {value: 'Purchase', label:'Purchase'},
+        {value: 'Sale', label: 'Sale'},
+        {value: 'Subscription', label: 'Subscription'},
+                                {value: 'Redemption', label: 'Redemption'}
+    ]}
+                            onChange={(e) => setTransactionType(e)}
+                            className={'instrument-search-input-field'}
+                        />
                 </div>
 
                 <div>
@@ -95,7 +98,7 @@ const PortfolioTransactionsFilter = (props) => {
                 </div>
 
 
-                <input ref={startDateRef} defaultValue={''} type="date" style={{width: 200}}/>
+                <input ref={startDateRef} defaultValue={currentDate} type="date" style={{width: 200}}/>
 
 
                 <div>
@@ -103,7 +106,7 @@ const PortfolioTransactionsFilter = (props) => {
                         To
                     </span>
                 </div>
-                <input ref={endDateRef} defaultValue={''} type="date" style={{width: 200}}/>
+                <input ref={endDateRef} defaultValue={currentDate} type="date" style={{width: 200}}/>
 
                 <div style={{paddingLeft: 10}}>
                     <button onClick={submitHandler} className={'normal-button'} style={{fontSize: 12}}>Search</button>

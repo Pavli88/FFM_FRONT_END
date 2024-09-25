@@ -58,22 +58,22 @@ const NewBrokerAccount = (props) => {
         setCurrency(event.target.value);
     };
 
-    const header = <div style={{display: "flex"}}>
-        <div style={{width: '90%'}}><p
-            style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>New</p>
-        </div>
-        <button className={'save-button'} onClick={submitHandler}>
-            Create
-        </button>
-    </div>
-
     const marginPercentageDiv = <div style={{margin: 10}}>
         <Form.Label>Margin Percentage</Form.Label>
         <Form.Control onChange={(e) => setMarginPercentage(e.target.value)} type="number" min={0.0} step={0.05}/>
     </div>
 
     return (
-        <CardWithHeader headerContent={header}>
+        <div className={'card'}>
+            <div className={'card-header'}>
+                <div>
+                    <span>New</span>
+                </div>
+
+                <div style={{position: "absolute", right: 10}}>
+                    <button className={'normal-button'} onClick={submitHandler}>Create</button>
+                </div>
+            </div>
             <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
                 <div style={{margin: 10}}>
                     <Form.Label>Broker</Form.Label>
@@ -117,7 +117,7 @@ const NewBrokerAccount = (props) => {
                 {marginAllowed === '1' ? marginPercentageDiv: ''}
 
             </div>
-        </CardWithHeader>
+        </div>
     );
 };
 

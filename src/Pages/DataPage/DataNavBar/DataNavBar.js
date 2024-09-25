@@ -9,7 +9,7 @@ const DataNavBar = (props) => {
     const [file, setFile] = useState();
     const [array, setArray] = useState([]);
     const fileReader = new FileReader();
-
+    // console.log(file)
     const handleOnChange = (e) => {
         setFile(e.target.files[0]);
 
@@ -24,11 +24,15 @@ const DataNavBar = (props) => {
 
     };
 
-    const postData = async() => {
-        const response = await axios.post(server + 'instruments/new/price/', {
-                data: array
-            }
-        )
+    const postData = async(file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        const config = {
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+        };
+        const response = await axios.post(server + 'data/import/', formData, config)
         alert(response.data.response)
     };
 
@@ -36,7 +40,7 @@ const DataNavBar = (props) => {
         const csvHeader = string.slice(0, string.indexOf("\n")).split(",");
         const csvRows = string.slice(string.indexOf('\n') + 1).split('\n').filter((str) => str !== '');
         const array = csvRows.map(i => {
-            const values = i.split(",");
+            const values = i.split(',');
             const obj = csvHeader.reduce((object, header, index) => {
                 object[header] = values[index];
                 return object;
@@ -44,12 +48,6 @@ const DataNavBar = (props) => {
             return obj;
         });
         setArray(array);
-    };
-
-    const handleOnSubmit = (e) => {
-        e.preventDefault();
-        postData();
-
     };
 
     const headerKeys = Object.keys(Object.assign({}, ...array));
@@ -63,7 +61,7 @@ const DataNavBar = (props) => {
                             Import Stream
                         </span>
                     </div>
-                    <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
+                    <div style={{paddingLeft: 15, paddingTop: 0, width: 500}}>
                         <Select
                             options={[
                                 {value: 'Prices', label: 'Prices'},
@@ -81,7 +79,7 @@ const DataNavBar = (props) => {
                         <input type={'file'} onChange={handleOnChange}/>
                     </div>
                     <div style={{paddingLeft: 10, paddingTop: 0, paddingBottom: 0}}>
-                        <button className={'get-button'} onClick={(e) => handleOnSubmit(e)}><BsArrowLeftSquare/>  Import</button>
+                        <button className={'get-button'} onClick={() => postData(file)}><BsArrowLeftSquare/>  Import</button>
                     </div>
                 </div>
 

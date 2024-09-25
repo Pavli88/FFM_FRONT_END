@@ -9,7 +9,7 @@ const BrokerAccounts = (props) => {
     const saveAccount = useContext(BrokerContext).saveAccount;
     const newAccount = useContext(BrokerContext).newAccount;
     const accounts = useContext(BrokerContext).accounts;
-    console.log(accounts)
+
     const accountRows = accounts.map((data) => <tr key={data.id} className={'table-row-all'}>
         <td className={'table-row'}>
             <div>
@@ -79,21 +79,50 @@ const BrokerAccounts = (props) => {
             });
     };
 
-    const header = <div style={{display: "flex"}}>
-        <div style={{width: '90%'}}><p style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>Accounts</p>
-        </div>
-    </div>
-
     return(
-        <CardWithHeader headerContent={header}>
+        <div className={'card'}>
+            <div className={'card-header'}>
+                Accounts
+            </div>
             <div style={{overflow:"scroll", height:'100%'}}>
                 <table style={{width: '100%'}}>
-                <tbody style={{width: '100%'}}>
+                    <thead>
+                    <tr>
+                        <td>
+                            ID
+                        </td>
+                        <td>
+                            Broker
+                        </td>
+                        <td>
+                            Name
+                        </td>
+                        <td>
+                            Account ID
+                        </td>
+                        <td>
+                            Token
+                        </td>
+                        <td>
+                            Currency
+                        </td>
+                        <td>
+                            Env
+                        </td>
+                        <td>
+                            Margin
+                        </td>
+                        <td>
+                            ID
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody style={{width: '100%'}}>
                 {accountRows}
                 </tbody>
             </table>
             </div>
-        </CardWithHeader>
+        </div>
     )
 };
 export default BrokerAccounts;

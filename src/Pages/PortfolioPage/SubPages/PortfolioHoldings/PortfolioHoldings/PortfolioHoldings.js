@@ -1,13 +1,12 @@
-import {useEffect, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import Card from "react-bootstrap/Card";
-import Table from "react-bootstrap/Table";
 import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-icons/bs";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import Select from "react-select";
 import {useExpanded, useGroupBy, useTable } from "react-table";
+import {CSVLink} from "react-csv";
+import DateContext from "../../../../../context/date-context";
 
 const PortfolioHoldings = (props) => {
+    const currentDate = useContext(DateContext).currentDate;
     const data = useMemo(
         () => props.data,
         [props.data]
@@ -103,8 +102,57 @@ const PortfolioHoldings = (props) => {
                 Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
             },
             {
-                Header: 'Leverage',
-                accessor: 'base_leverage',
+                Header: 'Beg BV',
+                accessor: 'beginning_bv',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
+            },
+               {
+                Header: 'End BV',
+                accessor: 'ending_bv',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
+            },
+             {
+                Header: 'Beg Lev',
+                accessor: 'beg_lev',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
+            },
+            {
+                Header: 'End Lev',
+                accessor: 'end_lev',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
+            },
+            {
+                Header: 'Lev Chg',
+                accessor: 'lev_chg',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
+            },
+            {
+                Header: 'Beg Margin',
+                accessor: 'beginning_margin',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
+            },
+            {
+                Header: 'End Margin',
+                accessor: 'ending_margin',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
+            },
+             {
+                Header: 'Margin Adj',
+                accessor: 'margin_adjustment',
                 aggregate: 'sum',
                 disableGroupBy: true,
                 Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
@@ -112,6 +160,13 @@ const PortfolioHoldings = (props) => {
             {
                 Header: 'Unrealized P&L',
                 accessor: 'unrealized_pnl',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
+            },
+            {
+                Header: 'Realized P&L',
+                accessor: 'realized_pnl',
                 aggregate: 'sum',
                 disableGroupBy: true,
                 Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
@@ -143,14 +198,23 @@ const PortfolioHoldings = (props) => {
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        Holdings at
+                        <span className={'input-label'}>
+                            Holdings
+                        </span>
+
+                    </div>
+                    <div>
+                        <button className={'get-button'} onClick={() => props.changeDate(currentDate)}>Today</button>
                     </div>
                     <div style={{paddingLeft: 5}}>
-                        {props.date}
+                        <input type={'date'} defaultValue={props.date} onChange={(e) => props.changeDate(e.target.value)}/>
+                    </div>
+                    <div>
+                        <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
                     </div>
                 </div>
             </Card.Header>
-            <div style={{height: '100%',overflowY: 'scroll'}}>
+            <div style={{height: '100%', overflowY: 'scroll'}}>
                 <table {...getTableProps()}>
                     <thead>
                     {

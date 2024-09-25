@@ -18,11 +18,12 @@ const NewPortfolio = (props) => {
     const currencyRef = useRef();
     const portTypeRef = useRef();
     const dateRef = useRef();
+
     const submitHandler = (event) => {
         event.preventDefault();
         axios.post(server + 'portfolios/new/portfolio/', {
             port_name: portNameRef.current.value,
-            port_code: portTypeRef.current.value === 'Portfolio Group' ? portCodeRef.current.value + '_GROUP': portCodeRef.current.value,
+            port_code: portTypeRef.current.value === 'Business' ? portCodeRef.current.value + '_BS': 'Portfolio Group' ? portCodeRef.current.value + '_GROUP': portCodeRef.current.value,
             port_type: portTypeRef.current.value,
             port_currency: currencyRef.current.value,
             inception_date: dateRef.current.value,
@@ -43,24 +44,24 @@ const NewPortfolio = (props) => {
     };
 
     const header = <div style={{display: "flex"}}>
-        <div style={{width: '90%'}}><p
-            style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5, fontSize: 16}}>New</p>
-        </div>
-        <button className={'save-button'} onClick={submitHandler}>
-            Create
-        </button>
+
+
     </div>
 
     return (
-        <CardWithHeader headerContent={header}>
+        <Modal headerContent={header} show={props.show} onHide={props.hide}>
+             <Modal.Header closeButton>
+                    <Modal.Title>New Portfolio</Modal.Title>
+                </Modal.Header>
             <div>
 
                 <div style={{margin: 10}}>
                     <Form.Label>Portfolio Type</Form.Label>
                     <Form.Control ref={portTypeRef} as="select">
+                        <option value={'Business'}>Business</option>
+                        <option value={'Portfolio Group'}>Portfolio Group</option>
                         <option value={'Automated'}>Automated</option>
                         <option value={'Investment'}>Investment</option>
-                        <option value={'Portfolio Group'}>Portfolio Group</option>
                         <option value={'Test'}>Test</option>
                         <option value={'Trade'}>Trade</option>
                         <option value={'Savings'}>Savings</option>
@@ -90,8 +91,13 @@ const NewPortfolio = (props) => {
                     <Form.Label>Portfolio Inception Date</Form.Label>
                     <Form.Control ref={dateRef} type="date" defaultValue={useContext(DateContext).currentDate}/>
                 </div>
+
+
             </div>
-        </CardWithHeader>
+            <Modal.Footer>
+                <button className={'save-button'} onClick={submitHandler}>Create</button>
+            </Modal.Footer>
+        </Modal>
     );
 };
 

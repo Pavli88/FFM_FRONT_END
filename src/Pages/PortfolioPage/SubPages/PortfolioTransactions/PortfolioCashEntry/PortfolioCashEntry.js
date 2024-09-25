@@ -17,9 +17,9 @@ const PortfolioCashEntry = (props) => {
     const quantityRef = useRef();
 
     const submitHandler = () => {
-        axios.post(props.server + 'portfolios/new/cashflow/', {
+        axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfoliCode,
-            security: selectedCurrency.id,
+            security_id: selectedCurrency.id,
             transaction_type: type,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
@@ -36,10 +36,10 @@ const PortfolioCashEntry = (props) => {
         axios.post(props.server + 'instruments/get/instruments/', {
                 // name: '',
                 currency: portfolioData.currency,
-                group: 'Cash'
+                type: 'Cash'
             }).then(response => setCurrencies(response.data))
     }, [])
-
+    console.log(currencies)
     const transactionType = [
         { value: 'Subscription', label: 'Subscription' },
         { value: 'Redemption', label: 'Redemption' },

@@ -1,11 +1,24 @@
-import {BsDash, BsPlus} from "react-icons/bs";
-import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import PortfolioContext from "../../../context/portfolio-context";
+import NewPortfolio from "./NewPortfolio";
+import UserContext from "../../../context/user-context";
+import ServerContext from "../../../context/server-context";
 
 const ProfilePortfolios = () => {
     const portfolioData = useContext(PortfolioContext).portfolios;
+    const [showNewPortModal, setNewPortModal] = useState(false);
+
+    const generalParameters = {
+        user: useContext(UserContext).user,
+        server: useContext(ServerContext).server
+    };
+
     const portfolios = portfolioData.map((data) => <tr key={data.id} className={'table-row-all'}>
+        <td className={'table-row'}>
+            <div>
+                {data.id}
+            </div>
+        </td>
         <td className={'table-row'}>
             <div>
                 {data.portfolio_name}
@@ -27,7 +40,10 @@ const ProfilePortfolios = () => {
             </div>
         </td>
         <td className={'table-row'}>
-            <div style={{width: '100%', color: data.status === 'Not Funded' ? 'red': data.status === 'Funded' ? 'green': 'orange'}}>
+            <div style={{
+                width: '100%',
+                color: data.status === 'Not Funded' ? 'red' : data.status === 'Funded' ? 'green' : 'orange'
+            }}>
                 {data.status}
             </div>
         </td>
@@ -37,21 +53,37 @@ const ProfilePortfolios = () => {
             </div>
         </td>
     </tr>)
-    const header = <div style={{display: "flex"}}>
-        <div style={{width: '90%'}}>
-            <div style={{margin: 0, height: '100%', verticalAlign: "middle", padding: 5}}>Portfolios</div>
-        </div>
-    </div>
+
     return (
-        <CardWithHeader headerContent={header}>
+        <div className={'card'}>
+            <div className={'card-header'}>
+                <div>
+                <span>Portfolios</span>
+                </div>
+                <div style={{position: "absolute", right: 10}}>
+                    <button className={'normal-button'} onClick={() => setNewPortModal(true)}>New Portfolio</button>
+                </div>
+            </div>
             <div style={{height: '100%', overflowY: "scroll"}}>
                 <table style={{width: '100%'}}>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Code</th>
+                        <th>Type</th>
+                        <th>Currency</th>
+                        <th>Funded</th>
+                    </tr>
+                    </thead>
                     <tbody style={{width: '100%'}}>
                     {portfolios}
                     </tbody>
                 </table>
             </div>
-        </CardWithHeader>
+            <NewPortfolio parameters={{...generalParameters}} show={showNewPortModal}
+                                  hide={() => setNewPortModal(false)}/>
+        </div>
     )
 };
 export default ProfilePortfolios;

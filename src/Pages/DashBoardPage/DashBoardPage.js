@@ -8,6 +8,7 @@ import DashBoardPerformance from "./DashBoardPerformance/DashBoardPerformance";
 import DashBoardMonthlyPnl from "./DashBoardMonthlyPnl/DashBoardMonthlyPnl";
 import DashBoardHistoricNav from "./DashBoardHistoricNav/DashBoardHistoricNav";
 import DashBoardTotalDrawdown from "./DashBoardTotalDrawdown/DashBoardTotalDrawdown";
+import Card from "react-bootstrap/Card";
 
 const DashBoardPage = () => {
     const server = useContext(ServerContext)['server'];
@@ -77,6 +78,26 @@ const DashBoardPage = () => {
     const portTypes = groupedNav.map((data) => data.portfolio_type)
     return(
         <div className={'page-container'} style={{overflow: "scroll"}}>
+
+            <Card className={'search-container'}>
+                <div style={{display: "flex"}}>
+                    <div>
+                    <span className={'input-label'}>
+                        Portfolio Group
+                    </span>
+                    </div>
+                    <div style={{width: 200}}>
+                        <input type="text"/>
+                    </div>
+
+                    <div style={{paddingLeft: 5}}>
+                        <button className={'get-button'}>Load</button>
+                    </div>
+                </div>
+
+            </Card>
+
+
             <div style={{display: "flex"}}>
                 <div>
                     <DashBoardNavWidget x={navs} y={portCodes} title={'Portfolios'}/>

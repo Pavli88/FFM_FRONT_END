@@ -20,7 +20,7 @@ const InstrumentSearchBar = () => {
 
     const secGroup = [
         {value: 'BND', label: 'Bond'},
-        {value: 'CSH', label:'Cash'},
+        {value: 'Cash', label:'Cash'},
         {value: 'CFD', label:'CFD'},
         {value: 'EQT', label: 'Equity'},
     ];
@@ -31,7 +31,8 @@ const InstrumentSearchBar = () => {
     ];
 
     const cashType = [
-        {value:'CSH', label: 'Cash'},
+        {value:'Cash', label: 'Cash'},
+        {value:'MRG', label: 'Margin'},
     ];
 
     const cfdType = [
@@ -60,77 +61,95 @@ const InstrumentSearchBar = () => {
     const fetchInstruments = () => {
         saveRequestParameters({
             name: nameRef.current.value,
-            // country: selectedCountries.map(data=>data.value),
-            // group: selectedGroup.value,
-            // type: selectedTypes.map(data=>data.value),
-            // currency: selectedCurrencies.map(data=>data.value)
+            country: selectedCountries.map(data=>data.value),
+            group: selectedGroup.value,
+            type: selectedTypes.map(data=>data.value),
+            currency: selectedCurrencies.map(data=>data.value)
 
         });
     };
 
     return (
-        <div className={'instrument-search-bar-container'}>
-            {/*<div className={'instrument-search-label'}>Search</div>*/}
-            <div className={'instrument-search-bar-name'}>
-                Name
+        <Card className={'search-container'}>
+            <div style={{display: "flex", height: '100%'}}>
+                <div style={{display: "flex"}}>
+                    <div className={'input-label'}>
+                        Name
+                    </div>
+                    <div >
+                        <input ref={nameRef} type="text" />
+                    </div>
+                </div>
+
+                <div style={{display: "flex"}}>
+                    <div className={'input-label'}>
+                        Country
+                    </div>
+                    <div >
+                        <Select
+                            isMulti
+                            options={countries}
+                            onChange={(e) => setSelectedCountries(e)}
+                            className={'instrument-search-input-field'}
+                        />
+                    </div>
+                </div>
+
+                <div style={{display: "flex"}}>
+                    <div className={'input-label'}>
+                        Group
+                    </div>
+                    <div>
+                        <Select
+                            options={secGroup}
+                            isClearable
+                            onChange={(e) => e === null ? setSelectedGroup([]) : setSelectedGroup(e)}
+                            className={'instrument-search-input-field'}
+                        />
+                    </div>
+                </div>
+
+                <div style={{display: "flex"}}>
+                    <div className={'input-label'}>
+                        Type
+                    </div>
+                    <div>
+                        <Select
+                            isMulti
+                            options={
+                                selectedGroup.value === 'BND' ? bondType :
+                                    selectedGroup.value === 'Cash' ? cashType :
+                                        selectedGroup.value === 'CFD' ? cfdType : equityType}
+                            onChange={(e) => setSelectedTypes(e)}
+                            className={'instrument-search-input-field'}
+                        />
+                    </div>
+                </div>
+
+                <div style={{display: "flex"}}>
+                    <div className={'input-label'}>
+                        Currency
+                    </div>
+                    <div>
+                        <Select
+                            isMulti
+                            options={currencies}
+                            onChange={(e) => setSelectedCurrencies(e)}
+                            className={'instrument-search-input-field'}
+                        />
+                    </div>
+                </div>
+
+                <div style={{display: "flex"}}>
+                    <div style={{height: '100%', paddingLeft: 5}}>
+                        <button onClick={fetchInstruments} className={'get-button'}>Search</button>
+                    </div>
+                    <div style={{height: '100%', paddingLeft: 5}}>
+                        <InstrumentNew className={'instrument-search-button'}/>
+                    </div>
+                </div>
             </div>
-            <div className={'instrument-search-input-field-container'}>
-                <Form.Control ref={nameRef} type="text" className={'instrument-search-input-field'}/>
-            </div>
-            <div className={'instrument-search-bar-name'}>
-                Country
-            </div>
-            <div className={'instrument-search-input-field-container'}>
-                <Select
-                    isMulti
-                    options={countries}
-                    onChange={(e) => setSelectedCountries(e)}
-                    className={'instrument-search-input-field'}
-                />
-            </div>
-            <div className={'instrument-search-bar-name'}>
-                Group
-            </div>
-            <div >
-                <Select
-                    options={secGroup}
-                    isClearable
-                    onChange={(e) => e === null ? setSelectedGroup([]) : setSelectedGroup(e)}
-                    className={'instrument-search-input-field'}
-                />
-            </div>
-            <div className={'instrument-search-bar-name'}>
-                Type
-            </div>
-            <div>
-                <Select
-                    isMulti
-                    options={
-                        selectedGroup.value === 'BND' ? bondType :
-                            selectedGroup.value === 'CSH' ? cashType :
-                                selectedGroup.value === 'CFD' ? cfdType : equityType}
-                    onChange={(e) => setSelectedTypes(e)}
-                    className={'instrument-search-input-field'}
-                />
-            </div>
-            <div className={'instrument-search-bar-name'}>
-                Currency
-            </div>
-            <div>
-                <Select
-                    isMulti
-                    options={currencies}
-                    onChange={(e) => setSelectedCurrencies(e)}
-                    className={'instrument-search-input-field'}
-                />
-            </div>
-            <div className={'instrument-search-button-div'}>
-                <Button onClick={fetchInstruments} className={'instrument-search-button'}>Get</Button>
-            </div>
-            <div className={'instrument-search-button-div'}>
-                <InstrumentNew className={'instrument-search-button'}/>
-            </div>
-        </div>
+        </Card>
     );
 };
 export default InstrumentSearchBar;

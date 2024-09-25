@@ -42,18 +42,19 @@ const InstrumentPage = () => {
                 saveRequestParameters: setRequestParameters
             }}>
             <div className={"page-container"} style={{overflow: "scroll"}}>
-                <div className={'instrument-page-container'}>
-                    <div style={{paddingTop: 15, paddingLeft: 15, paddingBottom: 15}}>
-                        <InstrumentSearchBar/>
-                        <InstrumentPricing/>
-                    </div>
 
-                    <div style={{padding: 15, width:'100%', height: '100%'}}>
-                        <InstrumentResuts data={instrumentSearchResults} server={server}
-                                          instrument={selectedInstrument}/>
-                    </div>
+                    <InstrumentSearchBar/>
+                    <div>
+                        <div style={{paddingTop: 15, paddingLeft: 15, paddingBottom: 15}}>
 
-                </div>
+                            <InstrumentPricing/>
+                        </div>
+
+                        <div style={{padding: 15, width: '100%', height: '100%'}}>
+                            <InstrumentResuts data={instrumentSearchResults} server={server}
+                                              instrument={selectedInstrument}/>
+                        </div>
+                    </div>
             </div>
         </InstrumentSearchContext.Provider>
     );

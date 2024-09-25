@@ -31,7 +31,6 @@ const TableGrouped = (props) => {
         props.fetch()
     };
     const updateTransaction = () =>  {
-        console.log(selectedTransaction)
         axios.post(props.server + 'portfolios/save/transaction/', selectedTransaction)
             .then(response => alert(response.data.response))
             .catch((error) => {
@@ -78,12 +77,20 @@ const TableGrouped = (props) => {
 
             },
             {
+                Header: 'Trade Date',
+                accessor: 'trade_date',
+            },
+            {
+                Header: 'Settlement Date',
+                accessor: 'settlement_date',
+            },
+            {
                 Header: 'Transaction Type',
                 accessor: 'transaction_type',
             },
             {
-                Header: 'Security',
-                accessor: 'security',
+                Header: 'Security Name',
+                accessor: 'name',
             },
             {
                 Header: 'Sec Group',
@@ -118,6 +125,14 @@ const TableGrouped = (props) => {
                 accessor: 'local_mv',
             },
             {
+                Header: 'Book Value',
+                accessor: 'bv',
+            },
+            {
+                Header: 'Local Book Value',
+                accessor: 'local_bv',
+            },
+            {
                 Header: 'Base CF',
                 accessor: 'net_cashflow',
             },
@@ -126,8 +141,12 @@ const TableGrouped = (props) => {
                 accessor: 'local_cashflow',
             },
             {
-                Header: 'Margin Amount',
+                Header: 'Margin',
                 accessor: 'margin_balance',
+            },
+            {
+                Header: 'Margin Rate %',
+                accessor: 'margin',
             },
             {
                 Header: 'Base P&L',
@@ -148,10 +167,6 @@ const TableGrouped = (props) => {
             {
                 Header: 'Broker ID',
                 accessor: 'broker_id',
-            },
-            {
-                Header: 'Trade Date',
-                accessor: 'trade_date',
             },
              {
                 Header: 'Option',
@@ -471,7 +486,7 @@ const PortfolioTransactions = (props) => {
                 <Card.Header style={{display: "flex"}}>
                     <div>
                         <span>Transactions</span>
-                        <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
+                        <CSVLink filename="transactions.csv" data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
                     </div>
                     <div style={{position: "absolute", right: 100}}>
                         <button onClick={() => setShowTransactionPanel(value => !value)}

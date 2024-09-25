@@ -5,7 +5,6 @@ import PortfolioPageContext from "../../context/portfolio-page-context";
 import DateContext from "../../../../context/date-context";
 import PortfolioHoldings from "../PortfolioHoldings/PortfolioHoldings/PortfolioHoldings";
 import Card from "react-bootstrap/Card";
-import {Nav} from "react-bootstrap";
 import PortfolioNav from "./PortfolioNav/PortfolioNav";
 import CashFlow from "./CashFlow/CashFlow";
 import CashBalance from "./CashBalance/CashBalance";
@@ -62,6 +61,10 @@ const PortfolioDashBoardPage = (props) => {
             fetchHoldingData()
         }
     }, [holdingDate])
+
+    const changeDate = (date) => {
+        setHoldingDate(date);
+    };
 
     useEffect(() => {
         if (showCashFlowPanel === 'CF') {
@@ -144,7 +147,7 @@ const PortfolioDashBoardPage = (props) => {
 
             </div>
             <div style={{paddingTop: 15}}>
-                <PortfolioHoldings data={holdingData} date={holdingDate}/>
+                <PortfolioHoldings data={holdingData} date={holdingDate} changeDate={changeDate}/>
             </div>
         </div>
     );

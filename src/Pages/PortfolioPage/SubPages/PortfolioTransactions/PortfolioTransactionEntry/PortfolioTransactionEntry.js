@@ -13,8 +13,8 @@ const PortfolioTransactionEntry = (props) => {
     const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
     const [optionSelected, setOptionSelected] = useState(false);
-    const [transactionStatus, setTransactionStatus] = useState(false);
     const [optionType, setOptionType] = useState("C");
+    const [broker, setBroker] = useState('oanda');
     const dateRef = useRef();
     const quantityRef = useRef();
     const priceRef = useRef();
@@ -22,20 +22,21 @@ const PortfolioTransactionEntry = (props) => {
     const brokerIdRef = useRef();
 
     const submitHandler = () => {
-        axios.post(props.server + 'portfolios/save/transaction/', {
+        axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfolioCode,
-            security: instrumentData.id,
+            security_id: instrumentData.id,
             sec_group: instrumentData.group,
             transaction_type: transactionType,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
             price: priceRef.current.value,
             currency: instrumentData.currency,
-            is_active: transactionStatus,
-            open_status: transactionStatus ? 'Open' : 'Closed',
+            is_active: false,
+            open_status: 'Open',
             transaction_link_code: 0,
             option: optionSelected ? optionType : '',
             fx_rate: fxRef.current.value,
+            broker: broker,
             broker_id: brokerIdRef.current.value
         })
             .then(response => alert(response.data.response))
@@ -68,14 +69,6 @@ const PortfolioTransactionEntry = (props) => {
                 <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
 
                     <div style={{display: 'flex'}}>
-                        <div style={{paddingLeft: 10, display: "flex"}}>
-                            <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Open Transaction</Form.Label>
-                            <div style={{padding: 10}}>
-                                <input type="checkbox" onChange={(e) => {
-                                    setTransactionStatus(e.target.checked)
-                                }}/>
-                            </div>
-                        </div>
                         <div style={{paddingLeft: 10, display: "flex"}}>
                             <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Option</Form.Label>
                             <div style={{padding: 10}}>
@@ -160,6 +153,13 @@ const PortfolioTransactionEntry = (props) => {
                     <div style={{margin: 10}}>
                         <Form.Label style={{paddingBottom: 5}}>FX Rate</Form.Label>
                         <Form.Control ref={fxRef} type="number" defaultValue={1.0}/>
+                    </div>
+
+                    <div className={'entry-block'}>
+                        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Broker</Form.Label>
+                        <Form.Control onChange={(e) => setBroker(e.target.value)} as="select">
+                            <option value={'oanda'}>Oanda</option>
+                        </Form.Control>
                     </div>
 
                     <div style={{margin: 10}}>

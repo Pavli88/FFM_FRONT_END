@@ -16,7 +16,7 @@ const PortfolioTransactionsPage = (props) => {
     const [newTransaction, setNewTransaction] = useState(0);
 
     const fetchData = (parameters) => {
-        axios.get(props.server + 'portfolios/get/transactions/', parameters)
+        axios.post(props.server + 'portfolios/get/transactions/', parameters)
             .then(response => setTransactionsData(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
@@ -27,11 +27,11 @@ const PortfolioTransactionsPage = (props) => {
             newTransaction: newTransaction,
             saveNewTransaction: setNewTransaction,
         }}>
-            <div style={{height: '800px', width: '100%', padding: 15}}>
+            <div style={{width: '100%', padding: 15}}>
                 <div>
                     <PortfolioTransactionsFilter fetch={fetchData}/>
                 </div>
-                <div style={{height: '780px', width: '100%', paddingTop: 15}}>
+                <div style={{height: '500px', width: '100%', paddingTop: 15, overflow: "scroll"}}>
                     <PortfolioTransactions data={transactionsData} server={props.server} fetch={fetchData}/>
                 </div>
             </div>
