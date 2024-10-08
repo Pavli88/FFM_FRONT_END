@@ -1,9 +1,4 @@
-import Card from "react-bootstrap/Card";
 import PortfolioTransactions from "./PortfolioTransactions/PortfolioTransactions";
-import PortfolioCashEntry from "./PortfolioCashEntry/PortfolioCashEntry";
-import PortfolioTransactionEntry from "./PortfolioTransactionEntry/PortfolioTransactionEntry";
-import Tabs from "react-bootstrap/Tabs";
-import Tab from "react-bootstrap/Tab";
 import './PortfolioTransactionsPage.css'
 import PortfolioTransactionsFilter from "./PortfolioTransactionsFilter/PortfolioTransactionsFilter";
 import {useContext, useEffect, useState} from "react";
@@ -14,26 +9,40 @@ import axios from "axios";
 const PortfolioTransactionsPage = (props) => {
     const [transactionsData, setTransactionsData] = useState([{}])
     const [newTransaction, setNewTransaction] = useState(0);
+    const [parameters, setParameters] = useState();
+    const [isInitialRender, setIsInitialRender] = useState(0);
 
-    const fetchData = (parameters) => {
+    const fetchData = () => {
         axios.post(props.server + 'portfolios/get/transactions/', parameters)
             .then(response => setTransactionsData(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
     };
+
+    useEffect(() => {
+        if (isInitialRender === 0) {
+            setIsInitialRender(isInitialRender + 1);  // Mark initial render as complete
+        } else {
+            fetchData();
+        }
+    }, [parameters, isInitialRender]);
+
     return (
         <TransactionContext.Provider value={{
             newTransaction: newTransaction,
             saveNewTransaction: setNewTransaction,
         }}>
-            <div style={{width: '100%', padding: 15}}>
+            <div style={{height: '100%', width: '100%', padding: 15, overflowY: 'scroll'}}>
                 <div>
-                    <PortfolioTransactionsFilter fetch={fetchData}/>
+                    <PortfolioTransactionsFilter updateParams={(e) => setParameters(e)}/>
                 </div>
-                <div style={{height: '500px', width: '100%', paddingTop: 15, overflow: "scroll"}}>
-                    <PortfolioTransactions data={transactionsData} server={props.server} fetch={fetchData}/>
+
+                <div style={{height: 900}}>
+                    <PortfolioTransactions data={transactionsData} server={props.server} fetch={() => setIsInitialRender(isInitialRender + 1)}/>
                 </div>
+
+
             </div>
         </TransactionContext.Provider>
     );

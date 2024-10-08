@@ -1,3 +1,7 @@
+p{
+    font-weight: bold;
+}
+
 body{
     overflow: hidden;
 }
@@ -17,6 +21,8 @@ th{
 thead{
     height: 50px;
     font-weight: bold;
+    background:  #f1f1f1;
+    color: #494f54;
 }
 
 td{
@@ -26,7 +32,48 @@ td{
     padding: 5px 10px;
     font-size: 12px;
     height: 50px;
-    white-space:nowrap
+    white-space:nowrap;
+    color: #494f54;
+}
+
+tr{
+
+}
+
+.menu-button{
+    font-size: 16px;
+    margin: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    color: #1b1e21;
+}
+
+.menu-button:hover{
+    background:  #d6eaf8;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #1b1e21;
+}
+
+.alert-button{
+    width: 40px;
+    height: 40px;
+    background-color:  #3498db;  /* Background color of the button */
+    border: none;               /* Remove any default borders */
+    color: white;               /* Icon color */
+    display: flex;              /* Use flexbox for centering */
+    justify-content: center;    /* Center horizontally */
+    align-items: center;        /* Center vertically */
+    font-size: 30px;            /* Icon size */
+    border-radius: 50%;         /* Make the button round */
+    cursor: pointer;            /* Cursor changes to pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.alert-button:hover {
+    background-color: #154360; /* Darken the color on hover */
 }
 
 .table-row-all{
@@ -100,7 +147,7 @@ td{
     font-size: 14px;
     font-weight: bold;
     padding: 5px;
-    background: #1e7e34;
+    background: #566573;
     width: 100%;
     color: white;
     height: 100%;
@@ -108,11 +155,16 @@ td{
 }
 
 .save-button:hover{
-    border: #1e7e34;
+    border:  #566573 ;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px;
     border-style: solid;
     border-width: 1px;
     background: white;
-    color: #1e7e34;
+    height: 100%;
+    width: 100%;
+    color:  #566573 ;
 }
 
 .normal-button{
@@ -139,6 +191,32 @@ td{
     color: white;
     height: 100%;
     border-radius: 10px;
+}
+
+.close-button{
+    border: none;
+    font-size: 30px;
+    font-weight: bold;
+    /*margin: 5px;*/
+    padding: 5px;
+    background: #e59866;
+    width: 30px;
+    height: 30px;
+    color: white;
+    border-radius: 5px;
+}
+
+.close-button:hover{
+    border:  #e59866;
+    font-size: 20px;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    color:  #e59866;
 }
 
 .page-container {
@@ -187,6 +265,16 @@ input[type=date], select {
 }
 
 input[type=file] {
+    width: 100%;
+    padding: 5px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #2b2b2b;
+}
+
+select{
     width: 100%;
     padding: 5px 20px;
     display: inline-block;
@@ -295,15 +383,38 @@ ul li:hover {
 }
 
 .card{
-    border-radius: 5px;
+    border-radius: 10px;
     background: white;
     height: 100%;
 }
 
 .card-header{
-    border-radius: 5px;
+    border-radius: 10px;
     background:  #f1f1f1;
     padding: 10px;
     display: flex;
     font-size: 14px;
+    font-weight: bold;
+    color: #494f54;
+}
+
+.icon{
+    border: none;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    color: #3498db;
+}
+
+.icon:hover{
+    border: none;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+    background:  #1f618d ;
+    width: 100%;
+    color: white;
+    height: 100%;
+    border-radius: 10px;
+    cursor: pointer;
 }

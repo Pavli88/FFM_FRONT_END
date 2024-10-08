@@ -85,28 +85,30 @@ const Notifications = (props) => {
     };
 
     return (
-        <>
-            <Form style={{margin: '5px'}}>
-                <Button className="rounded-circle block-example" id={'notError'} style={{background: '#49A75D', border: 0}}>
-                    <BsExclamationTriangle style={{fontSize: 16}}/>
-                </Button>
-            </Form>
-            <Form style={{margin: '5px'}}>
-                <Button className="rounded-circle block-example" id={'notRisk'} style={{background: '#49A75D', border: 0}}>
-                    <BsGraphDown style={{fontSize: 16}}/>
-                </Button>
-            </Form>
-            <Form onClick={procNotHandler} style={{margin: '5px'}}>
-                <Button className="rounded-circle block-example" id={'notProcess'} style={{background: '#49A75D', border: 0}}>
-                    <BsCpu style={{fontSize: 16}}/>
-                </Button>
-            </Form>
-            <Form style={{margin: '5px'}}>
-                <Button className="rounded-circle block-example" onClick={tradeNotHandler} id={'notTrades'} style={{background: '#49A75D', border: 0}}>
-                    <BsBell style={{fontSize: 16}}/>
-                </Button>
-            </Form>
-        </>
+        <div style={{display: "flex"}}>
+            <div style={{margin: 5}}>
+                <button className={'alert-button'}>
+                    <BsExclamationTriangle style={{fontSize: '20px', fontWeight: 'bold'}}/>
+                </button>
+            </div>
+
+            <div style={{margin: 5}}>
+                <button className={'alert-button'}>
+                    <BsGraphDown style={{fontSize: '20px', fontWeight: 'bold'}}/>
+                </button>
+            </div>
+
+            <div style={{margin: 5}}>
+                <button className={'alert-button'}>
+                    <BsCpu style={{fontSize: '20px', fontWeight: 'bold'}}/>
+                </button>
+            </div>
+            <div style={{margin: 5}}>
+                <button className={'alert-button'}>
+                    <BsBell style={{fontSize: '20px', fontWeight: 'bold'}}/>
+                </button>
+            </div>
+        </div>
     );
 };
 

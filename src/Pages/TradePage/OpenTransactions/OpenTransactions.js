@@ -40,7 +40,7 @@ const UnitModal = (props) => {
                                 'transaction_type': 'Close Out',
                                 'portfolio_code': props.data.portfolio_code,
                                 'account_id': props.data.account_id,
-                                'security': props.data.security,
+                                'security_id': props.data.security,
                                 'id': props.data.id,
                                 'quantity': newUnit,
                             })}>
@@ -53,7 +53,7 @@ const UnitModal = (props) => {
                                 'transaction_type': 'Close',
                                 'portfolio_code': props.data.portfolio_code,
                                 'account_id': props.data.account_id,
-                                'security': props.data.security,
+                                'security_id': props.data.security,
                                 'id': props.data.id,
                             })}>
                         Close
@@ -65,7 +65,7 @@ const UnitModal = (props) => {
                                 'transaction_type': 'Close All',
                                 'portfolio_code': props.data.portfolio_code,
                                 'account_id': props.data.account_id,
-                                'security': props.data.security,
+                                'security_id': props.data.security,
                                 'id': props.data.id,
                             })}>
                         Close All Trades
@@ -77,7 +77,7 @@ const UnitModal = (props) => {
                                 'transaction_type': 'Liquidate',
                                 'portfolio_code': props.data.portfolio_code,
                                 'account_id': props.data.account_id,
-                                'security': props.data.security,
+                                'security_id': props.data.security,
                                 'id': props.data.id,
                             })}>
                         Liquidate Portfolio

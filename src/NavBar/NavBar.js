@@ -24,27 +24,35 @@ const Navigation = (props) => {
     return (
         <Navbar className={'nav-bar'}>
             <Navbar.Brand href="react">
+                {/*<img*/}
+                {/*    // src={logo}*/}
+                {/*    alt="Fractal Logo"*/}
+                {/*    width="40" // Adjust size as needed*/}
+                {/*    height="40" // Adjust size as needed*/}
+                {/*    className="d-inline-block align-top"*/}
+                {/*/>*/}
                 Fractal
             </Navbar.Brand>
             <Nav className="mr-auto">
-                <Link className={'nav-button'} onClick={() => setProcessHandler(<></>)} as={Link} to={'/home'}>Home</Link>
-                <Link className={'nav-button'} as={Link} to={'/dashboard'}>Dashboard</Link>
-                <Link className={'nav-button'} as={Link}
-                          to={'/portfolio/dashboard'}>Portfolio</Link>
-                <Link className={'nav-button'} as={Link} to={'/risk'}>Risk</Link>
-                <Link className={'nav-button'} as={Link}
-                          to={'/instruments'}>Instrument</Link>
-                <Link className={'nav-button'} as={Link} to={'/trade'}>Trade</Link>
-                <Link className={'nav-button'} as={Link}
-                          to={'/calculations'}>Calculations</Link>
-                <Link className={'nav-button'} as={Link} to={'/data'}>Data</Link>
+                <Link className={'menu-button'} onClick={() => setProcessHandler(<></>)} as={Link}
+                      to={'/home'}>Home</Link>
+                <Link className={'menu-button'} as={Link} to={'/dashboard'}>Dashboard</Link>
+                <Link className={'menu-button'} as={Link} to={'/portfolio/dashboard'}>Portfolio</Link>
+                <Link className={'menu-button'} as={Link} to={'/risk'}>Risk</Link>
+                <Link className={'menu-button'} as={Link} to={'/instruments'}>Instrument</Link>
+                <Link className={'menu-button'} as={Link} to={'/trade'}>Trade</Link>
+                <Link className={'menu-button'} as={Link} to={'/calculations'}>Calculations</Link>
+                <Link className={'menu-button'} as={Link} to={'/data'}>Data</Link>
             </Nav>
+
             <Notifications server={server}/>
-            <DropdownButton alignRight flip title={props.user} style={{borderRadius: '5px'}}>
-                <Dropdown.Item as={Link} to={'/profil'} >Profil</Dropdown.Item>
+            <p style={{alignItems: "center", margin: 5}}>Welcome {props.user}</p>
+            <DropdownButton alignRight flip style={{borderRadius: '50px'}}>
+                <Dropdown.Item as={Link} to={'/profil'}>Profil</Dropdown.Item>
                 <Dropdown.Divider/>
                 <Dropdown.Item onSelect={userLogout}>Sign Out</Dropdown.Item>
             </DropdownButton>
+
         </Navbar>
     );
 };

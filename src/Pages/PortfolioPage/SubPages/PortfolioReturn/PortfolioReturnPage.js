@@ -89,32 +89,56 @@ const PortfolioReturnPage = () => {
     return (
         <div style={{height: '900px', width: '100%', padding: 15}}>
             <div style={{paddingBottom: 15}}>
-                <Card>
-                    <div className={'search-container'}>
-                        <div style={{paddingLeft: 15, paddingTop: 5}}>
-                        <span className={'input-label'} style={{textAlign: "left"}}>
+                <div className={'card'} style={{padding: 10}}>
+                    <div style={{display: "flex"}}>
+                        <div className={'input-label'}>
+                        <span>
                             Start Date
                         </span>
                         </div>
 
                         <div>
                             <input type={'date'} ref={startDateRef}
-                                   defaultValue={startDate} onChange={(e) => setStartDate(e.target.value)}/>
-                        </div>
-
-                        <div style={{width: 150, paddingLeft: 10}}>
-                            <button className={'get-button'}>Get
-                            </button>
+                                   defaultValue={startDate}
+                                   onChange={(e) => setStartDate(e.target.value)}/>
                         </div>
                     </div>
-                </Card>
+                </div>
             </div>
 
 
             <div style={{height: '760px', overflowY: "scroll"}}>
-                <div style={{paddingBottom: 15}}>
-                    <MonthlyReturns/>
+
+                <div style={{display: "flex"}}>
+
+                    <div style={{width: '50%'}}>
+                        <p>Monthly Total Returns</p>
+                        <div style={{paddingBottom: 15}}>
+                            <MonthlyReturns/>
+                        </div>
+                    </div>
+
+                    <div style={{width: '50%', paddingLeft: 15}}>
+                        <p>Ex-Post Periodic Returns</p>
+                        <div style={{paddingBottom: 15}}>
+                            <MonthlyReturns/>
+                        </div>
+                    </div>
                 </div>
+
+
+                <p>Profit & Loss</p>
+                <div style={{paddingBottom: 15, display: "flex"}}>
+                    <div style={{height: 300, width: '50%'}}>
+                        <DailyPnl data={navData}/>
+                    </div>
+
+                    <div style={{height: 300, width: '50%', paddingLeft: 15}}>
+                        <PortfolioTransactionPnl data={findCumulativeSum(pnlResults)}
+                                                 currency={portfolioData.currency}/>
+                    </div>
+                </div>
+
 
                 <div style={{width: '100%', display: 'flex'}}>
                     {/*Performance*/}
@@ -129,13 +153,8 @@ const PortfolioReturnPage = () => {
                     </div>
                     {/*Profit*/}
                     <div style={{height: '100%', width: '50%'}}>
-                        <div style={{height: 300, paddingLeft: 15, paddingRight: 15}}>
-                            <DailyPnl data={navData}/>
-                        </div>
-                        <div style={{height: 300, paddingLeft: 15, paddingRight: 15, paddingTop: 15}}>
-                            <PortfolioTransactionPnl data={findCumulativeSum(pnlResults)}
-                                                     currency={portfolioData.currency}/>
-                        </div>
+
+
 
                         <div style={{width: '100%', display: "flex", paddingLeft: 15, paddingRight: 15}}>
                             <div style={{width: '100%', height: 400, paddingRight: 15, paddingTop: 15}}>

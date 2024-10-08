@@ -4,29 +4,19 @@ import Select from 'react-select'
 import {useContext, useState} from "react";
 import axios from "axios";
 import ServerContext from "../../../context/server-context";
+import Papa from 'papaparse';
+
 const DataNavBar = (props) => {
     const server = useContext(ServerContext).server;
+    const [csvData, setCsvData] = useState([]);
+    const [headers, setHeaders] = useState([]);
     const [file, setFile] = useState();
-    const [array, setArray] = useState([]);
-    const fileReader = new FileReader();
-    // console.log(file)
-    const handleOnChange = (e) => {
-        setFile(e.target.files[0]);
-
-        if (file) {
-            fileReader.onload = function (event) {
-                const text = event.target.result;
-                csvFileToArray(text);
-            };
-
-            fileReader.readAsText(file);
-        }
-
-    };
+    const [process, setProcess] = useState('test');
 
     const postData = async(file) => {
         const formData = new FormData();
         formData.append("file", file);
+        formData.append('process', process)
         const config = {
           headers: {
             'content-type': 'multipart/form-data',
@@ -36,25 +26,26 @@ const DataNavBar = (props) => {
         alert(response.data.response)
     };
 
-    const csvFileToArray = string => {
-        const csvHeader = string.slice(0, string.indexOf("\n")).split(",");
-        const csvRows = string.slice(string.indexOf('\n') + 1).split('\n').filter((str) => str !== '');
-        const array = csvRows.map(i => {
-            const values = i.split(',');
-            const obj = csvHeader.reduce((object, header, index) => {
-                object[header] = values[index];
-                return object;
-            }, {});
-            return obj;
-        });
-        setArray(array);
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            Papa.parse(file, {
+                header: true, // if you want the first row to be the header
+                skipEmptyLines: true,
+                complete: function (results) {
+                    const rows = results.data;
+                    const headers = results.meta.fields;
+                    setHeaders(headers); // Set table headers
+                    setCsvData(rows);    // Set parsed data
+                },
+            });
+        }
+        setFile(file)
     };
 
-    const headerKeys = Object.keys(Object.assign({}, ...array));
-
-    return(
+    return (
         <div style={{width: '100%', padding: 15}}>
-            <Card>
+            <div className={'card'}>
                 <div style={{display: "flex", paddingLeft: 15, paddingTop: 5, paddingBottom: 5, paddingRight: 15}}>
                     <div style={{paddingTop: 0}}>
                         <span className={'input-label'} style={{textAlign: "left"}}>
@@ -64,52 +55,55 @@ const DataNavBar = (props) => {
                     <div style={{paddingLeft: 15, paddingTop: 0, width: 500}}>
                         <Select
                             options={[
-                                {value: 'Prices', label: 'Prices'},
-                                {value: 'NAV', label: 'NAV'},
-                                {value: 'Instrument', label: 'Instrument'},
-                                {value: 'Transactions', label: 'Transactions'},
+                                {value: 'prices', label: 'Prices'},
+                                {value: 'fx', label: 'FX Rates'},
+                                {value: 'nav', label: 'NAV'},
+                                {value: 'instrument', label: 'Instrument'},
+                                {value: 'transaction', label: 'Transactions'},
                             ]}
                             isClearable
-                            // onChange={(e) => e === null ? setSelectedGroup([]) : setSelectedGroup(e)}
+                            onChange={(e) => setProcess(e.value)}
                             className={'instrument-search-input-field'}
 
                         />
                     </div>
-                    <div style={{paddingLeft: 15, paddingTop:0}}>
-                        <input type={'file'} onChange={handleOnChange}/>
+                    <div style={{paddingLeft: 15, paddingTop: 0}}>
+                        <input type={'file'} accept=".csv" onChange={handleFileUpload}/>
                     </div>
                     <div style={{paddingLeft: 10, paddingTop: 0, paddingBottom: 0}}>
-                        <button className={'get-button'} onClick={() => postData(file)}><BsArrowLeftSquare/>  Import</button>
+                        <button className={'get-button'} onClick={() => postData(file)}><BsArrowLeftSquare/> Import
+                        </button>
                     </div>
                 </div>
+            </div>
 
-            </Card>
 
-            <div style={{paddingTop: 15}}>
-                <Card>
-                    <div>
-                        <table>
-                            <thead>
-                            <tr key={"header"}>
-                                {headerKeys.map((key) => (
-                                    <th>{key}</th>
+            <div className={'card'} style={{marginTop: 15}}>
+                {csvData.length > 0 && (
+                    <table>
+                        <thead>
+                        <tr>
+                            {/* Render table headers dynamically */}
+                            {headers.map((header, index) => (
+                                <th key={index} style={{padding: '8px'}}>{header}</th>
+                            ))}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {/* Render table rows dynamically */}
+                        {csvData.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                {headers.map((header, cellIndex) => (
+                                    <td key={cellIndex} style={{padding: '8px'}}>{row[header]}</td>
                                 ))}
                             </tr>
-                            </thead>
+                        ))}
+                        </tbody>
+                    </table>
+                )}
 
-                            <tbody>
-                            {array.map((item) => (
-                                <tr key={item.id}>
-                                    {Object.values(item).map((val) => (
-                                        <td>{val}</td>
-                                    ))}
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card>
             </div>
+
 
         </div>
 

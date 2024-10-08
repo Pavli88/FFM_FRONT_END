@@ -14,6 +14,7 @@ const PortfolioTransactionEntry = (props) => {
     const [instrumentData, setInstrumentData] = useState({});
     const [optionSelected, setOptionSelected] = useState(false);
     const [optionType, setOptionType] = useState("C");
+    const [active, setActive] = useState(false);
     const [broker, setBroker] = useState('oanda');
     const dateRef = useRef();
     const quantityRef = useRef();
@@ -21,17 +22,16 @@ const PortfolioTransactionEntry = (props) => {
     const fxRef = useRef();
     const brokerIdRef = useRef();
 
-    const submitHandler = () => {
-        axios.post(props.server + 'portfolios/new/transaction/', {
+    const submitHandler = async () => {
+        const response = await axios.post(props.server + 'portfolios/new/transaction/', {
             portfolio_code: portfolioCode,
             security_id: instrumentData.id,
-            sec_group: instrumentData.group,
             transaction_type: transactionType,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
             price: priceRef.current.value,
             currency: instrumentData.currency,
-            is_active: false,
+            is_active: active,
             open_status: 'Open',
             transaction_link_code: 0,
             option: optionSelected ? optionType : '',
@@ -39,12 +39,11 @@ const PortfolioTransactionEntry = (props) => {
             broker: broker,
             broker_id: brokerIdRef.current.value
         })
-            .then(response => alert(response.data.response))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
-        setTransactionType('Purchase')
-        props.close()
+        if (response.data.success){
+            setTransactionType('Purchase')
+            props.close()
+            console.log('CLOSING')
+        };
     };
 
     const getSecurity = () => {
@@ -62,114 +61,168 @@ const PortfolioTransactionEntry = (props) => {
 
     return (
         <Modal show={props.show} onHide={() => props.close()}>
-            <Modal.Header closeButton>
-                <Modal.Title>New Transaction</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+            <div className={'card-header'}>
+                New Transaction
+            </div>
+            <div>
                 <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
 
-                    <div style={{display: 'flex'}}>
-                        <div style={{paddingLeft: 10, display: "flex"}}>
-                            <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Option</Form.Label>
-                            <div style={{padding: 10}}>
-                                <input type="checkbox" onChange={(e) => {
-                                    setOptionSelected(e.target.checked)
-                                    setOptionType('C')
-                                }}/>
-                            </div>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Active Transaction</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10}}>
+                            <input type="checkbox" onChange={() => setActive(!active)}/>
                         </div>
                     </div>
 
-                    <div className={'entry-block'}>
-                        <Form.Label style={{
-                            paddingBottom: 5,
-                            paddingTop: 10
-                        }}>Security ID</Form.Label>
-                        <div style={{display: "flex"}}>
-                            <div style={{width: '100%', paddingRight: 15}}>
-                                <Form.Control value={relatedID} onChange={(e) => setRelatedID(e.target.value)}
-                                              type="number"/>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Option</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10}}>
+                            <input type="checkbox" onChange={(e) => {
+                                setOptionSelected(e.target.checked)
+                                setOptionType('C')
+                            }}/>
+                        </div>
+                    </div>
+
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Security ID</span>
+                        </div>
+
+                        <div style={{position: "absolute", right: 10, display: "flex"}}>
+                            <div>
+                                <input value={relatedID}
+                                       onChange={(e) => setRelatedID(e.target.value)}
+                                       type="number"
+                                       style={{width: 135}}/>
                             </div>
-                            <div style={{width: '60px'}}>
+                            <div style={{paddingLeft: 15}}>
                                 <button className={'normal-button'}
-                                        style={{paddingTop: 7, paddingBottom: 7, paddingLeft: 7, paddingRight: 7}}
+                                        style={{width: 50}}
                                         onClick={getSecurity}
                                 >Get
                                 </button>
                             </div>
+
                         </div>
                     </div>
 
-                    <div className={'entry-block'}>
-                        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Transaction Type</Form.Label>
-                        <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
-                            <option value={'Purchase'}>Purchase</option>
-                            <option value={'Sale'}>Sale</option>
-                        </Form.Control>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Transaction Type</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
+                                <option value={'Purchase'}>Purchase</option>
+                                <option value={'Sale'}>Sale</option>
+                            </Form.Control>
+                        </div>
                     </div>
 
 
-                    {optionSelected ? <div className={'entry-block'}>
-                        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Option Type</Form.Label>
-                        <Form.Control onChange={(e) => setOptionType(e.target.value)} as="select">
-                            <option value={'C'}>Call</option>
-                            <option value={'P'}>Put</option>
-                        </Form.Control>
+                    {optionSelected ? <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Option Type</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <Form.Control onChange={(e) => setOptionType(e.target.value)} as="select">
+                                <option value={'C'}>Call</option>
+                                <option value={'P'}>Put</option>
+                            </Form.Control>
+                        </div>
                     </div> : ""
                     }
 
-                    <div style={{margin: 10}}>
-                        <Form.Label style={{paddingBottom: 5}}>Sec Name</Form.Label>
-                        <Form.Control value={instrumentData.name}
-                                      type="text" disabled/>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Security Name</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <input value={instrumentData.name} type="text" disabled/>
+                        </div>
                     </div>
 
-                    <div style={{margin: 10}}>
-                        <Form.Label style={{paddingBottom: 5}}>Sec Group</Form.Label>
-                        <Form.Control value={instrumentData.group}
-                                      type="text" disabled/>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Security Group</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <input value={instrumentData.group} type="text" disabled/>
+                        </div>
                     </div>
 
-                    <div style={{margin: 10}}>
-                        <Form.Label style={{paddingBottom: 5}}>Currency</Form.Label>
-                        <Form.Control value={instrumentData.currency} type="text" disabled/>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Currency</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <input value={instrumentData.currency} type="text" disabled/>
+                        </div>
                     </div>
 
-                    <div style={{margin: 10}}>
-                        <Form.Label style={{paddingBottom: 5}}>Date</Form.Label>
-                        <Form.Control ref={dateRef} defaultValue={currentDate} type="date"/>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Date</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <input ref={dateRef} defaultValue={currentDate} type="date"/>
+                        </div>
                     </div>
 
-                    <div style={{margin: 10}}>
-                        <Form.Label style={{paddingBottom: 5}}>Quantity</Form.Label>
-                        <Form.Control ref={quantityRef} type="number"/>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Quantity</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <input ref={quantityRef} type="number"/>
+                        </div>
                     </div>
 
-                    <div style={{margin: 10}}>
-                        <Form.Label style={{paddingBottom: 5}}>Price</Form.Label>
-                        <Form.Control ref={priceRef} type="number" min={0.0}/>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Price</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <input ref={priceRef} type="number" min={0.0}/>
+                        </div>
                     </div>
 
-                    <div style={{margin: 10}}>
-                        <Form.Label style={{paddingBottom: 5}}>FX Rate</Form.Label>
-                        <Form.Control ref={fxRef} type="number" defaultValue={1.0}/>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>FX Rate</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <input ref={fxRef} type="number" defaultValue={1.0}/>
+                        </div>
                     </div>
 
-                    <div className={'entry-block'}>
-                        <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Broker</Form.Label>
-                        <Form.Control onChange={(e) => setBroker(e.target.value)} as="select">
-                            <option value={'oanda'}>Oanda</option>
-                        </Form.Control>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Broker</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <Form.Control onChange={(e) => setBroker(e.target.value)} as="select">
+                                <option value={'oanda'}>Oanda</option>
+                            </Form.Control>
+                        </div>
                     </div>
 
-                    <div style={{margin: 10}}>
-                        <Form.Label style={{paddingBottom: 5}}>Broker ID</Form.Label>
-                        <Form.Control ref={brokerIdRef} type="number" defaultValue={1.0}/>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div>
+                            <span className={'input-label'}>Broker ID</span>
+                        </div>
+                        <div style={{position: "absolute", right: 10, width: 200}}>
+                            <input ref={brokerIdRef} type="number" defaultValue={1.0}/>
+                        </div>
                     </div>
                 </div>
-            </Modal.Body>
+            </div>
             <Modal.Footer>
-                <button onClick={submitHandler} className={'normal-button'}>Save</button>
+                <button onClick={submitHandler} className={'save-button'}>Save</button>
             </Modal.Footer>
         </Modal>
     )

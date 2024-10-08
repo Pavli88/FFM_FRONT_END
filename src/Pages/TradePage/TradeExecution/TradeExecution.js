@@ -29,10 +29,9 @@ const TradeExecution = (props) => {
             axios.post(props.server + 'trade_page/new/signal/', {
                 portfolio_code: portCodeRef.current.value,
                 account_id: accountRef.current.value,
-                security: instrumentData.id,
+                security_id: instrumentData.id,
                 transaction_type: sideRef.current.value,
                 quantity: quantityRef.current.value,
-                status: '',
                 manual: true,
 
             })

@@ -1,4 +1,3 @@
-import Card from "react-bootstrap/Card";
 import './PortfolioTransactions.css'
 import axios from "axios";
 import {useMemo, useState} from "react";
@@ -6,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Select from "react-select";
 import { CSVLink, CSVDownload } from "react-csv";
-import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-icons/bs";
+import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare, BsArrowBarDown, BsX, BsCurrencyDollar} from "react-icons/bs";
 import {useExpanded, useGroupBy, useTable} from "react-table";
 import PortfolioTransactionEntry from "../PortfolioTransactionEntry/PortfolioTransactionEntry";
 import PortfolioCashEntry from "../PortfolioCashEntry/PortfolioCashEntry";
@@ -19,16 +18,14 @@ const TableGrouped = (props) => {
     const [selectedTransaction, setSelectedTransaction] = useState({});
     const [linkedTransaction, setLinkedTransaction] = useState({});
 
-    const deleteTransaction = (id) => {
-        axios.post(props.server + 'portfolios/delete/transaction/', {
+    const deleteTransaction = async (id) => {
+        const response = await axios.post(props.server + 'portfolios/delete/transaction/', {
             id: id['original']['id'],
         })
-            .then(response => alert(response.data.response))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
-        setShowModal(false)
-        props.fetch()
+        console.log(response)
+        if (response.data.success) {
+            props.fetch()
+        }
     };
     const updateTransaction = () =>  {
         axios.post(props.server + 'portfolios/save/transaction/', selectedTransaction)
@@ -43,20 +40,11 @@ const TableGrouped = (props) => {
         [props.data]
     )
 
-    const removeKey = () => {
-        setLinkedTransaction(current => {
-            const {id, ...rest} = current;
-            return rest;
-        });
-    };
-
-    const newLinkedTransaction = () => {
-        axios.post(props.server + 'portfolios/save/transaction/', linkedTransaction)
-            .then(response => alert(response.data.response))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
-        setShowLinkedModal(false)
+    const newLinkedTransaction = async() => {
+        const response = await axios.post(props.server + 'portfolios/new/transaction/', linkedTransaction)
+        if (response.data.success) {
+            props.fetch()
+        }
     };
 
     const columns = useMemo(
@@ -93,10 +81,6 @@ const TableGrouped = (props) => {
                 accessor: 'name',
             },
             {
-                Header: 'Sec Group',
-                accessor: 'sec_group',
-            },
-            {
                 Header: 'Currency',
                 accessor: 'currency',
             },
@@ -105,7 +89,7 @@ const TableGrouped = (props) => {
                 accessor: 'open_status',
             },
             {
-                Header: 'Initial Units',
+                Header: 'Quantity',
                 accessor: 'quantity',
             },
             {
@@ -146,23 +130,15 @@ const TableGrouped = (props) => {
             },
             {
                 Header: 'Margin Rate %',
-                accessor: 'margin',
-            },
-            {
-                Header: 'Base P&L',
-                accessor: 'realized_pnl',
-            },
-             {
-                Header: 'Local P&L',
-                accessor: 'local_pnl',
-            },
-             {
-                Header: 'FX P&L',
-                accessor: 'fx_pnl',
+                accessor: 'margin_rate',
             },
             {
                 Header: 'Account ID',
                 accessor: 'account_id',
+            },
+            {
+                Header: 'Broker',
+                accessor: 'broker',
             },
             {
                 Header: 'Broker ID',
@@ -177,7 +153,10 @@ const TableGrouped = (props) => {
         []
     )
     const tableInstance = useTable(
-        {columns, data},
+        {
+            columns,
+            data
+        },
         useGroupBy,
         useExpanded)
     const {
@@ -190,8 +169,33 @@ const TableGrouped = (props) => {
     } = tableInstance
     const firstPageRows = rows.slice(0, 200)
 
+    const onAddTransactionButtonClick = (row) => {
+        const newTransactionType = row.transaction_type === 'Purchase'
+            ? 'Sale'
+            : (row.sec_group === 'CFD' && row.transaction_type === 'Sale')
+                ? 'Sale'
+                : 'Purchase';
+
+        const updatedDict = {...row};
+        delete updatedDict['name']
+        delete updatedDict['id']
+        // Update linked transaction state
+        setLinkedTransaction({
+            ...updatedDict,
+            transaction_link_code: row.id,
+            // transaction_type: newTransactionType,
+            open_status: 'Close',
+            is_active: 0,
+        });
+
+        // Show the linked modal
+        setShowLinkedModal(true);
+
+    };
+
     return (
         <table {...getTableProps()}>
+
             <thead>
             {
                 headerGroups.map(headerGroup => (
@@ -211,14 +215,16 @@ const TableGrouped = (props) => {
                     </tr>
                 ))}
             </thead>
+
             <tbody {...getTableBodyProps()}>
             {firstPageRows.map((row, i) => {
                 prepareRow(row)
-
+                // console.log(row)
                 return (
                     <tr {...row.getRowProps()}
                         style={{
                             background: row.isGrouped ? '#f2f4f4': 'white',
+                            color: row.original.is_active ? 'green' : 'black',
                         }}
 
                     >
@@ -262,19 +268,9 @@ const TableGrouped = (props) => {
 
                         {row.isGrouped ? '' : <td className={'sticky-column'}>
                             <div style={{display: "flex"}}>
-                                {row.original.transaction_link_code === 0 && row.original.transaction_type !== 'Subscription' && row.original.transaction_type !== 'Redemption' && row.original.transaction_type !== 'Commission' ?
+                                {row.original.transaction_link_code === row.original.id && row.original.transaction_type !== 'Subscription' && row.original.transaction_type !== 'Redemption' && row.original.transaction_type !== 'Commission' ?
                                 <div style={{padding: 2}}>
-                                    <button className={'normal-button'} onClick={() => {
-                                        setShowLinkedModal(true)
-                                        setLinkedTransaction({
-                                            ...row.original,
-                                            'transaction_link_code': row.original.id,
-                                            'transaction_type': row.original.transaction_type === 'Purchase' ? 'Sale' : row.original.sec_group === 'CFD' && row.original.transaction_type === 'Sale' ? 'Sale' : 'Purchase',
-                                            'open_status': 'Closed',
-                                            'is_active': 0,
-                                        })
-                                        removeKey()
-                                    }}>
+                                    <button className={'normal-button'} onClick={() => onAddTransactionButtonClick(row.original)}>
                                         <BsPlusLg/>
                                     </button>
                                 </div>: ''}
@@ -390,83 +386,129 @@ const TableGrouped = (props) => {
             </Modal>
 
             <Modal show={showLinkedModal} onHide={() => setShowLinkedModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>New Linked Transaction</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div style={{padding: '5px', width: '100%'}}>
-
-                        <div style={{width: '100%'}}>
-                            <Form.Label>Parent Transaction</Form.Label>
-                            <Form.Control defaultValue={linkedTransaction.transaction_link_code}
-                                          type="text"
-                                          disabled={true}
-                            />
-                        </div>
-
-                        <div style={{width: '100%', marginTop: 15}}>
-                            <Form.Label>Open Status</Form.Label>
-                            <Form.Control defaultValue={'Closed'}
-                                          type="text"
-                                          disabled={true}
-                            />
-                        </div>
-
-
-                        <div style={{width: '100%', marginTop: 15}}>
-                            <Form.Label>Transaction Type</Form.Label>
-                            <Form.Control defaultValue={linkedTransaction.transaction_type}
-                                          type="text"
-                                          disabled={true}
-                            />
-                        </div>
-
-                        <div style={{width: '100%', marginTop: 15}}>
-                            <Form.Label>Trade Date</Form.Label>
-                            <Form.Control defaultValue={selectedTransaction.trade_date}
-                                          type="date"
-                                          onChange={(e) => setLinkedTransaction({
-                                              ...linkedTransaction,
-                                              trade_date: e.target.value
-                                          })}
-                            />
-                        </div>
-
-                        <div style={{width: '100%', marginTop: 15}}>
-                            <Form.Label>Quantity</Form.Label>
-                            <Form.Control placeholder={selectedTransaction.quantity}
-                                          type="number"
-                                          onChange={(e) => setLinkedTransaction({
-                                              ...linkedTransaction,
-                                              quantity: e.target.value
-                                          })}
-                            />
-                        </div>
-
-                        <div style={{width: '100%', marginTop: 15}}>
-                            <Form.Label>Price</Form.Label>
-                            <Form.Control defaultValue={selectedTransaction.price}
-                                          type="number"
-                                          onChange={(e) => setLinkedTransaction({
-                                              ...linkedTransaction,
-                                              price: e.target.value,
-                                          })}
-                            />
-                        </div>
-
-                        <div style={{width: '100%', marginTop: 15}}>
-                            <Form.Label>FX Rate</Form.Label>
-                            <Form.Control defaultValue={selectedTransaction.price}
-                                          type="number"
-                                          onChange={(e) => setLinkedTransaction({
-                                              ...linkedTransaction,
-                                              fx_rate: e.target.value,
-                                          })}
-                            />
-                        </div>
-
+                <div className={'card-header'}>
+                    <div>
+                        New Linked Transaction
                     </div>
-                </Modal.Body>
+                </div>
+                <div>
+                    <div style={{padding: '5px', width: '100%'}}>
+                        <div style={{display: "flex"}}>
+                            <div>
+                                <span className={'input-label'}>Parent Transaction</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <span className={'input-label'}>{linkedTransaction.transaction_link_code}</span>
+                            </div>
+                        </div>
+
+                        <div style={{display: "flex"}}>
+                            <div>
+                                <span className={'input-label'}>Security Name</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <span className={'input-label'}>{linkedTransaction.name}</span>
+                            </div>
+                        </div>
+
+                        <div style={{display: "flex"}}>
+                            <div>
+                                <span className={'input-label'}>Security Code</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <span className={'input-label'}>{linkedTransaction.security_id}</span>
+                            </div>
+                        </div>
+
+                        <div style={{display: "flex"}}>
+                            <div>
+                                <span className={'input-label'}>Open Status</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <span className={'input-label'}>Close</span>
+                            </div>
+                        </div>
+
+                        <div style={{display: "flex"}}>
+                            <div>
+                                <span className={'input-label'}>Transaction Type</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <span className={'input-label'}>{linkedTransaction.transaction_type}</span>
+                            </div>
+                        </div>
+
+                        <div style={{display: "flex"}}>
+                            <div>
+                                <span className={'input-label'}>Original Quantity</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <span className={'input-label'}>{linkedTransaction.quantity}</span>
+                            </div>
+                        </div>
+
+                        <div style={{display: "flex", margin: 5}}>
+                            <div>
+                                <span className={'input-label'}>Trade Date</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <input defaultValue={selectedTransaction.trade_date}
+                                       type="date"
+                                       onChange={(e) => setLinkedTransaction({
+                                           ...linkedTransaction,
+                                           trade_date: e.target.value
+                                       })}
+                                       style={{width: 236}}
+                                />
+                            </div>
+                        </div>
+
+                        <div style={{display: "flex", margin: 5}}>
+                            <div>
+                                <span className={'input-label'}>Quantity</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <input placeholder={selectedTransaction.quantity}
+                                       type="number"
+                                       onChange={(e) => setLinkedTransaction({
+                                           ...linkedTransaction,
+                                           quantity: e.target.value
+                                       })}
+                                />
+                            </div>
+                        </div>
+
+                        <div style={{display: "flex", margin: 5}}>
+                            <div>
+                                <span className={'input-label'}>Price</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <input defaultValue={selectedTransaction.price}
+                                       type="number"
+                                       onChange={(e) => setLinkedTransaction({
+                                           ...linkedTransaction,
+                                           price: e.target.value,
+                                       })}
+                                />
+                            </div>
+                        </div>
+
+                        <div style={{display: "flex", margin: 5}}>
+                            <div>
+                                <span className={'input-label'}>FX Rate</span>
+                            </div>
+                            <div style={{position: "absolute", right: 10}}>
+                                <input defaultValue={selectedTransaction.price}
+                                       type="number"
+                                       onChange={(e) => setLinkedTransaction({
+                                           ...linkedTransaction,
+                                           fx_rate: e.target.value,
+                                       })}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <Modal.Footer>
                     <button className={'save-button'} onClick={newLinkedTransaction}>
                         Save
@@ -481,34 +523,37 @@ const PortfolioTransactions = (props) => {
     const [showTransactionPanel, setShowTransactionPanel] = useState(false);
     const [showCashPanel, setShowCashPanel] = useState(false);
     return (
-        <div style={{height: '100%', display: "flex"}}>
-            <Card className={'transactions-container'}>
-                <Card.Header style={{display: "flex"}}>
-                    <div>
-                        <span>Transactions</span>
-                        <CSVLink filename="transactions.csv" data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
-                    </div>
-                    <div style={{position: "absolute", right: 100}}>
-                        <button onClick={() => setShowTransactionPanel(value => !value)}
-                                className={'normal-button'} style={{fontSize: 12}}><span style={{paddingRight: 5}}>Transaction</span>
-                            <BsPlusLg/>
-                        </button>
-                    </div>
-                    <div style={{position: "absolute", right: 15}}>
-                        <button onClick={() => setShowCashPanel(value => !value)}
-                                className={'normal-button'} style={{fontSize: 12}}><span style={{paddingRight: 5}}>Cashflow</span>
-                            <BsPlusLg/>
-                        </button>
-                    </div>
-                </Card.Header>
-                <div
-                    style={{height: '100%', width: '100%', overflowY: 'auto', overflowX: 'auto', position: 'relative'}}>
-                    <TableGrouped data={props.data} server={props.server}/>
-                </div>
-            </Card>
+        <div >
 
-            <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server} show={showTransactionPanel} close={() => setShowTransactionPanel(false)}/>
-            <PortfolioCashEntry portfolio={props.portfolio} server={props.server} show={showCashPanel} close={() => setShowCashPanel(false)}/>
+            <div className={'card-header'}>
+                <div>
+                    <span>Transactions</span>
+                    <CSVLink filename="transactions.csv" data={props.data} style={{paddingLeft: 15}}><BsArrowBarDown
+                        style={{fontSize: 20, fontWeight: "bold"}}/></CSVLink>
+                </div>
+                <div style={{position: "absolute", right: 50}}>
+                    <BsPlusLg className={'icon'} onClick={() => setShowTransactionPanel(value => !value)}/>
+                </div>
+                <div style={{position: "absolute", right: 15}}>
+                    <BsCurrencyDollar className={'icon'} onClick={() => setShowCashPanel(value => !value)}/>
+                </div>
+            </div>
+
+            <div style={{height: 600}}>
+
+                <div className={'card'}
+                    style={{height: '100%', width: '100%', overflowY: 'auto', overflowX: 'auto', position: 'relative'}}>
+                    <TableGrouped data={props.data} server={props.server} fetch={props.fetch}/>
+                </div>
+            </div>
+
+            <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server} show={showTransactionPanel}
+                                       close={() => {
+                                           setShowTransactionPanel(false);
+                                           props.fetch();
+                                       }}/>
+            <PortfolioCashEntry portfolio={props.portfolio} server={props.server} show={showCashPanel}
+                                close={() => setShowCashPanel(false)}/>
 
         </div>
     );

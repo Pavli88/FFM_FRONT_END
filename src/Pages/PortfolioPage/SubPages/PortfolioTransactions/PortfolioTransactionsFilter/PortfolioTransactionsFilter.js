@@ -16,10 +16,11 @@ const PortfolioTransactionsFilter = (props) => {
     const securityRef = useRef();
     const startDateRef = useRef();
     const endDateRef = useRef();
+    const invRef = useRef();
     const [transactionType, setTransactionType] = useState([]);
     const [transactionSubType, setTransactionSubType] = useState('Buy Open');
     const [openStatus, setOpenStatus] = useState(false)
-    console.log(transactionType)
+
     const purchaseSubTypes = [
         <option value={'Buy Open'}>Buy Open</option>,
         <option value={'Sell Close'}>Sell Close</option>
@@ -29,15 +30,14 @@ const PortfolioTransactionsFilter = (props) => {
         <option value={'Buy Close'}>Buy Close</option>
     ]
     const submitHandler = () => {
-        props.fetch({
-                portfolio_code: portfolioCode,
-                transaction_type: transactionType.map(data=>data.value),
-                // security: securityRef.current.value,
-                trade_date__gte: startDateRef.current.value,
-                trade_date__lte: endDateRef.current.value,
-                is_active: openStatus ? 1 : 0,
-            }
-        );
+        props.updateParams({
+            portfolio_code: portfolioCode,
+            trade_date__gte: startDateRef.current.value,
+            trade_date__lte: endDateRef.current.value,
+            ...(openStatus && {is_active: openStatus}),
+            ...(invRef.current?.value && { transaction_link_code: invRef.current.value }),
+            ...(securityRef.current?.value && { security_id: securityRef.current.value })
+        });
     };
 
     // useEffect(() => {
@@ -49,17 +49,28 @@ const PortfolioTransactionsFilter = (props) => {
     // }, [newTransaction])
 
     return (
-        <Card className={'search-container'}>
+        <div className={'card'} style={{padding: 10}}>
             <div style={{display: "flex"}}>
 
                 <div>
                     <span className={'input-label'}>
-                        Open Transactions
+                        Show Only Active Transactions
                     </span>
                 </div>
 
-                <div style={{width:30}}>
-                    <input type={'checkbox'} style={{position: "absolute",top: 18, width: 30, paddingTop: 15, paddingBottom: 5}} onClick={() => setOpenStatus(!openStatus)}/>
+                <div style={{width: 30}}>
+                    <input type={'checkbox'}
+                           style={{position: "absolute", top: 18, width: 30, paddingTop: 15, paddingBottom: 5}}
+                           onClick={() => setOpenStatus(!openStatus)}/>
+                </div>
+
+                <div>
+                    <span className={'input-label'}>
+                        Inv ID
+                    </span>
+                </div>
+                <div>
+                    <input ref={invRef} type="number" style={{width: 100}}/>
                 </div>
 
                 <div>
@@ -68,7 +79,7 @@ const PortfolioTransactionsFilter = (props) => {
                     </span>
                 </div>
                 <div>
-                    <input ref={securityRef} type="text" style={{width: 100}}/>
+                    <input ref={securityRef} type="number" style={{width: 100}}/>
                 </div>
 
                 <div>
@@ -79,16 +90,16 @@ const PortfolioTransactionsFilter = (props) => {
 
                 <div>
                     <Select
-                            isMulti
-                            options={[
-        {value: 'Purchase', label:'Purchase'},
-        {value: 'Sale', label: 'Sale'},
-        {value: 'Subscription', label: 'Subscription'},
-                                {value: 'Redemption', label: 'Redemption'}
-    ]}
-                            onChange={(e) => setTransactionType(e)}
-                            className={'instrument-search-input-field'}
-                        />
+                        isMulti
+                        options={[
+                            {value: 'Purchase', label: 'Purchase'},
+                            {value: 'Sale', label: 'Sale'},
+                            {value: 'Subscription', label: 'Subscription'},
+                            {value: 'Redemption', label: 'Redemption'}
+                        ]}
+                        onChange={(e) => setTransactionType(e)}
+                        className={'instrument-search-input-field'}
+                    />
                 </div>
 
                 <div>
@@ -113,7 +124,7 @@ const PortfolioTransactionsFilter = (props) => {
                 </div>
 
             </div>
-        </Card>
+        </div>
     )
 };
 export default PortfolioTransactionsFilter;

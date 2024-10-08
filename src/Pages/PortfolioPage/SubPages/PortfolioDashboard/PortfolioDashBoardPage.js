@@ -11,9 +11,10 @@ import CashBalance from "./CashBalance/CashBalance";
 
 const PortfolioDashBoardPage = (props) => {
     const firstDayOfYear = useContext(DateContext).firstDayOfCurrentYear;
+    const currentDate = useContext(DateContext).currentDate;
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     const [navData, setNavData] = useState([{}])
-    const [holdingDate, setHoldingDate] = useState();
+    const [holdingDate, setHoldingDate] = useState(currentDate);
     const [holdingData, setHoldingdata] = useState([{}])
     const [startDate, setStartDate] = useState(props.portfolioData.inception_date);
     const startDateRef = useRef();
@@ -106,33 +107,6 @@ const PortfolioDashBoardPage = (props) => {
 
     return (
         <div style={{width: '100%', height: '100%', margin: '0px', padding: 15}}>
-
-            <div style={{paddingBottom: 15}}>
-                <Card>
-                    <div className={'search-container'}>
-
-                        <div>
-                            <span className={'input-label'}>
-                                Valuation Start Date
-                            </span>
-                        </div>
-
-                        <div>
-                            <input type={'date'} ref={startDateRef}
-                                   defaultValue={startDate} onChange={(e) => setStartDate(e.target.value)}/>
-                        </div>
-
-                        <div style={{width: 150, paddingLeft: 10}}>
-                            <button className={'get-button'} onClick={runValuation}>Run
-                                Valuation
-                            </button>
-                        </div>
-
-                        {isLoading ? spinner: ''}
-
-                    </div>
-                </Card>
-            </div>
 
             <div style={{height: 300, width: '100%', display: 'flex'}}>
                 <div style={{width: '100%', height: '100%', paddingRight: 15}}>

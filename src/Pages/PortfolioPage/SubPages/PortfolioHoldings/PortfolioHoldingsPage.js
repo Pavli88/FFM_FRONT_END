@@ -23,7 +23,7 @@ const PortfolioHoldingsPage = (props) => {
         <div className={'port-holding-page-container'}>
             <div style={{display: 'flex', padding: 15}}>
                 <div>
-                     <button onClick={fetchData}>Get Holding</button>
+                    <button onClick={fetchData}>Get Holding</button>
                 </div>
                 <div>
                     <input type={'date'} onChange={(e) => setDate(e.target.value)}/>
