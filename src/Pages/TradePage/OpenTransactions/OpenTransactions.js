@@ -1,7 +1,5 @@
-import Card from "react-bootstrap/Card";
 import {useContext, useEffect, useMemo, useRef, useState} from "react";
 import axios from "axios";
-import {BiX} from "react-icons/bi";
 import TradeContext from "../context/trade-context";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -14,8 +12,8 @@ const UnitModal = (props) => {
     const [newUnit, setNewUnit] = useState(0);
     const closeTransactions = async (data) => {
         const response = await axios.post(props.server + 'trade_page/new/signal/', data)
-        // saveNewTransactionID(response.data.transaction_id)
-        alert('Transaction is closed')
+        props.update();
+        props.hide();
     }
 
     return (
@@ -40,7 +38,7 @@ const UnitModal = (props) => {
                                 'transaction_type': 'Close Out',
                                 'portfolio_code': props.data.portfolio_code,
                                 'account_id': props.data.account_id,
-                                'security_id': props.data.security,
+                                'security_id': props.data.security_id,
                                 'id': props.data.id,
                                 'quantity': newUnit,
                             })}>
@@ -53,7 +51,7 @@ const UnitModal = (props) => {
                                 'transaction_type': 'Close',
                                 'portfolio_code': props.data.portfolio_code,
                                 'account_id': props.data.account_id,
-                                'security_id': props.data.security,
+                                'security_id': props.data.security_id,
                                 'id': props.data.id,
                             })}>
                         Close
@@ -65,7 +63,7 @@ const UnitModal = (props) => {
                                 'transaction_type': 'Close All',
                                 'portfolio_code': props.data.portfolio_code,
                                 'account_id': props.data.account_id,
-                                'security_id': props.data.security,
+                                'security_id': props.data.security_id,
                                 'id': props.data.id,
                             })}>
                         Close All Trades
@@ -77,7 +75,7 @@ const UnitModal = (props) => {
                                 'transaction_type': 'Liquidate',
                                 'portfolio_code': props.data.portfolio_code,
                                 'account_id': props.data.account_id,
-                                'security_id': props.data.security,
+                                'security_id': props.data.security_id,
                                 'id': props.data.id,
                             })}>
                         Liquidate Portfolio
@@ -94,6 +92,8 @@ const OpenTransactions = (props) => {
     const [openTransactionsData, setOpenTransactionsData] =  useState([{}]);
     const [showModal, setShowModal] = useState(false);
     const [selectedTransaction, setSelectedTransaction] = useState({});
+    const [showTradeModal, setShowTradeModal] = useState(false);
+
     const MINUTE_MS = 10000;
 
     useEffect(() => {
@@ -106,7 +106,7 @@ const OpenTransactions = (props) => {
 
     const fetchTransactions = async() => {
         const response = await axios.get(props.server + 'portfolios/get/open_transactions/')
-        setOpenTransactionsData(JSON.parse(response.data))
+        setOpenTransactionsData(response.data)
     };
 
     const data = useMemo(
@@ -128,7 +128,7 @@ const OpenTransactions = (props) => {
             },
             {
                 Header: 'Security ID',
-                accessor: 'security',
+                accessor: 'security_id',
 
             },
             {
@@ -171,6 +171,11 @@ const OpenTransactions = (props) => {
                 accessor: 'account_id',
                 disableGroupBy: true,
             },
+             {
+                Header: 'Broker',
+                accessor: 'broker',
+                disableGroupBy: true,
+            },
             {
                 Header: 'Broker ID',
                 accessor: 'broker_id',
@@ -199,101 +204,107 @@ const OpenTransactions = (props) => {
     }, [openTransactionsData])
 
     return (
-            <div style={{height: '100%', width: '100%', display: "flex"}}>
-                <Card style={{width: '100%'}}>
-                    <Card.Header>Open Transactions</Card.Header>
 
-                    <div style={{height: '100%', overflowY: 'scroll'}}>
-                        <table {...getTableProps()}>
-                            <thead>
-                            {
-                                headerGroups.map(headerGroup => (
-                                    <tr {...headerGroup.getHeaderGroupProps()}>
-                                        {
-                                            headerGroup.headers.map(column => (
-                                                <th {...column.getHeaderProps()}>
-                                                    {column.canGroupBy ? (
-                                                        // If the column can be grouped, let's add a toggle
-                                                        <span {...column.getGroupByToggleProps()}
-                                                              style={{paddingRight: 5}}>
+        <div className={'card'} style={{width: '100%'}}>
+            <div className={'card-header'}>
+                <span>Open Transactions</span>
+                <div style={{position: "absolute", right: 10}}>
+                    <button className={'normal-button'} onClick={() => setShowTradeModal(true)}>New</button>
+                </div>
+            </div>
+
+            <div style={{height: '100%', overflowY: 'scroll'}}>
+                <table {...getTableProps()}>
+                    <thead>
+                    {
+                        headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {
+                                    headerGroup.headers.map(column => (
+                                        <th {...column.getHeaderProps()}>
+                                            {column.canGroupBy ? (
+                                                // If the column can be grouped, let's add a toggle
+                                                <span {...column.getGroupByToggleProps()}
+                                                      style={{paddingRight: 5}}>
                       {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
                     </span>
-                                                    ) : null}
-                                                    {column.render('Header')}
-                                                </th>
-                                            ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyProps()}>
-                            {firstPageRows.map((row, i) => {
-                                prepareRow(row)
-                                return (
-                                    <tr {...row.getRowProps()}
-                                        style={{
-                                            cursor: row.isGrouped ? '' : 'pointer',
-                                        }}
+                                            ) : null}
+                                            {column.render('Header')}
+                                        </th>
+                                    ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                    {firstPageRows.map((row, i) => {
+                        prepareRow(row)
+                        return (
+                            <tr {...row.getRowProps()}
+                                style={{
+                                    cursor: row.isGrouped ? '' : 'pointer',
+                                }}
 
-                                        onDoubleClick={() => {
-                                            if (row.isGrouped) {
-                                                console.log('grouped')
-                                            } else {
-                                                setShowModal(true)
-                                                setSelectedTransaction(row.original)
-                                            }
-                                        }
-                                        }
-                                        className={'table-row-all'}
-                                    >
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td
-                                                    {...cell.getCellProps()}
-                                                    style={{
-                                                        fontWeight: cell.isGrouped
-                                                            ? "bold"
-                                                            : cell.isAggregated
-                                                                ? "bold"
-                                                                : cell.isPlaceholder
-                                                                    ? '#ff000042'
-                                                                    : 'white',
-                                                        // color: (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value < 0 ? 'red' : (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value > 0 ? 'green' : 'black',
-                                                    }}
-                                                >
-                                                    {cell.isGrouped ? (
-                                                        // If it's a grouped cell, add an expander and row count
-                                                        <>
+                                onDoubleClick={() => {
+                                    if (row.isGrouped) {
+                                        console.log('grouped')
+                                    } else {
+                                        setShowModal(true)
+                                        setSelectedTransaction(row.original)
+                                    }
+                                }
+                                }
+                                className={'table-row-all'}
+                            >
+                                {row.cells.map(cell => {
+                                    return (
+                                        <td
+                                            {...cell.getCellProps()}
+                                            style={{
+                                                fontWeight: cell.isGrouped
+                                                    ? "bold"
+                                                    : cell.isAggregated
+                                                        ? "bold"
+                                                        : cell.isPlaceholder
+                                                            ? '#ff000042'
+                                                            : 'white',
+                                                // color: (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value < 0 ? 'red' : (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value > 0 ? 'green' : 'black',
+                                            }}
+                                        >
+                                            {cell.isGrouped ? (
+                                                // If it's a grouped cell, add an expander and row count
+                                                <>
                           <span {...row.getToggleRowExpandedProps()}>
                             {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
                           </span>{' '}
-                                                            {cell.render('Cell')} ({row.subRows.length})
-                                                        </>
-                                                    ) : cell.isAggregated ? (
-                                                        // If the cell is aggregated, use the Aggregated
-                                                        // renderer for cell
-                                                        cell.render('Aggregated')
-                                                    ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
-                                                        // Otherwise, just render the regular cell
-                                                        cell.render('Cell')
+                                                    {cell.render('Cell')} ({row.subRows.length})
+                                                </>
+                                            ) : cell.isAggregated ? (
+                                                // If the cell is aggregated, use the Aggregated
+                                                // renderer for cell
+                                                cell.render('Aggregated')
+                                            ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                                                // Otherwise, just render the regular cell
+                                                cell.render('Cell')
 
-                                                    )}
-                                                </td>
-                                            )
-                                        })
-                                        }
-                                    </tr>
-                                )
-                            })}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card>
-                <UnitModal show={showModal}
-                           hide={() => setShowModal(false)}
-                           data={selectedTransaction}
-                           server={props.server}/>
+                                            )}
+                                        </td>
+                                    )
+                                })
+                                }
+                            </tr>
+                        )
+                    })}
+                    </tbody>
+                </table>
             </div>
-
+            <UnitModal show={showModal}
+                       hide={() => setShowModal(false)}
+                       data={selectedTransaction}
+                       server={props.server}
+                       update={()=>fetchTransactions()}
+            />
+            <TradeExecution server={props.server} show={showTradeModal} hide={() => setShowTradeModal(false)} update={() => fetchTransactions()}/>
+        </div>
     )
 };
 export default OpenTransactions;

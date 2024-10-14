@@ -23,7 +23,7 @@ const NewPortfolio = (props) => {
         event.preventDefault();
         axios.post(server + 'portfolios/new/portfolio/', {
             port_name: portNameRef.current.value,
-            port_code: portTypeRef.current.value === 'Business' ? portCodeRef.current.value + '_BS': 'Portfolio Group' ? portCodeRef.current.value + '_GROUP': portCodeRef.current.value,
+            port_code: portCodeRef.current.value,
             port_type: portTypeRef.current.value,
             port_currency: currencyRef.current.value,
             inception_date: dateRef.current.value,

@@ -18,22 +18,14 @@ const PortfolioTransactionsFilter = (props) => {
     const endDateRef = useRef();
     const invRef = useRef();
     const [transactionType, setTransactionType] = useState([]);
-    const [transactionSubType, setTransactionSubType] = useState('Buy Open');
     const [openStatus, setOpenStatus] = useState(false)
 
-    const purchaseSubTypes = [
-        <option value={'Buy Open'}>Buy Open</option>,
-        <option value={'Sell Close'}>Sell Close</option>
-    ]
-    const saleSubTypes = [
-        <option value={'Sell Open'}>Sell Open</option>,
-        <option value={'Buy Close'}>Buy Close</option>
-    ]
     const submitHandler = () => {
         props.updateParams({
             portfolio_code: portfolioCode,
             trade_date__gte: startDateRef.current.value,
             trade_date__lte: endDateRef.current.value,
+            transaction_type: transactionType.map(data => data['value']),
             ...(openStatus && {is_active: openStatus}),
             ...(invRef.current?.value && { transaction_link_code: invRef.current.value }),
             ...(securityRef.current?.value && { security_id: securityRef.current.value })

@@ -70,7 +70,7 @@ const InstrumentSearchBar = () => {
     };
 
     return (
-        <Card className={'search-container'}>
+        <div className={'card'} style={{padding: 10}}>
             <div style={{display: "flex", height: '100%'}}>
                 <div style={{display: "flex"}}>
                     <div className={'input-label'}>
@@ -149,7 +149,7 @@ const InstrumentSearchBar = () => {
                     </div>
                 </div>
             </div>
-        </Card>
+        </div>
     );
 };
 export default InstrumentSearchBar;

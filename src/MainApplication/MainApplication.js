@@ -28,7 +28,6 @@ import './MainApplication.css'
 const MainApplication = (props) => {
     const { server, currentDate, fistDayOfCurrentYear } = props.config;
     const { userName } = props.user;
-    const history = useHistory();
 
     const [portfolios, setPortfolios] = useState([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState('');

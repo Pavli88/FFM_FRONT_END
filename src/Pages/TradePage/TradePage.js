@@ -87,20 +87,12 @@ const TradePage = () => {
                 {/*    <TradeTableData env={env} server={server}/>*/}
                 {/*</div>*/}
 
-                <div style={{height: 900,width: '75%'}}>
-                    <div style={{height: 600, padding: 15, display: "flex"}}>
-                        <OpenTransactions server={server}/>
-
-                    </div>
-                    <div style={{height: 400, paddingLeft: 15, paddingRight: 15, paddingBottom: 100}}>
-                        <TradeSignals server={server}/>
-                    </div>
+                <div style={{height: 900, width: '75%', marginTop: 15, marginLeft: 15}}>
+                    <OpenTransactions server={server}/>
                 </div>
-
-                <div style={{height: 900, width: '25%', paddingTop: 15}}>
-                    <TradeExecution server={server}/>
+                <div style={{height: 900, marginTop: 15, marginLeft: 15, marginRight: 15}}>
+                    <TradeSignals server={server}/>
                 </div>
-
             </div>
         </TradeContext.Provider>
     );

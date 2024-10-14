@@ -1,4 +1,3 @@
-import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import {useContext, useState, useRef} from "react";
@@ -6,6 +5,7 @@ import DateContext from "../../../context/date-context";
 import TradeContext from "../context/trade-context";
 import BrokerContext from "../../../context/broker-context";
 import UserContext from "../../../context/user-context";
+import Modal from "react-bootstrap/Modal";
 
 const TradeExecution = (props) => {
     const saveNewTransactionID = useContext(TradeContext).saveNewTrnsactionID;
@@ -22,11 +22,11 @@ const TradeExecution = (props) => {
     const [brokerTicker, setBrokerTicker] = useState({});
     const [accountsData, setAccountsData] = useState([{}]);
 
-    const submitHandler = (event) => {
+    const submitHandler = async(event) => {
         if (sl === 0.0) {
             alert('Stop loss cannot be zero!')
         } else {
-            axios.post(props.server + 'trade_page/new/signal/', {
+            const response = await axios.post(props.server + 'trade_page/new/signal/', {
                 portfolio_code: portCodeRef.current.value,
                 account_id: accountRef.current.value,
                 security_id: instrumentData.id,
@@ -35,15 +35,9 @@ const TradeExecution = (props) => {
                 manual: true,
 
             })
-                .then(response => {
-                    alert(response.data.response)
-                    saveNewTransactionID(response.data.transaction_id)
-                })
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }
-        ;
+            props.update();
+
+        };
     };
 
     const getSecurity = () => {
@@ -75,7 +69,7 @@ const TradeExecution = (props) => {
     )
 
     const accounts = accountsData.map((data, index) =>
-        <option key={data.id} value={data.id}>{data.account_name} | {data.account_number} | {data.env} | {data.currency}</option>
+        <option key={data.id} value={data.id}>{data.account_number}</option>
     )
 
     const getBrokerAccounts = () => {
@@ -99,32 +93,49 @@ const TradeExecution = (props) => {
         Security ID does not exist
     </div>
 
-    return(
-        <div style={{height: '100%', paddingLeft: 15}}>
-            <CardWithHeader headerContent={'Trades Execuion'}>
-            <div style={{width: '100%', height:'100%', overflow:"scroll"}}>
-                <div style={{margin: 10}}>
-                    <Form.Label>Portfolio Code</Form.Label>
-                    <Form.Control ref={portCodeRef} type={'text'}/>
+    return (
+        <Modal show={props.show} onHide={props.hide}>
+            <Modal.Header closeButton>
+                <Modal.Title>New Trade</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Portfolio Code</span>
+                    </div>
+                    <div style={{position: "absolute", right: 10, width: 250}}>
+                        <input ref={portCodeRef} type="text"/>
+                    </div>
                 </div>
 
-                <div style={{margin: 10}}>
-                    <Form.Label>Broker</Form.Label>
-                    <Form.Control ref={brokerRef} onChange={getBrokerAccounts} as="select">
-                        {brokers}
-                    </Form.Control>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Broker</span>
+                    </div>
+                    <div style={{position: "absolute", right: 10, width: 250}}>
+                        <Form.Control ref={brokerRef} onChange={getBrokerAccounts} as="select">
+                            {brokers}
+                        </Form.Control>
+                    </div>
                 </div>
 
-                <div style={{margin: 10}}>
-                    <Form.Label>Account</Form.Label>
-                    <Form.Control ref={accountRef} as="select">
-                        {accounts}
-                    </Form.Control>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Account</span>
+                    </div>
+                    <div style={{position: "absolute", right: 10, width: 250}}>
+                        <Form.Control ref={accountRef} as="select">
+                            {accounts}
+                        </Form.Control>
+                    </div>
                 </div>
 
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5, paddingTop: 10}}>Security ID</Form.Label>
-                    <div style={{display: "flex"}}>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Instrument ID</span>
+                    </div>
+
+                    <div style={{position: "absolute", right: 10, width: 250, display: "flex"}}>
                         <div style={{width: '100%', paddingRight: 15}}>
                             <Form.Control onChange={(e) => setSecurityID(e.target.value)}
                                           type="number"/>
@@ -139,55 +150,74 @@ const TradeExecution = (props) => {
                     </div>
                 </div>
 
-                {(securityID > 0 && Object.keys(instrumentData).length === 0)  ? securityExists: ''}
+                {(securityID > 0 && Object.keys(instrumentData).length === 0) ? securityExists : ''}
 
-                <div style={{margin: 10}}>
-                    <Form.Label>Broker Ticker</Form.Label>
-                    <Form.Control value={brokerTicker.source_ticker} type={'text'} disabled/>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Broker Ticker</span>
+                    </div>
+                    <div style={{position: "absolute", right: 10, width: 250}}>
+                        <input value={brokerTicker.source_ticker} type="text" disabled/>
+                    </div>
                 </div>
 
-                {(Object.keys(brokerTicker).length === 0 && Object.keys(instrumentData).length > 0)  ? brokerTickerExist: ''}
+                {(Object.keys(brokerTicker).length === 0 && Object.keys(instrumentData).length > 0) ? brokerTickerExist : ''}
 
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Sec Name</Form.Label>
-                    <Form.Control value={instrumentData.name} type="text" disabled/>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Security Name</span>
+                    </div>
+                    <div style={{position: "absolute", right: 10, width: 250}}>
+                        <input value={instrumentData.name} type="text" disabled/>
+                    </div>
                 </div>
 
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Sec Group</Form.Label>
-                    <Form.Control value={instrumentData.group} type="text" disabled/>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Security Group</span>
+                    </div>
+                    <div style={{position: "absolute", right: 10, width: 250}}>
+                        <input value={instrumentData.group} type="text" disabled/>
+                    </div>
                 </div>
 
-                <div style={{margin: 10}}>
-                    <Form.Label style={{paddingBottom: 5}}>Currency</Form.Label>
-                    <Form.Control value={instrumentData.currency} type="text" disabled/>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Currency</span>
+                    </div>
+                    <div style={{position: "absolute", right: 10, width: 250}}>
+                        <input value={instrumentData.currency} type="text" disabled/>
+                    </div>
                 </div>
 
-                <div style={{margin: 10}}>
-                    <Form.Label>Side</Form.Label>
-                    <Form.Control ref={sideRef} as="select">
-                        <option value={'Purchase'}>Purchase</option>
-                        <option value={'Sale'}>Sale</option>
-                    </Form.Control>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Trade side</span>
+                    </div>
+                    <div style={{position: "absolute", right: 10, width: 250}}>
+                        <Form.Control ref={sideRef} as="select">
+                            <option value={'Purchase'}>Purchase</option>
+                            <option value={'Sale'}>Sale</option>
+                        </Form.Control>
+                    </div>
                 </div>
 
-                <div style={{margin: 10}}>
-                    <Form.Label>Quantity</Form.Label>
-                    <Form.Control ref={quantityRef} type="number" min={0.0}/>
+                <div style={{display: "flex", margin: 5}}>
+                    <div>
+                        <span className={'input-label'}>Quantity</span>
+                    </div>
+                    <div style={{position: "absolute", right: 10, width: 250}}>
+                        <input ref={quantityRef} type="number" min={0.0}/>
+                    </div>
                 </div>
 
-                {/*<div style={{padding: '5px'}}>*/}
-                {/*    <Form.Label>Stop Loss</Form.Label>*/}
-                {/*    <Form.Control onChange={(e) => setSl(e.target.value)} type="number" min={0.0}/>*/}
-                {/*</div>*/}
-            </div>
+            </Modal.Body>
             <div style={{margin: 10}}>
                 <button className={'save-button'} onClick={submitHandler} style={{width: '100%'}}>
                     Execute
                 </button>
             </div>
-        </CardWithHeader>
-        </div>
+        </Modal>
     )
 };
 export default TradeExecution;

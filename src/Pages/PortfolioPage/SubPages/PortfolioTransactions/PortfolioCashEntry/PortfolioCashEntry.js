@@ -7,24 +7,28 @@ import PortfolioPageContext from "../../../context/portfolio-page-context";
 import Select from "react-select";
 
 const PortfolioCashEntry = (props) => {
-    const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
-    const portfolioData = useContext(PortfolioPageContext).portfolioData;
-    const currentDate = useContext(DateContext).currentDate;
-    const [currencies, setCurrencies] = useState([{}]);
-    const [selectedCurrency, setSelectedCurrency] = useState({});
-    const [type, setType] = useState()
+    const {portfolioCode, portfolioData} = useContext(PortfolioPageContext);
+    const { currentDate } = useContext(DateContext);
+
+    const [currencies, setCurrencies] = useState([]);
+    const [selectedCurrency, setSelectedCurrency] = useState(null);
+    const [type, setType] = useState(null)
+
     const dateRef = useRef();
     const quantityRef = useRef();
 
     const submitHandler = () => {
-        axios.post(props.server + 'portfolios/new/transaction/', {
-            portfolio_code: portfoliCode,
+        const parameters = {
+            portfolio_code: portfolioCode,
             security_id: selectedCurrency.id,
             transaction_type: type,
             trade_date: dateRef.current.value,
             quantity: quantityRef.current.value,
-            currency: selectedCurrency.currency
-        })
+            currency: selectedCurrency.currency,
+            ...(portfolioData[0].status === 'Not Funded' && {initial_cash: true})
+        }
+
+        axios.post(props.server + 'portfolios/new/transaction/', parameters)
             .then(response => alert(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
@@ -34,12 +38,12 @@ const PortfolioCashEntry = (props) => {
 
     useEffect(() => {
         axios.post(props.server + 'instruments/get/instruments/', {
-                // name: '',
-                currency: portfolioData.currency,
-                type: 'Cash'
-            }).then(response => setCurrencies(response.data))
+            // name: '',
+            currency: portfolioData.currency,
+            type: 'Cash'
+        }).then(response => setCurrencies(response.data))
     }, [])
-    console.log(currencies)
+
     const transactionType = [
         { value: 'Subscription', label: 'Subscription' },
         { value: 'Redemption', label: 'Redemption' },
@@ -47,6 +51,8 @@ const PortfolioCashEntry = (props) => {
         { value: 'Commission', label: 'Commission' },
     ]
 
+    const onlySubscription = [{ value: 'Subscription', label: 'Subscription' }]
+    console.log(portfolioData)
     return (
         <Modal show={props.show} onHide={() => props.close()}>
             <Modal.Header closeButton>
@@ -57,7 +63,7 @@ const PortfolioCashEntry = (props) => {
                 <div style={{margin: 10}}>
                     <Form.Label>Transaction Type</Form.Label>
                     <Select style={{height: '100%'}}
-                            options={transactionType}
+                            options={portfolioData[0].status === 'Not Funded' ? onlySubscription: transactionType}
                             onChange={(e) => setType(e.value)}
                     >
                     </Select>
@@ -83,6 +89,11 @@ const PortfolioCashEntry = (props) => {
                     <Form.Label>Quantity</Form.Label>
                     <Form.Control ref={quantityRef} type="number" required min={0.0}/>
                 </div>
+
+                {portfolioData[0].status === 'Not Funded' &&
+                <div style={{color: "red", border: "solid", borderColor: 'red', borderRadius: 10, borderWidth: 1, padding: 10}}>
+                    Portfolio is not funded. Please enter the initial cashflow of the fund.
+                </div>}
 
             </Modal.Body>
             <Modal.Footer>

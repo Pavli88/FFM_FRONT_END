@@ -24,6 +24,7 @@ const PortfolioTransactionsPage = (props) => {
         if (isInitialRender === 0) {
             setIsInitialRender(isInitialRender + 1);  // Mark initial render as complete
         } else {
+            // console.log('init')
             fetchData();
         }
     }, [parameters, isInitialRender]);

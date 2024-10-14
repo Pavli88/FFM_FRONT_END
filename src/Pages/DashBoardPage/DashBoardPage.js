@@ -79,24 +79,24 @@ const DashBoardPage = () => {
     return(
         <div className={'page-container'} style={{overflow: "scroll"}}>
 
-            <Card className={'search-container'}>
-                <div style={{display: "flex"}}>
-                    <div>
+            <div style={{margin: 10}}>
+                <div className={'card'} style={{padding: 10}}>
+                    <div style={{display: "flex"}}>
+                        <div>
                     <span className={'input-label'}>
                         Portfolio Group
                     </span>
-                    </div>
-                    <div style={{width: 200}}>
-                        <input type="text"/>
-                    </div>
+                        </div>
+                        <div style={{width: 200}}>
+                            <input type="text"/>
+                        </div>
 
-                    <div style={{paddingLeft: 5}}>
-                        <button className={'get-button'}>Load</button>
+                        <div style={{paddingLeft: 5}}>
+                            <button className={'get-button'}>Load</button>
+                        </div>
                     </div>
                 </div>
-
-            </Card>
-
+            </div>
 
             <div style={{display: "flex"}}>
                 <div>
@@ -105,7 +105,7 @@ const DashBoardPage = () => {
                 </div>
                 <div style={{height: 800}}>
                     <div style={{height: '50%', paddingTop: 15}}>
-                         <DashBoardTotalPnl data={totalPnl}/>
+                        <DashBoardTotalPnl data={totalPnl}/>
                     </div>
                     <div style={{height: '50%', paddingTop: 15}}>
                         <DashBoardMonthlyPnl data={monthlyPnl}/>

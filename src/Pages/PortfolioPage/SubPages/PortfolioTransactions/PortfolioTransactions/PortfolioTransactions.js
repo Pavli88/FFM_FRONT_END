@@ -18,15 +18,6 @@ const TableGrouped = (props) => {
     const [selectedTransaction, setSelectedTransaction] = useState({});
     const [linkedTransaction, setLinkedTransaction] = useState({});
 
-    const deleteTransaction = async (id) => {
-        const response = await axios.post(props.server + 'portfolios/delete/transaction/', {
-            id: id['original']['id'],
-        })
-        console.log(response)
-        if (response.data.success) {
-            props.fetch()
-        }
-    };
     const updateTransaction = () =>  {
         axios.post(props.server + 'portfolios/save/transaction/', selectedTransaction)
             .then(response => alert(response.data.response))
@@ -165,7 +156,7 @@ const TableGrouped = (props) => {
         headerGroups,
         rows,
         prepareRow,
-        state: { groupBy, expanded },
+        // state: { groupBy, expanded },
     } = tableInstance
     const firstPageRows = rows.slice(0, 200)
 
@@ -200,6 +191,7 @@ const TableGrouped = (props) => {
             {
                 headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
+                        <th></th>
                         {
                             headerGroup.headers.map(column => (
                                 <th {...column.getHeaderProps()} style={{fontSize: 12}}>
@@ -219,7 +211,7 @@ const TableGrouped = (props) => {
             <tbody {...getTableBodyProps()}>
             {firstPageRows.map((row, i) => {
                 prepareRow(row)
-                // console.log(row)
+
                 return (
                     <tr {...row.getRowProps()}
                         style={{
@@ -228,6 +220,9 @@ const TableGrouped = (props) => {
                         }}
 
                     >
+                        <td>
+                            <input type={"checkbox"} onChange={(e) => props.updateSelected(e, row.original.id)}/>
+                        </td>
                         {row.cells.map(cell => {
                             return (
                                 // This generates each individual cells
@@ -280,11 +275,6 @@ const TableGrouped = (props) => {
                                         setSelectedTransaction(row.original)
                                     }}>
                                         <BsPencil/>
-                                    </button>
-                                </div>
-                                <div style={{padding: 2}}>
-                                    <button className={'delete-button'} onClick={() => deleteTransaction(row)}>
-                                        <BsTrash/>
                                     </button>
                                 </div>
                             </div>
@@ -522,28 +512,66 @@ const TableGrouped = (props) => {
 const PortfolioTransactions = (props) => {
     const [showTransactionPanel, setShowTransactionPanel] = useState(false);
     const [showCashPanel, setShowCashPanel] = useState(false);
+    const [selectedIds, setSelectedIds] = useState([]);
+
+    const deleteTransaction = async (id) => {
+        const response = await axios.post(props.server + 'portfolios/delete/transaction/', {
+            ids: selectedIds
+        })
+        if (response.data.success) {
+            props.fetch()
+            selectedIds([])
+        }
+    };
+
+    const handleCheckboxChange = (e, id) => {
+        if (e.target.checked) {
+            // Add the ID to the list if the checkbox is checked
+            setSelectedIds((prevSelectedIds) => [...prevSelectedIds, id]);
+        } else {
+            // Remove the ID if the checkbox is unchecked
+            setSelectedIds((prevSelectedIds) =>
+                prevSelectedIds.filter((selectedId) => selectedId !== id)
+            );
+        }
+    };
+
     return (
         <div >
 
-            <div className={'card-header'}>
-                <div>
-                    <span>Transactions</span>
-                    <CSVLink filename="transactions.csv" data={props.data} style={{paddingLeft: 15}}><BsArrowBarDown
-                        style={{fontSize: 20, fontWeight: "bold"}}/></CSVLink>
+
+            <div style={{display: "flex", marginTop: 15, marginBottom: 15}}>
+                <p style={{margin: 5}}>Transactions</p>
+                <div style={{margin: 5}}>
+
+                    <CSVLink filename="transactions.csv" data={props.data}><BsArrowBarDown
+                        className={'get-button'} style={{padding: 5}}/></CSVLink>
                 </div>
-                <div style={{position: "absolute", right: 50}}>
-                    <BsPlusLg className={'icon'} onClick={() => setShowTransactionPanel(value => !value)}/>
+                <div style={{margin: 5}}>
+                    <BsPlusLg className={'get-button'} style={{padding: 5}} onClick={() => setShowTransactionPanel(value => !value)}/>
                 </div>
-                <div style={{position: "absolute", right: 15}}>
-                    <BsCurrencyDollar className={'icon'} onClick={() => setShowCashPanel(value => !value)}/>
+                <div style={{margin: 5}}>
+                    <BsCurrencyDollar className={'get-button'} style={{padding: 5}} onClick={() => setShowCashPanel(value => !value)}/>
+                </div>
+                <div style={{margin: 5}}>
+                    <button className={'delete-button'} style={{padding: 5}} onClick={() => deleteTransaction()}>
+                        <BsTrash />
+                    </button>
                 </div>
             </div>
+
 
             <div style={{height: 600}}>
 
                 <div className={'card'}
-                    style={{height: '100%', width: '100%', overflowY: 'auto', overflowX: 'auto', position: 'relative'}}>
-                    <TableGrouped data={props.data} server={props.server} fetch={props.fetch}/>
+                     style={{
+                         height: '100%',
+                         width: '100%',
+                         overflowY: 'auto',
+                         overflowX: 'auto',
+                         position: 'relative'
+                     }}>
+                    <TableGrouped data={props.data} server={props.server} fetch={props.fetch} updateSelected={handleCheckboxChange}/>
                 </div>
             </div>
 

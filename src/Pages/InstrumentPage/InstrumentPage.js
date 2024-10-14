@@ -42,8 +42,10 @@ const InstrumentPage = () => {
                 saveRequestParameters: setRequestParameters
             }}>
             <div className={"page-container"} style={{overflow: "scroll"}}>
+                    <div className={'search-bar'}>
+                        <InstrumentSearchBar/>
+                    </div>
 
-                    <InstrumentSearchBar/>
                     <div>
                         <div style={{paddingTop: 15, paddingLeft: 15, paddingBottom: 15}}>
 

@@ -20,16 +20,20 @@ const PortfolioNavBar = (props) => {
     const [textAnimation, setTextAnimation] = useState(0);
     const portfolioRef = useRef();
 
-    const fetchPortfolioData = (portfolio) => {
-        axios.get(server + 'portfolios/get/portfolios/', {
+    const fetchPortfolioData = async() => {
+        const response = await axios.get(server + 'portfolios/get/portfolios/', {
             params: {
                 portfolio_code: portfolioRef.current.value,
             }
         })
-            .then(response => savePortfolioData(response.data[0]))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
+        if (response.data.length !== 0){
+            savePortfolioCode(portfolioRef.current.value)
+            savePortfolioData(response.data)
+        }
+        else{
+            alert('Portfolio Code Does Not Exists!')
+        }
+        console.log(response.data)
     };
 
     const loadingButton = <div style={{position: "absolute", right: 5, height: '100%'}}>
@@ -67,10 +71,9 @@ const PortfolioNavBar = (props) => {
                         />
                     </div>
                     <div style={{paddingLeft: 10}}>
-                        <button onClick={(e) => {
-                            savePortfolioCode(portfolioRef.current.value)
-                            fetchPortfolioData()
-                        }} className={'get-button'} style={{width: 40}}><BsArrowRepeat
+                        <button onClick={(e) => fetchPortfolioData()}
+                                className={'get-button'}
+                                style={{width: 40}}><BsArrowRepeat
                         /></button>
                     </div>
                 </div>
