@@ -42,8 +42,6 @@ const PortfolioTransactionsPage = (props) => {
                 <div style={{height: 900}}>
                     <PortfolioTransactions data={transactionsData} server={props.server} fetch={() => setIsInitialRender(isInitialRender + 1)}/>
                 </div>
-
-
             </div>
         </TransactionContext.Provider>
     );

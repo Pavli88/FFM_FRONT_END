@@ -11,6 +11,7 @@ const DailyCashFlow = (props) => {
     const cash = props.data.map((data) => data.cash_val)
     const pos = props.data.map((data) => data.pos_val)
     const short_liab = props.data.map((data) => data.short_liab*-1)
+    const margin = props.data.map((data) => data.margin)
     const nav = props.data.map((data) => data.total)
 
     const x = {
@@ -71,14 +72,18 @@ const DailyCashFlow = (props) => {
                 name: 'Cash',
                 data: cash,
             },
+             {
+                name: 'Margin',
+                data: margin,
+            },
             {
                 name: 'Asset Value',
                 data: pos,
             },
-            {
-                name: 'Short Liability',
-                data: short_liab,
-            }
+            // {
+            //     name: 'Short Liability',
+            //     data: short_liab,
+            // }
         ]
     }
 

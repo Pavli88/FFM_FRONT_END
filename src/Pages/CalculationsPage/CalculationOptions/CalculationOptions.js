@@ -1,47 +1,155 @@
-import Card from "react-bootstrap/Card";
-import CalculationContext from "../CalculationPageContext/calculation-context";
 import DateContext from "../../../context/date-context";
 import {useContext, useRef, useState} from "react";
-import axios from "axios";
 import Select from "react-select";
 
-const CalculationOptions = (props) => {
-    const currentDate = useContext(DateContext).currentDate;
-    const startDateRef = useRef();
-    const [process, setProcess] = useState();
+const TotalReturnSection = (props) => {
+    const [calcType, setCalcType] = useState('multiple');
     const [parameters, setParameters] = useState({
-        'date': currentDate
+        'calc_type': calcType,
     });
+    const [periods, setPeriods] = useState([]);
 
-    const startDateDiv = <div style={{paddingLeft: 15, display: "flex"}}>
-        <div style={{paddingTop: 0, width: 150}}>
-                        <span className={'input-label'} style={{textAlign: "left"}}>
-                            Start Date
-                        </span>
+    const handleCalcTypeChange = (selectedOption) => {
+        const newCalcType = selectedOption?.value || 'multiple';
+        setCalcType(newCalcType);
+
+        let updatedParameters = {
+            ...parameters,
+            calc_type: newCalcType,
+            ...(newCalcType === 'multiple' && { periods: periods.length > 0 ? periods : [] }),
+        };
+
+        if (newCalcType === 'multiple') {
+            delete updatedParameters.start_date;
+        }
+
+        if (newCalcType === 'adhoc') {
+            delete updatedParameters.periods;
+        }
+
+        setParameters(updatedParameters);
+
+        if (newCalcType !== 'multiple') {
+            setPeriods([]);
+        }
+    };
+
+    const handlePeriodsChange = (selectedOptions) => {
+        const selectedPeriods = selectedOptions ? selectedOptions.map(option => option.value) : [];
+        setPeriods(selectedPeriods);
+
+        if (calcType === 'multiple') {
+            setParameters((prevParameters) => ({
+                ...prevParameters,
+                periods: selectedPeriods,
+            }));
+        }
+    };
+
+    return (
+        <div style={{display: 'flex', alignItems: 'center'}}>
+
+            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 5}}>
+                <span className="input-label" style={{width: 100}}>Period Mode</span>
+            </div>
+
+            <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
+                <Select
+                    options={[
+                        {value: 'adhoc', label: 'Ad-Hoc'},
+                        {value: 'multiple', label: 'Multiple Periods'},
+                        {value: 'multi', label: 'Multiple Dates'}
+                    ]}
+                    onChange={handleCalcTypeChange}
+                    defaultValue={{value: 'multiple', label: 'Multiple Periods'}}
+                />
+            </div>
+
+            {calcType !== 'adhoc' &&
+                <>
+
+                    <div style={{display: 'flex', alignItems: 'center', paddingLeft: 5}}>
+                        <span className="input-label" style={{width: 80}}>Period</span>
+                    </div>
+                    <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
+                        <Select
+                            options={[
+                                {value: '1m', label: '1 Month'},
+                                {value: '3m', label: '3 Months'},
+                                {value: '6m', label: '6 Months'},
+                                {value: '1y', label: '1 Year'},
+                                {value: 'me', label: 'Month End'},
+                                {value: 'mtd', label: 'Mtd'},
+                                {value: 'qtd', label: 'Qtd'},
+                                {value: 'ytd', label: 'Ytd'},
+                                {value: 'si', label: 'Since Inception'},
+                            ]}
+                            isClearable
+                            isMulti={calcType === 'multiple'}
+                            onChange={handlePeriodsChange}
+                        />
+                    </div>
+                </>
+            }
+
+            {(calcType === 'adhoc' || calcType === 'multi') && (
+                <div style={{display: 'flex', alignItems: 'center', paddingLeft: 5}}>
+                    <span className="input-label" style={{width: 100}}>Start Date</span>
+                    <input
+                        type="date"
+                        onChange={(e) => setParameters({...parameters, start_date: e.target.value})}
+                        style={{width: 200}}
+                    />
+                </div>
+            )}
+
+            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 5}}>
+                <span className="input-label" style={{width: 100}}>End Date</span>
+                <input
+                    type="date"
+                    onChange={(e) => setParameters({...parameters, end_date: e.target.value})}
+                    style={{width: 200}}
+                />
+            </div>
+
+            <div style={{paddingLeft: 10, paddingTop: 0, paddingBottom: 0}}>
+                <button className={'get-button'} onClick={() => props.run({
+                    'url': 'calculate/total_return/',
+                    params: parameters
+                })}>Run
+                </button>
+            </div>
+
         </div>
-        <input type={"date"} defaultValue={currentDate} onChange={(e) => setParameters({...parameters, 'date': e.target.value})}/>
-    </div>
+    );
+};
 
-    const returnPeriods = <div style={{paddingLeft: 15, paddingTop: 0, width: 400}}>
-        <Select
-            options={[
-                {value: '1m', label: '1 Month'},
-                {value: '3m', label: '3 Months'},
-                {value: '6m', label: '6 Months'},
-                {value: '1y', label: '1 Year'},
-                {value: 'mtd', label: 'Mtd'},
-                {value: 'qtd', label: 'Qtd'},
-                {value: 'ytd', label: 'Ytd'},
-                {value: 'si', label: 'Since Inception'},
-            ]}
-            isClearable
-            isMulti
-            onChange={(e) => setParameters({...parameters, 'periods':e.map(data => data['value'])})}
-            className={'instrument-search-input-field'}
+const ValuationSection = (props) => {
+    const currentDate = useContext(DateContext).currentDate;
+    const [parameters, setParameters] = useState({'start_date': currentDate});
 
-        />
-    </div>
+    return (
+        <div style={{display: 'flex', alignItems: 'center', paddingLeft: 5}}>
+            <span className="input-label" style={{width: 100}}>Start Date</span>
+            <input
+                type="date"
+                value={parameters.start_date}
+                onChange={(e) => setParameters({...parameters, 'start_date': e.target.value})}
+                style={{width: 200}}
+            />
+            <div style={{paddingLeft: 10, paddingTop: 0, paddingBottom: 0}}>
+                <button className={'get-button'} onClick={() => props.run({
+                    'url': 'calculate/valuation/',
+                    params: parameters
+                })}>Run
+                </button>
+            </div>
+        </div>
+    );
+};
 
+const CalculationOptions = (props) => {
+    const [process, setProcess] = useState();
     const urls = {
         'valuation': 'calculate/valuation/',
         'total_return': 'calculate/total_return/',
@@ -50,7 +158,7 @@ const CalculationOptions = (props) => {
 
     return (
         <div style={{padding: 15}}>
-            <Card>
+            <div className={'card'}>
                 <div style={{display: "flex", paddingLeft: 15, paddingTop: 5, paddingBottom: 5, paddingRight: 15}}>
                     <div style={{paddingTop: 0}}>
                         <span className={'input-label'} style={{textAlign: "left"}}>
@@ -65,29 +173,13 @@ const CalculationOptions = (props) => {
                                 {value: 'attribution', label: 'Attribution'}
                             ]}
                             isClearable
-                            onChange={function (e) {
-                                setProcess(e.value)
-                                setParameters({
-                                    'date': currentDate
-                                })
-                            }}
-                            className={'instrument-search-input-field'}
-
+                            onChange={(e) => setProcess(e.value)}
                         />
                     </div>
-
-                    {process === 'valuation' || process === 'total_return' ? startDateDiv: ''}
-                    {process === 'total_return' ? returnPeriods: ''}
-
-                    <div style={{paddingLeft: 10, paddingTop: 0, paddingBottom: 0}}>
-                        <button className={'get-button'} onClick={() => props.run({
-                            'url': urls[process],
-                            params: parameters
-                        })}>Run
-                        </button>
-                    </div>
+                    {process === 'valuation' && <ValuationSection run={(e) => props.run(e)}/>}
+                    {process === 'total_return' && <TotalReturnSection run={(e) => props.run(e)}/>}
                 </div>
-            </Card>
+            </div>
         </div>
 
     );
