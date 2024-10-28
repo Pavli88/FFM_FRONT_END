@@ -1,13 +1,13 @@
-import DailyCashFlow from "./DailyCashFlow/DailyCashFlow";
+import NavComposition from "./NavComposition/NavComposition";
 import axios from "axios";
 import {useContext, useEffect, useState, useRef} from "react";
 import PortfolioPageContext from "../../context/portfolio-page-context";
 import DateContext from "../../../../context/date-context";
 import PortfolioHoldings from "../PortfolioHoldings/PortfolioHoldings/PortfolioHoldings";
-import Card from "react-bootstrap/Card";
 import PortfolioNav from "./PortfolioNav/PortfolioNav";
 import CashFlow from "./CashFlow/CashFlow";
 import CashBalance from "./CashBalance/CashBalance";
+import Section from "../../../../components/Layout/Section";
 
 const PortfolioDashBoardPage = (props) => {
     const firstDayOfYear = useContext(DateContext).firstDayOfCurrentYear;
@@ -20,7 +20,6 @@ const PortfolioDashBoardPage = (props) => {
     const startDateRef = useRef();
     const [showCashFlowPanel, setShowCashflowPanel] = useState('NAV');
     const [cfData, setCfData] = useState({dates: [], series: [{}]});
-    const [isLoading, setIsLoading] = useState(false);
 
     const fetchData = async() => {
         const response = await axios.get(props.server + 'portfolios/get/nav/', {
@@ -76,21 +75,26 @@ const PortfolioDashBoardPage = (props) => {
     return (
         <div style={{width: '100%', height: '100%', margin: '0px', padding: 15}}>
 
-            <div style={{height: 300, width: '100%', display: 'flex'}}>
-                <div style={{width: '100%', height: '100%', paddingRight: 15}}>
-                    <PortfolioNav data={navData} showCF={(data) => setShowCashflowPanel(data)}/>
+            <Section title="NAV History">
+                <div style={{height: 300, width: '100%', display: 'flex'}}>
+                    <div style={{width: '100%', height: '100%', paddingRight: 15}}>
+                        <PortfolioNav data={navData} showCF={(data) => setShowCashflowPanel(data)}/>
+                    </div>
+
+                    <div style={{width: '100%', height: '100%'}}>
+                        {showCashFlowPanel === 'NAV' ? <NavComposition server={props.server} data={navData}
+                                                                       setHoldingDate={(date) => setHoldingDate(date)}/> : showCashFlowPanel === 'CF' ?
+                            <CashFlow data={cfData}/> :
+                            <CashBalance data={navData} setHoldingDate={(date) => setHoldingDate(date)}/>}
+
+                    </div>
+
                 </div>
+            </Section>
 
-                <div style={{width: '100%', height: '100%'}}>
-                    {showCashFlowPanel === 'NAV' ? <DailyCashFlow server={props.server} data={navData}
-                                                                  setHoldingDate={(date) => setHoldingDate(date)}/> : showCashFlowPanel === 'CF' ? <CashFlow data={cfData}/> : <CashBalance data={navData} setHoldingDate={(date) => setHoldingDate(date)}/>}
-
-                </div>
-
-            </div>
-            <div style={{paddingTop: 15}}>
+            <Section title="Holding">
                 <PortfolioHoldings data={holdingData} date={holdingDate} changeDate={changeDate}/>
-            </div>
+            </Section>
         </div>
     );
 };

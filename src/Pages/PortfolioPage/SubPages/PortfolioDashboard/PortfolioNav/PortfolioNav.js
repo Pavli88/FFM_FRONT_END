@@ -15,23 +15,7 @@ const PortfolioNav = (props) => {
             xaxis: {
                 categories: dates,
                 type: 'date',
-                labels: {show: true},
-                axisBorder: {
-                    show: false,
-                    color: '#78909C',
-                    height: 1,
-                    width: '100%',
-                    offsetX: 0,
-                    offsetY: 0
-                },
-                axisTicks: {
-                    show: false,
-                    borderType: 'solid',
-                    color: '#78909C',
-                    height: 6,
-                    offsetX: 0,
-                    offsetY: 0
-                },
+                labels: {show: false},
             },
             yaxis: [
                 {

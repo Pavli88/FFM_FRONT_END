@@ -1,4 +1,4 @@
-const DailyCashFlowChartConfig = (data) => {
+const NavCompositionChartConfig = (data) => {
     return{
 
         options: {
@@ -64,4 +64,4 @@ const DailyCashFlowChartConfig = (data) => {
         series: data.series
         }
 }
-export default DailyCashFlowChartConfig;
+export default NavCompositionChartConfig;

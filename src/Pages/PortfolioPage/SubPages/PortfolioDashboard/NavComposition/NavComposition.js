@@ -1,12 +1,12 @@
 import ChartWidget from "../../../../../Widgets/Charts/ChartWidget";
-import DailyCashFlowChartConfig from "./DailyCashFlowChartConfig";
+import NavCompositionChartConfig from "./NavCompositionChartConfig";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
 import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
 import axios from "axios";
 import {useContext, useState} from "react";
 
-const DailyCashFlow = (props) => {
+const NavComposition = (props) => {
     const dates = props.data.map((data) => data.date)
     const cash = props.data.map((data) => data.cash_val)
     const pos = props.data.map((data) => data.pos_val)
@@ -29,23 +29,7 @@ const DailyCashFlow = (props) => {
             xaxis: {
                 categories: dates,
                 type: 'date',
-                labels: {show: true},
-                axisBorder: {
-                    show: false,
-                    color: '#78909C',
-                    height: 1,
-                    width: '100%',
-                    offsetX: 0,
-                    offsetY: 0
-                },
-                axisTicks: {
-                    show: false,
-                    borderType: 'solid',
-                    color: '#78909C',
-                    height: 6,
-                    offsetX: 0,
-                    offsetY: 0
-                },
+                labels: {show: false},
             },
             yaxis: [
                 {
@@ -107,4 +91,4 @@ const DailyCashFlow = (props) => {
         </Card>
     )
 };
-export default DailyCashFlow;
+export default NavComposition;

@@ -10,6 +10,7 @@ import axios from "axios";
 import DailyPnl from "./DailyPnl/DailyPnl";
 import {BsArrowRepeat} from "react-icons/bs";
 import {cumulativeSum, cumulativeMultiply} from "../../../../calculations/cumulative";
+import Section from "../../../../components/Layout/Section";
 
 const PortfolioReturnPage = () => {
     const { server } = useContext(ServerContext);
@@ -98,13 +99,6 @@ const PortfolioReturnPage = () => {
     );
 };
 
-// Reusable section wrapper component
-const Section = ({ title, children }) => (
-    <div style={{ marginBottom: 15 }}>
-        <p>{title}</p>
-        <div>{children}</div>
-    </div>
-);
 
 
 export default PortfolioReturnPage;
