@@ -1,5 +1,5 @@
 import axios from "axios";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect, useState, useMemo} from "react";
 import ServerContext from "../../context/server-context";
 import DashBoardNavWidget from "./DashBoardNavWidget/DashBoardNavWidget";
 import DateContext from "../../context/date-context";
@@ -8,123 +8,150 @@ import DashBoardPerformance from "./DashBoardPerformance/DashBoardPerformance";
 import DashBoardMonthlyPnl from "./DashBoardMonthlyPnl/DashBoardMonthlyPnl";
 import DashBoardHistoricNav from "./DashBoardHistoricNav/DashBoardHistoricNav";
 import DashBoardTotalDrawdown from "./DashBoardTotalDrawdown/DashBoardTotalDrawdown";
-import Card from "react-bootstrap/Card";
+import HoldingTable from "../../components/Tables/HoldingTable";
 
-const DashBoardPage = () => {
-    const server = useContext(ServerContext)['server'];
-    const currentDate = useContext(DateContext).currentDate;
-    const [portfolioNavData, setPortfolioNavData] = useState([]);
-    const [groupedNav, setGroupedNav] = useState([]);
-    const [totalPnl, setTotalPnl] = useState([]);
-    const [performanceData, setPerformanceData] = useState([]);
-    const [monthlyPnl, setMonthlyPnl] = useState([]);
-    const [historicNav, setHistoricNav] = useState([{}]);
-
-    const fetchPortfolioNav = async() => {
-        const response = await axios.get(server + 'portfolios/get/portfolio_nav/', {
-            params: {
-                date: currentDate,
-            }
-        })
-        setPortfolioNavData(response.data)
-    };
-
-    const fetchPortfolioGroupedNav = async() => {
-        const response = await axios.get(server + 'portfolios/get/grouped/portfolio_nav/', {
-            params: {
-                date: currentDate,
-            }
-        })
-        setGroupedNav(response.data)
-    };
-
-    const fetchPerfDashBoard = async() => {
-        const response = await axios.get(server + 'portfolios/get/perf_dashboard/', {
-            params: {
-                date: currentDate,
-            }
-        })
-        setPerformanceData(response.data)
-    };
-
-    const fetchTotalPnl = async() => {
-        const response = await axios.get(server + 'portfolios/get/total_pnl/', )
-        setTotalPnl(response.data)
-    };
-
-    const fetchMonthlyPnl = async() => {
-        const response = await axios.get(server + 'portfolios/get/monthly_pnl/', )
-        setMonthlyPnl(response.data)
-    };
-
-    const fetchHistoricNav = async() => {
-        const response = await axios.get(server + 'portfolios/get/historic_nav/', )
-        setHistoricNav(response.data)
-    };
+// Custom hook for fetching dashboard data
+const useDashboardData = (server, currentDate) => {
+    const [data, setData] = useState({
+        portfolioNavData: [],
+        groupedNav: [],
+        totalPnl: [],
+        performanceData: [],
+        monthlyPnl: [],
+        historicNav: [{}],
+    });
 
     useEffect(() => {
-       fetchPortfolioNav();
-       fetchPortfolioGroupedNav();
-       fetchTotalPnl();
-       fetchPerfDashBoard();
-       fetchMonthlyPnl();
-       fetchHistoricNav();
-    }, [])
+        const fetchData = async () => {
+            try {
+                const [
+                    portfolioNavRes,
+                    groupedNavRes,
+                    totalPnlRes,
+                    performanceDataRes,
+                    monthlyPnlRes,
+                    historicNavRes,
+                ] = await Promise.all([
+                    axios.get(`${server}portfolios/get/portfolio_nav/`, { params: { date: currentDate } }),
+                    axios.get(`${server}portfolios/get/grouped/portfolio_nav/`, { params: { date: currentDate } }),
+                    axios.get(`${server}portfolios/get/total_pnl/`),
+                    axios.get(`${server}portfolios/get/perf_dashboard/`, { params: { date: currentDate } }),
+                    axios.get(`${server}portfolios/get/monthly_pnl/`),
+                    axios.get(`${server}portfolios/get/historic_nav/`),
+                ]);
 
+                setData({
+                    portfolioNavData: portfolioNavRes.data,
+                    groupedNav: groupedNavRes.data,
+                    totalPnl: totalPnlRes.data,
+                    performanceData: performanceDataRes.data,
+                    monthlyPnl: monthlyPnlRes.data,
+                    historicNav: historicNavRes.data,
+                });
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            }
+        };
 
-    const navs = portfolioNavData.map((data) => Math.round(data.total*100)/100)
-    const portCodes = portfolioNavData.map((data) => data.portfolio_code)
-    const groupedNavs = groupedNav.map((data) => Math.round(data.total*100)/100)
-    const portTypes = groupedNav.map((data) => data.portfolio_type)
-    return(
-        <div className={'page-container'} style={{overflow: "scroll"}}>
+        fetchData();
+    }, [server, currentDate]);
 
+    return data;
+};
+
+const DashBoardPage = () => {
+    const server = useContext(ServerContext).server;
+    const currentDate = useContext(DateContext).currentDate;
+    const {
+        portfolioNavData,
+        groupedNav,
+        totalPnl,
+        performanceData,
+        monthlyPnl,
+        historicNav,
+    } = useDashboardData(server, currentDate);
+
+    // Memoized derived values
+    const navs = useMemo(() => portfolioNavData.map((data) => Math.round(data.total * 100) / 100), [portfolioNavData]);
+    const portCodes = useMemo(() => portfolioNavData.map((data) => data.portfolio_code), [portfolioNavData]);
+    const groupedNavs = useMemo(() => groupedNav.map((data) => Math.round(data.total * 100) / 100), [groupedNav]);
+    const portTypes = useMemo(() => groupedNav.map((data) => data.portfolio_type), [groupedNav]);
+
+    return (
+        <div className="page-container" style={{overflow: 'scroll'}}>
             <div style={{margin: 10}}>
-                <div className={'card'} style={{padding: 10}}>
-                    <div style={{display: "flex"}}>
+                <div className="card" style={{padding: 10}}>
+                    <div style={{display: 'flex'}}>
                         <div>
-                    <span className={'input-label'}>
-                        Portfolio Group
-                    </span>
+                            <span className="input-label">Portfolio Group</span>
                         </div>
                         <div style={{width: 200}}>
                             <input type="text"/>
                         </div>
-
                         <div style={{paddingLeft: 5}}>
-                            <button className={'get-button'}>Load</button>
+                            <button className="get-button">Load</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div style={{display: "flex"}}>
-                <div>
-                    <DashBoardNavWidget x={navs} y={portCodes} title={'Portfolios'}/>
-                    <DashBoardNavWidget x={groupedNavs} y={portTypes} title={'Portfolio Type'}/>
+            <div style={{margin: 10}}>
+                <p>NAV</p>
+            </div>
+
+            <div style={{display: "flex", margin: 10}}>
+                <div style={{width: '33%'}}>
+                    <div style={{height: 200}}>
+                        <DashBoardNavWidget x={navs} y={portCodes} title="Portfolios"/>
+                    </div>
+                    <div style={{height: 200}}>
+                        <DashBoardNavWidget x={groupedNavs} y={portTypes} title="Portfolio Type"/>
+                    </div>
+
                 </div>
-                <div style={{height: 800}}>
-                    <div style={{height: '50%', paddingTop: 15}}>
-                        <DashBoardTotalPnl data={totalPnl}/>
-                    </div>
-                    <div style={{height: '50%', paddingTop: 15}}>
-                        <DashBoardMonthlyPnl data={monthlyPnl}/>
-                    </div>
-                </div>
-                <div style={{paddingLeft: 15}}>
-                    <div style={{paddingBottom: 15}}>
-                        <DashBoardPerformance data={performanceData}/>
-                    </div>
-                    <div style={{height: 400, paddingBottom: 5}}>
+
+                <div style={{width: '33%'}}>
+                    <div style={{height: 400}}>
                         <DashBoardHistoricNav data={historicNav}/>
                     </div>
-                    <div style={{height: 250}}>
+
+                </div>
+
+                <div style={{width: '33%'}}>
+                    <div style={{height: 400}}>
                         <DashBoardTotalDrawdown data={historicNav}/>
                     </div>
                 </div>
             </div>
+
+            <div style={{margin: 10}}>
+                <p>Performance</p>
+            </div>
+
+
+            <div style={{margin: 10, display: "flex"}}>
+                <div style={{height: '50%', paddingTop: 15}}>
+                    <DashBoardTotalPnl data={totalPnl}/>
+                </div>
+                <div style={{height: '50%', paddingTop: 15}}>
+                    <DashBoardMonthlyPnl data={monthlyPnl}/>
+                </div>
+                <div style={{paddingBottom: 15}}>
+                    <DashBoardPerformance data={performanceData}/>
+                </div>
+            </div>
+
+
+            <div style={{margin: 10}}>
+                <p>Exposure</p>
+            </div>
+
+            <div style={{margin: 15}}>
+                <HoldingTable data={[{}]}/>
+            </div>
+
         </div>
-    )
+    );
 };
 
 export default DashBoardPage;

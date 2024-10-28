@@ -71,8 +71,8 @@ const DashBoardTotalDrawdown = (props) => {
     const lastRecord = Math.round(nav[nav.length - 1] * 100) / 100;
     const maxDD = Math.round(Math.min(...nav) * 100)/100;
     return (
-        <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
-            <Card.Header>
+        <div className="card" style={{height: '100%', width: '100%'}}>
+            <div className={'card-header'}>
                  <div style={{display: 'flex'}}>
                     <div>
                         Drawdown
@@ -91,7 +91,7 @@ const DashBoardTotalDrawdown = (props) => {
                             right: 15
                         }}>{maxDD} %</span>
                 </div>
-            </Card.Header>
+            </div>
             <div style={{height: '100%'}}>
                 <Chart
                     options={x.options}
@@ -100,7 +100,7 @@ const DashBoardTotalDrawdown = (props) => {
                     width="100%"
                     height="100%"/>
             </div>
-        </Card>
+        </div>
     );
 };
 export default DashBoardTotalDrawdown;

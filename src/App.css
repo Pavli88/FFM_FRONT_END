@@ -6,10 +6,6 @@ p{
     font-weight: bold;
 }
 
-body{
-    overflow: hidden;
-}
-
 table{
     table-layout: auto;
     width: 100%;
@@ -35,7 +31,7 @@ td{
     border-left: none;
     padding: 5px 10px;
     font-size: 12px;
-    height: 50px;
+    height: 40px;
     white-space:nowrap;
 
 }
@@ -394,7 +390,7 @@ ul li:hover {
 }
 
 .card-header{
-    border-radius: 10px;
+    /*border-radius: 10px;*/
     background:  #f1f1f1;
     padding: 10px;
     display: flex;

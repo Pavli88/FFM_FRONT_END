@@ -73,38 +73,6 @@ const PortfolioDashBoardPage = (props) => {
         }
     }, [showCashFlowPanel])
 
-    const runValuation = async () => {
-        if (props.portfolioData.status !== 'Funded') {
-            alert('Portfolio is not in active funded status. Valuation is not possible.')
-        } else {
-            if (startDateRef.current.value < props.portfolioData.inception_date) {
-                alert('Valuation date is less than portfolio inception date. Valuation is not possible.')
-            } else {
-                setIsLoading(true)
-                const response = await axios.post(props.server + 'portfolios/calculate/holding/', {
-                    start_date: startDateRef.current.value,
-                    portfolio_code: portfoliCode
-                })
-                setIsLoading(false)
-                alert(response.data.response)
-                fetchData()
-
-            }
-        }
-    };
-
-    const spinner =
-
-        <div style={{ display: "flex", position: "absolute", right: 15}}>
-            <div className="spinner-border text-primary" role="status" >
-                <span className="sr-only">Loading...</span>
-            </div>
-            <span className={'input-label'}>
-                Calculating...
-            </span>
-        </div>
-
-
     return (
         <div style={{width: '100%', height: '100%', margin: '0px', padding: 15}}>
 

@@ -98,10 +98,9 @@ const DashBoardNavWidget = (props) => {
     }
 
     return (
-        <div style={{display: "flex", height: '400px', width: '1000px', padding: 15}}>
-            <div style={{width: '100%', paddingRight: 15}}>
-                <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
-                    <Card.Header>
+
+                <div className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
+                    <div className={'card-header'}>
                         <div style={{display: 'flex'}}>
                             <div>
                                 <span>NAV by {props.title}</span>
@@ -110,7 +109,7 @@ const DashBoardNavWidget = (props) => {
                                     <span>{props.x.reduce((a, b) => a + b, 0)}</span>
                                 </div>
                         </div>
-                    </Card.Header>
+                    </div>
                     <div style={{display: "flex", height: '100%'}}>
                         <div style={{height: '100%', width: '50%'}}>
                             <Chart
@@ -129,9 +128,8 @@ const DashBoardNavWidget = (props) => {
                                 height="100%"/>
                         </div>
                     </div>
-                </Card>
-            </div>
-        </div>
+                </div>
+
     )
 };
 export default DashBoardNavWidget;
