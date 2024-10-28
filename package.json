@@ -39,7 +39,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build --output-path /home/pavlicsek/Dev/FFM_WEB/front_end/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -1,7 +1,5 @@
 import ServerContext from "../context/server-context";
 import EntityContext from "../context/entity-context";
-import EnvContext from "../context/env-context";
-import RobotContext from "../context/robot-context";
 import PortfolioContext from "../context/portfolio-context";
 import DateContext from "../context/date-context";
 import UserContext from "../context/user-context";
@@ -23,7 +21,38 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Container from 'react-bootstrap/Container'
 
-import './MainApplication.css'
+// import './MainApplication.css'
+
+const Notifications = () => {
+        const [messages, setMessages] = useState([]);
+        console.log(messages)
+        useEffect(() => {
+            const socket = new WebSocket('ws://127.0.0.1:8000/ws/notifications/');
+
+            socket.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                setMessages((prevMessages) => [...prevMessages, data.message]);
+            };
+
+            socket.onclose = function (e) {
+                console.error('WebSocket closed unexpectedly');
+            };
+
+            return () => socket.close();
+        }, []);
+
+        return (
+            <div>
+                <p>test</p>
+                <h2>Notifications</h2>
+                <ul>
+                    {messages.map((message, index) => (
+                        <li key={index}>{message}</li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
 
 const MainApplication = (props) => {
     const { server, currentDate, fistDayOfCurrentYear } = props.config;
@@ -76,6 +105,8 @@ const MainApplication = (props) => {
         }, [newAccount]
     );
 
+
+
     return (
         <Container style={{background: '#FBFAFA', padding: 0}} fluid>
             <ServerContext.Provider value={{server: server}}>
@@ -112,6 +143,7 @@ const MainApplication = (props) => {
                                             <div style={{border: 1, borderColor: 'grey', background: 'grey'}}>
                                                 <Navigation user={userName}/>
                                             </div>
+                                            <Notifications/>
                                             <div style={{height: 1000, width: '100%', overflow: "scroll"}}>
                                                 <Switch>
                                                     <Route path="/risk">

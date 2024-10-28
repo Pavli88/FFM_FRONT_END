@@ -1,5 +1,3 @@
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {store} from "react-notifications-component";
@@ -9,6 +7,8 @@ const Notifications = (props) => {
     const startDate = new Date().toISOString().substr(0,10);
     const [date, setDate] = useState(startDate)
     const [messages, setMessages] = useState([]);
+    const [riskNotifications, setRiskNotifications] = useState([])
+    const [processNotifications, setProcessNotifications] = useState([])
     const tradeMessages = []
     const processMessages = []
 
@@ -21,25 +21,22 @@ const Notifications = (props) => {
         }
     })
 
-    // if (tradeMessages.length > 0){
-    //     document.getElementById('notTrades').style.backgroundColor='red'
-    // }
 
-    // Fetch the data periodically
-    useEffect(() => {
-        const interval = setInterval(() => {
-            axios.get(props.server + 'home/system_messages/not_verified', {
-                params: {
-                    date: date,
-                }
-            })
-                .then(response => setMessages(response['data']))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, 1000*900);
-        return () => clearInterval(interval);
-    }, [])
+    // WS connection to handle websockets
+    // useEffect(() => {
+    //     const socket = new WebSocket('ws://127.0.0.1:8000/ws/notifications/');
+    //
+    //         socket.onmessage = function (event) {
+    //             const data = JSON.parse(event.data);
+    //             setMessages((prevMessages) => [...prevMessages, data.message]);
+    //         };
+    //
+    //         socket.onclose = function (e) {
+    //             console.error('WebSocket closed unexpectedly');
+    //         };
+    //
+    //         return () => socket.close();
+    // }, [])
 
     const removeMsg = (msg) => {
         axios.get(props.server + 'home/verify_sys_msg/' + msg)
@@ -66,46 +63,34 @@ const Notifications = (props) => {
         })
     };
 
-    const tradeNotHandler = () => {
-        tradeMessages.forEach(function (item) {
-            store.addNotification({
-                title: item['msg_type'] + ' - ' + item['msg_sub_type'],
-                message: item['msg'],
-                type: "success",
-                insert: "top",
-                container: "top-right",
-                animationIn: ["animate__animated", "animate__fadeIn"],
-                animationOut: ["animate__animated", "animate__fadeOut"],
-                onRemoval: () => {
-                    removeMsg(item['id']);
-
-                }
-            })
-        })
-    };
-
     return (
-        <div style={{display: "flex"}}>
-            <div style={{margin: 5}}>
-                <button className={'alert-button'}>
-                    <BsExclamationTriangle style={{fontSize: '20px', fontWeight: 'bold'}}/>
+        <div style={{display: "flex", marginRight: 15}}>
+            <div className="notification-container">
+                <button className="notification-button" onClick="toggleNotifications()">
+                    <span className="notification-icon"><BsExclamationTriangle/></span>
+                    <span className="notification-badge"
+                          id="notification-badge">{riskNotifications.length}</span>
                 </button>
             </div>
-
-            <div style={{margin: 5}}>
-                <button className={'alert-button'}>
-                    <BsGraphDown style={{fontSize: '20px', fontWeight: 'bold'}}/>
+            <div className="notification-container">
+                <button className="notification-button" onClick="toggleNotifications()">
+                    <span className="notification-icon"><BsGraphDown/></span>
+                    <span className="notification-badge"
+                          id="notification-badge">34</span>
                 </button>
             </div>
-
-            <div style={{margin: 5}}>
-                <button className={'alert-button'}>
-                    <BsCpu style={{fontSize: '20px', fontWeight: 'bold'}}/>
+            <div className="notification-container">
+                <button className="notification-button" onClick="toggleNotifications()">
+                    <span className="notification-icon"><BsCpu/></span>
+                    <span className="notification-badge"
+                          id="notification-badge">{processNotifications.length}</span>
                 </button>
             </div>
-            <div style={{margin: 5}}>
-                <button className={'alert-button'}>
-                    <BsBell style={{fontSize: '20px', fontWeight: 'bold'}}/>
+            <div className="notification-container">
+                <button className="notification-button" onClick="toggleNotifications()">
+                    <span className="notification-icon"><BsBell/></span>
+                    <span className="notification-badge"
+                          id="notification-badge">3</span>
                 </button>
             </div>
         </div>

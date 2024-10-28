@@ -18,6 +18,7 @@ import { BsPencil } from "react-icons/bs";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
+import DateContext from "../../context/date-context";
 
 const DescUpdateModal = (props) => {
     const [newDesc, setNewDesc] = useState('');
@@ -48,16 +49,36 @@ const DescUpdateModal = (props) => {
 
 const PortfolioPage = (props) => {
     const server = useContext(ServerContext)['server'];
+    const currentDate = useContext(DateContext).currentDate;
     const [portfolioCode, setPortfolioCode] = useState();
     const [selectedPortfolioData, setSelectedPortfolioData] = useState([{}]);
     const [showImportModal, setShowImportModal] = useState(false);
     const [descModalStatus, setDescModalStatus] = useState(false);
+    const [currentHolding, setCurrentHolding] = useState({});
+
+    const fetchHoldingData = async() => {
+        const response = await axios.get(server + 'portfolios/get/holding/', {
+            params: {
+                date: currentDate,
+                portfolio_code: portfolioCode
+            }
+        })
+        setCurrentHolding(response.data)
+    };
+
+    useEffect(() => {
+        if (portfolioCode !== undefined) {
+            fetchHoldingData()
+        }
+    }, [portfolioCode])
+    console.log(currentHolding)
     return (
         <PortfolioPageContext.Provider value={{
             portfolioCode: portfolioCode,
             savePortfolioCode: setPortfolioCode,
             portfolioData: selectedPortfolioData,
             savePortfolioData: setSelectedPortfolioData,
+            currentHolding: currentHolding
         }}>
             <div className={'page-container'}>
                 <div className={'page-subContainer'}>

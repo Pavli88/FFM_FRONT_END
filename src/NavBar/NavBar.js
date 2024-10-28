@@ -21,6 +21,7 @@ const Navigation = (props) => {
             });
         setAuth({userAllowedToLogin: false});
     };
+
     return (
         <Navbar className={'nav-bar'}>
             <Navbar.Brand href="react">
@@ -52,7 +53,6 @@ const Navigation = (props) => {
                 <Dropdown.Divider/>
                 <Dropdown.Item onSelect={userLogout}>Sign Out</Dropdown.Item>
             </DropdownButton>
-
         </Navbar>
     );
 };

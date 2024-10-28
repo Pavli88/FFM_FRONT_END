@@ -21,10 +21,11 @@ export default function Login(props) {
                 console.error('Error Message:', error);
             });
     };
+  console.log(props.server)
   return (
       <Row className="vh-100 d-flex justify-content-center align-items-center">
         <Col md={8} lg={6} xs={12}>
-          <Card className="shadow">
+          <div className={'card'}>
             <Card.Body>
               <div className="mb-3 mt-md-4">
                 <div className="mb-3">
@@ -54,9 +55,9 @@ export default function Login(props) {
                       </p>
                     </Form.Group>
                     <div className="d-grid">
-                      <Button variant="primary" type="submit" style={{width: '100%'}} onClick={submitHandler}>
+                      <button className={'normal-button'} style={{width: '100%', height: 40}} onClick={submitHandler}>
                         Login
-                      </Button>
+                      </button>
                     </div>
                   </Form>
                   <div className="mt-3">
@@ -70,7 +71,7 @@ export default function Login(props) {
                 </div>
               </div>
             </Card.Body>
-          </Card>
+          </div>
         </Col>
       </Row>
   );

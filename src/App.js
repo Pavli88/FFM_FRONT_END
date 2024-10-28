@@ -2,7 +2,7 @@ import appConfig from "./config files/app-config";
 import React, {useContext, useEffect, useState} from "react";
 import MainApplication from "./MainApplication/MainApplication";
 import MainPage from "./Pages/MainPage/MainPage";
-
+import './App.css'
 // Contexts
 import AuthContext from "./context/AuthProvider";
 

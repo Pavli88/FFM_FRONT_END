@@ -1,40 +1,463 @@
-.App {
-  text-align: center;
-  height: 100%;
+body{
+    font-family: "Ubuntu";
 }
 
-/*.App-logo {*/
-/*  height: 40vmin;*/
-/*  pointer-events: none;*/
+p{
+    font-weight: bold;
+}
+
+body{
+    overflow: hidden;
+}
+
+table{
+    table-layout: auto;
+    width: 100%;
+    text-align: left;
+}
+
+th{
+    font-size: 14px;
+    padding: 5px 10px;
+    white-space:nowrap
+}
+
+thead{
+    height: 50px;
+    font-weight: bold;
+    background:  #f1f1f1;
+    color: #494f54;
+}
+
+td{
+    border: 1px solid #ccc;
+    border-right: none;
+    border-left: none;
+    padding: 5px 10px;
+    font-size: 12px;
+    height: 50px;
+    white-space:nowrap;
+
+}
+
+tr{
+    color: #494f54;
+}
+
+.menu-button{
+    font-size: 16px;
+    margin: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    color: #1b1e21;
+}
+
+.menu-button:hover{
+    background:  #d6eaf8;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #1b1e21;
+}
+
+.alert-button{
+    width: 40px;
+    height: 40px;
+    background-color:  #3498db;  /* Background color of the button */
+    border: none;               /* Remove any default borders */
+    color: white;               /* Icon color */
+    display: flex;              /* Use flexbox for centering */
+    justify-content: center;    /* Center horizontally */
+    align-items: center;        /* Center vertically */
+    font-size: 30px;            /* Icon size */
+    border-radius: 50%;         /* Make the button round */
+    cursor: pointer;            /* Cursor changes to pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.alert-button:hover {
+    background-color: #154360; /* Darken the color on hover */
+}
+
+.table-row-all{
+    background: white;
+}
+
+.table-row-all:hover{
+    background:   #d6eaf8;
+    border: none;
+}
+
+.nav-tabs {
+  border-bottom: 0px solid transparent;
+}
+.nav-tabs .nav-link {
+  border: 0px solid transparent;
+}
+
+.nav-bar{
+    background: white;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,.2);
+}
+
+.nav-button{
+    padding: 5px;
+    margin: 5px;
+    color: #282c34;
+}
+
+.delete-button{
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px;
+    background: #e23a30;
+    width: 100%;
+    color: white;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.delete-button:hover{
+    border: #e23a30;
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    color: #e23a30;
+}
+
+.terminate-button{
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px;
+    background: #e0a800;
+    width: 100%;
+    color: white;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.terminate-button:hover{
+    border: #e0a800;
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    color: #e0a800;
+}
+
+.save-button{
+    border: none;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px;
+    background: #566573;
+    width: 100%;
+    color: white;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.save-button:hover{
+    border:  #566573 ;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px;
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    height: 100%;
+    width: 100%;
+    color:  #566573 ;
+}
+
+.normal-button{
+    border: none;
+    font-size: 12px;
+    font-weight: bold;
+    /*margin: 5px;*/
+    padding: 5px;
+    background:    #3498db ;
+    width: 100%;
+    height: 100%;
+    color: white;
+    border-radius: 10px;
+    /*transform: translateY(-10%);*/
+}
+
+.normal-button:hover{
+    border: none;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+    background:  #1f618d ;
+    width: 100%;
+    color: white;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.close-button{
+    border: none;
+    font-size: 30px;
+    font-weight: bold;
+    /*margin: 5px;*/
+    padding: 5px;
+    background: #e59866;
+    width: 30px;
+    height: 30px;
+    color: white;
+    border-radius: 5px;
+}
+
+.close-button:hover{
+    border:  #e59866;
+    font-size: 20px;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 1px;
+    background: white;
+    color:  #e59866;
+}
+
+.page-container {
+    width: 100%;
+    height: 100%;
+    background-color: #e2e2e2;
+}
+
+.plus-minus-buttons{
+    border: none;
+    border-radius: 4px;
+    background: #5a6268;
+    color: white;
+}
+
+input[type=text], select {
+    width: 100%;
+    padding: 5px 20px;
+    /*margin: 8px 0;*/
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #2b2b2b;
+}
+
+input[type=number], select {
+    width: 100%;
+    padding: 5px 20px;
+    /*margin: 8px 0;*/
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #2b2b2b;
+}
+
+input[type=date], select {
+    width: 100%;
+    padding: 5px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #2b2b2b;
+}
+
+input[type=file] {
+    width: 100%;
+    padding: 5px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #2b2b2b;
+}
+
+select{
+    width: 100%;
+    padding: 5px 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #2b2b2b;
+}
+
+.multi-select {
+    width: 100%;
+    padding: 5px 20px;
+    /*margin: 8px 0;*/
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #2b2b2b;
+}
+
+.input-label{
+    text-align: center;
+    display: block;
+    padding: 8px;
+    font-size: 14px;
+    color: #5a6268;
+}
+
+.get-button{
+    height: 100%;
+    width: 100%;
+    border: solid;
+    border-width: 1px;
+    border-radius: 4px;
+    border-color: grey;
+    background: white;
+    color: grey;
+}
+
+.search-container{
+    height: 50px;
+    /*width: 100%;*/
+    padding: 5px;
+    margin: 15px;
+    display: flex;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+ul li:hover {
+  background-color: #eee;
+}
+
+.tree-view {
+    border: 1px solid #ccc; /* Optional */
+    padding: 10px;
+}
+
+.tree-node-parent {
+    font-size: 14px;
+    font-weight: bold;
+    /*padding: 8px;*/
+    /*margin-top: 4px;*/
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.tree-node-child {
+    font-weight: normal;
+    /*padding: 8px;*/
+    /*margin-top: 4px;*/
+    background-color: #f9f9f9;
+    /*transition: background-color 0.3s ease;*/
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+/*.tree-node-child:hover {*/
+/*    background-color: #e6f7ff;*/
+/*    border-color: darkslategrey;*/
 /*}*/
 
-/*@media (prefers-reduced-motion: no-preference) {*/
-/*  .App-logo {*/
-/*    animation: App-logo-spin infinite 20s linear;*/
-/*  }*/
+/*.tree-node-parent:hover {*/
+/*    background-color: #e6f7ff;*/
+/*    border-color: dimgrey;*/
 /*}*/
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.message-box {
+    border-radius: 5px;
+    background:  #f1f1f1;
+    margin-top: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    height: 100%;
+    font-size: 16px;
 }
 
-.App-link {
-  color: #61dafb;
+.card{
+    border-radius: 10px;
+    background: white;
+    height: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card-header{
+    border-radius: 10px;
+    background:  #f1f1f1;
+    padding: 10px;
+    display: flex;
+    font-size: 14px;
+    font-weight: bold;
+    color: #494f54;
 }
 
+.icon{
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    color: #1f618d;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon:hover{
+    border: #1f618d solid 1px;
+    width: 30px;
+    height: 30px;
+    /*color: white;*/
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.search-bar{
+    margin: 10px;
+}
+
+.notification-container {
+    position: relative;
+    display: inline-block;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.notification-button {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.notification-icon {
+    position: relative;
+    font-size: 26px; /* Adjust the icon size as needed */
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px; /* Adjust position */
+    right: -10px; /* Adjust position */
+    background-color: red; /* Badge color */
+    color: white;
+    border-radius: 50%; /* Make it round */
+    padding: 5px 10px; /* Padding around the number */
+    font-size: 12px; /* Font size for the badge */
+    min-width: 20px; /* Minimum width for the badge */
+    text-align: center;
+    display: inline-block;
+    font-weight: bold; /* Make the number bold */
+}

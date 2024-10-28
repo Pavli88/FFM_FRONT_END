@@ -1,28 +1,36 @@
 import UserRegistration from "./UserRegistertration";
 import UserLogin from "./UserLogin";
 import {Route, Switch, Link} from "react-router-dom";
-import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
+
 const MainPage = (props) => {
+    const imageUrl = 'https://wallpapercave.com/wp/wp2833183.jpg'; // Replace with your actual image path
+
+    const divStyle = {
+        height: '100vh', // Full height of the viewport
+        backgroundImage: `url(${imageUrl})`,
+        backgroundSize: 'cover', // Cover the entire div
+        backgroundPosition: 'center', // Center the image
+    };
     return (
-        <Container fluid>
-            <Row style={{width: '100%', marginTop: 5, padding: 0}}>
-                <Col sm={10} style={{display:'flex'}}>
-                    <div style={{margin: 2}}>
-                        <h2 stlye={{margin:0, height:'100%'}}>Fractal</h2>
-                    </div>
-                    <div style={{margin: 2, padding: 5}}>
-                        <p style={{textAlign: 'center'}}>Investment & Trade System</p>
-                    </div>
-                </Col>
-                <Col>
+        <div style={divStyle}>
+            <div style={{width: '100%', padding: 15, display: "flex"}}>
+                <div>
+                    <h2 stlye={{margin: 0, height: '100%', color: 'white'}}>FractalPortfolios</h2>
+                    <p>Investment & Trading System</p>
+                </div>
+                <div style={{position: "absolute", right: 10, display: "flex"}}>
                     <Link to={"/register"}>
-                        <Button md="auto" style={{marginTop: 6}}>Create Account</Button>
+                        <div style={{margin: 5, height: 40}}>
+                            <button className={'normal-button'} style={{padding: 10}}>Create Account</button>
+                        </div>
                     </Link>
                     <Link to={"/login"}>
-                        <Button md="auto" style={{marginTop: 6, marginLeft: 20}}>Login</Button>
+                        <div style={{margin: 5, height: 40}}>
+                            <button className={'normal-button'} style={{padding: 10}}>Login</button>
+                        </div>
                     </Link>
-                </Col>
-            </Row>
+                </div>
+            </div>
             <Switch>
                 <Route path="/login">
                     <UserLogin server={props.server}/>
@@ -31,7 +39,7 @@ const MainPage = (props) => {
                     <UserRegistration server={props.server}/>
                 </Route>
             </Switch>
-        </Container>
+        </div>
     )
 };
 export default MainPage;
