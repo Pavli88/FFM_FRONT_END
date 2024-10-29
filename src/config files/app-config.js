@@ -1,11 +1,9 @@
 // Date variables
 const date = new Date();
 const currentYear = new Date().getFullYear();
-// 'http://127.0.0.0:8001/' 'https://pavliati.pythonanywhere.com/'
-//https://fractalportfolios.com/
+// 'http://127.0.0.0:8001/'
 //https://www.fractalportfolios.com/
-// 'https://137.184.111.7:80/'
-//
+
 const appConfig = {
     server: 'https://www.fractalportfolios.com/',
     // defaultRobotEnvironment: 'live',

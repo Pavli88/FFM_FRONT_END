@@ -79,9 +79,10 @@ const TotalReturnSection = (props) => {
                                 {value: '6m', label: '6 Months'},
                                 {value: '1y', label: '1 Year'},
                                 {value: 'me', label: 'Month End'},
-                                {value: 'mtd', label: 'Mtd'},
-                                {value: 'qtd', label: 'Qtd'},
-                                {value: 'ytd', label: 'Ytd'},
+                                {value: 'dtd', label: 'DTD'},
+                                {value: 'mtd', label: 'MTD'},
+                                {value: 'qtd', label: 'QTD'},
+                                {value: 'ytd', label: 'YTD'},
                                 {value: 'si', label: 'Since Inception'},
                             ]}
                             isClearable

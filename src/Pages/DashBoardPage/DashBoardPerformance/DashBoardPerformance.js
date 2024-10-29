@@ -5,13 +5,14 @@ const DashBoardPerformance = (props) => {
 
     const perfRows = props.data.map((data) => <tr key={data['id']} className={'table-row-all'}>
         <td>{data['portfolio_name']}</td>
-        <td style={{color: data['mtd'] > 0.0 ? "green":"red"}}>{Math.round(data['mtd']*100)/100}</td>
-        <td style={{color: data['qtd'] > 0.0 ? "green":"red"}}>{Math.round(data['qtd']*100)/100}</td>
-        <td style={{color: data['ytd'] > 0.0 ? "green":"red"}}>{Math.round(data['ytd']*100)/100}</td>
-        <td style={{color: data['si'] > 0.0 ? "green":"red"}}>{Math.round(data['si']*100)/100}</td>
+        <td style={{color: data['dtd'] > 0.0 ? "green" : "red"}}>{Math.round(data['dtd'] * 100) / 100}</td>
+        <td style={{color: data['mtd'] > 0.0 ? "green" : "red"}}>{Math.round(data['mtd'] * 100) / 100}</td>
+        <td style={{color: data['qtd'] > 0.0 ? "green" : "red"}}>{Math.round(data['qtd'] * 100) / 100}</td>
+        <td style={{color: data['ytd'] > 0.0 ? "green" : "red"}}>{Math.round(data['ytd'] * 100) / 100}</td>
+        <td style={{color: data['si'] > 0.0 ? "green" : "red"}}>{Math.round(data['si'] * 100) / 100}</td>
     </tr>)
-    return(
-         <div style={{paddingTop: 15}}>
+    return (
+        <div style={{paddingTop: 15}}>
             <Card header={'Instruments'} style={{width: '100%', height: '100%'}}>
                 <Card.Header>
                     Performance %
@@ -21,6 +22,7 @@ const DashBoardPerformance = (props) => {
                         <thead>
                         <tr>
                             <th>Portfolio</th>
+                            <th>DTD</th>
                             <th>MTD</th>
                             <th>QTD</th>
                             <th>YTD</th>
