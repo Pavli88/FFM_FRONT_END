@@ -6,7 +6,7 @@ const currentYear = new Date().getFullYear();
 // 'https://137.184.111.7:80/'
 //
 const appConfig = {
-    server: 'https://137.184.111.7:80/',
+    server: 'https://137.184.111.7/',
     // defaultRobotEnvironment: 'live',
     currentDate: date.toISOString().substr(0,10),
     fistDayOfCurrentYear: currentYear.toString( ) + '-01-01'
