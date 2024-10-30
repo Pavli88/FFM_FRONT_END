@@ -1,5 +1,5 @@
 import DateContext from "../../../context/date-context";
-import {useContext, useRef, useState} from "react";
+import {useContext, useState} from "react";
 import Select from "react-select";
 
 const TotalReturnSection = (props) => {

@@ -113,26 +113,15 @@ const PortfolioRiskPage = (props) => {
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     const currentHoldingData = useContext(PortfolioPageContext).currentHolding
     const [drawDownData, setDrawDownData] = useState({'data': []});
-    const [drawDownData2, setDrawDownData2] = useState({'data': []});
     const [holdingDrawDown, setHoldingDrawDown] = useState([]);
 
     const fetchDrawdown2 = async () => {
-        const response = await axios.get(`${server}portfolios/get/drawdown2/`, {
+        const response = await axios.get(`${server}portfolios/get/drawdown/`, {
             params: {
                 portfolio_code: portfoliCode
             }
         })
-        setDrawDownData2(response.data['drawdowns'])
-    };
-
-    const fetchDrawdown = async () => {
-        const response = await axios.get(server + 'portfolios/get/drawdown/', {
-            params: {
-                start_date: '2023-01-01',
-                portfolio_code: portfoliCode
-            }
-        })
-        setDrawDownData(response.data)
+        setDrawDownData(response.data['drawdowns'])
     };
 
     const fetchNavData = async() => {
@@ -192,7 +181,7 @@ const PortfolioRiskPage = (props) => {
                     <PortfolioHoldingDrawdown data={hD} dates={hDDate}/>
                 </div>
                 <div style={{width: "100%", paddingLeft: 15}}>
-                    <PortfolioDrawdown data={drawDownData2}/>
+                    <PortfolioDrawdown data={drawDownData}/>
                 </div>
             </div>
             {/*<PositionExposure server={server}/>*/}

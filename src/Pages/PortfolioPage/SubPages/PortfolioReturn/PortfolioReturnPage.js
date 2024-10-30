@@ -19,9 +19,7 @@ const PortfolioReturnPage = () => {
     const [dailyReturns, setDailyReturns] = useState([]);
     const [startDate, setStartDate] = useState(portfolioData.inception_date);
     const startDateRef = useRef();
-    console.log(dailyReturns)
-    console.log(dailyReturns.map((d) => d.total_return))
-    // Consolidate data fetching
+
     const fetchAllData = async () => {
         try {
             const [navRes, retRes] = await Promise.all([
