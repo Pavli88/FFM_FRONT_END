@@ -19,7 +19,7 @@ const PortfolioDrawdown = (props) => {
             //     }
             // }],
             xaxis: {
-                categories: props.dates,
+                // categories: props.dates,
                 labels: {
                     show: false,
                     style: {

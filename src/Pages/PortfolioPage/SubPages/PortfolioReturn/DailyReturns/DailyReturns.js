@@ -2,9 +2,9 @@ import Card from "react-bootstrap/Card";
 import {CSVLink} from "react-csv";
 import Chart from "react-apexcharts";
 
-const DailyReturns = (props) => {
-    const returns = props.data.map((data) => data.period_return * 100)
-    const dates = props.data.map((data) => data.date)
+const DailyReturns = ( {returns, dates} ) => {
+    // const returns = props.data.map((data) => data.period_return * 100)
+    // const dates = props.data.map((data) => data.date)
     const x = {
         options: {
             chart: {
@@ -88,7 +88,7 @@ const DailyReturns = (props) => {
                 <div style={{display: 'flex'}}>
                     <div>
                         <span>Daily Returns</span>
-                        <CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>
+                        {/*<CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>*/}
                     </div>
                 </div>
             </Card.Header>

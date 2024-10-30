@@ -16,21 +16,28 @@ const PortfolioReturnPage = () => {
     const { server } = useContext(ServerContext);
     const { portfolioCode, portfolioData } = useContext(PortfolioPageContext);
     const [navData, setNavData] = useState([]);
+    const [dailyReturns, setDailyReturns] = useState([]);
     const [startDate, setStartDate] = useState(portfolioData.inception_date);
     const startDateRef = useRef();
-
+    console.log(dailyReturns)
+    console.log(dailyReturns.map((d) => d.total_return))
     // Consolidate data fetching
     const fetchAllData = async () => {
         try {
-            const [navRes] = await Promise.all([
+            const [navRes, retRes] = await Promise.all([
                 axios.get(`${server}portfolios/get/nav/`, {
                     params: {
                         date__gte: portfolioData.inception_date,
                         portfolio_code: portfolioCode,
                     },
                 }),
+                axios.post(`${server}portfolios/get/total_returns/`, {
+                    portfolio_code: portfolioCode,
+                    periods: ['dtd']
+                }),
             ]);
             setNavData(navRes.data);
+            setDailyReturns(retRes.data);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -82,16 +89,13 @@ const PortfolioReturnPage = () => {
                 <Section title="Returns">
                     <div style={{ display: "flex" }}>
                         <div style={{ width: "50%", height: 300 }}>
-                            <DailyReturns data={navData} />
+                            <DailyReturns returns={dailyReturns.map((d) => d.total_return)} dates={dailyReturns.map((d) => d.end_date)}/>
                         </div>
-                        <div style={{ width: "50%", height: 300 }}>
-                            <CumulativePerformance
-                                data={navData}
-                                returns={cumulativeMultiply(
-                                    navData.map((d) => 1 + d.period_return)
-                                ).map((value) => (value - 1) * 100)}
-                            />
-                        </div>
+                        {/*<div style={{ width: "50%", height: 300 }}>*/}
+                        {/*    <CumulativePerformance*/}
+                        {/*        */}
+                        {/*    />*/}
+                        {/*</div>*/}
                     </div>
                 </Section>
             </div>

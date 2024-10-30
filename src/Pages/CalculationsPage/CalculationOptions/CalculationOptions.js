@@ -38,14 +38,14 @@ const TotalReturnSection = (props) => {
         const selectedPeriods = selectedOptions ? selectedOptions.map(option => option.value) : [];
         setPeriods(selectedPeriods);
 
-        if (calcType === 'multiple') {
+        if (calcType === 'multiple' || calcType === 'multi') {
             setParameters((prevParameters) => ({
                 ...prevParameters,
                 periods: selectedPeriods,
             }));
         }
     };
-
+    console.log(periods)
     return (
         <div style={{display: 'flex', alignItems: 'center'}}>
 
@@ -86,7 +86,7 @@ const TotalReturnSection = (props) => {
                                 {value: 'si', label: 'Since Inception'},
                             ]}
                             isClearable
-                            isMulti={calcType === 'multiple'}
+                            isMulti={calcType === 'multiple' || calcType === 'multi'}
                             onChange={handlePeriodsChange}
                         />
                     </div>
