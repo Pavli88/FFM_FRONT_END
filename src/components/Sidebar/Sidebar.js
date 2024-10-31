@@ -7,7 +7,7 @@ const Sidebar = (props) => {
   const showSidebar = () => setSidebar(!sidebar);
  
   return (
-    <div className={styles.sidebar}>
+    <div className={'card'}>
       <div className={styles.sidebarWrap}> 
           {props.sidebarData.map((item, index) => {
               return <SubMenu item={item} key={index} />;

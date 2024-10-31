@@ -4,7 +4,6 @@ import { CSVLink, CSVDownload } from "react-csv";
 
 const PortfolioNav = (props) => {
     const dates = props.data.map((data) => data.date)
-    const nav = props.data.map((data) => data.total)
     const holding_nav = props.data.map((data) => data.holding_nav)
     const x = {
         options: {
@@ -40,10 +39,6 @@ const PortfolioNav = (props) => {
         series: [
             {
                 name: 'NAV',
-                data: nav,
-            },
-            {
-                name: 'Holding NAV',
                 data: holding_nav,
             },
         ]

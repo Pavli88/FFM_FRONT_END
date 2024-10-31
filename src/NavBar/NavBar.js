@@ -47,7 +47,7 @@ const Navigation = (props) => {
             </Nav>
 
             <Notifications server={server}/>
-            {/*<p style={{alignItems: "center", margin: 5}}></p>*/}
+
             <DropdownButton alignRight flip style={{borderRadius: '50px'}} title={props.user}>
                 <Dropdown.Item as={Link} to={'/profil'}>Profil</Dropdown.Item>
                 <Dropdown.Divider/>
