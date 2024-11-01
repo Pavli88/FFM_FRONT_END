@@ -4,7 +4,7 @@ import axios from "axios";
 import ServerContext from "../../../../context/server-context";
 import PortfolioPageContext from "../../context/portfolio-page-context";
 import PortfolioDrawdown from "./PortfolioDrawdown/PortfolioDrawdown";
-import PortfolioHoldingDrawdown from "./PortfolioHoldingDrawDown/PortfolioHoldingDrawDown";
+
 import Chart from 'react-apexcharts';
 
 const PieChart = ({ data, groupBy, value }) => {
@@ -22,7 +22,6 @@ const PieChart = ({ data, groupBy, value }) => {
 
     const groupedData = groupData(data, groupBy, value);
     const series = groupedData.map(item => Math.abs(item[value]));
-    console.log(series)
     const labels = groupedData.map(item => item[groupBy]);
 
     const [chartOptions, setChartOptions] = useState({
@@ -112,10 +111,9 @@ const PortfolioRiskPage = (props) => {
     const server = useContext(ServerContext)['server'];
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     const currentHoldingData = useContext(PortfolioPageContext).currentHolding
-    const [drawDownData, setDrawDownData] = useState({'data': []});
-    const [holdingDrawDown, setHoldingDrawDown] = useState([]);
-
-    const fetchDrawdown2 = async () => {
+    const [drawDownData, setDrawDownData] = useState([]);
+    console.log(drawDownData)
+    const fetchDrawdown = async () => {
         const response = await axios.get(`${server}portfolios/get/drawdown/`, {
             params: {
                 portfolio_code: portfoliCode
@@ -124,24 +122,8 @@ const PortfolioRiskPage = (props) => {
         setDrawDownData(response.data['drawdowns'])
     };
 
-    const fetchNavData = async() => {
-        const response = await axios.get(server + 'portfolios/get/nav/', {
-            params: {
-                date__gte: "2023-01-01",
-                portfolio_code: portfoliCode
-            }
-        })
-        setHoldingDrawDown(response.data)
-
-    };
-
-    const hD= holdingDrawDown.map(data => data['total'] === 0 ? 0: ((data['holding_nav'] / data['total']) -1) * 100)
-    const hDDate = holdingDrawDown.map(data => data['date'])
-
     useEffect(() => {
-        // fetchDrawdown();
-        fetchNavData();
-        fetchDrawdown2();
+        fetchDrawdown();
     }, [portfoliCode])
 
     return (
