@@ -1,15 +1,16 @@
 import Card from "react-bootstrap/Card";
 import {CSVLink} from "react-csv";
 import Chart from "react-apexcharts";
+import Select from "react-select";
 
-const DailyReturns = ( {returns, dates} ) => {
+const DailyReturns = ( {returns, dates, changeReturnType} ) => {
     // const returns = props.data.map((data) => data.period_return * 100)
     // const dates = props.data.map((data) => data.date)
     const x = {
         options: {
             chart: {
                 toolbar: true,
-                type: 'area',
+                type: 'bar',
                 zoom: {
                     enabled: true,
                     type: 'x',
@@ -37,7 +38,12 @@ const DailyReturns = ( {returns, dates} ) => {
             xaxis: {
                 categories: dates,
                 type: 'date',
-                labels: {show: false},
+                labels: {
+                    show: false,
+                    // formatter: function (value) {
+                    //     return value.toFixed(2) + "%"; // Format x-axis labels as percentages
+                    // }
+                },
                 axisBorder: {
                     show: false,
                     color: '#78909C',
@@ -50,7 +56,7 @@ const DailyReturns = ( {returns, dates} ) => {
                     show: false,
                     borderType: 'solid',
                     color: '#78909C',
-                    height: 6,
+                    height: 10,
                     offsetX: 0,
                     offsetY: 0
                 },
@@ -59,7 +65,7 @@ const DailyReturns = ( {returns, dates} ) => {
                 {
                     labels: {
                         formatter: function (val) {
-                            return val.toFixed(2);
+                            return val.toFixed(2) + "%";
                         }
                     },
                 },
@@ -74,24 +80,45 @@ const DailyReturns = ( {returns, dates} ) => {
                 position: 'right',
                 offsetY: 40
             },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val.toFixed(2) + "%"; // Display tooltip values as percentages
+                    }
+                }
+            }
         },
         series: [
             {
                 name: 'Performance',
-                data: returns,
+                data: returns.map((d) => d*100),
             },
         ]
     }
     return(
-        <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
-            <Card.Header>
+        <div className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
+            <div className={'card-header'}>
                 <div style={{display: 'flex'}}>
                     <div>
-                        <span>Daily Returns</span>
+                        <span>Total Returns</span>
                         {/*<CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>*/}
                     </div>
+
+                    <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
+                        <Select
+                            options={[
+                                {value: 'dtd', label: 'Day to Date'},
+                                {value: 'mtd', label: 'Month to Date'},
+                                {value: 'qtd', label: 'Quarter to Date'},
+                                {value: 'si', label: 'Inception to Date'}
+                            ]}
+                            onChange={changeReturnType}
+                            defaultValue={{value: 'dtd', label: 'Day to Date'}}
+                        />
+                    </div>
+
                 </div>
-            </Card.Header>
+            </div>
             <div style={{height: '100%'}}>
                 <Chart
                     options={x.options}
@@ -100,7 +127,7 @@ const DailyReturns = ( {returns, dates} ) => {
                     width="100%"
                     height="100%"/>
             </div>
-        </Card>
+        </div>
     )
 };
 export default DailyReturns;

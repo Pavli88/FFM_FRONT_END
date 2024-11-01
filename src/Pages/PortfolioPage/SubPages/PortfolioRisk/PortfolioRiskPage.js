@@ -176,10 +176,6 @@ const PortfolioRiskPage = (props) => {
 
             <p>Drawdown</p>
             <div style={{height: 300, display: "flex", width: "100%", paddingBottom: 15}}>
-
-                <div style={{width: "100%"}}>
-                    <PortfolioHoldingDrawdown data={hD} dates={hDDate}/>
-                </div>
                 <div style={{width: "100%", paddingLeft: 15}}>
                     <PortfolioDrawdown data={drawDownData}/>
                 </div>

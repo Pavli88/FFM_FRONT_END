@@ -1,16 +1,14 @@
 import PortfolioTransactionPnl from "./PortfolioTransactionPnl/PortfolioTransactionPnl";
-import CumulativePerformance from "./CumulativePerformance";
 import DailyReturns from "./DailyReturns/DailyReturns";
 import MonthlyReturns from "./MonthlyReturns/MonthlyReturns";
-import AggregatedPnl from "./AggregatedPnls/AggregatedPnl";
 import {useContext, useEffect, useRef, useState} from "react";
 import PortfolioPageContext from "../../context/portfolio-page-context";
 import ServerContext from "../../../../context/server-context";
 import axios from "axios";
 import DailyPnl from "./DailyPnl/DailyPnl";
-import {BsArrowRepeat} from "react-icons/bs";
 import {cumulativeSum, cumulativeMultiply} from "../../../../calculations/cumulative";
 import Section from "../../../../components/Layout/Section";
+import Attribution from "./Attribution/Attribution";
 
 const PortfolioReturnPage = () => {
     const { server } = useContext(ServerContext);
@@ -18,6 +16,7 @@ const PortfolioReturnPage = () => {
     const [navData, setNavData] = useState([]);
     const [dailyReturns, setDailyReturns] = useState([]);
     const [startDate, setStartDate] = useState(portfolioData.inception_date);
+    const [returnTypes, setReturnsTypes] = useState('dtd')
     const startDateRef = useRef();
 
     const fetchAllData = async () => {
@@ -31,7 +30,7 @@ const PortfolioReturnPage = () => {
                 }),
                 axios.post(`${server}portfolios/get/total_returns/`, {
                     portfolio_code: portfolioCode,
-                    periods: ['dtd']
+                    period: returnTypes
                 }),
             ]);
             setNavData(navRes.data);
@@ -43,7 +42,7 @@ const PortfolioReturnPage = () => {
 
     useEffect(() => {
         if (portfolioCode) fetchAllData();
-    }, [portfolioCode]);
+    }, [portfolioCode, returnTypes]);
 
     return (
         <div style={{ height: "900px", width: "100%", padding: 15 }}>
@@ -62,12 +61,20 @@ const PortfolioReturnPage = () => {
             </div>
 
             <div style={{ height: "760px", overflowY: "scroll" }}>
-                <Section title="Monthly Total Returns">
-                    <MonthlyReturns />
-                </Section>
-
-                <Section title="Ex-Post Periodic Returns">
-                    <MonthlyReturns />
+                <Section title="Returns">
+                    <div style={{ display: "flex" }}>
+                        <div style={{ width: "50%", height: 300 }}>
+                            <DailyReturns returns={dailyReturns.map((d) => d.total_return)}
+                                          dates={dailyReturns.map((d) => d.end_date)}
+                                          changeReturnType={(value) => setReturnsTypes(value.value)}
+                            />
+                        </div>
+                        {/*<div style={{ width: "50%", height: 300 }}>*/}
+                        {/*    <CumulativePerformance*/}
+                        {/*        */}
+                        {/*    />*/}
+                        {/*</div>*/}
+                    </div>
                 </Section>
 
                 <Section title="Profit & Loss">
@@ -75,7 +82,7 @@ const PortfolioReturnPage = () => {
                         <div style={{ width: "50%", height: 300 }}>
                             <DailyPnl data={navData} />
                         </div>
-                        <div style={{ width: "50%", height: 300 }}>
+                        <div style={{ width: "50%", height: 300, marginLeft: 10}}>
                             <PortfolioTransactionPnl
                                 data={cumulativeSum(navData.map((d) => d.total_pnl))}
                                 currency={portfolioData.currency}
@@ -84,17 +91,8 @@ const PortfolioReturnPage = () => {
                     </div>
                 </Section>
 
-                <Section title="Returns">
-                    <div style={{ display: "flex" }}>
-                        <div style={{ width: "50%", height: 300 }}>
-                            <DailyReturns returns={dailyReturns.map((d) => d.total_return)} dates={dailyReturns.map((d) => d.end_date)}/>
-                        </div>
-                        {/*<div style={{ width: "50%", height: 300 }}>*/}
-                        {/*    <CumulativePerformance*/}
-                        {/*        */}
-                        {/*    />*/}
-                        {/*</div>*/}
-                    </div>
+                <Section title="Attribution">
+                    <Attribution/>
                 </Section>
             </div>
         </div>

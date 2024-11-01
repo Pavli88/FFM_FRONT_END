@@ -71,7 +71,7 @@ const PortfolioPage = (props) => {
             fetchHoldingData()
         }
     }, [portfolioCode])
-    console.log(currentHolding)
+
     return (
         <PortfolioPageContext.Provider value={{
             portfolioCode: portfolioCode,

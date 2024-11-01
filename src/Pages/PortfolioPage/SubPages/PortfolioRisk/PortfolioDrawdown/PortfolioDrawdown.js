@@ -8,7 +8,7 @@ const PortfolioDrawdown = (props) => {
             chart: {
                 toolbar: false,
                 id: 'drawdown-chart',
-                type: 'area'
+                type: 'bar'
             },
             // colors: [function(value){
             //     console.log(value)
@@ -65,30 +65,37 @@ const PortfolioDrawdown = (props) => {
                 {
                     labels: {
                         formatter: function (val) {
-                            return val.toFixed(2);
+                            return val.toFixed(2) + "%";
                         }
                     },
-                }
+                },
             ],
             dataLabels: {
                 enabled: false
             },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val.toFixed(2) + "%"; // Display tooltip values as percentages
+                    }
+                }
+            }
         },
         series: [
             {
                 name: 'Profit',
-                data: props.data
+                data: props.data.map((d) => d*100)
             },
         ]
     }
-    const lastRecord = Math.round(props.data[props.data.length - 1] * 100) / 100
+    const lastRecord = Math.round(props.data[props.data.length - 1] * 10000) / 100
 
     return(
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
                 <div style={{display: 'flex'}}>
                     <div>
-                        Realized Drawdown
+                        Drawdown
                     </div>
                     <span style={{
                             color: lastRecord < 0 ? 'red': 'green',
