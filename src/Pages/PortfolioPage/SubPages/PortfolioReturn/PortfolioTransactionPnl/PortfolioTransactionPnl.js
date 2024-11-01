@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-const PortfolioTransactionPnl = (props) => {
+const PortfolioTransactionPnl = ( {unrealized, realized, total} ) => {
     // const data = props.data.map(data=>data.pnl)
     // const label = props.data.map(data=>data.name)
 
@@ -11,8 +11,8 @@ const PortfolioTransactionPnl = (props) => {
         options: {
             chart: {
                 toolbar: false,
-                id: 'pofits-chart',
-                type: 'area'
+                id: 'profits-chart',
+                type: 'line'
             },
             // colors: [function(value){
             //     console.log(value)
@@ -80,12 +80,22 @@ const PortfolioTransactionPnl = (props) => {
         },
         series: [
             {
-                name: 'Profit',
-                data: props.data
+                name: 'Unrealized',
+                data: unrealized,
+            },
+            {
+                name: 'Realized',
+                data: realized,
+            },
+            {
+                name: 'Total',
+                data: total,
             },
         ]
     }
-    const lastRecord = Math.round(props.data[props.data.length - 1] * 100) / 100
+    const lastTotal = Math.round(total[total.length - 1] * 100) / 100
+    const lastUnrel = Math.round(unrealized[unrealized.length - 1] * 100) / 100
+    const lastRel = Math.round(realized[realized.length - 1] * 100) / 100
     return(
         <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <Card.Header>
@@ -93,18 +103,38 @@ const PortfolioTransactionPnl = (props) => {
                     <div>
                         Cumulative Pnl
                     </div>
-                    <span style={{
-                            color: lastRecord < 0 ? 'red': 'green',
-                            position: "absolute",
-                            right: 15
-                        }}>{lastRecord} {props.currency}</span>
+                    <div style={{position: 'absolute', right: 15, display: "flex"}}>
+                        <div>
+                            Realized
+                        </div>
+                        <span style={{
+                            color: lastRel < 0 ? 'red' : 'green',
+                            paddingLeft: 10,
+                            paddingRight: 10
+                        }}>{lastRel}</span>
+                        <div>
+                            Unrealized
+                        </div>
+                        <span style={{
+                            color: lastUnrel < 0 ? 'red' : 'green',
+                            paddingLeft: 10,
+                            paddingRight: 10
+                        }}>{lastUnrel}</span>
+                        <div>
+                            Total
+                        </div>
+                        <span style={{
+                            color: lastTotal < 0 ? 'red' : 'green',
+                            paddingLeft: 10
+                        }}>{lastTotal}</span>
+                    </div>
                 </div>
             </Card.Header>
             <div style={{height: '100%'}}>
                 <Chart
                     options={chartConfig.options}
                     series={chartConfig.series}
-                    type={'area'}
+                    type={'line'}
                     width="100%"
                     height="100%"/>
             </div>

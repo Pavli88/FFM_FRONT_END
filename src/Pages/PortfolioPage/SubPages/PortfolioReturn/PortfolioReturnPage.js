@@ -43,7 +43,7 @@ const PortfolioReturnPage = () => {
     useEffect(() => {
         if (portfolioCode) fetchAllData();
     }, [portfolioCode, returnTypes]);
-
+    console.log(navData)
     return (
         <div style={{ height: "900px", width: "100%", padding: 15 }}>
             <div style={{ paddingBottom: 15 }}>
@@ -84,7 +84,9 @@ const PortfolioReturnPage = () => {
                         </div>
                         <div style={{ width: "50%", height: 300, marginLeft: 10}}>
                             <PortfolioTransactionPnl
-                                data={cumulativeSum(navData.map((d) => d.total_pnl))}
+                                total={cumulativeSum(navData.map((d) => d.total_pnl))}
+                                unrealized={cumulativeSum(navData.map((e) => e.unrealized_pnl))}
+                                realized={cumulativeSum(navData.map((f) => f.pnl))}
                                 currency={portfolioData.currency}
                             />
                         </div>
