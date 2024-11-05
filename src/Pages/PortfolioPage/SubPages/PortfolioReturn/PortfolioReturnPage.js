@@ -9,6 +9,7 @@ import DailyPnl from "./DailyPnl/DailyPnl";
 import {cumulativeSum, cumulativeMultiply} from "../../../../calculations/cumulative";
 import Section from "../../../../components/Layout/Section";
 import Attribution from "./Attribution/Attribution";
+import TradingMetrics from "../../../../calculations/tradeMetrics";
 
 const PortfolioReturnPage = () => {
     const { server } = useContext(ServerContext);
@@ -43,7 +44,7 @@ const PortfolioReturnPage = () => {
     useEffect(() => {
         if (portfolioCode) fetchAllData();
     }, [portfolioCode, returnTypes]);
-    console.log(navData)
+
     return (
         <div style={{ height: "900px", width: "100%", padding: 15 }}>
             <div style={{ paddingBottom: 15 }}>
@@ -63,7 +64,7 @@ const PortfolioReturnPage = () => {
             <div style={{ height: "760px", overflowY: "scroll" }}>
                 <Section title="Returns">
                     <div style={{ display: "flex" }}>
-                        <div style={{ width: "50%", height: 300 }}>
+                        <div style={{ width: "50%", height: 350 }}>
                             <DailyReturns returns={dailyReturns.map((d) => d.total_return)}
                                           dates={dailyReturns.map((d) => d.end_date)}
                                           changeReturnType={(value) => setReturnsTypes(value.value)}
@@ -79,16 +80,20 @@ const PortfolioReturnPage = () => {
 
                 <Section title="Profit & Loss">
                     <div style={{ display: "flex" }}>
-                        <div style={{ width: "50%", height: 300 }}>
+                        <div style={{ flex: 1, height: 350 }}>
                             <DailyPnl data={navData} />
                         </div>
-                        <div style={{ width: "50%", height: 300, marginLeft: 10}}>
+                        <div style={{ flex: 1, height: 350, marginLeft: 10}}>
                             <PortfolioTransactionPnl
                                 total={cumulativeSum(navData.map((d) => d.total_pnl))}
                                 unrealized={cumulativeSum(navData.map((e) => e.unrealized_pnl))}
                                 realized={cumulativeSum(navData.map((f) => f.pnl))}
                                 currency={portfolioData.currency}
                             />
+                        </div>
+
+                        <div style={{ height: 350, marginLeft: 10, width: 300}}>
+                             <TradingMetrics profits={navData.map((d) => d.pnl)} maxUnrealized={Math.min(...navData.map((d) => d.unrealized_pnl))}/>
                         </div>
                     </div>
                 </Section>

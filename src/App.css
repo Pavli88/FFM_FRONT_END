@@ -493,3 +493,12 @@ ul li:hover {
     /*border: 1px solid #ccc;*/
     border-top: none;
 }
+
+.aligned-container{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    font-size: 12px;
+}
