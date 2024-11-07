@@ -87,7 +87,9 @@ const PortfolioTransactionsFilter = (props) => {
                             {value: 'Purchase', label: 'Purchase'},
                             {value: 'Sale', label: 'Sale'},
                             {value: 'Subscription', label: 'Subscription'},
-                            {value: 'Redemption', label: 'Redemption'}
+                            {value: 'Redemption', label: 'Redemption'},
+                            {value: 'Commission', label: 'Commission'},
+                            {value: 'Financing', label: 'Financing'}
                         ]}
                         onChange={(e) => setTransactionType(e)}
                         className={'instrument-search-input-field'}

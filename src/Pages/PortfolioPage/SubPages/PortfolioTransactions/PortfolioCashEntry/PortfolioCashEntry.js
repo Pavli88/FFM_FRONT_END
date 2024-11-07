@@ -49,6 +49,7 @@ const PortfolioCashEntry = (props) => {
         { value: 'Redemption', label: 'Redemption' },
         { value: 'Interest Paid', label: 'Interest Paid' },
         { value: 'Commission', label: 'Commission' },
+        { value: 'Financing', label: 'Financing' },
     ]
 
     const onlySubscription = [{ value: 'Subscription', label: 'Subscription' }]
