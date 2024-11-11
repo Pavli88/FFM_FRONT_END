@@ -4,9 +4,10 @@ import axios from "axios";
 import ServerContext from "../../../../context/server-context";
 import PortfolioPageContext from "../../context/portfolio-page-context";
 import PortfolioDrawdown from "./PortfolioDrawdown/PortfolioDrawdown";
-
+import {BarChartGrouped} from "../../../../components/Charts/BarCharts";
 import Chart from 'react-apexcharts';
 import DateContext from "../../../../context/date-context";
+import holdingTable from "../../../../components/Tables/HoldingTable";
 
 const PieChart = ({ data, groupBy, value }) => {
     const groupData = (data, groupBy, value) => {
@@ -50,100 +51,29 @@ const PieChart = ({ data, groupBy, value }) => {
     );
 }
 
-const BarChart = ({ data, groupBy, value }) => {
-    const groupData = (data, groupBy, value) => {
-        return data.reduce((acc, curr) => {
-            const existing = acc.find(item => item[groupBy] === curr[groupBy]);
-            if (existing) {
-                existing[value] += curr[value];
-            } else {
-                acc.push({[groupBy]: curr[groupBy], [value]: curr[value]});
-            }
-            return acc;
-        }, []);
-    };
-
-    const groupedData = groupData(data, groupBy, value);
-    const seriesData = groupedData.map(item => item[value]);
-    const labels = groupedData.map(item => item[groupBy]);
-
-    // Fix the structure of series
-    const [chartOptions, setChartOptions] = useState({
-        chart: {
-            type: 'bar', // change to 'pie' if you're using a pie chart
-        },
-        series: [{
-            name: 'Values', // a name for your series
-            data: seriesData, // pass the seriesData here
-        }],
-        labels: labels,
-        dataLabels: {
-            enabled: false,  // Disable values on the bars
-        },
-        yaxis: {
-            labels: {
-                formatter: function (val) {
-                    // Convert to percentage format
-                    return (val * 100).toFixed(2) + '%';
-                }
-            },
-        },
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }]
-    });
-
-    return (
-        <div>
-            <Chart options={chartOptions} series={chartOptions.series} type="bar" width="400"/>
-        </div>
-    );
-}
 
 
-const CorrelationHeatmap = ({ server, params }) => {
+
+const CorrelationHeatmap = ({ data }) => {
     const [heatmapData, setHeatmapData] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [debouncedParams, setDebouncedParams] = useState(params);
 
     useEffect(() => {
-        const handler = setTimeout(() => {
-            setDebouncedParams(params);
-        }, 1000); // Adjust the delay as needed
+        const matrix = data;
 
-        return () => clearTimeout(handler); // Clear timeout if params changes again before delay
-    }, [params]);
+        // Format data for the heatmap
+        const formattedData = Object.keys(matrix).map(asset => ({
+            name: asset,
+            data: Object.keys(matrix[asset]).map(key => ({
+                x: key,
+                y: matrix[asset][key]
+            }))
+        }));
 
-    useEffect(() => {
+        setHeatmapData(formattedData);
+        setCategories(Object.keys(matrix));
+    }, [data]);
 
-        axios.get(`${server}portfolios/get/position_correlation/`, {
-            params: params
-        })
-        .then(response => {
-            const matrix = response.data;
-
-            // Format data for the heatmap
-            const formattedData = Object.keys(matrix).map(asset => ({
-                name: asset,
-                data: Object.keys(matrix[asset]).map(key => ({
-                    x: key,
-                    y: matrix[asset][key]
-                }))
-            }));
-
-            setHeatmapData(formattedData);
-            setCategories(Object.keys(matrix)); // Set the x-axis categories
-        })
-        .catch(error => console.error("Error fetching correlation matrix:", error));
-    }, [debouncedParams]);
 
     const chartOptions = {
         chart: {
@@ -178,10 +108,6 @@ const CorrelationHeatmap = ({ server, params }) => {
         yaxis: {
             show: true
         },
-        // title: {
-        //     text: 'Asset Correlation Heatmap',
-        //     align: 'center'
-        // }
     };
 
     return (
@@ -198,14 +124,15 @@ const CorrelationHeatmap = ({ server, params }) => {
 };
 
 
-
 const PortfolioRiskPage = (props) => {
     const server = useContext(ServerContext)['server'];
-    const currentDate = useContext(DateContext)['currentDate']
+    const currentDate = useContext(DateContext)['currentDate'];
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
-    const currentHoldingData = useContext(PortfolioPageContext).currentHolding
+    const currentHoldingData = useContext(PortfolioPageContext).currentHolding;
+
     const [drawDownData, setDrawDownData] = useState([]);
     const [correlPeriod, setCorrelPeriod] = useState(60);
+    const [d, setD] = useState({});
 
     const fetchDrawdown = async () => {
         const response = await axios.get(`${server}portfolios/get/drawdown/`, {
@@ -216,32 +143,34 @@ const PortfolioRiskPage = (props) => {
         setDrawDownData(response.data['drawdowns'])
     };
 
+    const fetchExposures = async () => {
+        const response = await axios.post(`${server}portfolios/get/position_exposures/`, {
+                        portfolio_code: [portfoliCode],
+                        period: correlPeriod,
+                        date: currentDate
+                    })
+        setD(response.data)
+    };
+
+    // Debounce the correlPeriod
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            fetchExposures();
+        }, 1000);
+        return () => clearTimeout(handler);
+    }, [correlPeriod, portfoliCode]);
+
     useEffect(() => {
         fetchDrawdown();
     }, [portfoliCode])
+
+    const positions = currentHoldingData.filter(record => !['Cash'].includes(record.group))
 
     return (
         <div style={{height: '100%', width: '100%', padding: 15, overflowY: 'scroll'}}>
             <p>Exposures</p>
             <div style={{display: "flex"}}>
-                <div className={'card'}>
-                    <div className={'card-header'}>
-                        Currency Exposure
-                    </div>
-                    <PieChart data={currentHoldingData} groupBy="currency" value="weight"/>
-                </div>
-                <div className={'card'}>
-                    <div className={'card-header'}>
-                        Currency Exposure
-                    </div>
-                    <BarChart data={currentHoldingData} groupBy="currency" value="weight"/>
-                </div>
-                <div className={'card'}>
-                    <div className={'card-header'}>
-                        Instrument Exposure
-                    </div>
-                    <PieChart data={currentHoldingData} groupBy="name" value="weight"/>
-                </div>
+
                 <div className={'card'}>
                     <div className={'card-header'}>
                         Instrument Type Exposure
@@ -257,23 +186,43 @@ const PortfolioRiskPage = (props) => {
                 </div>
             </div>
 
-            <p>Position Correlations</p>
-            <div className={'card'} style={{height: 400, width: 400}}>
-                <div className={'card-header'} style={{
-                    justifyContent: 'space-between'
-                }}>
-                    <span>Position Correlation</span>
-                    <div>
-                        <input type={'number'} min={0} defaultValue={correlPeriod}
-                               onChange={(e) => setCorrelPeriod(e.target.value)}/>
+            <p>Position Risk Exposure</p>
+
+            <div style={{display: "flex"}}>
+
+                <div className={'card'} style={{height: 400, width: 400}}>
+                    <div className={'card-header'}>
+                        Position Exposure
                     </div>
+                    <BarChartGrouped data={positions} groupBy="name" value="weight"/>
                 </div>
-                <CorrelationHeatmap server={server} params={{
-                    portfolio_code: portfoliCode,
-                period: correlPeriod,
-                date: currentDate
-            }}/>
+
+                <div className={'card'} style={{height: 400, width: 400}}>
+                    <div className={'card-header'}>
+                        Position Exposure Concentration
+                    </div>
+                    <PieChart data={positions} groupBy="name" value="weight"/>
+                </div>
+
+                <div className={'card'} style={{height: 400, width: 400}}>
+                    <div className={'card-header'} style={{
+                        justifyContent: 'space-between'
+                    }}>
+                        <span>Position Correlation (Days)</span>
+                        <div>
+                            <input type={'number'}
+                                   min={0}
+                                   defaultValue={correlPeriod}
+                                   onChange={(e) => setCorrelPeriod(e.target.value)}
+                                   style={{width: 150}}
+                            />
+                        </div>
+                    </div>
+                    <CorrelationHeatmap data={d}/>
+                </div>
+
             </div>
+
 
             {/*<PositionExposure server={server}/>*/}
         </div>

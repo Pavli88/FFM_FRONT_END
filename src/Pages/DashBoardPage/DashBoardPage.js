@@ -9,6 +9,7 @@ import DashBoardMonthlyPnl from "./DashBoardMonthlyPnl/DashBoardMonthlyPnl";
 import DashBoardHistoricNav from "./DashBoardHistoricNav/DashBoardHistoricNav";
 import DashBoardTotalDrawdown from "./DashBoardTotalDrawdown/DashBoardTotalDrawdown";
 import HoldingTable from "../../components/Tables/HoldingTable";
+import {BarChartGrouped} from "../../components/Charts/BarCharts";
 
 // Custom hook for fetching dashboard data
 const useDashboardData = (server, currentDate) => {
@@ -62,21 +63,37 @@ const useDashboardData = (server, currentDate) => {
 const DashBoardPage = () => {
     const server = useContext(ServerContext).server;
     const currentDate = useContext(DateContext).currentDate;
-    const {
-        portfolioNavData,
-        groupedNav,
-        totalPnl,
-        performanceData,
-        monthlyPnl,
-        historicNav,
-    } = useDashboardData(server, currentDate);
+    const [currentHolding, setCurrentHolding] = useState([]);
 
-    // Memoized derived values
-    const navs = useMemo(() => portfolioNavData.map((data) => Math.round(data.total * 100) / 100), [portfolioNavData]);
-    const portCodes = useMemo(() => portfolioNavData.map((data) => data.portfolio_code), [portfolioNavData]);
-    const groupedNavs = useMemo(() => groupedNav.map((data) => Math.round(data.total * 100) / 100), [groupedNav]);
-    const portTypes = useMemo(() => groupedNav.map((data) => data.portfolio_type), [groupedNav]);
+    // const {
+    //     portfolioNavData,
+    //     groupedNav,
+    //     totalPnl,
+    //     performanceData,
+    //     monthlyPnl,
+    //     historicNav,
+    // } = useDashboardData(server, currentDate);
+    //
+    // // Memoized derived values
+    // const navs = useMemo(() => portfolioNavData.map((data) => Math.round(data.total * 100) / 100), [portfolioNavData]);
+    // const portCodes = useMemo(() => portfolioNavData.map((data) => data.portfolio_code), [portfolioNavData]);
+    // const groupedNavs = useMemo(() => groupedNav.map((data) => Math.round(data.total * 100) / 100), [groupedNav]);
+    // const portTypes = useMemo(() => groupedNav.map((data) => data.portfolio_type), [groupedNav]);
 
+    const fetchHoldingData = async () => {
+        const response = await axios.post(server + 'portfolios/get/holding/', {
+                date: currentDate,
+                portfolio_code: ['SO1', 'BO1']
+            })
+        setCurrentHolding(response.data)
+    };
+
+    useEffect(() => {
+        fetchHoldingData();
+    }, [])
+
+    const positions = currentHolding.filter(record => !['Cash'].includes(record.group))
+    console.log(positions)
     return (
         <div className="page-container" style={{overflow: 'scroll'}}>
             <div style={{margin: 10}}>
@@ -96,59 +113,71 @@ const DashBoardPage = () => {
             </div>
 
             <div style={{margin: 10}}>
-                <p>NAV</p>
+                <p>Risk Exposures</p>
             </div>
 
-            <div style={{display: "flex", margin: 10}}>
-                <div style={{width: '33%'}}>
-                    <div style={{height: 200}}>
-                        <DashBoardNavWidget x={navs} y={portCodes} title="Portfolios"/>
-                    </div>
-                    <div style={{height: 200}}>
-                        <DashBoardNavWidget x={groupedNavs} y={portTypes} title="Portfolio Type"/>
-                    </div>
-
+            <div className={'card'} style={{height: 500, width: 500}}>
+                <div className={'card-header'}>
+                    Total Exposures
                 </div>
-
-                <div style={{width: '33%'}}>
-                    <div style={{height: 400}}>
-                        <DashBoardHistoricNav data={historicNav}/>
-                    </div>
-
-                </div>
-
-                <div style={{width: '33%'}}>
-                    <div style={{height: 400}}>
-                        <DashBoardTotalDrawdown data={historicNav}/>
-                    </div>
-                </div>
-            </div>
-
-            <div style={{margin: 10}}>
-                <p>Performance</p>
+                <BarChartGrouped data={positions} groupBy="name" value="weight"/>
             </div>
 
 
-            <div style={{margin: 10, display: "flex"}}>
-                <div style={{height: '50%', paddingTop: 15}}>
-                    <DashBoardTotalPnl data={totalPnl}/>
-                </div>
-                <div style={{height: '50%', paddingTop: 15}}>
-                    <DashBoardMonthlyPnl data={monthlyPnl}/>
-                </div>
-                <div style={{paddingBottom: 15}}>
-                    <DashBoardPerformance data={performanceData}/>
-                </div>
-            </div>
+            {/*<div style={{margin: 10}}>*/}
+            {/*    <p>NAV</p>*/}
+            {/*</div>*/}
+
+            {/*<div style={{display: "flex", margin: 10}}>*/}
+            {/*    <div style={{width: '33%'}}>*/}
+            {/*        <div style={{height: 200}}>*/}
+            {/*            <DashBoardNavWidget x={navs} y={portCodes} title="Portfolios"/>*/}
+            {/*        </div>*/}
+            {/*        <div style={{height: 200}}>*/}
+            {/*            <DashBoardNavWidget x={groupedNavs} y={portTypes} title="Portfolio Type"/>*/}
+            {/*        </div>*/}
+
+            {/*    </div>*/}
+
+            {/*    <div style={{width: '33%'}}>*/}
+            {/*        <div style={{height: 400}}>*/}
+            {/*            <DashBoardHistoricNav data={historicNav}/>*/}
+            {/*        </div>*/}
+
+            {/*    </div>*/}
+
+            {/*    <div style={{width: '33%'}}>*/}
+            {/*        <div style={{height: 400}}>*/}
+            {/*            <DashBoardTotalDrawdown data={historicNav}/>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
+
+            {/*<div style={{margin: 10}}>*/}
+            {/*    <p>Performance</p>*/}
+            {/*</div>*/}
 
 
-            <div style={{margin: 10}}>
-                <p>Exposure</p>
-            </div>
+            {/*<div style={{margin: 10, display: "flex"}}>*/}
+            {/*    <div style={{height: '50%', paddingTop: 15}}>*/}
+            {/*        <DashBoardTotalPnl data={totalPnl}/>*/}
+            {/*    </div>*/}
+            {/*    <div style={{height: '50%', paddingTop: 15}}>*/}
+            {/*        <DashBoardMonthlyPnl data={monthlyPnl}/>*/}
+            {/*    </div>*/}
+            {/*    <div style={{paddingBottom: 15}}>*/}
+            {/*        <DashBoardPerformance data={performanceData}/>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
 
-            <div style={{margin: 15}}>
-                <HoldingTable data={[{}]}/>
-            </div>
+
+            {/*<div style={{margin: 10}}>*/}
+            {/*    <p>Exposure</p>*/}
+            {/*</div>*/}
+
+            {/*<div style={{margin: 15}}>*/}
+            {/*    <HoldingTable data={[{}]}/>*/}
+            {/*</div>*/}
 
         </div>
     );

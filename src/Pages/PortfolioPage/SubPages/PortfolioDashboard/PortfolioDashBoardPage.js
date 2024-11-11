@@ -32,12 +32,10 @@ const PortfolioDashBoardPage = (props) => {
     };
 
     const fetchHoldingData = async() => {
-        const response = await axios.get(props.server + 'portfolios/get/holding/', {
-            params: {
+        const response = await axios.post(props.server + 'portfolios/get/holding/', {
                 date: holdingDate,
-                portfolio_code: portfoliCode
-            }
-        })
+                portfolio_code: [portfoliCode]
+            })
         setHoldingdata(response.data)
     };
 

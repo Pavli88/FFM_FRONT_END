@@ -56,12 +56,10 @@ const PortfolioPage = (props) => {
     const [descModalStatus, setDescModalStatus] = useState(false);
     const [currentHolding, setCurrentHolding] = useState({});
 
-    const fetchHoldingData = async() => {
-        const response = await axios.get(server + 'portfolios/get/holding/', {
-            params: {
-                date: currentDate,
-                portfolio_code: portfolioCode
-            }
+    const fetchHoldingData = async () => {
+        const response = await axios.post(server + 'portfolios/get/holding/', {
+            date: currentDate,
+            portfolio_code: [portfolioCode]
         })
         setCurrentHolding(response.data)
     };
