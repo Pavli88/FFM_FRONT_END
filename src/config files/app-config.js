@@ -6,7 +6,6 @@ const currentYear = new Date().getFullYear();
 
 const appConfig = {
     server: 'https://www.fractalportfolios.com/',
-    // defaultRobotEnvironment: 'live',
     currentDate: date.toISOString().substr(0,10),
     fistDayOfCurrentYear: currentYear.toString( ) + '-01-01'
 }

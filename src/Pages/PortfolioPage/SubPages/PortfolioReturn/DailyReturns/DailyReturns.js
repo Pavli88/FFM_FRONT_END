@@ -98,25 +98,22 @@ const DailyReturns = ( {returns, dates, changeReturnType} ) => {
     return(
         <div className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
             <div className={'card-header'}>
-                <div style={{display: 'flex'}}>
-                    <div>
-                        <span>Total Returns</span>
-                        {/*<CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>*/}
-                    </div>
 
-                    <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
-                        <Select
-                            options={[
-                                {value: 'dtd', label: 'Day to Date'},
-                                {value: 'mtd', label: 'Month to Date'},
-                                {value: 'qtd', label: 'Quarter to Date'},
-                                {value: 'si', label: 'Inception to Date'}
-                            ]}
-                            onChange={changeReturnType}
-                            defaultValue={{value: 'dtd', label: 'Day to Date'}}
-                        />
-                    </div>
 
+                <span>Total Returns</span>
+                {/*<CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>*/}
+
+                <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
+                    <Select
+                        options={[
+                            {value: 'dtd', label: 'Day to Date'},
+                            {value: 'mtd', label: 'Month to Date'},
+                            {value: 'qtd', label: 'Quarter to Date'},
+                            {value: 'si', label: 'Inception to Date'}
+                        ]}
+                        onChange={changeReturnType}
+                        defaultValue={{value: 'dtd', label: 'Day to Date'}}
+                    />
                 </div>
             </div>
             <div style={{height: '100%'}}>

@@ -400,6 +400,7 @@ ul li:hover {
     font-size: 14px;
     font-weight: bold;
     color: #494f54;
+    align-items: center;
 }
 
 .icon{

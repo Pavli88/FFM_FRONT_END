@@ -6,6 +6,7 @@ import PortfolioPageContext from "../../context/portfolio-page-context";
 import PortfolioDrawdown from "./PortfolioDrawdown/PortfolioDrawdown";
 
 import Chart from 'react-apexcharts';
+import DateContext from "../../../../context/date-context";
 
 const PieChart = ({ data, groupBy, value }) => {
     const groupData = (data, groupBy, value) => {
@@ -107,12 +108,105 @@ const BarChart = ({ data, groupBy, value }) => {
     );
 }
 
+
+const CorrelationHeatmap = ({ server, params }) => {
+    const [heatmapData, setHeatmapData] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [debouncedParams, setDebouncedParams] = useState(params);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedParams(params);
+        }, 1000); // Adjust the delay as needed
+
+        return () => clearTimeout(handler); // Clear timeout if params changes again before delay
+    }, [params]);
+
+    useEffect(() => {
+
+        axios.get(`${server}portfolios/get/position_correlation/`, {
+            params: params
+        })
+        .then(response => {
+            const matrix = response.data;
+
+            // Format data for the heatmap
+            const formattedData = Object.keys(matrix).map(asset => ({
+                name: asset,
+                data: Object.keys(matrix[asset]).map(key => ({
+                    x: key,
+                    y: matrix[asset][key]
+                }))
+            }));
+
+            setHeatmapData(formattedData);
+            setCategories(Object.keys(matrix)); // Set the x-axis categories
+        })
+        .catch(error => console.error("Error fetching correlation matrix:", error));
+    }, [debouncedParams]);
+
+    const chartOptions = {
+        chart: {
+            type: 'heatmap',
+            toolbar: { show: false },
+            height: '100%'
+        },
+        plotOptions: {
+            heatmap: {
+                shadeIntensity: 0.5,
+                colorScale: {
+                    ranges: [
+                        { from: -1, to: -0.5, color: '#F15B46' },
+                        { from: -0.5, to: 0, color: '#FEB019' },
+                        { from: 0, to: 0.5, color: '#A9D8A5' },
+                        { from: 0.5, to: 1, color: '#1E90FF' }
+                    ]
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function (val) {
+                return val.toFixed(2);
+            },
+            style: { colors: ['#000'] }
+        },
+        xaxis: {
+            type: 'category',
+            categories: categories // Use the updated categories from state
+        },
+        yaxis: {
+            show: true
+        },
+        // title: {
+        //     text: 'Asset Correlation Heatmap',
+        //     align: 'center'
+        // }
+    };
+
+    return (
+        <div style={{height: '100%', width: '100%'}}>
+            <Chart
+                options={chartOptions}
+                series={heatmapData}
+                type="heatmap"
+                height="100%"
+                width="100%"
+            />
+        </div>
+    );
+};
+
+
+
 const PortfolioRiskPage = (props) => {
     const server = useContext(ServerContext)['server'];
+    const currentDate = useContext(DateContext)['currentDate']
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     const currentHoldingData = useContext(PortfolioPageContext).currentHolding
     const [drawDownData, setDrawDownData] = useState([]);
-    console.log(drawDownData)
+    const [correlPeriod, setCorrelPeriod] = useState(60);
+
     const fetchDrawdown = async () => {
         const response = await axios.get(`${server}portfolios/get/drawdown/`, {
             params: {
@@ -162,6 +256,25 @@ const PortfolioRiskPage = (props) => {
                     <PortfolioDrawdown data={drawDownData}/>
                 </div>
             </div>
+
+            <p>Position Correlations</p>
+            <div className={'card'} style={{height: 400, width: 400}}>
+                <div className={'card-header'} style={{
+                    justifyContent: 'space-between'
+                }}>
+                    <span>Position Correlation</span>
+                    <div>
+                        <input type={'number'} min={0} defaultValue={correlPeriod}
+                               onChange={(e) => setCorrelPeriod(e.target.value)}/>
+                    </div>
+                </div>
+                <CorrelationHeatmap server={server} params={{
+                    portfolio_code: portfoliCode,
+                period: correlPeriod,
+                date: currentDate
+            }}/>
+            </div>
+
             {/*<PositionExposure server={server}/>*/}
         </div>
     );
