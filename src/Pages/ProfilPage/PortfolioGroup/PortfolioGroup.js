@@ -210,7 +210,7 @@ const PortfolioGroup = () => {
     return (
         <div className={'card'}>
             <div className={'card-header'}>
-                Portfolio Relationships
+                Portfolios Structure
             </div>
             <div style={{overflow: "scroll", height: '100%'}}>
                 <TreeView data={treeData} update={(e)=>setNode(e)}/>

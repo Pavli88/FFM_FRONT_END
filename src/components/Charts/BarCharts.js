@@ -58,3 +58,47 @@ export const BarChartGrouped = ({ data, groupBy, value }) => {
         </div>
     );
 }
+
+export const BarChart = ({ data, labels, values }) => {
+    const labelArray = data.map((l) => l[labels])
+    const valueArray = data.map((v) => v[values])
+
+    const chartOptions = {
+        chart: {
+            type: 'bar',
+        },
+        series: [{
+            name: 'Values',
+            data: valueArray,
+        }],
+        labels: labelArray ,
+        dataLabels: {
+            enabled: false,
+        },
+        yaxis: {
+            labels: {
+                formatter: function (val) {
+                    // Convert to percentage format
+                    return (val * 100).toFixed(2) + '%';
+                }
+            },
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+    };
+
+    return (
+        <div style={{height: "100%"}}>
+            <Chart options={chartOptions} series={chartOptions.series} type="bar" height="100%"/>
+        </div>
+    );
+}

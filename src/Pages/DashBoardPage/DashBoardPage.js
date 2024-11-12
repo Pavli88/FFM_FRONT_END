@@ -10,6 +10,8 @@ import DashBoardHistoricNav from "./DashBoardHistoricNav/DashBoardHistoricNav";
 import DashBoardTotalDrawdown from "./DashBoardTotalDrawdown/DashBoardTotalDrawdown";
 import HoldingTable from "../../components/Tables/HoldingTable";
 import {BarChartGrouped} from "../../components/Charts/BarCharts";
+import {PositionExposures} from "../../components/Widgets/Risk/PositionExposures";
+import PortfolioGroup from "../ProfilPage/PortfolioGroup/PortfolioGroup";
 
 // Custom hook for fetching dashboard data
 const useDashboardData = (server, currentDate) => {
@@ -80,48 +82,21 @@ const DashBoardPage = () => {
     // const groupedNavs = useMemo(() => groupedNav.map((data) => Math.round(data.total * 100) / 100), [groupedNav]);
     // const portTypes = useMemo(() => groupedNav.map((data) => data.portfolio_type), [groupedNav]);
 
-    const fetchHoldingData = async () => {
-        const response = await axios.post(server + 'portfolios/get/holding/', {
-                date: currentDate,
-                portfolio_code: ['SO1', 'BO1']
-            })
-        setCurrentHolding(response.data)
-    };
-
-    useEffect(() => {
-        fetchHoldingData();
-    }, [])
-
     const positions = currentHolding.filter(record => !['Cash'].includes(record.group))
     console.log(positions)
     return (
         <div className="page-container" style={{overflow: 'scroll'}}>
-            <div style={{margin: 10}}>
-                <div className="card" style={{padding: 10}}>
-                    <div style={{display: 'flex'}}>
-                        <div>
-                            <span className="input-label">Portfolio Group</span>
-                        </div>
-                        <div style={{width: 200}}>
-                            <input type="text"/>
-                        </div>
-                        <div style={{paddingLeft: 5}}>
-                            <button className="get-button">Load</button>
-                        </div>
-                    </div>
+
+            <div style={{display: "flex"}}>
+                <div style={{height: 500, width: 350, padding: 10}}>
+                    <PortfolioGroup/>
                 </div>
+
+                <PositionExposures portfolioCodes={['SO1', 'BO1']} server={server}/>
             </div>
 
-            <div style={{margin: 10}}>
-                <p>Risk Exposures</p>
-            </div>
 
-            <div className={'card'} style={{height: 500, width: 500}}>
-                <div className={'card-header'}>
-                    Total Exposures
-                </div>
-                <BarChartGrouped data={positions} groupBy="name" value="weight"/>
-            </div>
+
 
 
             {/*<div style={{margin: 10}}>*/}
