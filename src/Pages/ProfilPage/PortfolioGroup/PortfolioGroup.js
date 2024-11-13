@@ -179,7 +179,6 @@ const PortfolioGroup = () => {
     const fetchPortGroupData = async () => {
         const response = await axios.get(server + 'portfolios/get/port_groups/');
         setPortGroupData(response.data);
-        console.log(response.data)
     };
 
     useEffect(() => {

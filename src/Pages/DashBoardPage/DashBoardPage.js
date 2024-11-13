@@ -82,8 +82,8 @@ const DashBoardPage = () => {
     // const groupedNavs = useMemo(() => groupedNav.map((data) => Math.round(data.total * 100) / 100), [groupedNav]);
     // const portTypes = useMemo(() => groupedNav.map((data) => data.portfolio_type), [groupedNav]);
 
-    const positions = currentHolding.filter(record => !['Cash'].includes(record.group))
-    console.log(positions)
+    // const positions = currentHolding.filter(record => !['Cash'].includes(record.group))
+    // console.log(positions)
     return (
         <div className="page-container" style={{overflow: 'scroll'}}>
 
