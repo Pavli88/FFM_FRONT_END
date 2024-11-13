@@ -16,11 +16,13 @@ export const PositionExposures = ({portfolioCodes, server}) => {
             "correlation": {},
             "exposures": [],
             "port_std": 0,
-            "lev_exp": 0
+            "lev_exp": 0,
+            "risk_structure": []
         }
     }]);
-    console.log(exposureData)
-    const [correlPeriod, setCorrelPeriod] = useState(60);
+
+    const [correlPeriod, setCorrelPeriod] = useState(5);
+    const [samplePeriod, setSamplePeriod] = useState(10);
 
     // Debounce the correlPeriod
     useEffect(() => {
@@ -28,13 +30,14 @@ export const PositionExposures = ({portfolioCodes, server}) => {
             fetchExposures();
         }, 1000);
         return () => clearTimeout(handler);
-    }, [correlPeriod, portfolioCodes]);
+    }, [correlPeriod, portfolioCodes, samplePeriod]);
 
     const fetchExposures = async () => {
         const response = await axios.post(`${server}portfolios/get/position_exposures/`, {
             portfolio_code: portfolioCodes,
             period: correlPeriod,
-            date: currentDate
+            date: currentDate,
+            sample_period: samplePeriod
         })
         setExposureData(response.data)
         // setCorrelationData(response.data['correlation'])
@@ -43,7 +46,12 @@ export const PositionExposures = ({portfolioCodes, server}) => {
     const std_hist = exposureData.map((d) => d.data.port_std)
     const exp_hist = exposureData.map((d) => d.data.lev_exp)
     const std_dates = exposureData.map((l) => l.date)
-
+    const lastRecordData = exposureData[exposureData.length - 1]['data']
+    const expData = lastRecordData['exposures'].map((d) => d.weight)
+    const expLabel = lastRecordData['exposures'].map((d) => d.instrument__name)
+    const riskExpData = lastRecordData['risk_structure'].map((d) => d.value)
+    const riskExpLabel = lastRecordData['risk_structure'].map((d) => d.label)
+    console.log(lastRecordData)
     return (
         <div style={{padding: 10}}>
 
@@ -57,7 +65,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                 <p style={{padding: 0}}>Position Risk Exposure</p>
 
                 <div>
-                    <span style={{paddingRight: 10}}>Leverage</span>
+                    <span style={{paddingRight: 10}}>Net Exposure</span>
                     <span
                         style={{paddingRight: 10}}>{(exposureData[exposureData.length - 1]['data']['lev_exp'] * 100).toFixed(2)} %</span>
                 </div>
@@ -77,6 +85,17 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                            style={{width: 100}}
                     />
                 </div>
+
+                <div>
+                    <span style={{paddingRight: 10}}>Sample Period</span>
+                    <input type={'number'}
+                           min={0}
+                           defaultValue={samplePeriod}
+                           onChange={(e) => setSamplePeriod(e.target.value)}
+                           style={{width: 100}}
+                    />
+                </div>
+
             </div>
 
             <div style={{display: "flex"}}>
@@ -85,9 +104,18 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                     <div className={'card-header'}>
                         Position Exposure
                     </div>
-                    <BarChart data={exposureData[exposureData.length - 1]['data']['exposures']}
-                              labels={'instrument__name'}
-                              values={'weight'}/>
+                    <BarChart
+                        labels={expLabel}
+                        values={expData}/>
+                </div>
+
+                <div className={'card'} style={{height: 400, width: 400, marginTop: 10, marginRight: 5}}>
+                    <div className={'card-header'}>
+                        Risk Exposure
+                    </div>
+                    <BarChart
+                        labels={riskExpLabel}
+                        values={riskExpData}/>
                 </div>
 
                 <div className={'card'} style={{height: 400, width: 400, marginTop: 10, marginRight: 5, marginLeft: 5}}>
@@ -127,7 +155,9 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                     }}>
                         <span>Exposure History</span>
                     </div>
-                    <LineChart data={exp_hist} labels={std_dates}/>
+                    <BarChart
+                        labels={std_dates}
+                        values={exp_hist}/>
                 </div>
 
             </div>

@@ -59,9 +59,7 @@ export const BarChartGrouped = ({ data, groupBy, value }) => {
     );
 }
 
-export const BarChart = ({ data, labels, values }) => {
-    const labelArray = data.map((l) => l[labels])
-    const valueArray = data.map((v) => v[values])
+export const BarChart = ({ labels, values }) => {
 
     const chartOptions = {
         chart: {
@@ -69,9 +67,9 @@ export const BarChart = ({ data, labels, values }) => {
         },
         series: [{
             name: 'Values',
-            data: valueArray,
+            data: values,
         }],
-        labels: labelArray ,
+        labels: labels ,
         dataLabels: {
             enabled: false,
         },
