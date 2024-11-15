@@ -108,7 +108,7 @@ const MainApplication = (props) => {
 
 
     return (
-        <Container style={{background: '#FBFAFA', padding: 0}} fluid>
+        <div style={{background: '#FBFAFA', padding: 0}}>
             <ServerContext.Provider value={{server: server}}>
                 <EntityContext.Provider value={{
                     entity: entity,
@@ -140,11 +140,24 @@ const MainApplication = (props) => {
                                         }}>
                                             <ReactNotification/>
 
-                                            <div style={{border: 1, borderColor: 'grey', background: 'grey'}}>
+                                            <div style={{
+                                                position: "fixed",
+                                                top: 0,
+                                                left: 0,
+                                                right: 0,
+                                                // border: '1px solid grey',
+                                                background: 'grey',
+                                                zIndex: 1000
+                                            }}>
                                                 <Navigation user={userName}/>
                                             </div>
 
-                                            <div style={{height: 1000, width: '100%', overflow: "scroll"}}>
+                                            <div style={{
+                                                marginTop: 60,
+                                                height: 'calc(100vh - 60px)',
+                                                width: '100%',
+                                                overflow: 'auto'
+                                            }}>
                                                 <Switch>
                                                     <Route path="/risk">
                                                         <RiskPage/>
@@ -182,7 +195,7 @@ const MainApplication = (props) => {
                             </PortfolioContext.Provider>
                 </EntityContext.Provider>
             </ServerContext.Provider>
-        </Container>
+        </div>
     );
 };
 export default MainApplication;

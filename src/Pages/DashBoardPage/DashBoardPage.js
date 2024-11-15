@@ -3,13 +3,8 @@ import {useContext, useEffect, useState, useMemo} from "react";
 import ServerContext from "../../context/server-context";
 import DashBoardNavWidget from "./DashBoardNavWidget/DashBoardNavWidget";
 import DateContext from "../../context/date-context";
-import DashBoardTotalPnl from "./DashBoardTotalPnl/DashBoardTotalPnl";
-import DashBoardPerformance from "./DashBoardPerformance/DashBoardPerformance";
-import DashBoardMonthlyPnl from "./DashBoardMonthlyPnl/DashBoardMonthlyPnl";
-import DashBoardHistoricNav from "./DashBoardHistoricNav/DashBoardHistoricNav";
-import DashBoardTotalDrawdown from "./DashBoardTotalDrawdown/DashBoardTotalDrawdown";
-import HoldingTable from "../../components/Tables/HoldingTable";
-import {BarChartGrouped} from "../../components/Charts/BarCharts";
+import {BarChartGrouped, StackedBarChart} from "../../components/Charts/BarCharts";
+import {PieChart} from "../../components/Charts/PieCharts";
 import {PositionExposures} from "../../components/Widgets/Risk/PositionExposures";
 import PortfolioGroup from "../ProfilPage/PortfolioGroup/PortfolioGroup";
 
@@ -17,39 +12,21 @@ import PortfolioGroup from "../ProfilPage/PortfolioGroup/PortfolioGroup";
 const useDashboardData = (server, currentDate) => {
     const [data, setData] = useState({
         portfolioNavData: [],
-        groupedNav: [],
-        totalPnl: [],
-        performanceData: [],
-        monthlyPnl: [],
-        historicNav: [{}],
     });
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [
-                    portfolioNavRes,
-                    groupedNavRes,
-                    totalPnlRes,
-                    performanceDataRes,
-                    monthlyPnlRes,
-                    historicNavRes,
+                    portfolioNavRes
                 ] = await Promise.all([
-                    axios.get(`${server}portfolios/get/portfolio_nav/`, { params: { date: currentDate } }),
-                    axios.get(`${server}portfolios/get/grouped/portfolio_nav/`, { params: { date: currentDate } }),
-                    axios.get(`${server}portfolios/get/total_pnl/`),
-                    axios.get(`${server}portfolios/get/perf_dashboard/`, { params: { date: currentDate } }),
-                    axios.get(`${server}portfolios/get/monthly_pnl/`),
-                    axios.get(`${server}portfolios/get/historic_nav/`),
+                    axios.post(`${server}portfolios/get/nav/`,  {
+                        portfolio_code__in : ['SO1', 'BO1']
+                    }),
                 ]);
 
                 setData({
                     portfolioNavData: portfolioNavRes.data,
-                    groupedNav: groupedNavRes.data,
-                    totalPnl: totalPnlRes.data,
-                    performanceData: performanceDataRes.data,
-                    monthlyPnl: monthlyPnlRes.data,
-                    historicNav: historicNavRes.data,
                 });
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
@@ -62,98 +39,124 @@ const useDashboardData = (server, currentDate) => {
     return data;
 };
 
+const transformPortfolioData = (dateRecords) => {
+    const portfolioMap = {};
+
+    dateRecords.forEach(({ records }) => {
+        records.forEach(({ portfolio_code, holding_nav }) => {
+            // Skip invalid holding_nav
+            if (holding_nav == null || isNaN(holding_nav)) return;
+
+            // If portfolio_code is not in the map, initialize it
+            if (!portfolioMap[portfolio_code]) {
+                portfolioMap[portfolio_code] = [];
+            }
+
+            // Push the holding_nav value to the portfolio's data array
+            portfolioMap[portfolio_code].push(holding_nav);
+        });
+    });
+
+    // Convert the map to the desired array format
+    return Object.entries(portfolioMap).map(([name, data]) => ({ name, data }));
+};
+
+const transformSummedData = (dateRecords, fieldMapping) => {
+    const fieldMap = {};
+
+    // Initialize the field map with empty arrays for each field
+    fieldMapping.values.forEach((field) => {
+        fieldMap[field] = [];
+    });
+
+    dateRecords.forEach(({ records }) => {
+        // Initialize a temporary sum object for the current date
+        const tempSum = {};
+        fieldMapping.values.forEach((field) => {
+            tempSum[field] = 0;
+        });
+
+        // Sum up the specified fields across all records for the current date
+        records.forEach((record) => {
+            fieldMapping.values.forEach((field) => {
+                if (record[field] != null && !isNaN(record[field])) {
+                    tempSum[field] += record[field];
+                }
+            });
+        });
+
+        // Append the computed sums to the respective field's data array
+        fieldMapping.values.forEach((field, index) => {
+            fieldMap[field].push(tempSum[field]);
+        });
+    });
+
+    // Convert the map to the desired array format using the labels
+    return fieldMapping.values.map((field, index) => ({
+        name: fieldMapping.labels[index],
+        data: fieldMap[field],
+    }));
+};
+
 const DashBoardPage = () => {
     const server = useContext(ServerContext).server;
     const currentDate = useContext(DateContext).currentDate;
     const [currentHolding, setCurrentHolding] = useState([]);
 
-    // const {
-    //     portfolioNavData,
-    //     groupedNav,
-    //     totalPnl,
-    //     performanceData,
-    //     monthlyPnl,
-    //     historicNav,
-    // } = useDashboardData(server, currentDate);
-    //
+    const {
+        portfolioNavData,
+    } = useDashboardData(server, currentDate);
+    // console.log(portfolioNavData)
     // // Memoized derived values
     // const navs = useMemo(() => portfolioNavData.map((data) => Math.round(data.total * 100) / 100), [portfolioNavData]);
     // const portCodes = useMemo(() => portfolioNavData.map((data) => data.portfolio_code), [portfolioNavData]);
     // const groupedNavs = useMemo(() => groupedNav.map((data) => Math.round(data.total * 100) / 100), [groupedNav]);
     // const portTypes = useMemo(() => groupedNav.map((data) => data.portfolio_type), [groupedNav]);
 
-    // const positions = currentHolding.filter(record => !['Cash'].includes(record.group))
-    // console.log(positions)
+    const data = transformPortfolioData(portfolioNavData)
+    const summedData = transformSummedData(portfolioNavData, {labels: ['Positions', 'Cash', 'Margin'], values: ['pos_val', 'cash_val', 'margin']})
+    const labels = portfolioNavData.map((d) => d.date)
+    const lastRecordData = portfolioNavData.length > 0 ? portfolioNavData[portfolioNavData.length - 1]['records']: []
+    const portfolios = lastRecordData.map((d) => d.portfolio_code)
+    const navValues = lastRecordData.map((d) => d.holding_nav)
     return (
-        <div className="page-container" style={{overflow: 'scroll'}}>
+        <div >
 
             <div style={{display: "flex"}}>
                 <div style={{height: 500, width: 350, padding: 10}}>
                     <PortfolioGroup/>
                 </div>
 
-                <PositionExposures portfolioCodes={['SO1', 'BO1']} server={server}/>
+                <div>
+                    <div style={{padding: 10}}>
+                        <div style={{
+                            borderTop: "1px solid  #e5e8e8 ",
+                            borderBottom: "1px solid  #e5e8e8 ",
+                            padding: "5px",
+                            display: "flex",
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
+                            <span style={{fontWeight: "bold"}}>NAV</span>
+
+                        </div>
+                        <div style={{display: "flex", height: 350, marginTop: 10}}>
+                            <div className={'card'} style={{flex: 1, marginRight: 5}}>
+                                <StackedBarChart data={data} labels={labels} yName={'NAV'}/>
+                            </div>
+
+                            <div className={'card'} style={{flex: 1, marginRight: 5, marginLeft: 5}}>
+                                <StackedBarChart data={summedData} labels={labels} yName={'NAV'}/>
+                            </div>
+                            <div className={'card'} style={{height: '100%', marginLeft: 5}}>
+                                <PieChart values={navValues} labels={portfolios}/>
+                            </div>
+                        </div>
+                    </div>
+                    <PositionExposures portfolioCodes={['SO1', 'BO1']} server={server}/>
+                </div>
+
             </div>
-
-
-
-
-
-            {/*<div style={{margin: 10}}>*/}
-            {/*    <p>NAV</p>*/}
-            {/*</div>*/}
-
-            {/*<div style={{display: "flex", margin: 10}}>*/}
-            {/*    <div style={{width: '33%'}}>*/}
-            {/*        <div style={{height: 200}}>*/}
-            {/*            <DashBoardNavWidget x={navs} y={portCodes} title="Portfolios"/>*/}
-            {/*        </div>*/}
-            {/*        <div style={{height: 200}}>*/}
-            {/*            <DashBoardNavWidget x={groupedNavs} y={portTypes} title="Portfolio Type"/>*/}
-            {/*        </div>*/}
-
-            {/*    </div>*/}
-
-            {/*    <div style={{width: '33%'}}>*/}
-            {/*        <div style={{height: 400}}>*/}
-            {/*            <DashBoardHistoricNav data={historicNav}/>*/}
-            {/*        </div>*/}
-
-            {/*    </div>*/}
-
-            {/*    <div style={{width: '33%'}}>*/}
-            {/*        <div style={{height: 400}}>*/}
-            {/*            <DashBoardTotalDrawdown data={historicNav}/>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-
-            {/*<div style={{margin: 10}}>*/}
-            {/*    <p>Performance</p>*/}
-            {/*</div>*/}
-
-
-            {/*<div style={{margin: 10, display: "flex"}}>*/}
-            {/*    <div style={{height: '50%', paddingTop: 15}}>*/}
-            {/*        <DashBoardTotalPnl data={totalPnl}/>*/}
-            {/*    </div>*/}
-            {/*    <div style={{height: '50%', paddingTop: 15}}>*/}
-            {/*        <DashBoardMonthlyPnl data={monthlyPnl}/>*/}
-            {/*    </div>*/}
-            {/*    <div style={{paddingBottom: 15}}>*/}
-            {/*        <DashBoardPerformance data={performanceData}/>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
-
-
-            {/*<div style={{margin: 10}}>*/}
-            {/*    <p>Exposure</p>*/}
-            {/*</div>*/}
-
-            {/*<div style={{margin: 15}}>*/}
-            {/*    <HoldingTable data={[{}]}/>*/}
-            {/*</div>*/}
-
         </div>
     );
 };

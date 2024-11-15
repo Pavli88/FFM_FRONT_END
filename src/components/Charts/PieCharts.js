@@ -44,15 +44,12 @@ export const PieChartGrouped = ({ data, groupBy, value }) => {
     );
 }
 
-export const PieChart = ({ data, labels, values }) => {
-    const labelArray = data.map((l) => l[labels])
-    const valueArray = data.map((v) => Math.abs(v[values]))
-
+export const PieChart = ({ labels, values }) => {
     const chartOptions = {
         chart: {
             type: 'pie',
         },
-        labels: labelArray,
+        labels: labels,
         legend: {
             position: 'top', // Place the legend on top
             horizontalAlign: 'center', // Center the legend horizontally
@@ -78,7 +75,7 @@ export const PieChart = ({ data, labels, values }) => {
             height: '100%',
             flexDirection: 'column'
         }}>
-            <Chart options={chartOptions} series={valueArray} type="pie" width="100%" height="90%"/>
+            <Chart options={chartOptions} series={values} type="pie" width="100%" height="90%"/>
         </div>
     );
 }

@@ -100,3 +100,59 @@ export const BarChart = ({ labels, values }) => {
         </div>
     );
 }
+
+export const StackedBarChart = ( { labels, data, yName} ) => {
+    const options = {
+        chart: {
+            type: 'bar',
+            stacked: true,
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                dataLabels: {
+                    enabled: false, // Hides the data labels on the bars
+                },
+            },
+
+        },
+        dataLabels: {
+            enabled: false, // Global setting to disable data labels
+        },
+        xaxis: {
+            categories: labels,
+        },
+        yaxis: {
+            title: {
+                text: yName,
+            },
+            labels: {
+                formatter: (value) => value.toFixed(2), // Formats y-axis values to two decimal places
+            },
+        },
+        legend: {
+            position: 'top', // Legend position
+        },
+        fill: {
+            opacity: 1,
+        },
+        tooltip: {
+            y: {
+                formatter: (val) => `${val}`, // Tooltip value formatting
+            },
+        },
+    };
+
+    const series = data;
+
+    return (
+        <div>
+            <Chart
+                options={options}
+                series={series}
+                type="bar"
+                height={350}
+            />
+        </div>
+    );
+}

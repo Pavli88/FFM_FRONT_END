@@ -51,18 +51,19 @@ export const PositionExposures = ({portfolioCodes, server}) => {
     const expLabel = lastRecordData['exposures'].map((d) => d.instrument__name)
     const riskExpData = lastRecordData['risk_structure'].map((d) => d.value)
     const riskExpLabel = lastRecordData['risk_structure'].map((d) => d.label)
-    console.log(lastRecordData)
+
     return (
         <div style={{padding: 10}}>
 
             <div style={{
-                borderBottom: "1px solid #000",
-                paddingBottom: "2px",
+                borderTop: "1px solid  #e5e8e8 ",
+                borderBottom: "1px solid  #e5e8e8 ",
+                padding: "5px",
                 display: "flex",
                 justifyContent: 'space-between',
                 alignItems: 'center'
             }}>
-                <p style={{padding: 0}}>Position Risk Exposure</p>
+                <span style={{fontWeight: "bold"}}>Position Risk Exposure</span>
 
                 <div>
                     <span style={{paddingRight: 10}}>Net Exposure</span>
@@ -120,11 +121,9 @@ export const PositionExposures = ({portfolioCodes, server}) => {
 
                 <div className={'card'} style={{height: 400, width: 400, marginTop: 10, marginRight: 5, marginLeft: 5}}>
                     <div className={'card-header'}>
-                        Position Exposure Concentration
+                        Risk Exposure Concentration
                     </div>
-                    <PieChart data={exposureData[exposureData.length - 1]['data']['exposures']}
-                              labels={'instrument__name'}
-                              values={'weight'}/>
+                    <PieChart values={riskExpData} labels={riskExpLabel}/>
                 </div>
 
                 <div className={'card'} style={{height: 400, width: 400, marginTop: 10, marginLeft: 5}}>
