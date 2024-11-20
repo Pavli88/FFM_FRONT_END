@@ -77,8 +77,12 @@ const TradingMetrics = ({ profits, maxUnrealized }) => {
                     <span>{calculateExpectancy(profits).toFixed(2)}</span>
                 </div>
                 <div className={"aligned-container"}>
+                    <span>Max Drawdown</span>
+                    <span>{maxUnrealized.toFixed(2)}</span>
+                </div>
+                <div className={"aligned-container"}>
                     <span>Profit to Drawdown</span>
-                    <span>{(calculateNetProfit(profits)/Math.abs(maxUnrealized)).toFixed(2)}</span>
+                    <span>{(calculateNetProfit(profits) / Math.abs(maxUnrealized)).toFixed(4)}</span>
                 </div>
             </div>
         </div>

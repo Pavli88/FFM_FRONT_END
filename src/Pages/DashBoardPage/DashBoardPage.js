@@ -7,6 +7,10 @@ import {BarChartGrouped, StackedBarChart} from "../../components/Charts/BarChart
 import {PieChart} from "../../components/Charts/PieCharts";
 import {PositionExposures} from "../../components/Widgets/Risk/PositionExposures";
 import PortfolioGroup from "../ProfilPage/PortfolioGroup/PortfolioGroup";
+import {cumulativeSum} from "../../calculations/cumulative";
+import PortfolioTransactionPnl
+    from "../PortfolioPage/SubPages/PortfolioReturn/PortfolioTransactionPnl/PortfolioTransactionPnl";
+import TradingMetrics from "../../calculations/tradeMetrics";
 
 // Custom hook for fetching dashboard data
 const useDashboardData = (server, currentDate) => {
@@ -115,10 +119,15 @@ const DashBoardPage = () => {
 
     const data = transformPortfolioData(portfolioNavData)
     const summedData = transformSummedData(portfolioNavData, {labels: ['Positions', 'Cash', 'Margin'], values: ['pos_val', 'cash_val', 'margin']})
+    const summedPnl = transformSummedData(portfolioNavData, {labels: ['Realized', 'Unrealized'], values: ['pnl', 'unrealized_pnl']})
     const labels = portfolioNavData.map((d) => d.date)
     const lastRecordData = portfolioNavData.length > 0 ? portfolioNavData[portfolioNavData.length - 1]['records']: []
     const portfolios = lastRecordData.map((d) => d.portfolio_code)
     const navValues = lastRecordData.map((d) => d.holding_nav)
+    const realizedPnl = summedPnl[0]['data']
+    const unrealizedPnl = summedPnl[1]['data']
+    // console.log(summedPnl)
+    // console.log(cumulativeUnrealized)
     return (
         <div >
 
@@ -154,6 +163,43 @@ const DashBoardPage = () => {
                         </div>
                     </div>
                     <PositionExposures portfolioCodes={['SO1', 'BO1']} server={server}/>
+
+                    <div style={{padding: 10}}>
+                        <div style={{
+                            borderTop: "1px solid  #e5e8e8 ",
+                            borderBottom: "1px solid  #e5e8e8 ",
+                            padding: "5px",
+                            display: "flex",
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
+                            <span style={{fontWeight: "bold"}}>Performance</span>
+
+                        </div>
+                        <div style={{display: "flex", height: 350, marginTop: 10}}>
+                            <div className={'card'} style={{flex: 1, marginRight: 5}}>
+                                <StackedBarChart data={summedPnl} labels={labels} yName={'Profit & Loss'}/>
+                            </div>
+                            {/*<div style={{flex: 1, height: 350, marginLeft: 10}}>*/}
+                            {/*    <PortfolioTransactionPnl*/}
+                            {/*        total={cumulativeUnrealizedPnl}*/}
+                            {/*        unrealized={cumulativeUnrealizedPnl}*/}
+                            {/*        realized={cumulativeRealizedPnl}*/}
+                            {/*    />*/}
+                            {/*</div>*/}
+                            <div style={{height: 350, marginLeft: 10, width: 300}}>
+                                <TradingMetrics profits={realizedPnl}
+                                                maxUnrealized={Math.min(...unrealizedPnl)}/>
+                            </div>
+                            {/*<div className={'card'} style={{flex: 1, marginRight: 5, marginLeft: 5}}>*/}
+                            {/*    <StackedBarChart data={summedData} labels={labels} yName={'NAV'}/>*/}
+                            {/*</div>*/}
+                            {/*<div className={'card'} style={{height: '100%', marginLeft: 5}}>*/}
+                            {/*    <PieChart values={navValues} labels={portfolios}/>*/}
+                            {/*</div>*/}
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
