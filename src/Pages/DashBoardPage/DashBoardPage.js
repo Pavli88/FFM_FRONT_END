@@ -136,7 +136,7 @@ const DashBoardPage = () => {
                     <PortfolioGroup/>
                 </div>
 
-                <div>
+                <div style={{width: '100%'}}>
                     <div style={{padding: 10}}>
                         <div style={{
                             borderTop: "1px solid  #e5e8e8 ",
@@ -180,23 +180,16 @@ const DashBoardPage = () => {
                             <div className={'card'} style={{flex: 1, marginRight: 5}}>
                                 <StackedBarChart data={summedPnl} labels={labels} yName={'Profit & Loss'}/>
                             </div>
-                            {/*<div style={{flex: 1, height: 350, marginLeft: 10}}>*/}
-                            {/*    <PortfolioTransactionPnl*/}
-                            {/*        total={cumulativeUnrealizedPnl}*/}
-                            {/*        unrealized={cumulativeUnrealizedPnl}*/}
-                            {/*        realized={cumulativeRealizedPnl}*/}
-                            {/*    />*/}
-                            {/*</div>*/}
+                            <div style={{flex: 1, height: 350, marginLeft: 10}}>
+                                <PortfolioTransactionPnl
+                                    unrealized={cumulativeSum(unrealizedPnl)}
+                                    realized={cumulativeSum(realizedPnl)}
+                                />
+                            </div>
                             <div style={{height: 350, marginLeft: 10, width: 300}}>
                                 <TradingMetrics profits={realizedPnl}
-                                                maxUnrealized={Math.min(...unrealizedPnl)}/>
+                                                maxUnrealized={Math.min(...cumulativeSum(unrealizedPnl))}/>
                             </div>
-                            {/*<div className={'card'} style={{flex: 1, marginRight: 5, marginLeft: 5}}>*/}
-                            {/*    <StackedBarChart data={summedData} labels={labels} yName={'NAV'}/>*/}
-                            {/*</div>*/}
-                            {/*<div className={'card'} style={{height: '100%', marginLeft: 5}}>*/}
-                            {/*    <PieChart values={navValues} labels={portfolios}/>*/}
-                            {/*</div>*/}
                         </div>
                     </div>
 

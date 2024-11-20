@@ -85,7 +85,6 @@ const PortfolioReturnPage = () => {
                         </div>
                         <div style={{ flex: 1, height: 350, marginLeft: 10}}>
                             <PortfolioTransactionPnl
-                                total={cumulativeSum(navData.map((d) => d.total_pnl))}
                                 unrealized={cumulativeSum(navData.map((e) => e.unrealized_pnl))}
                                 realized={cumulativeSum(navData.map((f) => f.pnl))}
                                 currency={portfolioData.currency}

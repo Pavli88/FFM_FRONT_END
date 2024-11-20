@@ -3,10 +3,10 @@ import Card from "react-bootstrap/Card";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
-const PortfolioTransactionPnl = ( {unrealized, realized, total} ) => {
+const PortfolioTransactionPnl = ( {unrealized, realized} ) => {
     // const data = props.data.map(data=>data.pnl)
     // const label = props.data.map(data=>data.name)
-
+    const total = unrealized.map((value, index) => value + (realized[index] || 0))
     const chartConfig = {
         options: {
             chart: {
