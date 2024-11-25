@@ -4,12 +4,7 @@ import Chart from 'react-apexcharts';
 export const LineChart = ( { data, labels } ) => {
     // Define initial state for chart data and options
     const chartData = {
-        series: [
-            {
-                name: "Sales",
-                data: data
-            }
-        ],
+        series: data,
         options: {
             chart: {
                 type: 'line',
@@ -42,7 +37,7 @@ export const LineChart = ( { data, labels } ) => {
                 strokeColors: '#fff',
                 strokeWidth: 2,
             },
-            colors: ['#00BAEC']
+            // colors: ['#00BAEC']
         }
     };
 

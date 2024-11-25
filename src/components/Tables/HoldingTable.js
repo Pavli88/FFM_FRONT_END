@@ -11,6 +11,11 @@ const HoldingsTable = (props) => {
     const columns = useMemo(
         () => [
             {
+                Header: 'Portfolio',
+                accessor: 'portfolio_code',
+
+            },
+            {
                 Header: 'Date',
                 accessor: 'date',
 
@@ -102,6 +107,20 @@ const HoldingsTable = (props) => {
             {
                 Header: 'Realized P&L',
                 accessor: 'rgl',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
+            },
+             {
+                Header: 'Weight',
+                accessor: 'weight',
+                aggregate: 'sum',
+                disableGroupBy: true,
+                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
+            },
+            {
+                Header: 'Leverage',
+                accessor: 'pos_lev',
                 aggregate: 'sum',
                 disableGroupBy: true,
                 Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,

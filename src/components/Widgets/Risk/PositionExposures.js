@@ -17,7 +17,8 @@ export const PositionExposures = ({portfolioCodes, server}) => {
             "exposures": [],
             "port_std": 0,
             "lev_exp": 0,
-            "risk_structure": []
+            "risk_structure": [],
+            "leverage": 0
         }
     }]);
 
@@ -51,6 +52,10 @@ export const PositionExposures = ({portfolioCodes, server}) => {
     const expLabel = lastRecordData['exposures'].map((d) => d.instrument__name)
     const riskExpData = lastRecordData['risk_structure'].map((d) => d.value)
     const riskExpLabel = lastRecordData['risk_structure'].map((d) => d.label)
+    const normalRisks = exposureData.map((d) => d.data.port_std / d.data.leverage)
+    const levFreeRisk = exposureData[exposureData.length - 1]['data']['port_std'] / exposureData[exposureData.length - 1]['data']['leverage']
+    const totalRisk = exposureData[exposureData.length - 1]['data']['port_std']
+    const leverages = exposureData.map((d) => d.data.leverage)
 
     return (
         <div style={{padding: 10}}>
@@ -74,7 +79,25 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                 <div>
                     <span style={{paddingRight: 10}}>Risk</span>
                     <span
-                        style={{paddingRight: 10}}>{(exposureData[exposureData.length - 1]['data']['port_std'] * 100).toFixed(2)} %</span>
+                        style={{paddingRight: 10}}>{((levFreeRisk) * 100).toFixed(2)} %</span>
+                </div>
+
+                <div>
+                    <span style={{paddingRight: 10}}>Risk due to Leverage</span>
+                    <span
+                        style={{paddingRight: 10}}>{((totalRisk - levFreeRisk)* 100).toFixed(2)} %</span>
+                </div>
+
+                <div>
+                    <span style={{paddingRight: 10}}>Total Risk</span>
+                    <span
+                        style={{paddingRight: 10}}>{(totalRisk * 100).toFixed(2)} %</span>
+                </div>
+
+                <div>
+                    <span style={{paddingRight: 10}}>Leverage</span>
+                    <span
+                        style={{paddingRight: 10}}>{(exposureData[exposureData.length - 1]['data']['leverage']).toFixed(2)} x</span>
                 </div>
 
                 <div>
@@ -112,7 +135,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
 
                 <div className={'card'} style={{height: 400, width: 400, marginTop: 10, marginRight: 5}}>
                     <div className={'card-header'}>
-                        Risk Exposure
+                        Marginal Risk Contribution
                     </div>
                     <BarChart
                         labels={riskExpLabel}
@@ -145,18 +168,38 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                     }}>
                         <span>Risk History</span>
                     </div>
-                    <LineChart data={std_hist} labels={std_dates}/>
+                    <LineChart data={[
+                        {
+                            name: "Total Risk",
+                            data: std_hist
+                        },
+                        {
+                            name: "Lev Free Risk",
+                            data: normalRisks
+                        }
+                    ]} labels={std_dates}/>
                 </div>
 
                 <div className={'card'} style={{flex: 1, height: 400, width: 400, marginTop: 10, marginLeft: 5}}>
                     <div className={'card-header'} style={{
                         justifyContent: 'space-between'
                     }}>
-                        <span>Exposure History</span>
+                        <span>Net Exposure History</span>
                     </div>
                     <BarChart
                         labels={std_dates}
                         values={exp_hist}/>
+                </div>
+
+                <div className={'card'} style={{flex: 1, height: 400, width: 400, marginTop: 10, marginLeft: 5}}>
+                    <div className={'card-header'} style={{
+                        justifyContent: 'space-between'
+                    }}>
+                        <span>Leverage History</span>
+                    </div>
+                    <BarChart
+                        labels={std_dates}
+                        values={leverages}/>
                 </div>
 
             </div>
