@@ -58,7 +58,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
     const leverages = exposureData.map((d) => d.data.leverage)
 
     return (
-        <div style={{padding: 10}}>
+        <div style={{padding: 10, width: '100%'}}>
 
             <div style={{
                 borderTop: "1px solid  #e5e8e8 ",
@@ -124,7 +124,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
 
             <div style={{display: "flex"}}>
 
-                <div className={'card'} style={{height: 400, width: 400, marginTop: 10, marginRight: 5}}>
+                <div className={'card'} style={{height: 400, flex: 1, marginTop: 10, marginRight: 5}}>
                     <div className={'card-header'}>
                         Position Exposure
                     </div>
@@ -133,7 +133,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                         values={expData}/>
                 </div>
 
-                <div className={'card'} style={{height: 400, width: 400, marginTop: 10, marginRight: 5}}>
+                <div className={'card'} style={{height: 400, flex: 1, marginTop: 10, marginRight: 5}}>
                     <div className={'card-header'}>
                         Marginal Risk Contribution
                     </div>
@@ -162,7 +162,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
             </div>
 
             <div style={{display: "flex"}}>
-                <div className={'card'} style={{flex: 1, height: 400, width: 400, marginTop: 10, marginLeft: 5}}>
+                <div className={'card'} style={{flex: 1, height: 400, marginTop: 10, marginLeft: 5}}>
                     <div className={'card-header'} style={{
                         justifyContent: 'space-between'
                     }}>
@@ -180,7 +180,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                     ]} labels={std_dates}/>
                 </div>
 
-                <div className={'card'} style={{flex: 1, height: 400, width: 400, marginTop: 10, marginLeft: 5}}>
+                <div className={'card'} style={{flex: 1, height: 400, marginTop: 10, marginLeft: 5}}>
                     <div className={'card-header'} style={{
                         justifyContent: 'space-between'
                     }}>
@@ -191,7 +191,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                         values={exp_hist}/>
                 </div>
 
-                <div className={'card'} style={{flex: 1, height: 400, width: 400, marginTop: 10, marginLeft: 5}}>
+                <div className={'card'} style={{flex: 1, height: 400, marginTop: 10, marginLeft: 5}}>
                     <div className={'card-header'} style={{
                         justifyContent: 'space-between'
                     }}>

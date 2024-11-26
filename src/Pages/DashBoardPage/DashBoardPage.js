@@ -126,17 +126,19 @@ const DashBoardPage = () => {
     const navValues = lastRecordData.map((d) => d.holding_nav)
     const realizedPnl = summedPnl[0]['data']
     const unrealizedPnl = summedPnl[1]['data']
-    // console.log(summedPnl)
-    // console.log(cumulativeUnrealized)
+    const totalNav = lastRecordData.map((n) => n.holding_nav).reduce((acc, curr) => acc + curr, 0).toFixed(2)
+    const totalCash = lastRecordData.map((n) => n.cash_val).reduce((acc, curr) => acc + curr, 0).toFixed(2)
+    // console.log(lastRecordData)
+
     return (
         <div >
 
-            <div style={{display: "flex"}}>
-                <div style={{height: 500, width: 350, padding: 10}}>
+            <div style={{display: "flex", width: '100%'}}>
+                <div style={{height: 500, width: 300, padding: 10}}>
                     <PortfolioGroup/>
                 </div>
 
-                <div style={{width: '100%'}}>
+                <div style={{flex: 1}}>
                     <div style={{padding: 10}}>
                         <div style={{
                             borderTop: "1px solid  #e5e8e8 ",
@@ -147,21 +149,28 @@ const DashBoardPage = () => {
                             alignItems: 'center'
                         }}>
                             <span style={{fontWeight: "bold"}}>NAV</span>
+                            <div>
+                                <span style={{fontWeight: "bold", marginRight: 10}}>Total</span>
+                                <span style={{fontWeight: "bold", marginRight: 10}}>{totalNav}</span>
+                                <span style={{fontWeight: "bold", marginRight: 10}}>Cash</span>
+                                <span style={{fontWeight: "bold"}}>{totalCash}</span>
+                            </div>
 
                         </div>
                         <div style={{display: "flex", height: 350, marginTop: 10}}>
-                            <div className={'card'} style={{flex: 1, marginRight: 5}}>
+                            <div className={'card'} style={{flex: 2, marginRight: 5}}>
                                 <StackedBarChart data={data} labels={labels} yName={'NAV'}/>
                             </div>
 
-                            <div className={'card'} style={{flex: 1, marginRight: 5, marginLeft: 5}}>
+                            <div className={'card'} style={{flex: 2, marginRight: 5, marginLeft: 5}}>
                                 <StackedBarChart data={summedData} labels={labels} yName={'NAV'}/>
                             </div>
-                            <div className={'card'} style={{height: '100%', marginLeft: 5}}>
+                            <div className={'card'} style={{height: '100%', flex: 1, marginLeft: 5}}>
                                 <PieChart values={navValues} labels={portfolios}/>
                             </div>
                         </div>
                     </div>
+
                     <PositionExposures portfolioCodes={['SO1', 'BO1']} server={server}/>
 
                     <div style={{padding: 10}}>

@@ -97,8 +97,8 @@ const PortfolioTransactionPnl = ( {unrealized, realized} ) => {
     const lastUnrel = Math.round(unrealized[unrealized.length - 1] * 100) / 100
     const lastRel = Math.round(realized[realized.length - 1] * 100) / 100
     return(
-        <Card className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
-            <Card.Header>
+        <div className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
+            <div className={'card-header'}>
                 <div style={{display: 'flex'}}>
                     <div>
                         Cumulative Pnl
@@ -129,7 +129,7 @@ const PortfolioTransactionPnl = ( {unrealized, realized} ) => {
                         }}>{lastTotal}</span>
                     </div>
                 </div>
-            </Card.Header>
+            </div>
             <div style={{height: '100%'}}>
                 <Chart
                     options={chartConfig.options}
@@ -138,7 +138,7 @@ const PortfolioTransactionPnl = ( {unrealized, realized} ) => {
                     width="100%"
                     height="100%"/>
             </div>
-        </Card>
+        </div>
     )
 }
 export default PortfolioTransactionPnl;
