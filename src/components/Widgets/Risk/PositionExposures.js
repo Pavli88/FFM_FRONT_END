@@ -18,6 +18,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
             "port_std": 0,
             "lev_exp": 0,
             "risk_structure": [],
+            "risk_contribs": [],
             "leverage": 0
         }
     }]);
@@ -50,8 +51,8 @@ export const PositionExposures = ({portfolioCodes, server}) => {
     const lastRecordData = exposureData[exposureData.length - 1]['data']
     const expData = lastRecordData['exposures'].map((d) => d.weight)
     const expLabel = lastRecordData['exposures'].map((d) => d.instrument__name)
-    const riskExpData = lastRecordData['risk_structure'].map((d) => d.value)
-    const riskExpLabel = lastRecordData['risk_structure'].map((d) => d.label)
+    const riskExpData = lastRecordData['risk_contribs'].map((d) => d.value)
+    const riskExpLabel = lastRecordData['risk_contribs'].map((d) => d.label)
     const normalRisks = exposureData.map((d) => d.data.port_std / d.data.leverage)
     const levFreeRisk = exposureData[exposureData.length - 1]['data']['port_std'] / exposureData[exposureData.length - 1]['data']['leverage']
     const totalRisk = exposureData[exposureData.length - 1]['data']['port_std']
