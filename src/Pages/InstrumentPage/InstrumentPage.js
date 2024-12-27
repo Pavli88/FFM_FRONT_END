@@ -1,13 +1,10 @@
 import "./InstrumentPage.css"
 import {useContext, useEffect, useState, useRef} from "react";
 import InstrumentSearchBar from "./InstrumentSearchBar/InstrumentSearchBar";
-import InstrumentInfo from "./InstrumentInfo/InstrumentInfo";
 import InstrumentResuts from "./InstrumentResults/InstrumentResuts";
-import InstrumentBrokerTickers from "./InstrumentInfo/InstrumentBrokerTickers/InstrumentBrokerTickers";
 import ServerContext from "../../context/server-context";
 import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-context";
 import axios from "axios";
-import InstrumentPrices from "./InstrumentInfo/InstrumentPrices/InstrumentPrices";
 import InstrumentPricing from "./InstrumentPricing/InstrumentPricing";
 
 const InstrumentPage = () => {

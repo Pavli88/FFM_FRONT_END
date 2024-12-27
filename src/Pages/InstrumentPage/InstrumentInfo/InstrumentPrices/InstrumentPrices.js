@@ -133,7 +133,7 @@ const InstrumentPrices = (props) => {
                             <Select
                                 options={priceSources}
                                 defaultValue={priceSource}
-                                onChange={(e) => setPriceSource(e)}
+                                onChange={(e) => setPriceSource(e.value)}
                                 className={'instrument-search-input-field'}
                             />
                         </div>
