@@ -31,7 +31,7 @@ const InstrumentPricesTable = (props) => {
         axios.get(props.server + 'instruments/get/prices/by_date', {
             params: {
                 date: dateRef.current.value,
-                inst_code: selectedInstrumentData[0]['id'],
+                instrument_id: selectedInstrumentData[0]['id'],
                 source: selectedInstrumentData[0]['source'],
             }
         })

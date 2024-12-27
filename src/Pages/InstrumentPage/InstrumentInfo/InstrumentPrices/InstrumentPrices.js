@@ -9,6 +9,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import DateContext from "../../../../context/date-context";
+import Select from "react-select";
 
 const InstrumentPrices = (props) => {
     const currentDate = useContext(DateContext).currentDate
@@ -17,6 +18,7 @@ const InstrumentPrices = (props) => {
     const isMounted = useRef(false);
     const [priceData, setPriceData] = useState([{}]);
     const [selectedPriceID, setSelectedPrice] = useState({});
+    const [priceSource, setPriceSource] = useState("oanda");
     const dateRef = useRef();
     const priceRef = useRef();
 
@@ -37,9 +39,10 @@ const InstrumentPrices = (props) => {
 
     const saveNewPrice = async() => {
         const response = await axios.post(props.server + 'instruments/new/price/', {
-            inst_code: props.instrument.id,
+            instrument_id: props.instrument.id,
             date: dateRef.current.value,
             price: priceRef.current.value,
+            source: priceSource
         })
         alert(response.data.response)
         fetchPrices(queryDate);
@@ -49,7 +52,7 @@ const InstrumentPrices = (props) => {
         const response = await axios.get(props.server + 'instruments/get/price/', {
             params: {
                 date__gte: date,
-                inst_code: props.instrument.id
+                instrument_id: props.instrument.id
             }
         })
         setPriceData(response.data);
@@ -62,6 +65,11 @@ const InstrumentPrices = (props) => {
         alert(response.data.response)
         fetchPrices();
     };
+
+    const priceSources = [
+        {value: 'oanda', label: 'Oanda'},
+        {value: 'saxo', label: 'Saxo Bank'},
+    ];
 
     return (
         <div style={{width: '100%', height: '100%', paddingLeft: 15}}>
@@ -97,24 +105,46 @@ const InstrumentPrices = (props) => {
                 <Modal.Title>New Price - {props.instrument.name}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form style={{width: '100%'}}>
+                <div style={{width: '100%'}}>
 
-                    <Form.Group>
-                        <Form.Label>Date</Form.Label>
-                        <Form.Control ref={dateRef} defaultValue={currentDate} type={'date'}></Form.Control>
-                    </Form.Group>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div className={'input-label'}>
+                            Date
+                        </div>
+                        <div style={{width: 300, position: "absolute", right: 15}}>
+                            <input ref={dateRef} defaultValue={currentDate} type={'date'}></input>
+                        </div>
+                    </div>
 
-                    <Form.Group>
-                        <Form.Label>Price</Form.Label>
-                        <Form.Control ref={priceRef} type={'number'}></Form.Control>
-                    </Form.Group>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div className={'input-label'}>
+                            Price
+                        </div>
+                        <div style={{width: 300, position: "absolute", right: 15}}>
+                            <input ref={priceRef} type={'number'}></input>
+                        </div>
+                    </div>
 
-                </Form>
+                    <div style={{display: "flex", margin: 5}}>
+                        <div className={'input-label'}>
+                            Source
+                        </div>
+                        <div style={{width: 300, position: "absolute", right: 15}}>
+                            <Select
+                                options={priceSources}
+                                defaultValue={priceSource}
+                                onChange={(e) => setPriceSource(e)}
+                                className={'instrument-search-input-field'}
+                            />
+                        </div>
+                    </div>
+
+                </div>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="primary" onClick={saveNewPrice} style={{width: '100%'}}>Save</Button>
-            </Modal.Footer>
-        </Modal>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={saveNewPrice} style={{width: '100%'}}>Save</Button>
+                </Modal.Footer>
+            </Modal>
 
         </div>
     )

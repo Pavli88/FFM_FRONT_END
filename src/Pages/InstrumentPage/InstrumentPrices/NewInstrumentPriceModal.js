@@ -25,7 +25,7 @@ const NewInstrumentPriceModal = (props) => {
         event.preventDefault();
         console.log(source)
         axios.post(props.server + 'instruments/new/price/', {
-            inst_code: selectedInstrumentData[0]['id'],
+            instrument_id: selectedInstrumentData[0]['id'],
             price: priceRef.current.value,
             date: dateRef.current.value,
             source: source,
