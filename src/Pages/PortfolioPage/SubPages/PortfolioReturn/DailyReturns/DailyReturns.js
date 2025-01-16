@@ -9,24 +9,29 @@ const DailyReturns = ( {returns, dates, changeReturnType} ) => {
     const x = {
         options: {
             chart: {
-                toolbar: true,
-                type: 'bar',
-                zoom: {
-                    enabled: true,
-                    type: 'x',
-                    autoScaleYaxis: false,
-                    zoomedArea: {
-                        fill: {
-                            color: '#90CAF9',
-                            opacity: 0.4
-                        },
-                        stroke: {
-                            color: '#0D47A1',
-                            opacity: 0.4,
-                            width: 1
-                        }
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download: true, // Enables the download button
                     }
-                }
+                },
+                type: 'bar',
+                // zoom: {
+                //     enabled: true,
+                //     type: 'x',
+                //     autoScaleYaxis: false,
+                //     zoomedArea: {
+                //         fill: {
+                //             color: '#90CAF9',
+                //             opacity: 0.4
+                //         },
+                //         stroke: {
+                //             color: '#0D47A1',
+                //             opacity: 0.4,
+                //             width: 1
+                //         }
+                //     }
+                // }
             },
             colors: [function(value){
                 if (value["value"] < 0){
@@ -76,10 +81,10 @@ const DailyReturns = ( {returns, dates, changeReturnType} ) => {
             fill: {
                 opacity: 1
             },
-            legend: {
-                position: 'right',
-                offsetY: 40
-            },
+            // legend: {
+            //     position: 'right',
+            //     offsetY: 40
+            // },
             tooltip: {
                 y: {
                     formatter: function (val) {

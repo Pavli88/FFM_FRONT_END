@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useContext, useEffect, useState, useMemo} from "react";
 import ServerContext from "../../context/server-context";
-import DashBoardNavWidget from "./DashBoardNavWidget/DashBoardNavWidget";
+import DailyReturns from "../PortfolioPage/SubPages/PortfolioReturn/DailyReturns/DailyReturns";
 import DateContext from "../../context/date-context";
 import {BarChartGrouped, StackedBarChart} from "../../components/Charts/BarCharts";
 import {PieChart} from "../../components/Charts/PieCharts";
@@ -106,6 +106,8 @@ const DashBoardPage = () => {
     const server = useContext(ServerContext).server;
     const currentDate = useContext(DateContext).currentDate;
     const [currentHolding, setCurrentHolding] = useState([]);
+    const [totalReturns, setTotalReturns] = useState([]);
+    const [portGroup, setPortGroup] = useState("PBS1_GROUP_GROUP")
 
     const {
         portfolioNavData,
@@ -116,6 +118,20 @@ const DashBoardPage = () => {
     // const portCodes = useMemo(() => portfolioNavData.map((data) => data.portfolio_code), [portfolioNavData]);
     // const groupedNavs = useMemo(() => groupedNav.map((data) => Math.round(data.total * 100) / 100), [groupedNav]);
     // const portTypes = useMemo(() => groupedNav.map((data) => data.portfolio_type), [groupedNav]);
+
+    const fetchAllData = async () => {
+        try {
+            const [retRes] = await Promise.all([
+                axios.post(`${server}portfolios/get/total_returns/`, {
+                    portfolio_code: portGroup,
+                    period: returnTypes
+                }),
+            ]);
+            setTotalReturns(retRes.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
 
     const data = transformPortfolioData(portfolioNavData)
     const summedData = transformSummedData(portfolioNavData, {labels: ['Positions', 'Cash', 'Margin'], values: ['pos_val', 'cash_val', 'margin']})
@@ -128,7 +144,11 @@ const DashBoardPage = () => {
     const unrealizedPnl = summedPnl[1]['data']
     const totalNav = lastRecordData.map((n) => n.holding_nav).reduce((acc, curr) => acc + curr, 0).toFixed(2)
     const totalCash = lastRecordData.map((n) => n.cash_val).reduce((acc, curr) => acc + curr, 0).toFixed(2)
-    // console.log(lastRecordData)
+    const [returnTypes, setReturnsTypes] = useState('dtd')
+
+    useEffect(() => {
+        if (portGroup) fetchAllData();
+    }, [portGroup, returnTypes]);
 
     return (
         <div >
@@ -182,7 +202,7 @@ const DashBoardPage = () => {
                             justifyContent: 'space-between',
                             alignItems: 'center'
                         }}>
-                            <span style={{fontWeight: "bold"}}>Performance</span>
+                            <span style={{fontWeight: "bold"}}>Profit and Loss</span>
 
                         </div>
                         <div style={{display: "flex", height: 350, marginTop: 10}}>
@@ -199,6 +219,33 @@ const DashBoardPage = () => {
                                 <TradingMetrics profits={realizedPnl}
                                                 maxUnrealized={Math.min(...cumulativeSum(unrealizedPnl))}/>
                             </div>
+                        </div>
+                    </div>
+
+                    <div style={{padding: 10}}>
+                        <div style={{
+                            borderTop: "1px solid  #e5e8e8 ",
+                            borderBottom: "1px solid  #e5e8e8 ",
+                            padding: "5px",
+                            display: "flex",
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}>
+                            <span style={{fontWeight: "bold"}}>Performance</span>
+
+                        </div>
+
+                        <div style={{display: "flex", height: 350, marginTop: 10}}>
+                            <div className={'card'} style={{flex: 1, marginRight: 5}}>
+                                <DailyReturns returns={totalReturns.map((d) => d.total_return)}
+                                              dates={totalReturns.map((d) => d.end_date)}
+                                              changeReturnType={(value) => setReturnsTypes(value.value)}
+                                />
+                            </div>
+                            <div className={'card'} style={{flex: 2, marginRight: 5, marginLeft: 5}}>
+
+                            </div>
+
                         </div>
                     </div>
 
