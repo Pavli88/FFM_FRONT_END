@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import DateContext from "../../../context/date-context";
 import axios from "axios";
-import {BarChart} from "../../Charts/BarCharts";
+import {BarChart, BarChartSorted} from "../../Charts/BarCharts";
 import {PieChart} from "../../Charts/PieCharts";
 import {Heatmap} from "../../Charts/Heatmaps";
 import {LineChart} from "../../Charts/LineCharts";
@@ -129,7 +129,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                     <div className={'card-header'}>
                         Position Exposure
                     </div>
-                    <BarChart
+                    <BarChartSorted
                         labels={expLabel}
                         values={expData}/>
                 </div>
@@ -138,7 +138,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                     <div className={'card-header'}>
                         Marginal Risk Contribution
                     </div>
-                    <BarChart
+                    <BarChartSorted
                         labels={riskExpLabel}
                         values={riskExpData}/>
                 </div>

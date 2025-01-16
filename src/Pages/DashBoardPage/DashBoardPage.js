@@ -107,7 +107,7 @@ const DashBoardPage = () => {
     const currentDate = useContext(DateContext).currentDate;
     const [currentHolding, setCurrentHolding] = useState([]);
     const [totalReturns, setTotalReturns] = useState([]);
-    const [portGroup, setPortGroup] = useState("PBS1_GROUP_GROUP")
+    const [portGroup, setPortGroup] = useState("PBS1_GROUP")
 
     const {
         portfolioNavData,

@@ -101,6 +101,58 @@ export const BarChart = ({ labels, values }) => {
     );
 }
 
+export const BarChartSorted = ({ labels, values }) => {
+    // Combine labels and values for sorting
+    const sortedData = labels
+        .map((label, index) => ({ label, value: values[index] })) // Pair labels and values
+        .sort((a, b) => a.value - b.value); // Sort by value (ascending order)
+
+    // Extract sorted labels and values
+    const sortedLabels = sortedData.map((item) => item.label);
+    const sortedValues = sortedData.map((item) => item.value);
+
+    const chartOptions = {
+        chart: {
+            type: 'bar',
+        },
+        series: [{
+            name: 'Values',
+            data: sortedValues, // Use sorted values
+        }],
+        xaxis: {
+            categories: sortedLabels, // Use sorted labels
+        },
+        dataLabels: {
+            enabled: false,
+        },
+        yaxis: {
+            labels: {
+                formatter: function (val) {
+                    // Convert to percentage format
+                    return (val * 100).toFixed(2) + '%';
+                }
+            },
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200,
+                },
+                legend: {
+                    position: 'bottom',
+                },
+            },
+        }],
+    };
+
+    return (
+        <div style={{ height: '100%' }}>
+            <Chart options={chartOptions} series={chartOptions.series} type="bar" height="100%" />
+        </div>
+    );
+};
+
 export const StackedBarChart = ( { labels, data, yName} ) => {
     const options = {
         chart: {
