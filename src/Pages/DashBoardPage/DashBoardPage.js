@@ -206,19 +206,21 @@ const DashBoardPage = () => {
 
                         </div>
                         <div style={{display: "flex", height: 350, marginTop: 10}}>
-                            <div className={'card'} style={{flex: 1, marginRight: 5}}>
-                                <StackedBarChart data={summedPnl} labels={labels} yName={'Profit & Loss'}/>
-                            </div>
-                            <div style={{flex: 1, height: 350, marginLeft: 10}}>
-                                <PortfolioTransactionPnl
-                                    unrealized={cumulativeSum(unrealizedPnl)}
-                                    realized={cumulativeSum(realizedPnl)}
-                                />
-                            </div>
-                            <div style={{height: 350, marginLeft: 10, width: 300}}>
-                                <TradingMetrics profits={realizedPnl}
-                                                maxUnrealized={Math.min(...cumulativeSum(unrealizedPnl))}/>
-                            </div>
+                                <div className={'card'} style={{flex: 1, marginRight: 5}}>
+                                    <StackedBarChart data={summedPnl} labels={labels} yName={'Profit & Loss'}/>
+                                </div>
+
+                                <div style={{flex: 1, height: 350, marginLeft: 10}}>
+                                    <PortfolioTransactionPnl
+                                        unrealized={cumulativeSum(unrealizedPnl)}
+                                        realized={cumulativeSum(realizedPnl)}
+                                    />
+                                </div>
+                                <div style={{height: 350, marginLeft: 10, width: 300}}>
+                                    <TradingMetrics profits={realizedPnl}
+                                                    maxUnrealized={Math.min(...cumulativeSum(unrealizedPnl))}/>
+                                </div>
+
                         </div>
                     </div>
 

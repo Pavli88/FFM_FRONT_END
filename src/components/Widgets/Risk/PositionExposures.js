@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from "react";
 import DateContext from "../../../context/date-context";
 import axios from "axios";
 import {BarChart, BarChartSorted} from "../../Charts/BarCharts";
-import {PieChart} from "../../Charts/PieCharts";
+import {PieChart, PieChartSorted} from "../../Charts/PieCharts";
 import {Heatmap} from "../../Charts/Heatmaps";
 import {LineChart} from "../../Charts/LineCharts";
 
@@ -147,7 +147,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                     <div className={'card-header'}>
                         Risk Exposure Concentration
                     </div>
-                    <PieChart values={riskExpData} labels={riskExpLabel}/>
+                    <PieChartSorted values={riskExpData} labels={riskExpLabel}/>
                 </div>
 
                 <div className={'card'} style={{height: 400, width: 400, marginTop: 10, marginLeft: 5}}>

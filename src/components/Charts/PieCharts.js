@@ -80,4 +80,53 @@ export const PieChart = ({ labels, values }) => {
     );
 }
 
+export const PieChartSorted = ({ labels, values }) => {
+    // Combine labels and values into an array of objects for sorting
+    const data = labels.map((label, index) => ({
+        label: label,
+        value: values[index],
+    }));
+
+    // Sort the data based on the values in descending order
+    const sortedData = data.sort((a, b) => b.value - a.value);
+
+    // Extract sorted labels and values
+    const sortedLabels = sortedData.map(item => item.label);
+    const sortedValues = sortedData.map(item => item.value);
+
+    // Chart options
+    const chartOptions = {
+        chart: {
+            type: 'pie',
+        },
+        labels: sortedLabels,
+        legend: {
+            position: 'top', // Place the legend on top
+            horizontalAlign: 'center', // Center the legend horizontally
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 300
+                },
+                legend: {
+                    position: 'top'
+                }
+            }
+        }]
+    };
+
+    return (
+        <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            flexDirection: 'column'
+        }}>
+            <Chart options={chartOptions} series={sortedValues} type="pie" width="100%" height="90%" />
+        </div>
+    );
+};
 
