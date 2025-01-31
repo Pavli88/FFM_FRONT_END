@@ -48,6 +48,7 @@ const ProfilPage = () => {
             saveNewCashflow: setNewCashflow,
         }}>
             <div className={'page-container'}>
+                <p>Test</p>
                 <div style={{width: '100%', height: '100%', padding: 20}}>
                     <Tabs tabs={tabs}/>
                 </div>
