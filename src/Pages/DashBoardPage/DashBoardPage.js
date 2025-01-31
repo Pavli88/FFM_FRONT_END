@@ -107,12 +107,12 @@ const transformSummedData = (dateRecords, fieldMapping) => {
 const DashBoardPage = () => {
     const server = useContext(ServerContext).server;
     const currentDate = useContext(DateContext).currentDate;
-    const { portGroup } = useContext(DashboardContext);
+    const {portGroup} = useContext(DashboardContext);
     const [childPortfolios, setChildPortfolios] = useState([]);
     const [totalReturns, setTotalReturns] = useState([]);
     const [isMenuOpen, setIsMenuOpen] = useState(true);
     const [returnTypes, setReturnsTypes] = useState('dtd');
-
+    const [portfolioNavData, setPortfolioNavData] = useState([]);
     // Fetch child portfolios whenever portGroup changes
     useEffect(() => {
         const fetchPortChildCodes = async () => {
@@ -128,8 +128,6 @@ const DashBoardPage = () => {
     }, [portGroup]);
 
     // Fetch portfolio data when portGroup, returnTypes, or childPortfolios change
-    const { portfolioNavData } = useDashboardData(server, currentDate, childPortfolios);
-
     useEffect(() => {
         const fetchAllData = async () => {
             try {
@@ -146,8 +144,48 @@ const DashBoardPage = () => {
         if (portGroup) fetchAllData();
     }, [portGroup, returnTypes]);
 
+    useEffect(() => {
+        const fetchNavData = async () => {
+            try {
+                const [portfolioNavRes] = await Promise.all([
+                    axios.post(`${server}portfolios/get/nav/`, {
+                        portfolio_code__in: childPortfolios
+                    }),
+                ]);
+
+                setPortfolioNavData(portfolioNavRes.data);
+            } catch (error) {
+                console.error("Error fetching dashboard data:", error);
+            }
+        };
+
+        if (childPortfolios && childPortfolios.length > 0) {
+            fetchNavData();
+        }
+    }, [childPortfolios])
+
+    const data = transformPortfolioData(portfolioNavData)
+    const summedData = transformSummedData(portfolioNavData, {
+        labels: ['Positions', 'Cash', 'Margin'],
+        values: ['pos_val', 'cash_val', 'margin']
+    })
+    const summedPnl = transformSummedData(portfolioNavData, {
+        labels: ['Realized', 'Unrealized'],
+        values: ['pnl', 'unrealized_pnl']
+    })
+    const realizedPnl = summedPnl[0]['data']
+    const unrealizedPnl = summedPnl[1]['data']
+
+    const labels = portfolioNavData.map((d) => d.date)
+    const lastRecordData = portfolioNavData.length > 0 ? portfolioNavData[portfolioNavData.length - 1]['records'] : []
+    const portfolios = lastRecordData.map((d) => d.portfolio_code)
+    const navValues = lastRecordData.map((d) => d.holding_nav)
+
+    const totalNav = lastRecordData.map((n) => n.holding_nav).reduce((acc, curr) => acc + curr, 0).toFixed(2)
+    const totalCash = lastRecordData.map((n) => n.cash_val).reduce((acc, curr) => acc + curr, 0).toFixed(2)
+
     return (
-        <div style={{ display: "flex", width: "100%", height: "100%" }}>
+        <div style={{display: "flex", width: "100%", height: "100%"}}>
             {/* Side Menu */}
             <div style={{
                 width: isMenuOpen ? "500px" : "50px",
@@ -171,7 +209,7 @@ const DashBoardPage = () => {
                     transition: "visibility 0.3s, opacity 0.3s ease",
                     height: '400px'
                 }}>
-                    <PortfolioGroup allowSelect={true} />
+                    <PortfolioGroup allowSelect={true}/>
                 </div>
 
                 {/* Open/Close Button */}
@@ -194,7 +232,7 @@ const DashBoardPage = () => {
                         justifyContent: "center",
                     }}
                 >
-                    {isMenuOpen ? <BsChevronLeft /> : <BsChevronRight />}
+                    {isMenuOpen ? <BsChevronLeft/> : <BsChevronRight/>}
                 </div>
             </div>
 
@@ -205,7 +243,7 @@ const DashBoardPage = () => {
                 flex: 1,
                 padding: 10,
             }}>
-                <div style={{ padding: 10 }}>
+                <div style={{padding: 10}}>
                     {/* Portfolio Info */}
                     <div style={{
                         borderTop: "1px solid #e5e8e8",
@@ -215,39 +253,80 @@ const DashBoardPage = () => {
                         justifyContent: "space-between",
                         alignItems: "center"
                     }}>
-                        <span style={{ fontWeight: "bold" }}>{portGroup}</span>
+                        <span style={{fontWeight: "bold"}}>{portGroup}</span>
                     </div>
                 </div>
 
-                <div style={{ padding: 10 }}>
-                    {/* NAV Section */}
+
+                <div style={{padding: 10}}>
                     <div style={{
-                        borderTop: "1px solid #e5e8e8",
-                        borderBottom: "1px solid #e5e8e8",
+                        borderTop: "1px solid  #e5e8e8 ",
+                        borderBottom: "1px solid  #e5e8e8 ",
                         padding: "5px",
                         display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center"
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
                     }}>
-                        <span style={{ fontWeight: "bold" }}>NAV</span>
-                    </div>
-
-                    {/* Charts Section */}
-                    <div style={{ display: "flex", height: 350, marginTop: 10 }}>
-                        <div className={'card'} style={{ flex: 2, marginRight: 5 }}>
-                            <StackedBarChart data={portfolioNavData} labels={portfolioNavData.map(d => d.date)} yName={'NAV'} />
+                        <span style={{fontWeight: "bold"}}>NAV</span>
+                        <div>
+                            <span style={{fontWeight: "bold", marginRight: 10}}>Total</span>
+                            <span style={{fontWeight: "bold", marginRight: 10}}>{totalNav}</span>
+                            <span style={{fontWeight: "bold", marginRight: 10}}>Cash</span>
+                            <span style={{fontWeight: "bold"}}>{totalCash}</span>
                         </div>
-                        <div className={'card'} style={{ flex: 1, marginLeft: 5 }}>
-                            <PieChart values={portfolioNavData.map(d => d.holding_nav)} labels={portfolioNavData.map(d => d.portfolio_code)} />
+
+                    </div>
+                    <div style={{display: "flex", height: 350, marginTop: 10}}>
+                        <div className={'card'} style={{flex: 2, marginRight: 5}}>
+                            <StackedBarChart data={data} labels={labels} yName={'NAV'}/>
+                        </div>
+
+                        <div className={'card'} style={{flex: 2, marginRight: 5, marginLeft: 5}}>
+                            <StackedBarChart data={summedData} labels={labels} yName={'NAV'}/>
+                        </div>
+                        <div className={'card'} style={{height: '100%', flex: 1, marginLeft: 5}}>
+                            <PieChart values={navValues} labels={portfolios}/>
                         </div>
                     </div>
                 </div>
 
                 {/* Position Exposures */}
-                <PositionExposures portfolioCodes={childPortfolios} server={server} />
+                <PositionExposures portfolioCodes={childPortfolios} server={server}/>
+
+                {/*pnl*/}
+                <div style={{padding: 10}}>
+                    <div style={{
+                        borderTop: "1px solid  #e5e8e8 ",
+                        borderBottom: "1px solid  #e5e8e8 ",
+                        padding: "5px",
+                        display: "flex",
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}>
+                        <span style={{fontWeight: "bold"}}>Profit and Loss</span>
+
+                    </div>
+                    <div style={{display: "flex", height: 350, marginTop: 10}}>
+                        <div className={'card'} style={{flex: 1, marginRight: 5}}>
+                            <StackedBarChart data={summedPnl} labels={labels} yName={'Profit & Loss'}/>
+                        </div>
+
+                        <div style={{flex: 1, height: 350, marginLeft: 10}}>
+                            <PortfolioTransactionPnl
+                                unrealized={cumulativeSum(unrealizedPnl)}
+                                realized={cumulativeSum(realizedPnl)}
+                            />
+                        </div>
+                        <div style={{height: 350, marginLeft: 10, width: 300}}>
+                            <TradingMetrics profits={realizedPnl}
+                                            maxUnrealized={Math.min(...cumulativeSum(unrealizedPnl))}/>
+                        </div>
+
+                    </div>
+                </div>
 
                 {/* Performance Section */}
-                <div style={{ padding: 10 }}>
+                <div style={{padding: 10}}>
                     <div style={{
                         borderTop: "1px solid #e5e8e8",
                         borderBottom: "1px solid #e5e8e8",
@@ -256,11 +335,11 @@ const DashBoardPage = () => {
                         justifyContent: "space-between",
                         alignItems: "center"
                     }}>
-                        <span style={{ fontWeight: "bold" }}>Performance</span>
+                        <span style={{fontWeight: "bold"}}>Performance</span>
                     </div>
 
-                    <div style={{ display: "flex", height: 350, marginTop: 10 }}>
-                        <div className={'card'} style={{ flex: 1, marginRight: 5 }}>
+                    <div style={{display: "flex", height: 350, marginTop: 10}}>
+                        <div className={'card'} style={{flex: 1, marginRight: 5}}>
                             <DailyReturns
                                 returns={totalReturns.map(d => d.total_return)}
                                 dates={totalReturns.map(d => d.end_date)}
