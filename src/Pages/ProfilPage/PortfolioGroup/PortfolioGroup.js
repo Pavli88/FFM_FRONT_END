@@ -5,129 +5,12 @@ import NewPortfolio from "../ProfilePortfolios/NewPortfolio";
 import {useContext, useEffect, useRef, useState} from "react";
 import UserContext from "../../../context/user-context";
 import ServerContext from "../../../context/server-context";
+import DashboardContext from "../../../context/dashboard-context";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import DateContext from "../../../context/date-context";
 import Card from "react-bootstrap/Card";
-
-const TreeNode = ({node, onRightClick}) => {
-    const [expanded, setExpanded] = useState(false);
-    const hasChildren = node.children && node.children.length > 0;
-
-    const handleRightClick = (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        onRightClick(event, node);  // Pass the right-click event and node to the parent
-    };
-
-    return (
-        <div style={{marginLeft: 10, marginRight: 10, marginTop: 10}}
-             onContextMenu={handleRightClick}
-             className={node.portfolio_type === 'Business' || node.portfolio_type === 'Portfolio Group' ? 'tree-node-parent' : 'tree-node-child'}>
-            <div onClick={() => setExpanded(!expanded)} style={{display: "flex"}}>
-                <div style={{paddingLeft: 20}}>
-                    {hasChildren && (expanded ? <BsDash/> : <BsPlus/>)}
-                </div>
-                <div style={{paddingLeft: 20}}>
-                    {node.name}
-                </div>
-                {/*<div style={{paddingLeft: 20}}>*/}
-                {/*    {node.portfolio_type}*/}
-                {/*</div>*/}
-                {/*<div style={{paddingLeft: 20}}>*/}
-                {/*    {node.portfolio_code}*/}
-                {/*</div>*/}
-            </div>
-            {hasChildren && expanded && (
-                <div>
-                    {node.children.map(child => (
-                        <TreeNode key={child.id} node={child} onRightClick={onRightClick}/>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-};
-
-const TreeView = ({data, update}) => {
-    const server = useContext(ServerContext)['server'];
-    const [contextMenu, setContextMenu] = useState(null);  // Manage context menu state
-    const [selectedNode, setSelectedNode] = useState(null);  // Track which node is selected
-    const [addModalShow, setAddModalShow] = useState(false);
-
-    // Function to handle the right-click and show the context menu
-    const handleRightClick = (event, node) => {
-        event.preventDefault();
-        setSelectedNode(node);  // Set the clicked node as the selected node
-        setContextMenu({
-            visible: true,
-            x: event.clientX,
-            y: 100
-        });
-    };
-
-    // Function to handle context menu option clicks
-    const handleMenuClick = async (action) => {
-        if (action === 'delete') {
-            const response = await axios.post(server + 'portfolios/delete/port_group/', {
-                id: selectedNode.id
-            })
-            if (response.data.success) {
-                update(selectedNode.id);
-            } else {
-                alert(response.data.message);
-            };
-
-        } else if (action === 'add-child') {
-            // Handle add child node logic
-            setAddModalShow(true);
-        }
-        setContextMenu(null);  // Close the context menu
-    };
-
-    // Close context menu when clicking outside
-    const handleOutsideClick = () => {
-        setContextMenu(null);
-    };
-
-    return (
-        <div onClick={handleOutsideClick} style={{position: 'relative', height: '100%'}}>
-            {data.map(node => (
-                <TreeNode key={node.id} node={node} onRightClick={handleRightClick}/>
-            ))}
-
-            {contextMenu?.visible && (
-                <ul
-                    style={{
-                        position: 'absolute',
-                        top: `${contextMenu.y}px`,
-                        left: `${contextMenu.x}px`,
-                        backgroundColor: 'white',
-                        border: '1px solid #ccc',
-                        padding: '10px',
-                        listStyleType: 'none',
-                        zIndex: 100,
-                        borderRadius: 10
-                    }}
-                    onClick={(e) => e.stopPropagation()}  // Prevent clicking inside from closing the menu
-                >
-                    {(selectedNode?.portfolio_type === 'Business' || selectedNode?.portfolio_type === 'Portfolio Group') && (
-                        <li onClick={() => handleMenuClick('add-child')}>Add Child</li>)}
-                    <li onClick={() => handleMenuClick('delete')}>Delete Node</li>
-                </ul>
-            )}
-            {selectedNode !== null &&
-                <AddModal
-                    show={addModalShow}
-                    hide={() => {
-                        setAddModalShow(false);
-                        update(selectedNode.id);
-                    }}
-                    data={selectedNode}/>}
-        </div>
-    );
-};
 
 const AddModal = (props) => {
     const server = useContext(ServerContext)['server'];
@@ -171,13 +54,136 @@ const AddModal = (props) => {
     )
 };
 
-const PortfolioGroup = () => {
-    const server = useContext(ServerContext)['server'];
-    const [portGroupDate, setPortGroupData] = useState([]);
+const TreeNode = ({ node, onRightClick }) => {
+    const [expanded, setExpanded] = useState(false);
+    const hasChildren = node.children && node.children.length > 0;
+
+    const handleRightClick = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        onRightClick(event, node);
+    };
+
+    return (
+        <div
+            style={{ marginLeft: 10, marginTop: 5 }}
+            onContextMenu={handleRightClick}
+            className={
+                node.portfolio_type === "Business" || node.portfolio_type === "Portfolio Group"
+                    ? "tree-node-parent"
+                    : "tree-node-child"
+            }
+        >
+            <div onClick={() => setExpanded(!expanded)} style={{display: "flex", alignItems: "center"}}>
+                <div style={{width: 20, textAlign: "center"}}>
+                    {hasChildren && (expanded ? <BsDash/> : <BsPlus/>)}
+                </div>
+                <div style={{flex: 1, paddingLeft: 10}}>{node.name}</div>
+                <div style={{flex: 1, paddingLeft: 10, fontSize: "0.9em", color: "#555"}}>
+                    {node.portfolio_code}
+                </div>
+                <div style={{flex: 1, paddingLeft: 20, fontSize: "0.9em", color: "#555"}}>
+                    {node.portfolio_type}
+                </div>
+            </div>
+
+            {hasChildren && expanded && (
+                <div>
+                    {node.children.map((child) => (
+                        <TreeNode key={child.id} node={child} onRightClick={onRightClick} />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const TreeView = ({ data, update, allowSelect = false }) => {
+    const server = useContext(ServerContext)["server"];
+    const [contextMenu, setContextMenu] = useState(null);
+    const [selectedNode, setSelectedNode] = useState(null);
+    const [addModalShow, setAddModalShow] = useState(false);
+    const { setPortGroup } = useContext(DashboardContext);
+    const handleRightClick = (event, node) => {
+        event.preventDefault();
+        setSelectedNode(node);
+        setContextMenu({ visible: true, x: event.clientX, y: event.clientY });
+    };
+
+    const handleMenuClick = async (action) => {
+        if (action === "delete") {
+            const response = await axios.post(server + "portfolios/delete/port_group/", { id: selectedNode.id });
+            if (response.data.success) update(selectedNode.id);
+            else alert(response.data.message);
+        } else if (action === "add-child") {
+            setAddModalShow(true);
+        } else if (action === "load") {
+            setPortGroup(selectedNode.portfolio_code)
+            // alert(`Loading portfolio: ${selectedNode.portfolio_code}`); // Placeholder for load functionality
+        }
+        setContextMenu(null);
+    };
+
+    const handleOutsideClick = () => setContextMenu(null);
+
+    return (
+        <div onClick={handleOutsideClick} style={{ position: "relative", height: "100%" }}>
+            {/*<div style={{ display: "flex", paddingBottom: 10, fontWeight: "bold", borderBottom: "1px solid #ccc" }}>*/}
+            {/*    <div style={{ flex: 1 }}>Portfolio Name</div>*/}
+            {/*    <div style={{ flex: 1, paddingLeft: 20 }}>Portfolio Code</div>*/}
+            {/*</div>*/}
+
+            {data.map((node) => (
+                <TreeNode key={node.id} node={node} onRightClick={handleRightClick} />
+            ))}
+
+            {contextMenu?.visible && (
+                <ul
+                    style={{
+                        position: "absolute",
+                        top: `${contextMenu.y}px`,
+                        left: `${contextMenu.x}px`,
+                        backgroundColor: "white",
+                        border: "1px solid #ccc",
+                        padding: "10px",
+                        listStyleType: "none",
+                        zIndex: 100,
+                        borderRadius: 10,
+                        boxShadow: "0px 2px 6px rgba(0,0,0,0.2)",
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {(selectedNode?.portfolio_type === "Business" || selectedNode?.portfolio_type === "Portfolio Group") && (
+                        <>
+                         {allowSelect && <li onClick={() => handleMenuClick("load")}>Load</li>}
+                            <li onClick={() => handleMenuClick("add-child")}>Add Child</li>
+                        </>
+                    )}
+                    <li onClick={() => handleMenuClick("delete")}>Delete Node</li>
+                </ul>
+            )}
+
+            {selectedNode !== null && (
+                <AddModal
+                    show={addModalShow}
+                    hide={() => {
+                        setAddModalShow(false);
+                        update(selectedNode.id);
+                    }}
+                    data={selectedNode}
+                />
+            )}
+        </div>
+    );
+};
+
+const PortfolioGroup = ({ allowSelect = false }) => {
+    const server = useContext(ServerContext)["server"];
+    const [portGroupData, setPortGroupData] = useState([]);
     const [node, setNode] = useState(null);
 
     const fetchPortGroupData = async () => {
-        const response = await axios.get(server + 'portfolios/get/port_groups/');
+        const response = await axios.get(server + "portfolios/get/port_groups/");
         setPortGroupData(response.data);
     };
 
@@ -185,36 +191,22 @@ const PortfolioGroup = () => {
         fetchPortGroupData();
     }, [node]);
 
-    const data = [
-        {id: 1, name: 'Parent 1', parent_id: 0},
-        {id: 2, name: 'Child 1.1', parent_id: 1},
-        {id: 3, name: 'Child 1.2', parent_id: 1},
-        {id: 4, name: 'Parent 2', parent_id: 0},
-        {id: 5, name: 'Child 2.1', parent_id: 4},
-        {id: 6, name: 'Child 2.2', parent_id: 4},
-        {id: 7, name: 'Subchild 1.2.1', parent_id: 3},
-    ];
-
     const buildTree = (data, parentId = 0) => {
         return data
-            .filter(item => item.parent_id === parentId)
-            .map(item => ({
-                ...item,
-                children: buildTree(data, item.id)
-            }));
+            .filter((item) => item.parent_id === parentId)
+            .map((item) => ({ ...item, children: buildTree(data, item.id) }));
     };
 
-    const treeData = buildTree(portGroupDate);
+    const treeData = buildTree(portGroupData);
 
     return (
-        <div className={'card'}>
-            <div className={'card-header'}>
-                Portfolios Structure
-            </div>
-            <div style={{overflow: "scroll", height: '100%'}}>
-                <TreeView data={treeData} update={(e)=>setNode(e)}/>
+        <div className={"card"}>
+            <div className={"card-header"}>Portfolios Structure</div>
+            <div style={{ overflow: "scroll", height: "100%" }}>
+                <TreeView data={treeData} update={(e) => setNode(e)} allowSelect={allowSelect}/>
             </div>
         </div>
-    )
+    );
 };
+
 export default PortfolioGroup;

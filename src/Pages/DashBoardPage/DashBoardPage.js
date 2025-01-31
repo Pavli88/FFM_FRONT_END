@@ -3,6 +3,7 @@ import {useContext, useEffect, useState, useMemo} from "react";
 import ServerContext from "../../context/server-context";
 import DailyReturns from "../PortfolioPage/SubPages/PortfolioReturn/DailyReturns/DailyReturns";
 import DateContext from "../../context/date-context";
+import DashboardContext from "../../context/dashboard-context";
 import {BarChartGrouped, StackedBarChart} from "../../components/Charts/BarCharts";
 import {PieChart} from "../../components/Charts/PieCharts";
 import {PositionExposures} from "../../components/Widgets/Risk/PositionExposures";
@@ -11,9 +12,10 @@ import {cumulativeSum} from "../../calculations/cumulative";
 import PortfolioTransactionPnl
     from "../PortfolioPage/SubPages/PortfolioReturn/PortfolioTransactionPnl/PortfolioTransactionPnl";
 import TradingMetrics from "../../calculations/tradeMetrics";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 // Custom hook for fetching dashboard data
-const useDashboardData = (server, currentDate) => {
+const useDashboardData = (server, currentDate, portCodes) => {
     const [data, setData] = useState({
         portfolioNavData: [],
     });
@@ -25,7 +27,7 @@ const useDashboardData = (server, currentDate) => {
                     portfolioNavRes
                 ] = await Promise.all([
                     axios.post(`${server}portfolios/get/nav/`,  {
-                        portfolio_code__in : ['SO1', 'BO1']
+                        portfolio_code__in : portCodes
                     }),
                 ]);
 
@@ -105,154 +107,168 @@ const transformSummedData = (dateRecords, fieldMapping) => {
 const DashBoardPage = () => {
     const server = useContext(ServerContext).server;
     const currentDate = useContext(DateContext).currentDate;
-    const [currentHolding, setCurrentHolding] = useState([]);
+    const { portGroup } = useContext(DashboardContext);
+    const [childPortfolios, setChildPortfolios] = useState([]);
     const [totalReturns, setTotalReturns] = useState([]);
-    const [portGroup, setPortGroup] = useState("PBS1_GROUP")
+    const [isMenuOpen, setIsMenuOpen] = useState(true);
+    const [returnTypes, setReturnsTypes] = useState('dtd');
 
-    const {
-        portfolioNavData,
-    } = useDashboardData(server, currentDate);
-    // console.log(portfolioNavData)
-    // // Memoized derived values
-    // const navs = useMemo(() => portfolioNavData.map((data) => Math.round(data.total * 100) / 100), [portfolioNavData]);
-    // const portCodes = useMemo(() => portfolioNavData.map((data) => data.portfolio_code), [portfolioNavData]);
-    // const groupedNavs = useMemo(() => groupedNav.map((data) => Math.round(data.total * 100) / 100), [groupedNav]);
-    // const portTypes = useMemo(() => groupedNav.map((data) => data.portfolio_type), [groupedNav]);
+    // Fetch child portfolios whenever portGroup changes
+    useEffect(() => {
+        const fetchPortChildCodes = async () => {
+            try {
+                const response = await axios.get(`${server}portfolios/group/${portGroup}/`);
+                setChildPortfolios(response.data.child_portfolios);
+            } catch (error) {
+                console.error("Error fetching child portfolios:", error);
+            }
+        };
 
-    const fetchAllData = async () => {
-        try {
-            const [retRes] = await Promise.all([
-                axios.post(`${server}portfolios/get/total_returns/`, {
-                    portfolio_code: portGroup,
-                    period: returnTypes
-                }),
-            ]);
-            setTotalReturns(retRes.data);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
+        if (portGroup) fetchPortChildCodes();
+    }, [portGroup]);
 
-    const data = transformPortfolioData(portfolioNavData)
-    const summedData = transformSummedData(portfolioNavData, {labels: ['Positions', 'Cash', 'Margin'], values: ['pos_val', 'cash_val', 'margin']})
-    const summedPnl = transformSummedData(portfolioNavData, {labels: ['Realized', 'Unrealized'], values: ['pnl', 'unrealized_pnl']})
-    const labels = portfolioNavData.map((d) => d.date)
-    const lastRecordData = portfolioNavData.length > 0 ? portfolioNavData[portfolioNavData.length - 1]['records']: []
-    const portfolios = lastRecordData.map((d) => d.portfolio_code)
-    const navValues = lastRecordData.map((d) => d.holding_nav)
-    const realizedPnl = summedPnl[0]['data']
-    const unrealizedPnl = summedPnl[1]['data']
-    const totalNav = lastRecordData.map((n) => n.holding_nav).reduce((acc, curr) => acc + curr, 0).toFixed(2)
-    const totalCash = lastRecordData.map((n) => n.cash_val).reduce((acc, curr) => acc + curr, 0).toFixed(2)
-    const [returnTypes, setReturnsTypes] = useState('dtd')
+    // Fetch portfolio data when portGroup, returnTypes, or childPortfolios change
+    const { portfolioNavData } = useDashboardData(server, currentDate, childPortfolios);
 
     useEffect(() => {
+        const fetchAllData = async () => {
+            try {
+                const response = await axios.post(`${server}portfolios/get/total_returns/`, {
+                    portfolio_code: portGroup,
+                    period: returnTypes
+                });
+                setTotalReturns(response.data);
+            } catch (error) {
+                console.error("Error fetching total returns:", error);
+            }
+        };
+
         if (portGroup) fetchAllData();
     }, [portGroup, returnTypes]);
 
     return (
-        <div >
-
-            <div style={{display: "flex", width: '100%'}}>
-                <div style={{height: 500, width: 300, padding: 10}}>
-                    <PortfolioGroup/>
+        <div style={{ display: "flex", width: "100%", height: "100%" }}>
+            {/* Side Menu */}
+            <div style={{
+                width: isMenuOpen ? "500px" : "50px",
+                transition: "width 0.3s ease",
+                backgroundColor: "#cfcccb",
+                height: "100vh",
+                position: "fixed",
+                zIndex: 2,
+                top: 0,
+                left: 0,
+                overflow: "hidden",
+                boxShadow: isMenuOpen ? "2px 0px 5px rgba(0, 0, 0, 0.1)" : "none",
+                paddingTop: "80px",
+                paddingLeft: isMenuOpen ? 20 : 0,
+                paddingRight: 50,
+            }}>
+                {/* Portfolio Group Widget inside the menu */}
+                <div style={{
+                    visibility: isMenuOpen ? "visible" : "hidden",
+                    opacity: isMenuOpen ? 1 : 0,
+                    transition: "visibility 0.3s, opacity 0.3s ease",
+                    height: '400px'
+                }}>
+                    <PortfolioGroup allowSelect={true} />
                 </div>
 
-                <div style={{flex: 1}}>
-                    <div style={{padding: 10}}>
-                        <div style={{
-                            borderTop: "1px solid  #e5e8e8 ",
-                            borderBottom: "1px solid  #e5e8e8 ",
-                            padding: "5px",
-                            display: "flex",
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                        }}>
-                            <span style={{fontWeight: "bold"}}>NAV</span>
-                            <div>
-                                <span style={{fontWeight: "bold", marginRight: 10}}>Total</span>
-                                <span style={{fontWeight: "bold", marginRight: 10}}>{totalNav}</span>
-                                <span style={{fontWeight: "bold", marginRight: 10}}>Cash</span>
-                                <span style={{fontWeight: "bold"}}>{totalCash}</span>
-                            </div>
+                {/* Open/Close Button */}
+                <div
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    style={{
+                        position: "absolute",
+                        right: "5px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        cursor: "pointer",
+                        fontSize: "16px",
+                        backgroundColor: "#fff",
+                        borderRadius: "80%",
+                        padding: "10px",
+                        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                        zIndex: 3,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    {isMenuOpen ? <BsChevronLeft /> : <BsChevronRight />}
+                </div>
+            </div>
 
-                        </div>
-                        <div style={{display: "flex", height: 350, marginTop: 10}}>
-                            <div className={'card'} style={{flex: 2, marginRight: 5}}>
-                                <StackedBarChart data={data} labels={labels} yName={'NAV'}/>
-                            </div>
-
-                            <div className={'card'} style={{flex: 2, marginRight: 5, marginLeft: 5}}>
-                                <StackedBarChart data={summedData} labels={labels} yName={'NAV'}/>
-                            </div>
-                            <div className={'card'} style={{height: '100%', flex: 1, marginLeft: 5}}>
-                                <PieChart values={navValues} labels={portfolios}/>
-                            </div>
-                        </div>
+            {/* Main Content */}
+            <div style={{
+                marginLeft: isMenuOpen ? "500px" : "50px",
+                transition: "margin-left 0.3s ease",
+                flex: 1,
+                padding: 10,
+            }}>
+                <div style={{ padding: 10 }}>
+                    {/* Portfolio Info */}
+                    <div style={{
+                        borderTop: "1px solid #e5e8e8",
+                        borderBottom: "1px solid #e5e8e8",
+                        padding: "5px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
+                        <span style={{ fontWeight: "bold" }}>{portGroup}</span>
                     </div>
-
-                    <PositionExposures portfolioCodes={['SO1', 'BO1']} server={server}/>
-
-                    <div style={{padding: 10}}>
-                        <div style={{
-                            borderTop: "1px solid  #e5e8e8 ",
-                            borderBottom: "1px solid  #e5e8e8 ",
-                            padding: "5px",
-                            display: "flex",
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                        }}>
-                            <span style={{fontWeight: "bold"}}>Profit and Loss</span>
-
-                        </div>
-                        <div style={{display: "flex", height: 350, marginTop: 10}}>
-                                <div className={'card'} style={{flex: 1, marginRight: 5}}>
-                                    <StackedBarChart data={summedPnl} labels={labels} yName={'Profit & Loss'}/>
-                                </div>
-
-                                <div style={{flex: 1, height: 350, marginLeft: 10}}>
-                                    <PortfolioTransactionPnl
-                                        unrealized={cumulativeSum(unrealizedPnl)}
-                                        realized={cumulativeSum(realizedPnl)}
-                                    />
-                                </div>
-                                <div style={{height: 350, marginLeft: 10, width: 300}}>
-                                    <TradingMetrics profits={realizedPnl}
-                                                    maxUnrealized={Math.min(...cumulativeSum(unrealizedPnl))}/>
-                                </div>
-
-                        </div>
-                    </div>
-
-                    <div style={{padding: 10}}>
-                        <div style={{
-                            borderTop: "1px solid  #e5e8e8 ",
-                            borderBottom: "1px solid  #e5e8e8 ",
-                            padding: "5px",
-                            display: "flex",
-                            justifyContent: 'space-between',
-                            alignItems: 'center'
-                        }}>
-                            <span style={{fontWeight: "bold"}}>Performance</span>
-
-                        </div>
-
-                        <div style={{display: "flex", height: 350, marginTop: 10}}>
-                            <div className={'card'} style={{flex: 1, marginRight: 5}}>
-                                <DailyReturns returns={totalReturns.map((d) => d.total_return)}
-                                              dates={totalReturns.map((d) => d.end_date)}
-                                              changeReturnType={(value) => setReturnsTypes(value.value)}
-                                />
-                            </div>
-                            <div className={'card'} style={{flex: 2, marginRight: 5, marginLeft: 5}}>
-
-                            </div>
-
-                        </div>
-                    </div>
-
                 </div>
 
+                <div style={{ padding: 10 }}>
+                    {/* NAV Section */}
+                    <div style={{
+                        borderTop: "1px solid #e5e8e8",
+                        borderBottom: "1px solid #e5e8e8",
+                        padding: "5px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
+                        <span style={{ fontWeight: "bold" }}>NAV</span>
+                    </div>
+
+                    {/* Charts Section */}
+                    <div style={{ display: "flex", height: 350, marginTop: 10 }}>
+                        <div className={'card'} style={{ flex: 2, marginRight: 5 }}>
+                            <StackedBarChart data={portfolioNavData} labels={portfolioNavData.map(d => d.date)} yName={'NAV'} />
+                        </div>
+                        <div className={'card'} style={{ flex: 1, marginLeft: 5 }}>
+                            <PieChart values={portfolioNavData.map(d => d.holding_nav)} labels={portfolioNavData.map(d => d.portfolio_code)} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Position Exposures */}
+                <PositionExposures portfolioCodes={childPortfolios} server={server} />
+
+                {/* Performance Section */}
+                <div style={{ padding: 10 }}>
+                    <div style={{
+                        borderTop: "1px solid #e5e8e8",
+                        borderBottom: "1px solid #e5e8e8",
+                        padding: "5px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
+                        <span style={{ fontWeight: "bold" }}>Performance</span>
+                    </div>
+
+                    <div style={{ display: "flex", height: 350, marginTop: 10 }}>
+                        <div className={'card'} style={{ flex: 1, marginRight: 5 }}>
+                            <DailyReturns
+                                returns={totalReturns.map(d => d.total_return)}
+                                dates={totalReturns.map(d => d.end_date)}
+                                changeReturnType={(value) => setReturnsTypes(value.value)}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

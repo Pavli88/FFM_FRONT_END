@@ -5,6 +5,7 @@ import DateContext from "../context/date-context";
 import UserContext from "../context/user-context";
 import appConfig from "../config files/app-config";
 import BrokerContext from "../context/broker-context";
+import DashboardContext from "../context/dashboard-context";
 import ReactNotification from "react-notifications-component";
 import Navigation from "../NavBar/NavBar";
 import {Route, Switch, Redirect, useHistory } from "react-router-dom";
@@ -74,6 +75,9 @@ const MainApplication = (props) => {
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0, 10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0, 10));
 
+    // Dashboard Context
+    const [portGroup, setPortGroup] = useState(null);
+
     useEffect(() => {
             axios.get(server + 'portfolios/get/portfolios/', {
                 params: {
@@ -138,57 +142,62 @@ const MainApplication = (props) => {
                                         <UserContext.Provider value={{
                                             user: userName
                                         }}>
-                                            <ReactNotification/>
-
-                                            <div style={{
-                                                position: "fixed",
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                // border: '1px solid grey',
-                                                background: 'grey',
-                                                zIndex: 1000
+                                            <DashboardContext.Provider value={{
+                                                portGroup: portGroup,
+                                                setPortGroup: setPortGroup
                                             }}>
-                                                <Navigation user={userName}/>
-                                            </div>
+                                                <ReactNotification/>
 
-                                            <div style={{
-                                                marginTop: 60,
-                                                height: 'calc(100vh - 60px)',
-                                                width: '100%',
-                                                overflow: 'auto'
-                                            }}>
-                                                <Switch>
-                                                    <Route path="/risk">
-                                                        <RiskPage/>
-                                                    </Route>
-                                                    <Route path="/dashboard">
-                                                        <DashBoardPage/>
-                                                    </Route>
-                                                    <Route path="/home">
-                                                        <HomePage/>
-                                                    </Route>
-                                                    <Route path="/trade">
-                                                        <TradePage/>
-                                                    </Route>
-                                                    <Route path="/data">
-                                                        <DataPage/>
-                                                    </Route>
-                                                    <Route path="/portfolio">
-                                                        <PortfolioPage/>
-                                                    </Route>
-                                                    <Route path="/calculations">
-                                                        <CalculationsPage/>
-                                                    </Route>
-                                                    <Route path="/instruments">
-                                                        <InstrumentPage/>
-                                                    </Route>
-                                                    <Route path="/profil">
-                                                        <ProfilPage/>
-                                                    </Route>
-                                                    <Route path='*' element={<Redirect to='/dashboard'/>}/>
-                                                </Switch>
-                                            </div>
+                                                <div style={{
+                                                    position: "fixed",
+                                                    top: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    // border: '1px solid grey',
+                                                    background: 'grey',
+                                                    zIndex: 1000
+                                                }}>
+                                                    <Navigation user={userName}/>
+                                                </div>
+
+                                                <div style={{
+                                                    marginTop: 60,
+                                                    height: 'calc(100vh - 60px)',
+                                                    width: '100%',
+                                                    overflow: 'auto'
+                                                }}>
+                                                    <Switch>
+                                                        <Route path="/risk">
+                                                            <RiskPage/>
+                                                        </Route>
+                                                        <Route path="/dashboard">
+                                                            <DashBoardPage/>
+                                                        </Route>
+                                                        <Route path="/home">
+                                                            <HomePage/>
+                                                        </Route>
+                                                        <Route path="/trade">
+                                                            <TradePage/>
+                                                        </Route>
+                                                        <Route path="/data">
+                                                            <DataPage/>
+                                                        </Route>
+                                                        <Route path="/portfolio">
+                                                            <PortfolioPage/>
+                                                        </Route>
+                                                        <Route path="/calculations">
+                                                            <CalculationsPage/>
+                                                        </Route>
+                                                        <Route path="/instruments">
+                                                            <InstrumentPage/>
+                                                        </Route>
+                                                        <Route path="/profil">
+                                                            <ProfilPage/>
+                                                        </Route>
+                                                        <Route path='*' element={<Redirect to='/dashboard'/>}/>
+                                                    </Switch>
+                                                </div>
+                                            </DashboardContext.Provider>
                                         </UserContext.Provider>
                                     </BrokerContext.Provider>
                                 </DateContext.Provider>
