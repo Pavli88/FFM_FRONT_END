@@ -106,13 +106,14 @@ const transformSummedData = (dateRecords, fieldMapping) => {
 
 const DashBoardPage = () => {
     const server = useContext(ServerContext).server;
-    const currentDate = useContext(DateContext).currentDate;
+    const firstDayOfYear = useContext(DateContext).firstDayOfCurrentYear;
     const {portGroup} = useContext(DashboardContext);
     const [childPortfolios, setChildPortfolios] = useState([]);
     const [totalReturns, setTotalReturns] = useState([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [returnTypes, setReturnsTypes] = useState('dtd');
     const [portfolioNavData, setPortfolioNavData] = useState([]);
+    const [startDate, setStartDate] = useState(firstDayOfYear);
     console.log(portfolioNavData)
     // Fetch child portfolios whenever portGroup changes
     useEffect(() => {
@@ -134,7 +135,8 @@ const DashBoardPage = () => {
             try {
                 const response = await axios.post(`${server}portfolios/get/total_returns/`, {
                     portfolio_code: portGroup,
-                    period: returnTypes
+                    period: returnTypes,
+                    end_date__gte: startDate
                 });
                 setTotalReturns(response.data);
             } catch (error) {
@@ -143,14 +145,15 @@ const DashBoardPage = () => {
         };
 
         if (portGroup) fetchAllData();
-    }, [portGroup, returnTypes]);
+    }, [portGroup, returnTypes, startDate]);
 
     useEffect(() => {
         const fetchNavData = async () => {
             try {
                 const [portfolioNavRes] = await Promise.all([
                     axios.post(`${server}portfolios/get/nav/`, {
-                        portfolio_code__in: childPortfolios
+                        portfolio_code__in: childPortfolios,
+                        date__gte: startDate
                     }),
                 ]);
 
@@ -163,7 +166,7 @@ const DashBoardPage = () => {
         if (childPortfolios && childPortfolios.length > 0) {
             fetchNavData();
         }
-    }, [childPortfolios])
+    }, [childPortfolios, startDate])
 
     const data = transformPortfolioData(portfolioNavData)
 
@@ -212,6 +215,15 @@ const DashBoardPage = () => {
                     height: '400px'
                 }}>
                     <PortfolioGroup allowSelect={true}/>
+                </div>
+
+                <div style={{
+                    visibility: isMenuOpen ? "visible" : "hidden",
+                    opacity: isMenuOpen ? 1 : 0,
+                    transition: "visibility 0.3s, opacity 0.3s ease",
+                    height: '400px'
+                }}>
+                    <input type={'date'} onChange={(e) => setStartDate(e.target.value)} defaultValue={startDate}/>
                 </div>
 
                 {/* Open/Close Button */}
