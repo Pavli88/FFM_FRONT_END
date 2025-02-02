@@ -50,16 +50,16 @@ const transformPortfolioData = (dateRecords) => {
 
     dateRecords.forEach(({ records }) => {
         records.forEach(({ portfolio_code, holding_nav }) => {
-            // Skip invalid holding_nav
-            if (holding_nav == null || isNaN(holding_nav)) return;
+            // Replace null or NaN values with 0
+            const validNav = holding_nav == null || isNaN(holding_nav) ? 0 : holding_nav;
 
             // If portfolio_code is not in the map, initialize it
             if (!portfolioMap[portfolio_code]) {
                 portfolioMap[portfolio_code] = [];
             }
 
-            // Push the holding_nav value to the portfolio's data array
-            portfolioMap[portfolio_code].push(holding_nav);
+            // Push the valid holding_nav value to the portfolio's data array
+            portfolioMap[portfolio_code].push(validNav);
         });
     });
 
@@ -113,6 +113,7 @@ const DashBoardPage = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(true);
     const [returnTypes, setReturnsTypes] = useState('dtd');
     const [portfolioNavData, setPortfolioNavData] = useState([]);
+    console.log(portfolioNavData)
     // Fetch child portfolios whenever portGroup changes
     useEffect(() => {
         const fetchPortChildCodes = async () => {
@@ -165,6 +166,7 @@ const DashBoardPage = () => {
     }, [childPortfolios])
 
     const data = transformPortfolioData(portfolioNavData)
+
     const summedData = transformSummedData(portfolioNavData, {
         labels: ['Positions', 'Cash', 'Margin'],
         values: ['pos_val', 'cash_val', 'margin']

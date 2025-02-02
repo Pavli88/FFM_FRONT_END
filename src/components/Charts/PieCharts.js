@@ -101,6 +101,7 @@ export const PieChartSorted = ({ labels, values }) => {
         },
         labels: sortedLabels,
         legend: {
+            show: false,
             position: 'top', // Place the legend on top
             horizontalAlign: 'center', // Center the legend horizontally
         },
