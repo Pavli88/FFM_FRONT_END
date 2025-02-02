@@ -114,7 +114,8 @@ const DailyReturns = ( {returns, dates, changeReturnType} ) => {
                             {value: 'dtd', label: 'Day to Date'},
                             {value: 'mtd', label: 'Month to Date'},
                             {value: 'qtd', label: 'Quarter to Date'},
-                            {value: 'si', label: 'Inception to Date'}
+                            {value: 'si', label: 'Inception to Date'},
+                            {value: '1m', label: '1 Month'}
                         ]}
                         onChange={changeReturnType}
                         defaultValue={{value: 'dtd', label: 'Day to Date'}}

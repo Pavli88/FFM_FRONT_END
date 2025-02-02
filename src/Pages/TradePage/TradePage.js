@@ -9,10 +9,12 @@ import ServerContext from "../../context/server-context";
 import TradeContext from "./context/trade-context";
 import TradeExecution from "./TradeExecution/TradeExecution";
 import axios from "axios";
+import {BsChevronLeft, BsChevronRight} from "react-icons/bs";
 
 const TradePage = () => {
     const server = useContext(ServerContext)['server'];
     const [newTransactionID, setNewTransactionID] = useState(0);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const MINUTE_MS = 10000;
 
     // const url = "https://stream-fxtrade.oanda.com/v3/accounts/001-004-2840244-004/pricing/stream?instruments=EUR_USD"
@@ -87,12 +89,62 @@ const TradePage = () => {
                 {/*    <TradeTableData env={env} server={server}/>*/}
                 {/*</div>*/}
 
-                <div style={{height: 900, width: '75%', marginTop: 15, marginLeft: 15}}>
+                <div style={{
+                    width: isMenuOpen ? "1000px" : "50px",
+                    transition: "width 0.3s ease",
+                    backgroundColor: "#cfcccb",
+                    height: "100vh",
+                    position: "fixed",
+                    zIndex: 2,
+                    top: 0,
+                    left: 0,
+                    overflow: "hidden",
+                    boxShadow: isMenuOpen ? "2px 0px 5px rgba(0, 0, 0, 0.1)" : "none",
+                    paddingTop: "80px",
+                    paddingLeft: isMenuOpen ? 20 : 0,
+                    paddingRight: 50,
+
+                }}>
+                    <div style={{
+                        visibility: isMenuOpen ? "visible" : "hidden",
+                        opacity: isMenuOpen ? 1 : 0,
+                        transition: "visibility 0.3s, opacity 0.3s ease",
+                        height: "100vh",
+                    }}>
+                        <TradeSignals server={server}/>
+                    </div>
+                    <div
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        style={{
+                            position: "absolute",
+                            right: "5px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            cursor: "pointer",
+                            fontSize: "16px",
+                            backgroundColor: "#fff",
+                            borderRadius: "80%",
+                            padding: "10px",
+                            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                            zIndex: 3,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        {isMenuOpen ? <BsChevronLeft/> : <BsChevronRight/>}
+                    </div>
+                </div>
+
+                <div style={{
+                    marginLeft: isMenuOpen ? "500px" : "50px",
+                    transition: "margin-left 0.3s ease",
+                    flex: 1,
+                    padding: 10,
+                }}>
                     <OpenTransactions server={server}/>
                 </div>
-                <div style={{height: 900, marginTop: 15, marginLeft: 15, marginRight: 15}}>
-                    <TradeSignals server={server}/>
-                </div>
+
             </div>
         </TradeContext.Provider>
     );

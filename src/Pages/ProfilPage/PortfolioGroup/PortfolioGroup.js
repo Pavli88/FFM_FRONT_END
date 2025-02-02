@@ -55,7 +55,7 @@ const AddModal = (props) => {
 };
 
 const TreeNode = ({ node, onRightClick }) => {
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(true);
     const hasChildren = node.children && node.children.length > 0;
 
     const handleRightClick = (event) => {
@@ -153,9 +153,10 @@ const TreeView = ({ data, update, allowSelect = false }) => {
                     }}
                     onClick={(e) => e.stopPropagation()}
                 >
+                    {allowSelect && <li onClick={() => handleMenuClick("load")}>Load</li>}
                     {(selectedNode?.portfolio_type === "Business" || selectedNode?.portfolio_type === "Portfolio Group") && (
                         <>
-                         {allowSelect && <li onClick={() => handleMenuClick("load")}>Load</li>}
+
                             <li onClick={() => handleMenuClick("add-child")}>Add Child</li>
                         </>
                     )}

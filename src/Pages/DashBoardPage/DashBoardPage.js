@@ -110,7 +110,7 @@ const DashBoardPage = () => {
     const {portGroup} = useContext(DashboardContext);
     const [childPortfolios, setChildPortfolios] = useState([]);
     const [totalReturns, setTotalReturns] = useState([]);
-    const [isMenuOpen, setIsMenuOpen] = useState(true);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [returnTypes, setReturnsTypes] = useState('dtd');
     const [portfolioNavData, setPortfolioNavData] = useState([]);
     console.log(portfolioNavData)
@@ -340,7 +340,7 @@ const DashBoardPage = () => {
                         <span style={{fontWeight: "bold"}}>Performance</span>
                     </div>
 
-                    <div style={{display: "flex", height: 350, marginTop: 10}}>
+                    <div style={{display: "flex", height: 500, marginTop: 10}}>
                         <div className={'card'} style={{flex: 1, marginRight: 5}}>
                             <DailyReturns
                                 returns={totalReturns.map(d => d.total_return)}
