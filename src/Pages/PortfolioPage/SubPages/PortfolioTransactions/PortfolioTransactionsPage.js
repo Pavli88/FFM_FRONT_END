@@ -34,7 +34,7 @@ const PortfolioTransactionsPage = (props) => {
             newTransaction: newTransaction,
             saveNewTransaction: setNewTransaction,
         }}>
-            <div style={{height: '100%', width: '100%', padding: 15, overflowY: 'scroll'}}>
+            <div style={{height: '100%', width: '100%', padding: 15}}>
                 <div>
                     <PortfolioTransactionsFilter updateParams={(e) => setParameters(e)}/>
                 </div>

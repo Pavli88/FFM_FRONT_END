@@ -71,28 +71,8 @@ const PortfolioDashBoardPage = (props) => {
     }, [showCashFlowPanel])
 
     return (
-        <div style={{width: '100%', height: '100%', margin: '0px', padding: 15}}>
-
-            <Section title="NAV History">
-                <div style={{height: 300, width: '100%', display: 'flex'}}>
-                    <div style={{width: '100%', height: '100%', paddingRight: 15}}>
-                        <PortfolioNav data={navData} showCF={(data) => setShowCashflowPanel(data)}/>
-                    </div>
-
-                    <div style={{width: '100%', height: '100%'}}>
-                        {showCashFlowPanel === 'NAV' ? <NavComposition server={props.server} data={navData}
-                                                                       setHoldingDate={(date) => setHoldingDate(date)}/> : showCashFlowPanel === 'CF' ?
-                            <CashFlow data={cfData}/> :
-                            <CashBalance data={navData} setHoldingDate={(date) => setHoldingDate(date)}/>}
-
-                    </div>
-
-                </div>
-            </Section>
-
-            <Section title="Holding">
-                <PortfolioHoldings data={holdingData} date={holdingDate} changeDate={changeDate}/>
-            </Section>
+        <div style={{ height: '100%', margin: '0px', padding: 15}}>
+            <PortfolioHoldings data={holdingData} date={holdingDate} changeDate={changeDate}/>
         </div>
     );
 };

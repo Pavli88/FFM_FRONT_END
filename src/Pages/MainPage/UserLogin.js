@@ -1,78 +1,79 @@
-import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
-import React, {useContext, useRef} from "react";
-import { Link } from "react-router-dom";
+import { useState, useContext } from "react";
+// import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { Form, Button, Card, Col, Alert, Container } from "react-bootstrap";
 
 // Context
 import AuthContext from "../../context/AuthProvider";
 
-export default function Login(props) {
+export default function Login({ server }) {
   const { setAuth } = useContext(AuthContext);
-  const usernameRef = useRef();
-  const passwordRef = useRef();
-  const submitHandler = (event) => {
-        event.preventDefault();
-        axios.post(props.server + 'user_login/', {
-            username: usernameRef.current.value,
-            password: passwordRef.current.value,
-        })
-            .then(response => setAuth(response.data))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
-    };
-  console.log(props.server)
-  return (
-      <Row className="vh-100 d-flex justify-content-center align-items-center">
-        <Col md={8} lg={6} xs={12}>
-          <div className={'card'}>
-            <Card.Body>
-              <div className="mb-3 mt-md-4">
-                <div className="mb-3">
-                  <Form>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                      <Form.Label className="text-center">
-                        Username
-                      </Form.Label>
-                      <Form.Control type="email" placeholder="Enter username" ref={usernameRef}/>
-                    </Form.Group>
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [error, setError] = useState(null);
 
-                    <Form.Group
-                        className="mb-3"
-                        controlId="formBasicPassword"
-                    >
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password" ref={passwordRef}/>
-                    </Form.Group>
-                    <Form.Group
-                        className="mb-3"
-                        controlId="formBasicCheckbox"
-                    >
-                      <p className="small">
-                        <a className="text-primary" href="#!">
-                          Forgot password?
-                        </a>
-                      </p>
-                    </Form.Group>
-                    <div className="d-grid">
-                      <button className={'normal-button'} style={{width: '100%', height: 40}} onClick={submitHandler}>
-                        Login
-                      </button>
-                    </div>
-                  </Form>
-                  <div className="mt-3">
-                    <p className="mb-0  text-center">
-                      Don't have an account?{" "}
-                      <Link to={"/register"}>
-                        Sign Up
-                      </Link>
-                    </p>
-                  </div>
-                </div>
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    try {
+      const response = await axios.post(`${server}user_login/`, formData);
+      setAuth(response.data);
+    } catch (err) {
+      setError("Invalid username or password. Please try again.");
+    }
+  };
+
+  return (
+    <Container className="d-flex justify-content-center align-items-center vh-100">
+      <Col md={6} lg={5} sm={8} xs={12}>
+        <Card className="shadow-lg p-4">
+          <Card.Body>
+            <h2 className="text-center mb-4">Login</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="username">
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Enter password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+
+              <div className="d-flex justify-content-between">
+                <Link to="#" className="text-primary small">Forgot password?</Link>
               </div>
-            </Card.Body>
-          </div>
-        </Col>
-      </Row>
+
+              <Button variant="primary" type="submit" className="w-100 mt-3">
+                Login
+              </Button>
+            </Form>
+
+            <p className="mt-3 text-center">
+              Don't have an account? <Link to="/register">Sign Up</Link>
+            </p>
+          </Card.Body>
+        </Card>
+      </Col>
+    </Container>
   );
 }

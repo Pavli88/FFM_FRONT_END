@@ -83,7 +83,7 @@ const PortfolioPage = (props) => {
                     <div style={{
                         width: isMenuOpen ? "300px" : "50px",
                         transition: "width 0.3s ease",
-                        backgroundColor: "#cfcccb",
+                        backgroundColor: "#eeeeee",
                         height: "100vh",
                         position: "fixed",
                         zIndex: 2,
@@ -197,17 +197,11 @@ const PortfolioPage = (props) => {
                         </div>
 
                         <Switch>
-                            <Route path="/portfolio/dashboard">
+                            <Route path="/portfolio/holdings">
                                 <PortfolioDashBoardPage server={server} portfolioData={selectedPortfolioData}/>
                             </Route>
                             <Route path="/portfolio/transactions">
                                 <PortfolioTransactionsPage server={server}/>
-                            </Route>
-                            <Route path="/portfolio/risk">
-                                <PortfolioRiskPage server={server}/>
-                            </Route>
-                            <Route path="/portfolio/return">
-                                <PortfolioReturnPage/>
                             </Route>
                             <Route path="/portfolio/settings">
                                 <PortfolioSettingsPage/>

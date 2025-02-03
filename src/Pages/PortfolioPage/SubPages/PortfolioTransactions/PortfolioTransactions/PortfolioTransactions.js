@@ -303,357 +303,77 @@ const TableGrouped = (props) => {
     );
 };
 
-// const TableGrouped = (props) => {
-//     const [showModal, setShowModal] = useState(false);
-//     const [showLinkedModal, setShowLinkedModal] = useState(false);
-//     const [selectedTransaction, setSelectedTransaction] = useState({});
-//     const [linkedTransaction, setLinkedTransaction] = useState({});
-//
-//     const updateTransaction = () =>  {
-//         axios.post(props.server + 'portfolios/update/transaction/', selectedTransaction)
-//             .then(response => alert(response.data.response))
-//             .catch((error) => {
-//                 console.error('Error Message:', error);
-//             });
-//         setShowModal(false)
-//     };
-//     const data = useMemo(
-//         () => props.data,
-//         [props.data]
-//     )
-//
-//     const newLinkedTransaction = async() => {
-//         const response = await axios.post(props.server + 'portfolios/new/transaction/', linkedTransaction)
-//         if (response.data.success) {
-//             props.fetch()
-//         }
-//     };
-//
-//     const columns = useMemo(
-//         () => [
-//             {
-//                 Header: 'ID',
-//                 accessor: 'id',
-//
-//             },
-//             {
-//                 Header: 'Linked Transaction',
-//                 accessor: 'transaction_link_code',
-//
-//             },
-//             {
-//                 Header: 'Portfolio Code',
-//                 accessor: 'portfolio_code',
-//
-//             },
-//             {
-//                 Header: 'Trade Date',
-//                 accessor: 'trade_date',
-//             },
-//             {
-//                 Header: 'Settlement Date',
-//                 accessor: 'settlement_date',
-//             },
-//             {
-//                 Header: 'Transaction Type',
-//                 accessor: 'transaction_type',
-//             },
-//             {
-//                 Header: 'Security Name',
-//                 accessor: 'name',
-//             },
-//             {
-//                 Header: 'Currency',
-//                 accessor: 'currency',
-//             },
-//             {
-//                 Header: 'Status',
-//                 accessor: 'open_status',
-//             },
-//             {
-//                 Header: 'Quantity',
-//                 accessor: 'quantity',
-//             },
-//             {
-//                 Header: 'Trade Price',
-//                 accessor: 'price',
-//             },
-//             {
-//                 Header: 'FX Rate',
-//                 accessor: 'fx_rate',
-//             },
-//             {
-//                 Header: 'Base MV',
-//                 accessor: 'mv',
-//             },
-//             {
-//                 Header: 'Local MV',
-//                 accessor: 'local_mv',
-//             },
-//             {
-//                 Header: 'Book Value',
-//                 accessor: 'bv',
-//             },
-//             {
-//                 Header: 'Local Book Value',
-//                 accessor: 'local_bv',
-//             },
-//             {
-//                 Header: 'Base CF',
-//                 accessor: 'net_cashflow',
-//             },
-//             {
-//                 Header: 'Local CF',
-//                 accessor: 'local_cashflow',
-//             },
-//             {
-//                 Header: 'Margin',
-//                 accessor: 'margin_balance',
-//             },
-//             {
-//                 Header: 'Margin Rate %',
-//                 accessor: 'margin_rate',
-//             },
-//             {
-//                 Header: 'Account ID',
-//                 accessor: 'account_id',
-//             },
-//             {
-//                 Header: 'Broker',
-//                 accessor: 'broker',
-//             },
-//             {
-//                 Header: 'Broker ID',
-//                 accessor: 'broker_id',
-//             },
-//              {
-//                 Header: 'Option',
-//                 accessor: 'option',
-//             },
-//
-//         ],
-//         []
-//     )
-//     const tableInstance = useTable(
-//         {
-//             columns,
-//             data
-//         },
-//         useGroupBy,
-//         useExpanded)
-//     const {
-//         getTableProps,
-//         getTableBodyProps,
-//         headerGroups,
-//         rows,
-//         prepareRow,
-//         // state: { groupBy, expanded },
-//     } = tableInstance
-//     const firstPageRows = rows.slice(0, 200)
-//
-//     const onAddTransactionButtonClick = (row) => {
-//         const newTransactionType = row.transaction_type === 'Purchase'
-//             ? 'Sale'
-//             : (row.sec_group === 'CFD' && row.transaction_type === 'Sale')
-//                 ? 'Sale'
-//                 : 'Purchase';
-//
-//         const updatedDict = {...row};
-//         delete updatedDict['name']
-//         delete updatedDict['id']
-//         // Update linked transaction state
-//         setLinkedTransaction({
-//             ...updatedDict,
-//             transaction_link_code: row.id,
-//             // transaction_type: newTransactionType,
-//             open_status: 'Close',
-//             is_active: 0,
-//         });
-//
-//         // Show the linked modal
-//         setShowLinkedModal(true);
-//
-//     };
-//
-//     return (
-//         <table {...getTableProps()}>
-//
-//             <thead>
-//             {
-//                 headerGroups.map(headerGroup => (
-//                     <tr {...headerGroup.getHeaderGroupProps()}>
-//                         <th></th>
-//                         {
-//                             headerGroup.headers.map(column => (
-//                                 <th {...column.getHeaderProps()} style={{fontSize: 12}}>
-//                                     {column.canGroupBy ? (
-//                                         // If the column can be grouped, let's add a toggle
-//                                         <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
-//                       {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
-//                     </span>
-//                                     ) : null}
-//                                     {column.render('Header')}
-//                                 </th>
-//                             ))}
-//                     </tr>
-//                 ))}
-//             </thead>
-//
-//             <tbody {...getTableBodyProps()}>
-//             {firstPageRows.map((row, i) => {
-//                 prepareRow(row)
-//
-//                 return (
-//                     <tr {...row.getRowProps()}
-//                         style={{
-//                             background: row.isGrouped ? '#f2f4f4': 'white',
-//                             color: row.original.is_active ? 'green' : 'black',
-//                         }}
-//
-//                     >
-//                         <td>
-//                             <input type={"checkbox"} onChange={(e) => props.updateSelected(e, row.original.id)}/>
-//                         </td>
-//                         {row.cells.map(cell => {
-//                             return (
-//                                 // This generates each individual cells
-//                                 <td
-//                                     {...cell.getCellProps()}
-//                                     style={{
-//                                         fontWeight: cell.isGrouped
-//                                             ? "bold"
-//                                             : cell.isAggregated
-//                                                 ? "bold"
-//                                                 : cell.isPlaceholder
-//                                                     ? '#ff000042'
-//                                                     : 'white',
-//                                         fontSize: 12,
-//                                     }}
-//                                 >
-//                                     {cell.isGrouped ? (
-//                                         // If it's a grouped cell, add an expander and row count
-//                                         <>
-//                           <span {...row.getToggleRowExpandedProps()}>
-//                             {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
-//                           </span>{' '}
-//                                             {cell.render('Cell')} ({row.subRows.length})
-//                                         </>
-//                                     ) : cell.isAggregated ? (
-//                                         // If the cell is aggregated, use the Aggregated
-//                                         // renderer for cell
-//                                         cell.render('Aggregated')
-//                                     ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
-//                                         // Otherwise, just render the regular cell
-//                                         cell.render('Cell')
-//
-//                                     )}
-//                                 </td>
-//                             )
-//                         })
-//                         }
-//
-//                         {row.isGrouped ? '' : <td className={'sticky-column'}>
-//                             <div style={{display: "flex"}}>
-//                                 {row.original.transaction_link_code === row.original.id && row.original.transaction_type !== 'Subscription' && row.original.transaction_type !== 'Redemption' && row.original.transaction_type !== 'Commission' ?
-//                                 <div style={{padding: 2}}>
-//                                     <button className={'normal-button'} onClick={() => onAddTransactionButtonClick(row.original)}>
-//                                         <BsPlusLg/>
-//                                     </button>
-//                                 </div>: ''}
-//                                 <div style={{padding: 2}}>
-//                                     <button className={'normal-button'} onClick={() => {
-//                                         setShowModal(true)
-//                                         setSelectedTransaction(row.original)
-//                                     }}>
-//                                         <BsPencil/>
-//                                     </button>
-//                                 </div>
-//                             </div>
-//
-//                         </td>}
-//                     </tr>
-//                 )
-//             })}
-//             </tbody>
-
-//         </table>
-//     );
-// };
-
-const PortfolioTransactions = (props) => {
+const PortfolioTransactions = ({ server, data, fetch, portfolio }) => {
     const [showTransactionPanel, setShowTransactionPanel] = useState(false);
     const [showCashPanel, setShowCashPanel] = useState(false);
     const [selectedIds, setSelectedIds] = useState([]);
 
-    const deleteTransaction = async (id) => {
-        const response = await axios.post(props.server + 'portfolios/delete/transaction/', {
-            ids: selectedIds
-        })
-        if (response.data.success) {
-            props.fetch()
-            selectedIds([])
+    const deleteTransaction = async () => {
+        if (selectedIds.length === 0) return;
+        try {
+            const response = await axios.post(`${server}portfolios/delete/transaction/`, { ids: selectedIds });
+            if (response.data.success) {
+                fetch();
+                setSelectedIds([]);
+            }
+        } catch (error) {
+            console.error("Error deleting transaction:", error);
         }
     };
 
-    const handleCheckboxChange = (e, id) => {
-        if (e.target.checked) {
-            // Add the ID to the list if the checkbox is checked
-            setSelectedIds((prevSelectedIds) => [...prevSelectedIds, id]);
-        } else {
-            // Remove the ID if the checkbox is unchecked
-            setSelectedIds((prevSelectedIds) =>
-                prevSelectedIds.filter((selectedId) => selectedId !== id)
-            );
-        }
+    const handleCheckboxChange = (id, checked) => {
+        setSelectedIds(prevIds =>
+            checked ? [...prevIds, id] : prevIds.filter(selectedId => selectedId !== id)
+        );
     };
 
     return (
-        <div >
-
-
-            <div style={{display: "flex", marginTop: 15, marginBottom: 15}}>
-                <p style={{margin: 5}}>Transactions</p>
-                <div style={{margin: 5}}>
-
-                    <CSVLink filename="transactions.csv" data={props.data}><BsArrowBarDown
-                        className={'get-button'} style={{padding: 5}}/></CSVLink>
-                </div>
-                <div style={{margin: 5}}>
-                    <BsPlusLg className={'get-button'} style={{padding: 5}} onClick={() => setShowTransactionPanel(value => !value)}/>
-                </div>
-                <div style={{margin: 5}}>
-                    <BsCurrencyDollar className={'get-button'} style={{padding: 5}} onClick={() => setShowCashPanel(value => !value)}/>
-                </div>
-                <div style={{margin: 5}}>
-                    <button className={'delete-button'} style={{padding: 5}} onClick={() => deleteTransaction()}>
-                        <BsTrash />
+        <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Transactions</h2>
+                <div className="flex gap-2">
+                    <CSVLink filename="transactions.csv" data={data} className="p-2 bg-blue-500 text-white rounded-lg">
+                        <BsArrowBarDown size={20} />
+                    </CSVLink>
+                    <button className="action-button edit-button" onClick={() => setShowTransactionPanel(prev => !prev)}>
+                        <BsPlusLg size={20} />
+                    </button>
+                    <button className="action-button edit-button" onClick={() => setShowCashPanel(prev => !prev)}>
+                        <BsCurrencyDollar size={20} />
+                    </button>
+                    <button
+                        className={`p-2 rounded-lg ${selectedIds.length ? "bg-red-500 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
+                        onClick={deleteTransaction}
+                        disabled={!selectedIds.length}
+                    >
+                        <BsTrash size={20} />
                     </button>
                 </div>
             </div>
 
-
-            <div style={{height: 600}}>
-
-                <div className={'card'}
-                     style={{
-                         height: '100%',
-                         width: '100%',
-                         overflowY: 'auto',
-                         overflowX: 'auto',
-                         position: 'relative'
-                     }}>
-                    <TableGrouped data={props.data} server={props.server} fetch={props.fetch} updateSelected={handleCheckboxChange}/>
-                </div>
+            {/* Transactions Table */}
+            <div className="bg-white rounded-lg shadow-md p-4 overflow-auto max-h-[600px]">
+                <TableGrouped data={data} server={server} fetch={fetch} updateSelected={handleCheckboxChange} />
             </div>
 
-            <PortfolioTransactionEntry portfolio={props.portfolio} server={props.server} show={showTransactionPanel}
-                                       close={() => {
-                                           setShowTransactionPanel(false);
-                                           props.fetch();
-                                       }}/>
-            <PortfolioCashEntry portfolio={props.portfolio} server={props.server} show={showCashPanel}
-                                close={() => setShowCashPanel(false)}/>
+            {/* Transaction Entry Modal */}
+            {showTransactionPanel && (
+                <PortfolioTransactionEntry
+                    portfolio={portfolio}
+                    server={server}
+                    show={showTransactionPanel}
+                    close={() => {
+                        setShowTransactionPanel(false);
+                        fetch();
+                    }}
+                />
+            )}
 
+            {/* Cash Entry Modal */}
+            {showCashPanel && (
+                <PortfolioCashEntry portfolio={portfolio} server={server} show={showCashPanel} close={() => setShowCashPanel(false)} />
+            )}
         </div>
     );
 };

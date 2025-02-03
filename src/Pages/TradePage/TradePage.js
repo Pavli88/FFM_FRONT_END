@@ -92,7 +92,7 @@ const TradePage = () => {
                 <div style={{
                     width: isMenuOpen ? "1000px" : "50px",
                     transition: "width 0.3s ease",
-                    backgroundColor: "#cfcccb",
+                    backgroundColor: "#eeeeee",
                     height: "100vh",
                     position: "fixed",
                     zIndex: 2,

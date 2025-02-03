@@ -172,7 +172,7 @@ const PortfolioSettingsPage = (props) => {
         <div className={'portfolio-settings-page-container'}>
 
             <div style={{paddingBottom: 15,paddingTop: 15, height: 80}}>
-                <Card style={{height: '100%'}}>
+                <div className={'card'} style={{height: '100%'}}>
                     <div style={{display: "flex"}}>
                         <div style={{padding: 5, height: '100%'}}>
                             <button className={'save-button'} onClick={savePortfolioData}>Save</button>
@@ -184,14 +184,14 @@ const PortfolioSettingsPage = (props) => {
                             <button className={'delete-button'}>Delete</button>
                         </div>
                     </div>
-                </Card>
+                </div>
             </div>
 
             <div style={{display: "flex", width: '100%'}}>
 
                 <div style={{width: '30%'}}>
                     <div style={{paddingBottom: 8}}>
-                        <CardWithHeader headerContent={'General'}>
+                        <div className={'card'}>
 
                             <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
                                 <div className={'portfolio-settings-name-field'}>
@@ -339,12 +339,12 @@ const PortfolioSettingsPage = (props) => {
                                 </div>
                             </div>
 
-                        </CardWithHeader>
+                        </div>
                     </div>
 
                     <div style={{paddingBottom: 8}}>
-                            <CardWithHeader headerContent={'Ownership'}>
-
+                            <div className={'card'}>
+                                <p>Ownership</p>
                                 <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
                                     <div className={'portfolio-settings-name-field'}>
                                         <Nav.Link href="#" disabled>
@@ -383,11 +383,12 @@ const PortfolioSettingsPage = (props) => {
                                     </div>
                                 </div>
 
-                            </CardWithHeader>
+                            </div>
                         </div>
 
                     <div>
-                            <CardWithHeader headerContent={'Dates'}>
+                            <div className={'card'}>
+                                <p>Dates</p>
                                 <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>
                                     <div className={'portfolio-settings-name-field'}>
                                         <Nav.Link href="#" disabled>
@@ -426,7 +427,7 @@ const PortfolioSettingsPage = (props) => {
                                 <InputField name={'Terminated'} data={portfolioData.termination_date}
                                             disabled={false}
                                             style={'date'}/>
-                            </CardWithHeader>
+                            </div>
                         </div>
 
                 </div>

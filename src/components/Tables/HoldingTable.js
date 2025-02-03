@@ -1,246 +1,170 @@
-import {useEffect, useMemo} from "react";
-import {useExpanded, useGroupBy, useTable} from "react-table";
-import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-icons/bs";
+import { useMemo, useEffect } from 'react';
+import { useTable, useGroupBy, useExpanded } from 'react-table';
+import { BsDashSquare, BsPlusSquare, BsCaretUpFill, BsCaretDownFill } from 'react-icons/bs';
+import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 
-const HoldingsTable = (props) => {
-    const data = useMemo(
-        () => props.data,
-        [props.data]
-    )
+const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
-    const columns = useMemo(
-        () => [
-            {
-                Header: 'Portfolio',
-                accessor: 'portfolio_code',
-
-            },
-            {
-                Header: 'Date',
-                accessor: 'date',
-
-            },
-            {
-                Header: 'Name',
-                accessor: 'name',
-
-            },
-            {
-                Header: 'Group',
-                accessor: 'group',
-            },
-            {
-                Header: 'Type',
-                accessor: 'type',
-            },
-            {
-                Header: 'Currency',
-                accessor: 'currency',
-                disableGroupBy: true,
-
-            },
-            {
-                Header: 'Transaction ID',
-                accessor: 'trd_id',
-                disableGroupBy: true,
-
-            },
-
-            {
-                Header: 'Instrument ID',
-                accessor: 'instrument_id',
-                disableGroupBy: true,
-            },
-            {
-                Header: 'Trade Date',
-                accessor: 'trade_date',
-                disableGroupBy: true,
-            },
-            {
-                Header: 'Trade Type',
-                accessor: 'trade_type',
-                disableGroupBy: true,
-            },
-            {
-                Header: 'Quantity',
-                accessor: 'quantity',
-                aggregate: 'sum',
-                disableGroupBy: true,
-                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
-            },
-            {
-                Header: 'Trade Price',
-                accessor: 'trade_price',
-                disableGroupBy: true,
-            },
-            {
-                Header: 'Market Price',
-                accessor: 'market_price',
-                disableGroupBy: true,
-            },
-            {
-                Header: 'FX Rate',
-                accessor: 'fx_rate',
-                disableGroupBy: true,
-            },
-            {
-                Header: 'Book Value',
-                accessor: 'bv',
-                aggregate: 'sum',
-                disableGroupBy: true,
-                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`
-            },
-            {
-                Header: 'Market Value',
-                accessor: 'mv',
-                aggregate: 'sum',
-                disableGroupBy: true,
-                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
-            },
-            {
-                Header: 'Unrealized P&L',
-                accessor: 'ugl',
-                aggregate: 'sum',
-                disableGroupBy: true,
-                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
-            },
-            {
-                Header: 'Realized P&L',
-                accessor: 'rgl',
-                aggregate: 'sum',
-                disableGroupBy: true,
-                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
-            },
-             {
-                Header: 'Weight',
-                accessor: 'weight',
-                aggregate: 'sum',
-                disableGroupBy: true,
-                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
-            },
-            {
-                Header: 'Leverage',
-                accessor: 'pos_lev',
-                aggregate: 'sum',
-                disableGroupBy: true,
-                Aggregated: ({ value }) => `${Math.round(value * 100) / 100}`,
-            },
-        ],
-        []
-    )
-    const tableInstance = useTable(
+const HoldingsTable = ({ data }) => {
+    const columns = useMemo(() => [
+        { Header: 'Portfolio', accessor: 'portfolio_code' },
+        { Header: 'Date', accessor: 'date' },
+        { Header: 'Name', accessor: 'name' },
+        { Header: 'Group', accessor: 'group' },
+        { Header: 'Type', accessor: 'type' },
+        { Header: 'Currency', accessor: 'currency', disableGroupBy: true },
+        { Header: 'Transaction ID', accessor: 'trd_id', disableGroupBy: true },
+        { Header: 'Instrument ID', accessor: 'instrument_id', disableGroupBy: true },
+        { Header: 'Trade Date', accessor: 'trade_date', disableGroupBy: true },
         {
-            columns,
-            data,
-            initialState: {
-                groupBy: ['type'], // Change 'category' to the field you want to group by
-            },
+            Header: 'Trade Type', accessor: 'trade_type', disableGroupBy: true,
+
         },
-        useGroupBy,
-        useExpanded)
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        setGroupBy,
-        prepareRow,
-        // state: {groupBy},
-    } = tableInstance
-    const firstPageRows = rows.slice(0, 200)
+        {
+            Header: 'Quantity', accessor: 'quantity', aggregate: 'sum', disableGroupBy: true,
+            Aggregated: ({ value }) => formatFloat(value)
+        },
+        {
+            Header: 'Trade Price', accessor: 'trade_price', disableGroupBy: true,
+            Cell: ({ value }) => formatFloat(value)
+        },
+        {
+            Header: 'Market Price', accessor: 'market_price', disableGroupBy: true,
+            Cell: ({ value }) => formatFloat(value)
+        },
+        {
+            Header: 'FX Rate', accessor: 'fx_rate', disableGroupBy: true,
+            Cell: ({ value }) => formatFloat(value)
+        },
+        {
+            Header: 'Book Value', accessor: 'bv', aggregate: 'sum', disableGroupBy: true,
+            Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            )
+        },
+        {
+            Header: 'Market Value', accessor: 'mv', aggregate: 'sum', disableGroupBy: true,
+            Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            )
+        },
+        {
+            Header: 'Unrealized P&L', accessor: 'ugl', aggregate: 'sum', disableGroupBy: true,
+             Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            )
+        },
+        {
+            Header: 'Realized P&L', accessor: 'rgl', aggregate: 'sum', disableGroupBy: true,
+            Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            )
+        },
+         {
+            Header: 'Weight', accessor: 'weight', aggregate: 'sum', disableGroupBy: true,
+            Aggregated: ({ value }) => `${formatFloat(value)}%`,
+            Cell: ({ value }) => `${formatFloat(value)}%`
+        },
+        {
+            Header: 'Leverage', accessor: 'pos_lev', aggregate: 'sum', disableGroupBy: true,
+            Aggregated: ({ value }) => `${formatFloat(value)}%`,
+            Cell: ({ value }) => `${formatFloat(value)}%`
+        }
+    ], []);
+
+    const tableInstance = useTable(
+        { columns, data, initialState: { groupBy: ['type'] } },
+        useGroupBy, useExpanded
+    );
+
+    const { getTableProps, getTableBodyProps, headerGroups, rows, setGroupBy, prepareRow } = tableInstance;
+    const firstPageRows = rows.slice(0, 200);
 
     useEffect(() => {
-        setGroupBy(['group', 'type'])
-    }, [props.data])
+        setGroupBy(['name']);
+    }, [data]);
+
     return (
-        <div style={{height: 500}}>
-            <div className={'card'} style={{height: '100%', overflowY: 'scroll'}}>
-                <table {...getTableProps()}>
+        <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+            <div className='card' style={{ backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '8px' }}>
+                <table {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
-                    {
-                        headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {
-                                    headerGroup.headers.map(column => (
-                                        <th {...column.getHeaderProps()}>
-                                            {column.canGroupBy ? (
-                                                // If the column can be grouped, let's add a toggle
-                                                <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
-                      {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
-                    </span>
-                                            ) : null}
-                                            {column.render('Header')}
-                                        </th>
-                                    ))}
+                        {headerGroups.map(headerGroup => (
+                            <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: '#eeeeee', fontWeight: 'bold' }}>
+                                {headerGroup.headers.map(column => (
+                                    <th {...column.getHeaderProps()}>
+                                        {column.canGroupBy && (
+                                            <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
+                                                {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
+                                            </span>
+                                        )}
+                                        {column.render('Header')}
+                                    </th>
+                                ))}
                             </tr>
                         ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                    {firstPageRows.map((row, i) => {
-                        prepareRow(row)
-                        // console.log(row)
+                    {firstPageRows.map(row => {
+                        prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()}
-                                style={{
-                                    cursor: row.isGrouped ? '' : 'pointer',
-                                    // background: row.isGrouped ? '#f2f4f4' : 'white'
-                                }}
-
-                                // onDoubleClick={() => {
-                                //     if (row.isGrouped) {
-                                //         console.log('grouped')
-                                //     } else {
-                                //         setShowModal(true)
-                                //         setSelectedTransaction(row.original)
-                                //     }
-                                // }
-                                // }
-                            >
-
-                                {row.cells.map(cell => {
-                                    return (
-                                        <td
-                                            {...cell.getCellProps()}
-                                            style={{
-                                                fontWeight: cell.isGrouped
-                                                    ? "bold"
-                                                    : cell.isAggregated
-                                                        ? "bold"
-                                                        : cell.isPlaceholder
-                                                            ? '#ff000042'
-                                                            : 'white',
-                                                color: (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value < 0 ? 'red' : (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value > 0 ? 'green' : 'black',
-                                            }}
-                                        >
-                                            {cell.isGrouped ? (
-                                                // If it's a grouped cell, add an expander and row count
-                                                <>
-                          <span {...row.getToggleRowExpandedProps()}>
-                            {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
-                          </span>{' '}
-                                                    {cell.render('Cell')} ({row.subRows.length})
-                                                </>
-                                            ) : cell.isAggregated ? (
-                                                // If the cell is aggregated, use the Aggregated
-                                                // renderer for cell
-                                                cell.render('Aggregated')
-                                            ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
-                                                // Otherwise, just render the regular cell
-                                                cell.render('Cell')
-
-                                            )}
-                                        </td>
-                                    )
-                                })
-                                }
+                            <tr {...row.getRowProps()}>
+                                {row.cells.map(cell => (
+                                    <td {...cell.getCellProps()} style={row.isGrouped ? { backgroundColor: "white", fontWeight: 'bold' } : {}}>
+                                        {cell.isGrouped ? (
+                                            <>
+                                                    <span {...row.getToggleRowExpandedProps()}>
+                                                        {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
+                                                    </span>{' '}
+                                                {cell.render('Cell')} ({row.subRows.length})
+                                            </>
+                                        ) : cell.isAggregated ? (
+                                            cell.render('Aggregated')
+                                        ) : (
+                                            cell.render('Cell')
+                                        )}
+                                    </td>
+                                ))}
                             </tr>
-                        )
+                        );
                     })}
                     </tbody>
                 </table>
             </div>
         </div>
-    )
+    );
 };
 
 export default HoldingsTable;

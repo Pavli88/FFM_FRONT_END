@@ -62,14 +62,14 @@ export const PositionExposures = ({portfolioCodes, server}) => {
         <div style={{padding: 10, width: '100%'}}>
 
             <div style={{
-                borderTop: "1px solid  #e5e8e8 ",
-                borderBottom: "1px solid  #e5e8e8 ",
+                // borderTop: "1px solid  #e5e8e8 ",
+                // borderBottom: "1px solid  #e5e8e8 ",
                 padding: "5px",
                 display: "flex",
                 justifyContent: 'space-between',
                 alignItems: 'center'
             }}>
-                <span style={{fontWeight: "bold"}}>Position Risk Exposure</span>
+                <span className="input-label" style={{ fontSize: "1.2rem", fontWeight: "bold" }}>Position Risk Exposure</span>
 
                 <div>
                     <span style={{paddingRight: 10}}>Net Exposure</span>

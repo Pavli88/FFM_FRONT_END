@@ -4,26 +4,14 @@ import { BsGear, BsExclamationDiamond, BsReverseLayoutTextSidebarReverse, BsColu
 
 export const PortfolioSidebarData = [
   {
-    title: "Dashboard",
-    path: "/portfolio/dashboard",
+    title: "Holdings",
+    path: "/portfolio/holdings",
     icon: <BsColumns size={20}/>,
   },
   {
     title: "Transactions",
     path: "/portfolio/transactions",
     icon: <BsReverseLayoutTextSidebarReverse size={20}/>
-
-  },
-  {
-    title: "Risk",
-    path: "/portfolio/risk",
-    icon: <BsExclamationDiamond size={20}/>
-
-  },
-  {
-    title: "Return",
-    path: "/portfolio/return",
-    icon: <BsGraphUp size={20}/>
 
   },
   {

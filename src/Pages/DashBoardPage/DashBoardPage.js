@@ -195,7 +195,7 @@ const DashBoardPage = () => {
             <div style={{
                 width: isMenuOpen ? "500px" : "50px",
                 transition: "width 0.3s ease",
-                backgroundColor: "#cfcccb",
+                backgroundColor: "#eeeeee",
                 height: "100vh",
                 position: "fixed",
                 zIndex: 2,
@@ -274,14 +274,14 @@ const DashBoardPage = () => {
 
                 <div style={{padding: 10}}>
                     <div style={{
-                        borderTop: "1px solid  #e5e8e8 ",
-                        borderBottom: "1px solid  #e5e8e8 ",
+                        // borderTop: "1px solid  #e5e8e8 ",
+                        // borderBottom: "1px solid  #e5e8e8 ",
                         padding: "5px",
                         display: "flex",
                         justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
-                        <span style={{fontWeight: "bold"}}>NAV</span>
+                        <span className="input-label" style={{fontSize: "1.2rem", fontWeight: "bold"}}>Net Asset Value</span>
                         <div>
                             <span style={{fontWeight: "bold", marginRight: 10}}>Total</span>
                             <span style={{fontWeight: "bold", marginRight: 10}}>{totalNav}</span>
