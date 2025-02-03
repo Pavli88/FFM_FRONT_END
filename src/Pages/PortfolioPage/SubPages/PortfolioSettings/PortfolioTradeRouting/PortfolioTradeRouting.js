@@ -89,13 +89,13 @@ const TradeRoute = (props) => {
             <td>
                 <div style={{display: 'flex'}}>
                     <div style={{width: '33%', padding: 2}}>
-                        <button className={'normal-button'}
+                        <button className="action-button add-button"
                         onClick={() => {setData({...data, is_active: data.is_active === 1 ? 0 : 1})
                         }}> {data.is_active === 1 ?
                     <BsFillCaretRightFill/> : <BsFillPauseFill/>}</button>
                     </div>
                     <div style={{width: '33%', padding: 2}}>
-                        <button className={'normal-button'} onClick={() => updateRouting()}><BsArrowRepeat/></button>
+                        <button className="action-button edit-button" onClick={() => updateRouting()}><BsArrowRepeat/></button>
                     </div>
                     <div style={{width: '33%', padding: 2}}>
                         <button className={'delete-button'} onClick={() => deleteRouting(data['id'])}><BsTrash/></button>

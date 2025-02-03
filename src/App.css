@@ -503,3 +503,83 @@ ul li:hover {
     border-bottom: 1px solid #ccc;
     font-size: 12px;
 }
+
+.action-button {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.action-button:hover {
+    background: #e0e0e0;
+}
+
+.edit-button {
+    color: #007bff;
+}
+
+.add-button {
+    color: #28a745;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+}
+
+.input-value {
+    color: #555;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding: 5px 0;
+}
+
+.transaction-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+.modal-header {
+    background: #f8f9fa;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.input-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.input-value {
+    color: #555;
+}
+
+.input-group {
+    margin: 10px 0;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
