@@ -53,15 +53,14 @@ const Notifications = () => {
 
 const MainApplication = ({config, userData}) => {
     const { server, currentDate, fistDayOfCurrentYear } = config;
-    const { username, email, firstName, lastName, dateJoined, lastLogin, isStaff, isSuperuser} = userData;
 
+    //User related data and variables
+    const { username, email, firstName, lastName, dateJoined, lastLogin, isStaff, isSuperuser} = userData;
     const [portfolios, setPortfolios] = useState([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState('');
     const [newPortfolio, setNewPortfolio] = useState(0);
 
     const [brokerData, setBrokerData] = useState([{}]);
-    const [entity, setEntity] = useState('Portfolio');
-
     const [accounts, setAccounts] = useState([]);
     const [newAccount, setNewAccount] = useState(0)
 
@@ -75,17 +74,19 @@ const MainApplication = ({config, userData}) => {
     const [portGroup, setPortGroup] = useState(null);
 
     useEffect(() => {
-            axios.get(server + 'portfolios/get/portfolios/', {
-                params: {
-                    owner: username
-                }
-            })
-                .then(response => setPortfolios(response.data))
+            axios.get(server + 'accounts/get/brokers')
+                .then(response => setBrokerData(response['data']))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-            axios.get(server + 'accounts/get/brokers')
-                .then(response => setBrokerData(response['data']))
+        }, []
+    );
+
+    useEffect(() => {
+            axios.get(server + 'portfolios/get/portfolios/', {
+                params: {owner: username}
+            })
+                .then(response => setPortfolios(response.data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
@@ -93,119 +94,109 @@ const MainApplication = ({config, userData}) => {
     );
 
     useEffect(() => {
-            axios.get(server + 'accounts/get/accounts/', {
-                params: {
-                    owner: username
-                }
-            })
+            axios.get(`${server}accounts/get/accounts/`, {params: {owner: username}})
                 .then(response => setAccounts(response.data))
                 .catch((error) => {
                     console.error('Error Message:', error);
                 });
-        }, [newAccount]
+        },[ newAccount ]
     );
-
 
 
     return (
         <div style={{background: '#FBFAFA', padding: 0}}>
             <ServerContext.Provider value={{server: server}}>
-                <EntityContext.Provider value={{
-                    entity: entity,
-                    saveEntity: setEntity,
+                <PortfolioContext.Provider value={{
+                    portfolios: portfolios,
+                    selectedPortfolio: selectedPortfolio,
+                    selectPortfolio: setSelectedPortfolio,
+                    saveNewPortfolio: setNewPortfolio,
                 }}>
-
-                            <PortfolioContext.Provider value={{
-                                portfolios: portfolios,
-                                selectedPortfolio: selectedPortfolio,
-                                selectPortfolio: setSelectedPortfolio,
-                                saveNewPortfolio: setNewPortfolio,
+                    <DateContext.Provider value={{
+                        startDate: startDate,
+                        endDate: endDate,
+                        saveStartDate: setStartDate,
+                        saveEndDate: setEndDate,
+                        currentDate: currentDate,
+                        firstDayOfCurrentYear: fistDayOfCurrentYear
+                    }}>
+                        <BrokerContext.Provider value={{
+                            brokerData: brokerData,
+                            accounts: accounts,
+                            newAccount: newAccount,
+                            saveAccount: setNewAccount,
+                        }}>
+                            <UserContext.Provider value={{
+                                user: username,
+                                email: email,
+                                firstName: firstName,
+                                lastName: lastName,
+                                dateJoined: dateJoined,
+                                lastLogin: lastLogin,
+                                isStaff: isStaff,
+                                isSuperuser: isSuperuser
                             }}>
-                                <DateContext.Provider value={{
-                                    startDate: startDate,
-                                    endDate: endDate,
-                                    saveStartDate: setStartDate,
-                                    saveEndDate: setEndDate,
-                                    currentDate: currentDate,
-                                    firstDayOfCurrentYear: fistDayOfCurrentYear
+                                <DashboardContext.Provider value={{
+                                    portGroup: portGroup,
+                                    setPortGroup: setPortGroup
                                 }}>
-                                    <BrokerContext.Provider value={{
-                                        brokerData: brokerData,
-                                        accounts: accounts,
-                                        newAccount: newAccount,
-                                        saveAccount: setNewAccount,
+                                    <ReactNotification/>
+
+                                    <div style={{
+                                        position: "fixed",
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        // border: '1px solid grey',
+                                        background: 'grey',
+                                        zIndex: 1000
                                     }}>
-                                        <UserContext.Provider value={{
-                                            user: username,
-                                            email: email,
-                                            firstName: firstName,
-                                            lastName: lastName,
-                                            dateJoined: dateJoined,
-                                            lastLogin: lastLogin,
-                                            isStaff: isStaff,
-                                            isSuperuser: isSuperuser
-                                        }}>
-                                            <DashboardContext.Provider value={{
-                                                portGroup: portGroup,
-                                                setPortGroup: setPortGroup
-                                            }}>
-                                                <ReactNotification/>
+                                        <Navigation user={username}/>
+                                    </div>
 
-                                                <div style={{
-                                                    position: "fixed",
-                                                    top: 0,
-                                                    left: 0,
-                                                    right: 0,
-                                                    // border: '1px solid grey',
-                                                    background: 'grey',
-                                                    zIndex: 1000
-                                                }}>
-                                                    <Navigation user={username}/>
-                                                </div>
+                                    <div style={{
+                                        marginTop: 85,
+                                        height: 'calc(100vh - 60px)',
+                                        width: '100%',
+                                        overflow: 'auto'
+                                    }}>
+                                        <Switch>
+                                            <Route path="/risk">
+                                                <RiskPage/>
+                                            </Route>
+                                            <Route path="/dashboard">
+                                                <DashBoardPage/>
+                                            </Route>
+                                            <Route path="/home">
+                                                <HomePage/>
+                                            </Route>
+                                            <Route path="/trade">
+                                                <TradePage/>
+                                            </Route>
+                                            <Route path="/data">
+                                                <DataPage/>
+                                            </Route>
+                                            <Route path="/portfolio">
+                                                <PortfolioPage/>
+                                            </Route>
+                                            <Route path="/calculations">
+                                                <CalculationsPage/>
+                                            </Route>
+                                            <Route path="/instruments">
+                                                <InstrumentPage/>
+                                            </Route>
+                                            <Route path="/profil">
+                                                <ProfilPage/>
+                                            </Route>
+                                            <Route path='*' element={<Redirect to='/dashboard'/>}/>
+                                        </Switch>
+                                    </div>
+                                </DashboardContext.Provider>
+                            </UserContext.Provider>
+                        </BrokerContext.Provider>
+                    </DateContext.Provider>
+                </PortfolioContext.Provider>
 
-                                                <div style={{
-                                                    marginTop: 85,
-                                                    height: 'calc(100vh - 60px)',
-                                                    width: '100%',
-                                                    overflow: 'auto'
-                                                }}>
-                                                    <Switch>
-                                                        <Route path="/risk">
-                                                            <RiskPage/>
-                                                        </Route>
-                                                        <Route path="/dashboard">
-                                                            <DashBoardPage/>
-                                                        </Route>
-                                                        <Route path="/home">
-                                                            <HomePage/>
-                                                        </Route>
-                                                        <Route path="/trade">
-                                                            <TradePage/>
-                                                        </Route>
-                                                        <Route path="/data">
-                                                            <DataPage/>
-                                                        </Route>
-                                                        <Route path="/portfolio">
-                                                            <PortfolioPage/>
-                                                        </Route>
-                                                        <Route path="/calculations">
-                                                            <CalculationsPage/>
-                                                        </Route>
-                                                        <Route path="/instruments">
-                                                            <InstrumentPage/>
-                                                        </Route>
-                                                        <Route path="/profil">
-                                                            <ProfilPage/>
-                                                        </Route>
-                                                        <Route path='*' element={<Redirect to='/dashboard'/>}/>
-                                                    </Switch>
-                                                </div>
-                                            </DashboardContext.Provider>
-                                        </UserContext.Provider>
-                                    </BrokerContext.Provider>
-                                </DateContext.Provider>
-                            </PortfolioContext.Provider>
-                </EntityContext.Provider>
             </ServerContext.Provider>
         </div>
     );
