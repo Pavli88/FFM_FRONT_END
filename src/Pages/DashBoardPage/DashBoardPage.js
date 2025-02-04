@@ -13,6 +13,7 @@ import PortfolioTransactionPnl
     from "../PortfolioPage/SubPages/PortfolioReturn/PortfolioTransactionPnl/PortfolioTransactionPnl";
 import TradingMetrics from "../../calculations/tradeMetrics";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
+import { BsCaretUpFill, BsCaretDownFill } from 'react-icons/bs';
 
 // Custom hook for fetching dashboard data
 const useDashboardData = (server, currentDate, portCodes) => {
@@ -183,12 +184,16 @@ const DashBoardPage = () => {
 
     const labels = portfolioNavData.map((d) => d.date)
     const lastRecordData = portfolioNavData.length > 0 ? portfolioNavData[portfolioNavData.length - 1]['records'] : []
+    const secondLastRecord = portfolioNavData.length > 0 ? portfolioNavData[portfolioNavData.length - 2]['records'] : []
     const portfolios = lastRecordData.map((d) => d.portfolio_code)
     const navValues = lastRecordData.map((d) => d.holding_nav)
 
     const totalNav = lastRecordData.map((n) => n.holding_nav).reduce((acc, curr) => acc + curr, 0).toFixed(2)
+    const totalSecondNav = secondLastRecord.map((n) => n.holding_nav).reduce((acc, curr) => acc + curr, 0).toFixed(2)
     const totalCash = lastRecordData.map((n) => n.cash_val).reduce((acc, curr) => acc + curr, 0).toFixed(2)
-
+    const secondTotalCash = secondLastRecord.map((n) => n.cash_val).reduce((acc, curr) => acc + curr, 0).toFixed(2)
+    const navChange = totalNav - totalSecondNav
+    const cashChange = totalCash - secondTotalCash
     return (
         <div style={{display: "flex", width: "100%", height: "100%"}}>
             {/* Side Menu */}
@@ -281,12 +286,42 @@ const DashBoardPage = () => {
                         justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
-                        <span className="input-label" style={{fontSize: "1.2rem", fontWeight: "bold"}}>Net Asset Value</span>
+                        <span className="input-label"
+                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Net Asset Value</span>
                         <div>
                             <span style={{fontWeight: "bold", marginRight: 10}}>Total</span>
-                            <span style={{fontWeight: "bold", marginRight: 10}}>{totalNav}</span>
+                            <span style={{fontWeight: "bold", marginRight: 10, color: totalNav > 0 ? "green" : "red"}}>
+                {totalNav > 0 ? "+" : ""}{totalNav}
+                                {navChange !== 0 && (
+                                    <span style={{fontSize: "0.8em", opacity: 0.7, marginLeft: 5}}>
+                        <span style={{
+                            color: navChange > 0 ? "green" : "red",
+                            display: "inline-flex",
+                            alignItems: "center"
+                        }}>
+                            {navChange > 0 ? <BsCaretUpFill/> : <BsCaretDownFill/>}
+                            {navChange > 0 ? "+" : "-"}{Math.abs(navChange)}
+                        </span>
+                    </span>
+                                )}
+            </span>
+
                             <span style={{fontWeight: "bold", marginRight: 10}}>Cash</span>
-                            <span style={{fontWeight: "bold"}}>{totalCash}</span>
+                            <span style={{fontWeight: "bold", color: totalNav > 0 ? "green" : "red"}}>
+                {totalNav > 0 ? "+" : ""}{totalCash}
+                                {cashChange !== 0 && (
+                                    <span style={{fontSize: "0.8em", opacity: 0.7, marginLeft: 5}}>
+                        <span style={{
+                            color: cashChange > 0 ? "green" : "red",
+                            display: "inline-flex",
+                            alignItems: "center"
+                        }}>
+                            {cashChange > 0 ? <BsCaretUpFill/> : <BsCaretDownFill/>}
+                            {cashChange > 0 ? "+" : "-"}{Math.abs(cashChange)}
+                        </span>
+                    </span>
+                                )}
+            </span>
                         </div>
 
                     </div>
