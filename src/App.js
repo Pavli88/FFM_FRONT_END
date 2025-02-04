@@ -12,7 +12,7 @@ function App(props) {
         return <MainPage server={props.server}/>
     }
     return (
-        <MainApplication config={props} user={auth}/>
+        <MainApplication config={props} userData={auth.user}/>
     );
 }
 export default App;

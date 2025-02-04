@@ -1,60 +1,106 @@
-import {Navbar, Nav } from 'react-bootstrap';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import { Link } from 'react-router-dom'
-import {useContext, useEffect, useState} from "react";
+import { Link } from 'react-router-dom';
+import { useContext , useState, useEffect, useRef} from 'react';
 import Notifications from "./Notifications/Notifications";
 import ServerContext from "../context/server-context";
 import AuthContext from "../context/AuthProvider";
 import axios from "axios";
+import UserContext from "../context/user-context";
+import { FaUserCircle } from 'react-icons/fa';
 
-const Navigation = (props) => {
+const Navbar = () => {
     const server = useContext(ServerContext)['server'];
-    const { setAuth } = useContext(AuthContext);
-    const [brokerModalStatus, setBrokerModalStatus] = useState(false);
-    const [processHandler, setProcessHandler] = useState(<></>);
+    const {user, email} = useContext(UserContext);
+    const {setAuth} = useContext(AuthContext);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownOpen(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+
     const userLogout = () => {
-        axios.get(server + 'user_logout/', )
+        axios.get(server + 'user_logout/')
             .then(response => console.log(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
-        setAuth({userAllowedToLogin: false});
+        setAuth({ userAllowedToLogin: false });
     };
 
     return (
-        <Navbar className={'nav-bar'}>
-            <Navbar.Brand href="react">
-                {/*<img*/}
-                {/*    // src={logo}*/}
-                {/*    alt="Fractal Logo"*/}
-                {/*    width="40" // Adjust size as needed*/}
-                {/*    height="40" // Adjust size as needed*/}
-                {/*    className="d-inline-block align-top"*/}
-                {/*/>*/}
-                Fractal
-            </Navbar.Brand>
-            <Nav className="mr-auto">
-                <Link className={'menu-button'} onClick={() => setProcessHandler(<></>)} as={Link}
-                      to={'/home'}>Home</Link>
-                <Link className={'menu-button'} as={Link} to={'/dashboard'}>Dashboard</Link>
-                <Link className={'menu-button'} as={Link} to={'/portfolio/holdings'}>Portfolio</Link>
-                <Link className={'menu-button'} as={Link} to={'/risk'}>Risk</Link>
-                <Link className={'menu-button'} as={Link} to={'/instruments'}>Instrument</Link>
-                <Link className={'menu-button'} as={Link} to={'/trade'}>Trade</Link>
-                <Link className={'menu-button'} as={Link} to={'/calculations'}>Calculations</Link>
-                <Link className={'menu-button'} as={Link} to={'/data'}>Data</Link>
-            </Nav>
-
-            <Notifications server={server}/>
-
-            <DropdownButton alignRight flip style={{borderRadius: '50px'}} title={props.user}>
-                <Dropdown.Item as={Link} to={'/profil'}>Profil</Dropdown.Item>
-                <Dropdown.Divider/>
-                <Dropdown.Item onSelect={userLogout}>Sign Out</Dropdown.Item>
-            </DropdownButton>
-        </Navbar>
+        <div className="nav-bar fixed-top">
+            <div className="nav-brand">
+                <Link className="menu-button" to="/home">Fractal</Link>
+            </div>
+            <div className="nav-links">
+                <Link className="menu-button" to="/dashboard">Dashboard</Link>
+                <Link className="menu-button" to="/portfolio/holdings">Portfolio</Link>
+                <Link className="menu-button" to="/risk">Risk</Link>
+                <Link className="menu-button" to="/instruments">Instrument</Link>
+                <Link className="menu-button" to="/trade">Trade</Link>
+                <Link className="menu-button" to="/calculations">Calculations</Link>
+                <Link className="menu-button" to="/data">Data</Link>
+            </div>
+            <div className="nav-notifications">
+                <Notifications server={server}/>
+            </div>
+            <div className="nav-user-menu" style={{position: 'relative'}} ref={dropdownRef}>
+                <button className="icon-button" onClick={() => setDropdownOpen(!dropdownOpen)} style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    backgroundColor: '#f0f0f0',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'background 0.3s'
+                }}>
+                    <FaUserCircle size={24}/>
+                </button>
+                {dropdownOpen && (
+                    <div className="dropdown-content" style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: '50px',
+                        background: '#fff',
+                        boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                        borderRadius: '10px',
+                        padding: '10px',
+                        minWidth: '150px'
+                    }}>
+                        <Link to="/profil" style={{
+                            display: 'block',
+                            padding: '8px 12px',
+                            textDecoration: 'none',
+                            color: '#333'
+                        }}>Profile</Link>
+                        <hr/>
+                        <button onClick={userLogout} style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            border: 'none',
+                            background: 'none',
+                            cursor: 'pointer',
+                            textAlign: 'left'
+                        }}>Sign Out
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
     );
 };
 
-export default Navigation;
+export default Navbar;

@@ -22,8 +22,6 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import Container from 'react-bootstrap/Container'
 
-// import './MainApplication.css'
-
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
         console.log(messages)
@@ -55,9 +53,9 @@ const Notifications = () => {
         );
     }
 
-const MainApplication = (props) => {
-    const { server, currentDate, fistDayOfCurrentYear } = props.config;
-    const { userName } = props.user;
+const MainApplication = ({config, userData}) => {
+    const { server, currentDate, fistDayOfCurrentYear } = config;
+    const { username, email, firstName, lastName, dateJoined, lastLogin, isStaff, isSuperuser} = userData;
 
     const [portfolios, setPortfolios] = useState([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState('');
@@ -81,7 +79,7 @@ const MainApplication = (props) => {
     useEffect(() => {
             axios.get(server + 'portfolios/get/portfolios/', {
                 params: {
-                    owner: userName
+                    owner: username
                 }
             })
                 .then(response => setPortfolios(response.data))
@@ -99,7 +97,7 @@ const MainApplication = (props) => {
     useEffect(() => {
             axios.get(server + 'accounts/get/accounts/', {
                 params: {
-                    owner: userName
+                    owner: username
                 }
             })
                 .then(response => setAccounts(response.data))
@@ -140,7 +138,14 @@ const MainApplication = (props) => {
                                         saveAccount: setNewAccount,
                                     }}>
                                         <UserContext.Provider value={{
-                                            user: userName
+                                            user: username,
+                                            email: email,
+                                            firstName: firstName,
+                                            lastName: lastName,
+                                            dateJoined: dateJoined,
+                                            lastLogin: lastLogin,
+                                            isStaff: isStaff,
+                                            isSuperuser: isSuperuser
                                         }}>
                                             <DashboardContext.Provider value={{
                                                 portGroup: portGroup,
@@ -157,7 +162,7 @@ const MainApplication = (props) => {
                                                     background: 'grey',
                                                     zIndex: 1000
                                                 }}>
-                                                    <Navigation user={userName}/>
+                                                    <Navigation user={username}/>
                                                 </div>
 
                                                 <div style={{
