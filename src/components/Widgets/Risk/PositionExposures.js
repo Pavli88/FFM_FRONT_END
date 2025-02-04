@@ -72,37 +72,37 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                 <span className="input-label" style={{ fontSize: "1.2rem", fontWeight: "bold" }}>Position Risk Exposure</span>
 
                 <div>
-                    <span style={{paddingRight: 10}}>Net Exposure</span>
+                    <span style={{fontWeight: "bold", marginRight: 10}}>Net Exposure</span>
                     <span
-                        style={{paddingRight: 10}}>{(exposureData[exposureData.length - 1]['data']['lev_exp'] * 100).toFixed(2)} %</span>
+                        style={{fontWeight: "bold", marginRight: 10}}>{(exposureData[exposureData.length - 1]['data']['lev_exp'] * 100).toFixed(2)} %</span>
                 </div>
 
                 <div>
-                    <span style={{paddingRight: 10}}>Risk</span>
+                    <span style={{fontWeight: "bold", marginRight: 10}}>Risk</span>
                     <span
-                        style={{paddingRight: 10}}>{((levFreeRisk) * 100).toFixed(2)} %</span>
+                        style={{fontWeight: "bold", marginRight: 10}}>{((levFreeRisk) * 100).toFixed(2)} %</span>
                 </div>
 
                 <div>
-                    <span style={{paddingRight: 10}}>Risk due to Leverage</span>
+                    <span style={{fontWeight: "bold", marginRight: 10}}>Risk due to Leverage</span>
                     <span
-                        style={{paddingRight: 10}}>{((totalRisk - levFreeRisk)* 100).toFixed(2)} %</span>
+                        style={{fontWeight: "bold", marginRight: 10}}>{((totalRisk - levFreeRisk)* 100).toFixed(2)} %</span>
                 </div>
 
                 <div>
-                    <span style={{paddingRight: 10}}>Total Risk</span>
+                    <span style={{fontWeight: "bold", marginRight: 10}}>Total Risk</span>
                     <span
-                        style={{paddingRight: 10}}>{(totalRisk * 100).toFixed(2)} %</span>
+                        style={{fontWeight: "bold", marginRight: 10}}>{(totalRisk * 100).toFixed(2)} %</span>
                 </div>
 
                 <div>
-                    <span style={{paddingRight: 10}}>Leverage</span>
+                    <span style={{fontWeight: "bold", marginRight: 10}}>Leverage</span>
                     <span
-                        style={{paddingRight: 10}}>{(exposureData[exposureData.length - 1]['data']['leverage']).toFixed(2)} x</span>
+                        style={{fontWeight: "bold", marginRight: 10}}>{(exposureData[exposureData.length - 1]['data']['leverage']).toFixed(2)} x</span>
                 </div>
 
                 <div>
-                    <span style={{paddingRight: 10}}>Correlation Days</span>
+                    <span style={{fontWeight: "bold", marginRight: 10}}>Correlation Days</span>
                     <input type={'number'}
                            min={0}
                            defaultValue={correlPeriod}
@@ -112,7 +112,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                 </div>
 
                 <div>
-                    <span style={{paddingRight: 10}}>Sample Period</span>
+                    <span style={{fontWeight: "bold", marginRight: 10}}>Sample Period</span>
                     <input type={'number'}
                            min={0}
                            defaultValue={samplePeriod}
@@ -162,8 +162,8 @@ export const PositionExposures = ({portfolioCodes, server}) => {
 
             </div>
 
-            <div style={{display: "flex"}}>
-                <div className={'card'} style={{flex: 1, height: 400, marginTop: 10, marginLeft: 5}}>
+            <div style={{display: "flex", marginTop: 15}}>
+                <div className={'card'} style={{flex: 1, height: 400, marginTop: 10, marginLeft: 15}}>
                     <div className={'card-header'} style={{
                         justifyContent: 'space-between'
                     }}>
@@ -181,7 +181,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                     ]} labels={std_dates}/>
                 </div>
 
-                <div className={'card'} style={{flex: 1, height: 400, marginTop: 10, marginLeft: 5}}>
+                <div className={'card'} style={{flex: 1, height: 400, marginTop: 10, marginLeft: 15}}>
                     <div className={'card-header'} style={{
                         justifyContent: 'space-between'
                     }}>
@@ -192,7 +192,7 @@ export const PositionExposures = ({portfolioCodes, server}) => {
                         values={exp_hist}/>
                 </div>
 
-                <div className={'card'} style={{flex: 1, height: 400, marginTop: 10, marginLeft: 5}}>
+                <div className={'card'} style={{flex: 1, height: 400, marginTop: 10, marginLeft: 15}}>
                     <div className={'card-header'} style={{
                         justifyContent: 'space-between'
                     }}>

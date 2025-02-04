@@ -310,14 +310,15 @@ const DashBoardPage = () => {
                 {/*pnl*/}
                 <div style={{padding: 10}}>
                     <div style={{
-                        borderTop: "1px solid  #e5e8e8 ",
-                        borderBottom: "1px solid  #e5e8e8 ",
+                        // borderTop: "1px solid  #e5e8e8 ",
+                        // borderBottom: "1px solid  #e5e8e8 ",
                         padding: "5px",
                         display: "flex",
                         justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
-                        <span style={{fontWeight: "bold"}}>Profit and Loss</span>
+                        <span className="input-label"
+                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Profit and Loss</span>
 
                     </div>
                     <div style={{display: "flex", height: 350, marginTop: 10}}>
@@ -342,14 +343,15 @@ const DashBoardPage = () => {
                 {/* Performance Section */}
                 <div style={{padding: 10}}>
                     <div style={{
-                        borderTop: "1px solid #e5e8e8",
-                        borderBottom: "1px solid #e5e8e8",
+                        // borderTop: "1px solid #e5e8e8",
+                        // borderBottom: "1px solid #e5e8e8",
                         padding: "5px",
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center"
                     }}>
-                        <span style={{fontWeight: "bold"}}>Performance</span>
+                        <span className="input-label"
+                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Performance</span>
                     </div>
 
                     <div style={{display: "flex", height: 500, marginTop: 10}}>

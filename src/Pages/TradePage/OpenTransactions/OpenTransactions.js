@@ -204,106 +204,108 @@ const OpenTransactions = (props) => {
     }, [openTransactionsData])
 
     return (
+        <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+            <div className='card' style={{backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '8px'}}>
 
-        <div className={'card'} style={{width: '100%'}}>
-            <div className={'card-header'}>
-                <span>Open Transactions</span>
-                <div style={{position: "absolute", right: 10}}>
-                    <button className={'normal-button'} onClick={() => setShowTradeModal(true)}>New</button>
+                <div className={'card-header'}>
+                    <div style={{position: "absolute", left: 10, padding: 15}}>
+                        <button className={'normal-button'} onClick={() => setShowTradeModal(true)}>New</button>
+                    </div>
                 </div>
-            </div>
 
-            <div style={{height: '100%', overflowY: 'scroll'}}>
-                <table {...getTableProps()}>
-                    <thead>
-                    {
-                        headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {
-                                    headerGroup.headers.map(column => (
-                                        <th {...column.getHeaderProps()}>
-                                            {column.canGroupBy ? (
-                                                // If the column can be grouped, let's add a toggle
-                                                <span {...column.getGroupByToggleProps()}
-                                                      style={{paddingRight: 5}}>
+                <div style={{height: '100%', overflowY: 'scroll'}}>
+                    <table {...getTableProps()}>
+                        <thead>
+                        {
+                            headerGroups.map(headerGroup => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {
+                                        headerGroup.headers.map(column => (
+                                            <th {...column.getHeaderProps()}>
+                                                {column.canGroupBy ? (
+                                                    // If the column can be grouped, let's add a toggle
+                                                    <span {...column.getGroupByToggleProps()}
+                                                          style={{paddingRight: 5}}>
                       {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
                     </span>
-                                            ) : null}
-                                            {column.render('Header')}
-                                        </th>
-                                    ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {firstPageRows.map((row, i) => {
-                        prepareRow(row)
-                        return (
-                            <tr {...row.getRowProps()}
-                                style={{
-                                    cursor: row.isGrouped ? '' : 'pointer',
-                                }}
+                                                ) : null}
+                                                {column.render('Header')}
+                                            </th>
+                                        ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                        {firstPageRows.map((row, i) => {
+                            prepareRow(row)
+                            return (
+                                <tr {...row.getRowProps()}
+                                    style={{
+                                        cursor: row.isGrouped ? '' : 'pointer',
+                                    }}
 
-                                onDoubleClick={() => {
-                                    if (row.isGrouped) {
-                                        console.log('grouped')
-                                    } else {
-                                        setShowModal(true)
-                                        setSelectedTransaction(row.original)
+                                    onDoubleClick={() => {
+                                        if (row.isGrouped) {
+                                            console.log('grouped')
+                                        } else {
+                                            setShowModal(true)
+                                            setSelectedTransaction(row.original)
+                                        }
                                     }
-                                }
-                                }
-                                className={'table-row-all'}
-                            >
-                                {row.cells.map(cell => {
-                                    return (
-                                        <td
-                                            {...cell.getCellProps()}
-                                            style={{
-                                                fontWeight: cell.isGrouped
-                                                    ? "bold"
-                                                    : cell.isAggregated
+                                    }
+                                    className={'table-row-all'}
+                                >
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <td
+                                                {...cell.getCellProps()}
+                                                style={{
+                                                    fontWeight: cell.isGrouped
                                                         ? "bold"
-                                                        : cell.isPlaceholder
-                                                            ? '#ff000042'
-                                                            : 'white',
-                                                // color: (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value < 0 ? 'red' : (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value > 0 ? 'green' : 'black',
-                                            }}
-                                        >
-                                            {cell.isGrouped ? (
-                                                // If it's a grouped cell, add an expander and row count
-                                                <>
-                          <span {...row.getToggleRowExpandedProps()}>
+                                                        : cell.isAggregated
+                                                            ? "bold"
+                                                            : cell.isPlaceholder
+                                                                ? '#ff000042'
+                                                                : 'white',
+                                                    // color: (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value < 0 ? 'red' : (cell.column.Header === 'Change' || cell.column.Header === 'P&L') && cell.value > 0 ? 'green' : 'black',
+                                                }}
+                                            >
+                                                {cell.isGrouped ? (
+                                                    // If it's a grouped cell, add an expander and row count
+                                                    <>
+                           <span {...row.getToggleRowExpandedProps()}>
                             {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
                           </span>{' '}
-                                                    {cell.render('Cell')} ({row.subRows.length})
-                                                </>
-                                            ) : cell.isAggregated ? (
-                                                // If the cell is aggregated, use the Aggregated
-                                                // renderer for cell
-                                                cell.render('Aggregated')
-                                            ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
-                                                // Otherwise, just render the regular cell
-                                                cell.render('Cell')
+                                                        {cell.render('Cell')} ({row.subRows.length})
+                                                    </>
+                                                ) : cell.isAggregated ? (
+                                                    // If the cell is aggregated, use the Aggregated
+                                                    // renderer for cell
+                                                    cell.render('Aggregated')
+                                                ) : cell.isPlaceholder ? null : ( // For cells with repeated values, render null
+                                                    // Otherwise, just render the regular cell
+                                                    cell.render('Cell')
 
-                                            )}
-                                        </td>
-                                    )
-                                })
-                                }
-                            </tr>
-                        )
-                    })}
-                    </tbody>
-                </table>
+                                                )}
+                                            </td>
+                                        )
+                                    })
+                                    }
+                                </tr>
+                            )
+                        })}
+                        </tbody>
+                    </table>
+                </div>
+                <UnitModal show={showModal}
+                           hide={() => setShowModal(false)}
+                           data={selectedTransaction}
+                           server={props.server}
+                           update={() => fetchTransactions()}
+                />
+                <TradeExecution server={props.server} show={showTradeModal} hide={() => setShowTradeModal(false)}
+                                update={() => fetchTransactions()}/>
             </div>
-            <UnitModal show={showModal}
-                       hide={() => setShowModal(false)}
-                       data={selectedTransaction}
-                       server={props.server}
-                       update={()=>fetchTransactions()}
-            />
-            <TradeExecution server={props.server} show={showTradeModal} hide={() => setShowTradeModal(false)} update={() => fetchTransactions()}/>
         </div>
     )
 };

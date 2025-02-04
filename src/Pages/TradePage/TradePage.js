@@ -142,6 +142,10 @@ const TradePage = () => {
                     flex: 1,
                     padding: 10,
                 }}>
+
+                    <h2 className="input-label" style={{fontSize: "1.2rem", fontWeight: "bold"}}>
+                    Open Transactions
+                </h2>
                     <OpenTransactions server={server}/>
                 </div>
 

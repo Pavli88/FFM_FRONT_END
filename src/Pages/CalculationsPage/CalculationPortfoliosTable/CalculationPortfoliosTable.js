@@ -37,10 +37,7 @@ const CalculationPortfoliosTable = (props) => {
         </td>
     </tr>)
     return (
-        <Card style={{height: '100%'}}>
-            <Card.Header>
-                Portfolios
-            </Card.Header>
+        <div className='card' style={{backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '8px'}}>
             <div style={{height: '100%', overflowY: "scroll"}}>
                 <table style={{width: '100%'}}>
                     <tbody style={{width: '100%'}}>
@@ -48,7 +45,7 @@ const CalculationPortfoliosTable = (props) => {
                     </tbody>
                 </table>
             </div>
-        </Card>
+        </div>
     )
 };
 export default CalculationPortfoliosTable;

@@ -38,7 +38,7 @@ const Navigation = (props) => {
                 <Link className={'menu-button'} onClick={() => setProcessHandler(<></>)} as={Link}
                       to={'/home'}>Home</Link>
                 <Link className={'menu-button'} as={Link} to={'/dashboard'}>Dashboard</Link>
-                <Link className={'menu-button'} as={Link} to={'/portfolio/dashboard'}>Portfolio</Link>
+                <Link className={'menu-button'} as={Link} to={'/portfolio/holdings'}>Portfolio</Link>
                 <Link className={'menu-button'} as={Link} to={'/risk'}>Risk</Link>
                 <Link className={'menu-button'} as={Link} to={'/instruments'}>Instrument</Link>
                 <Link className={'menu-button'} as={Link} to={'/trade'}>Trade</Link>

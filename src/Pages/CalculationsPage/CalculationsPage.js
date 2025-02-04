@@ -60,12 +60,15 @@ const CalculationsPage = (props) => {
             <div className={'page-container'}>
                 <CalculationOptions run={runCalculation}/>
                 <div style={{display: "flex", height: 800}}>
+
                     <div style={{paddingBottom: 15, paddingLeft: 15, paddingRight: 15, width: '30%', height: '100%'}}>
-                        <CalculationPortfoliosTable data={portfolios} />
+                        <span className="input-label"
+                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Porftolios</span>
+                        <CalculationPortfoliosTable data={portfolios}/>
                     </div>
 
                     <div style={{paddingBottom: 15, paddingRight: 15, width: '70%', height: '100%'}}>
-                        <CalculationResponseTable data={calcResponse}/>
+                    <CalculationResponseTable data={calcResponse}/>
                     </div>
                 </div>
             </div>
