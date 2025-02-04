@@ -1,7 +1,6 @@
 import {useContext, useState} from "react";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import CardWithHeader from "../../Widgets/Charts/CardWithHeader";
 import RobotContext from "../../context/robot-context";
 import Button from "react-bootstrap/Button";
 
@@ -33,7 +32,7 @@ const TradeExecutor = (props) => {
 
     return (
         <div style={{width: '100%', paddingLeft: 15}}>
-            <CardWithHeader headerContent={'Trades Execuion'}>
+            <div className={'card'}>
             <div style={{width: '100%', height:'100%'}}>
                 <div style={{padding: '5px'}}>
                     <Form.Label>Robot</Form.Label>
@@ -58,7 +57,7 @@ const TradeExecutor = (props) => {
                     Execute
                 </Button>
             </div>
-        </CardWithHeader>
+        </div>
         </div>
     );
 };

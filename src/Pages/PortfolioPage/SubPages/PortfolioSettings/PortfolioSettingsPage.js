@@ -5,7 +5,6 @@ import PortfolioPageContext from "../../context/portfolio-page-context";
 import './PortfolioSettingsPage.css'
 import {Nav, Card} from "react-bootstrap";
 import Form from 'react-bootstrap/Form'
-import CardWithHeader from "../../../../Widgets/Charts/CardWithHeader";
 import axios from "axios";
 import Select from "react-select";
 import PortfolioProcessWidget from "./PortfolioProcessWidget/PortfolioProcessWidget";

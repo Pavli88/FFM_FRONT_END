@@ -1,4 +1,3 @@
-import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
 import BrokerContext from "../../../context/broker-context";
 import {useContext} from "react";
 import {BsDash, BsTrash} from "react-icons/bs";

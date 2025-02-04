@@ -1,16 +1,9 @@
-import PlusMinusButtonGroup from "../../../components/PlusMinusButtonGroup/PlusMinusButtonGroup";
-import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
-import {BsDash, BsPlus, BsDiagram3} from "react-icons/bs";
-import NewPortfolio from "../ProfilePortfolios/NewPortfolio";
+import {BsDash, BsPlus} from "react-icons/bs";
 import {useContext, useEffect, useRef, useState} from "react";
-import UserContext from "../../../context/user-context";
 import ServerContext from "../../../context/server-context";
 import DashboardContext from "../../../context/dashboard-context";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import DateContext from "../../../context/date-context";
-import Card from "react-bootstrap/Card";
 
 const AddModal = (props) => {
     const server = useContext(ServerContext)['server'];

@@ -1,4 +1,3 @@
-import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
 import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare, BsTrash} from "react-icons/bs";
 import './TradeSignals.css'
 import {useEffect, useMemo, useState} from "react";

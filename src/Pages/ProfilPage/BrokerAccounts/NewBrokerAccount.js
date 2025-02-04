@@ -1,11 +1,7 @@
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import {useState, useRef, useContext} from "react";
-
 import axios from "axios";
 import BrokerContext from "../../../context/broker-context";
-import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
-import {BsDash} from "react-icons/bs";
 
 const NewBrokerAccount = (props) => {
     const { user, server} = props.parameters;

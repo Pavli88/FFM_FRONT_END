@@ -1,9 +1,7 @@
-import CardWithHeader from "../../../Widgets/Charts/CardWithHeader";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-import {useContext, useState, useRef} from "react";
+import {useContext, useRef} from "react";
 import axios from "axios";
 
 // Context

@@ -3,11 +3,9 @@ import {Route, Switch} from "react-router-dom";
 import 'react-pro-sidebar/dist/css/styles.css';
 import ServerContext from "../../context/server-context";
 import PortfolioDashBoardPage from "./SubPages/PortfolioDashboard/PortfolioDashBoardPage";
-import PortfolioRiskPage from "./SubPages/PortfolioRisk/PortfolioRiskPage";
 import PortfolioSettingsPage from "./SubPages/PortfolioSettings/PortfolioSettingsPage";
 import PortfolioTransactionsPage from "./SubPages/PortfolioTransactions/PortfolioTransactionsPage";
 import PortfolioDataImport from "./SubPages/PortfolioImport/PortfolioDataImport";
-import PortfolioReturnPage from "./SubPages/PortfolioReturn/PortfolioReturnPage";
 import PortfolioNavBar from "./PortfolioNavBar/PortfolioNavBar";
 import PortfolioPageContext from "./context/portfolio-page-context";
 import {PortfolioSidebarData} from "./PortfolioSidebarData";
@@ -16,7 +14,6 @@ import './PortfolioPage.css'
 import Card from "react-bootstrap/Card";
 import {BsChevronLeft, BsChevronRight, BsPencil} from "react-icons/bs";
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
 import axios from "axios";
 import DateContext from "../../context/date-context";
 

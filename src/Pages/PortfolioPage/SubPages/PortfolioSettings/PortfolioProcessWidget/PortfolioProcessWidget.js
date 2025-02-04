@@ -1,6 +1,5 @@
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import CardWithHeader from "../../../../../Widgets/Charts/CardWithHeader";
 import PortfolioTradeRouting from "../PortfolioTradeRouting/PortfolioTradeRouting";
 import Card from "react-bootstrap/Card";
 const PortfolioProcessWidget = (props) => {

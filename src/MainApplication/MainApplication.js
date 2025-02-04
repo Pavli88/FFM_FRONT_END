@@ -3,7 +3,6 @@ import EntityContext from "../context/entity-context";
 import PortfolioContext from "../context/portfolio-context";
 import DateContext from "../context/date-context";
 import UserContext from "../context/user-context";
-import appConfig from "../config files/app-config";
 import BrokerContext from "../context/broker-context";
 import DashboardContext from "../context/dashboard-context";
 import ReactNotification from "react-notifications-component";
@@ -20,7 +19,6 @@ import ProfilPage from "../Pages/ProfilPage/ProfilPage";
 import DataPage from "../Pages/DataPage/DataPage";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import Container from 'react-bootstrap/Container'
 
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
@@ -166,7 +164,7 @@ const MainApplication = ({config, userData}) => {
                                                 </div>
 
                                                 <div style={{
-                                                    marginTop: 60,
+                                                    marginTop: 85,
                                                     height: 'calc(100vh - 60px)',
                                                     width: '100%',
                                                     overflow: 'auto'

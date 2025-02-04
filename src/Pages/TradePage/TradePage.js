@@ -1,14 +1,9 @@
-import TradeTableData from "./TradeTableData";
-import TradeExecutor from "./TradeExecutor";
 import TradeSignals from "./TradePageSignals/TradeSignals";
 import OpenTransactions from "./OpenTransactions/OpenTransactions";
 import React from "react";
-import {useContext, useState, useEffect} from "react";
-import EnvContext from "../../context/env-context";
+import {useContext, useState} from "react";
 import ServerContext from "../../context/server-context";
 import TradeContext from "./context/trade-context";
-import TradeExecution from "./TradeExecution/TradeExecution";
-import axios from "axios";
 import {BsChevronLeft, BsChevronRight} from "react-icons/bs";
 
 const TradePage = () => {

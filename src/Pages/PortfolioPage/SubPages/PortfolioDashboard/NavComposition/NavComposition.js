@@ -1,10 +1,5 @@
-import ChartWidget from "../../../../../Widgets/Charts/ChartWidget";
-import NavCompositionChartConfig from "./NavCompositionChartConfig";
-import PortfolioPageContext from "../../../context/portfolio-page-context";
 import Card from "react-bootstrap/Card";
 import Chart from "react-apexcharts";
-import axios from "axios";
-import {useContext, useState} from "react";
 
 const NavComposition = (props) => {
     const dates = props.data.map((data) => data.date)

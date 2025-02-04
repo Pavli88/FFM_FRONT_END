@@ -1,23 +1,16 @@
-import NavComposition from "./NavComposition/NavComposition";
 import axios from "axios";
 import {useContext, useEffect, useState, useRef} from "react";
 import PortfolioPageContext from "../../context/portfolio-page-context";
 import DateContext from "../../../../context/date-context";
 import PortfolioHoldings from "../PortfolioHoldings/PortfolioHoldings/PortfolioHoldings";
-import PortfolioNav from "./PortfolioNav/PortfolioNav";
-import CashFlow from "./CashFlow/CashFlow";
-import CashBalance from "./CashBalance/CashBalance";
-import Section from "../../../../components/Layout/Section";
 
 const PortfolioDashBoardPage = (props) => {
-    const firstDayOfYear = useContext(DateContext).firstDayOfCurrentYear;
     const currentDate = useContext(DateContext).currentDate;
     const portfoliCode = useContext(PortfolioPageContext).portfolioCode;
     const [navData, setNavData] = useState([{}])
     const [holdingDate, setHoldingDate] = useState(currentDate);
     const [holdingData, setHoldingdata] = useState([{}])
     const [startDate, setStartDate] = useState(props.portfolioData.inception_date);
-    const startDateRef = useRef();
     const [showCashFlowPanel, setShowCashflowPanel] = useState('NAV');
     const [cfData, setCfData] = useState({dates: [], series: [{}]});
 
