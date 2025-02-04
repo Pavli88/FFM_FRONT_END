@@ -1,3 +1,5 @@
+import { BsCaretUpFill, BsCaretDownFill } from 'react-icons/bs';
+
 const calculateNetProfit = (profits) => {
     return profits.reduce((acc, profit) => acc + profit, 0);
 };
@@ -39,54 +41,50 @@ const calculateExpectancy = (profits) => {
 };
 
 const TradingMetrics = ({ profits, maxUnrealized }) => {
+    const getFormattedValue = (value) => {
+        if (value === undefined || value === null || isNaN(value)) {
+            return <span style={{ color: 'black' }}>0.00</span>;
+        }
+
+        const isPositive = value > 0;
+        const isNegative = value < 0;
+        const color = isPositive ? 'green' : isNegative ? 'red' : 'black';
+        const Icon = isPositive ? BsCaretUpFill : isNegative ? BsCaretDownFill : null;
+
+        return (
+            <span style={{ color, fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'right' }}>
+                {Icon && <Icon style={{ marginRight: 5 }} />} {value.toFixed(2)}
+            </span>
+        );
+    };
+
+    const metrics = [
+        { label: 'Net Profit', value: calculateNetProfit(profits) },
+        { label: 'Gross Profit', value: calculateGrossProfit(profits) },
+        { label: 'Gross Loss', value: calculateGrossLoss(profits) },
+        { label: 'Profit Factor', value: calculateProfitFactor(profits) },
+        { label: 'Win Rate %', value: calculateWinRate(profits) },
+        { label: 'Average Win', value: calculateAverageWin(profits) },
+        { label: 'Average Loss', value: calculateAverageLoss(profits) },
+        { label: 'Expectancy', value: calculateExpectancy(profits) },
+        { label: 'Max Drawdown', value: maxUnrealized },
+        { label: 'Profit to Drawdown', value: calculateNetProfit(profits) / Math.abs(maxUnrealized) }
+    ];
 
     return (
-        <div className={'card'}>
-            <div className={'card-header'}>Profit Metrics</div>
-            <div style={{margin: 10}}>
-                <div className={"aligned-container"}>
-                    <span>Net Profit</span>
-                    <span>{calculateNetProfit(profits).toFixed(2)}</span>
-                </div>
-                <div className={"aligned-container"}>
-                    <span>Gross Profit</span>
-                    <span>{calculateGrossProfit(profits).toFixed(2)}</span>
-                </div>
-                <div className={"aligned-container"}>
-                    <span>Gross Loss</span>
-                    <span>{calculateGrossLoss(profits).toFixed(2)}</span>
-                </div>
-                <div className={"aligned-container"}>
-                    <span>Profit Factor</span>
-                    <span>{calculateProfitFactor(profits).toFixed(2)}</span>
-                </div>
-                <div className={"aligned-container"}>
-                    <span>Win Rate</span>
-                    <span>{calculateWinRate(profits).toFixed(2)} %</span>
-                </div>
-                <div className={"aligned-container"}>
-                    <span>Average Win</span>
-                    <span>{calculateAverageWin(profits).toFixed(2)}</span>
-                </div>
-                <div className={"aligned-container"}>
-                    <span>Average Loss</span>
-                    <span>{calculateAverageLoss(profits).toFixed(2)}</span>
-                </div>
-                <div className={"aligned-container"}>
-                    <span>Expectancy</span>
-                    <span>{calculateExpectancy(profits).toFixed(2)}</span>
-                </div>
-                <div className={"aligned-container"}>
-                    <span>Max Drawdown</span>
-                    <span>{maxUnrealized.toFixed(2)}</span>
-                </div>
-                <div className={"aligned-container"}>
-                    <span>Profit to Drawdown</span>
-                    <span>{(calculateNetProfit(profits) / Math.abs(maxUnrealized)).toFixed(4)}</span>
-                </div>
+        <div className='card'>
+            <div style={{ margin: 10 }}>
+                {metrics.map(({ label, value, suffix = '' }) => (
+                    <div className='aligned-container' key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '30px' }}>
+                        <span>{label}</span>
+                        <span style={{ textAlign: 'right', flex: 1 }}>{getFormattedValue(value)}</span>
+                    </div>
+                ))}
             </div>
         </div>
     );
 };
 
 export default TradingMetrics;
+
+
