@@ -36,13 +36,29 @@ const TableGrouped = (props) => {
         }
     };
 
+    // Handle checkbox selection
+    const handleCheckboxChange = (e, id) => {
+
+        if (e.target.checked) {
+            // Add item if not already in the list
+            props.updateSelected((prev) => [...prev, id]);
+        } else {
+            // Remove item from the list
+            props.updateSelected((prev) => prev.filter((item) => item !== id));
+        }
+    };
+
     const columns = useMemo(() => [
         {
             Header: "Actions",
             accessor: "actions",
             Cell: ({row}) => (
                 <div style={{display: "flex", alignItems: "center", gap: "8px"}}>
-                    <input type="checkbox" onChange={(e) => props.updateSelected(e, row.original.id)}/>
+                    <input
+                        type="checkbox"
+                        // checked={selectedItems.has(row.original.id)}
+                        onChange={(e) => handleCheckboxChange(e, row.original.id)}
+                    />
                     <button className="action-button edit-button" onClick={() => onEditTransaction(row.original)}>
                         <BsPencil size={16}/>
                     </button>
@@ -56,9 +72,9 @@ const TableGrouped = (props) => {
             ),
         },
         {Header: "ID", accessor: "id"},
-        { Header: "Linked Transaction", accessor: "transaction_link_code" },
-        { Header: "Portfolio Code", accessor: "portfolio_code" },
-        { Header: "Trade Date", accessor: "trade_date" },
+        {Header: "Linked Transaction", accessor: "transaction_link_code"},
+        {Header: "Portfolio Code", accessor: "portfolio_code"},
+        {Header: "Trade Date", accessor: "trade_date" },
         { Header: "Settlement Date", accessor: "settlement_date" },
         { Header: "Transaction Type", accessor: "transaction_type" },
         { Header: "Security Name", accessor: "name" },
@@ -307,7 +323,7 @@ const PortfolioTransactions = ({ server, data, fetch, portfolio }) => {
     const [showTransactionPanel, setShowTransactionPanel] = useState(false);
     const [showCashPanel, setShowCashPanel] = useState(false);
     const [selectedIds, setSelectedIds] = useState([]);
-
+    console.log(selectedIds)
     const deleteTransaction = async () => {
         if (selectedIds.length === 0) return;
         try {
@@ -319,12 +335,6 @@ const PortfolioTransactions = ({ server, data, fetch, portfolio }) => {
         } catch (error) {
             console.error("Error deleting transaction:", error);
         }
-    };
-
-    const handleCheckboxChange = (id, checked) => {
-        setSelectedIds(prevIds =>
-            checked ? [...prevIds, id] : prevIds.filter(selectedId => selectedId !== id)
-        );
     };
 
     return (
@@ -345,7 +355,7 @@ const PortfolioTransactions = ({ server, data, fetch, portfolio }) => {
                     <button
                         className={`p-2 rounded-lg ${selectedIds.length ? "bg-red-500 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
                         onClick={deleteTransaction}
-                        disabled={!selectedIds.length}
+                        // disabled={!selectedIds.length}
                     >
                         <BsTrash size={20} />
                     </button>
@@ -354,7 +364,7 @@ const PortfolioTransactions = ({ server, data, fetch, portfolio }) => {
 
             {/* Transactions Table */}
             <div className="bg-white rounded-lg shadow-md p-4 overflow-auto max-h-[600px]">
-                <TableGrouped data={data} server={server} fetch={fetch} updateSelected={handleCheckboxChange} />
+                <TableGrouped data={data} server={server} fetch={fetch} updateSelected={(e) => setSelectedIds(e)} />
             </div>
 
             {/* Transaction Entry Modal */}
