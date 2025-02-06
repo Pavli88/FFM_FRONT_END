@@ -323,7 +323,7 @@ const PortfolioTransactions = ({ server, data, fetch, portfolio }) => {
     const [showTransactionPanel, setShowTransactionPanel] = useState(false);
     const [showCashPanel, setShowCashPanel] = useState(false);
     const [selectedIds, setSelectedIds] = useState([]);
-    console.log(selectedIds)
+    // console.log(selectedIds)
     const deleteTransaction = async () => {
         if (selectedIds.length === 0) return;
         try {
