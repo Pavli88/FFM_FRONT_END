@@ -1,5 +1,4 @@
 import ServerContext from "../context/server-context";
-import EntityContext from "../context/entity-context";
 import PortfolioContext from "../context/portfolio-context";
 import DateContext from "../context/date-context";
 import UserContext from "../context/user-context";
@@ -15,10 +14,12 @@ import PortfolioPage from "../Pages/PortfolioPage/PortfolioPage";
 import CalculationsPage from "../Pages/CalculationsPage/CalculationsPage";
 import InstrumentPage from "../Pages/InstrumentPage/InstrumentPage";
 import DashBoardPage from "../Pages/DashBoardPage/DashBoardPage";
-import ProfilPage from "../Pages/ProfilPage/ProfilPage";
+import ProfilePage from "../Pages/UserMenu/Profile/ProfilePage";
+import MyPortfoliosPage from "../Pages/UserMenu/MyPortfolios/MyPortfoliosPage";
 import DataPage from "../Pages/DataPage/DataPage";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import BrokerAccountsPage from "../Pages/UserMenu/BrokerAccounts/BrokerAccountsPage";
 
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
@@ -186,7 +187,13 @@ const MainApplication = ({config, userData}) => {
                                                 <InstrumentPage/>
                                             </Route>
                                             <Route path="/profil">
-                                                <ProfilPage/>
+                                                <ProfilePage/>
+                                            </Route>
+                                            <Route path="/myPortfolios">
+                                                <MyPortfoliosPage/>
+                                            </Route>
+                                            <Route path="/brokerAccounts">
+                                                <BrokerAccountsPage/>
                                             </Route>
                                             <Route path='*' element={<Redirect to='/dashboard'/>}/>
                                         </Switch>

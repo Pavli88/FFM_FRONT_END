@@ -85,7 +85,25 @@ const Navbar = () => {
                             padding: '8px 12px',
                             textDecoration: 'none',
                             color: '#333'
-                        }}>Profile</Link>
+                        }}>My Profile</Link>
+                        <Link to="/myPortfolios" style={{
+                            display: 'block',
+                            padding: '8px 12px',
+                            textDecoration: 'none',
+                            color: '#333'
+                        }}>My Portfolios</Link>
+                        <Link to="/subscriptions" style={{
+                            display: 'block',
+                            padding: '8px 12px',
+                            textDecoration: 'none',
+                            color: '#333'
+                        }}>Subscriptions</Link>
+                        <Link to="/brokerAccounts" style={{
+                            display: 'block',
+                            padding: '8px 12px',
+                            textDecoration: 'none',
+                            color: '#333'
+                        }}>Broker Accounts</Link>
                         <hr/>
                         <button onClick={userLogout} style={{
                             width: '100%',

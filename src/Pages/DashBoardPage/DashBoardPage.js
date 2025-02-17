@@ -7,7 +7,7 @@ import DashboardContext from "../../context/dashboard-context";
 import {BarChartGrouped, StackedBarChart} from "../../components/Charts/BarCharts";
 import {PieChart} from "../../components/Charts/PieCharts";
 import {PositionExposures} from "../../components/Widgets/Risk/PositionExposures";
-import PortfolioGroup from "../ProfilPage/PortfolioGroup/PortfolioGroup";
+import PortfolioGroup from "../UserMenu/PortfolioGroup/PortfolioGroup";
 import {cumulativeSum} from "../../calculations/cumulative";
 import PortfolioTransactionPnl
     from "../PortfolioPage/SubPages/PortfolioReturn/PortfolioTransactionPnl/PortfolioTransactionPnl";
