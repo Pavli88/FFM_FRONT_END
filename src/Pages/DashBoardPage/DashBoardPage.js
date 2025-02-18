@@ -195,7 +195,7 @@ const DashBoardPage = () => {
     const navChange = totalNav - totalSecondNav
     const cashChange = totalCash - secondTotalCash
     return (
-        <div style={{display: "flex", width: "100%", height: "100%"}}>
+        <div className={'page-container'}>
             {/* Side Menu */}
             <div style={{
                 width: isMenuOpen ? "500px" : "50px",

@@ -1,5 +1,12 @@
+
+/*FAF7F5*/
+/*D3BEA3*/
+/*CAB4A8*/
+/*B5A49D*/
+/*9D7374*/
+
 body{
-    font-family: "Ubuntu";
+    font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif, "Ubuntu";
 }
 
 p{
@@ -52,7 +59,7 @@ tr{
 }
 
 .menu-button:hover{
-    background:  #d6eaf8;
+    background:  #B4AAA5;
     border-radius: 20px;
     text-decoration: none;
     color: #1b1e21;
@@ -115,127 +122,62 @@ tr{
     color: #282c34;
 }
 
-.delete-button{
-    border: none;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 5px;
-    background: #e23a30;
-    width: 100%;
-    color: white;
-    height: 100%;
-    border-radius: 4px;
-}
-
-.delete-button:hover{
-    border: #e23a30;
-    border-style: solid;
-    border-width: 1px;
-    background: white;
-    color: #e23a30;
-}
-
-.terminate-button{
-    border: none;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 5px;
-    background: #e0a800;
-    width: 100%;
-    color: white;
-    height: 100%;
-    border-radius: 4px;
-}
-
-.terminate-button:hover{
-    border: #e0a800;
-    border-style: solid;
-    border-width: 1px;
-    background: white;
-    color: #e0a800;
-}
-
-.save-button{
-    border: none;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 5px;
-    background: #566573;
-    width: 100%;
-    color: white;
-    height: 100%;
-    border-radius: 4px;
-}
-
-.save-button:hover{
-    border:  #566573 ;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 5px;
-    border-style: solid;
-    border-width: 1px;
-    background: white;
-    height: 100%;
-    width: 100%;
-    color:  #566573 ;
-}
-
-.normal-button{
-    border: none;
-    font-size: 12px;
-    font-weight: bold;
-    /*margin: 5px;*/
-    padding: 5px;
-    background:    #3498db ;
-    width: 100%;
-    height: 100%;
-    color: white;
-    border-radius: 10px;
-    /*transform: translateY(-10%);*/
-}
-
-.normal-button:hover{
-    border: none;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 5px;
-    background:  #1f618d ;
-    width: 100%;
-    color: white;
-    height: 100%;
-    border-radius: 10px;
-}
-
-.close-button{
-    border: none;
-    font-size: 30px;
-    font-weight: bold;
-    /*margin: 5px;*/
-    padding: 5px;
-    background: #e59866;
-    width: 30px;
-    height: 30px;
-    color: white;
-    border-radius: 5px;
-}
-
-.close-button:hover{
-    border:  #e59866;
-    font-size: 20px;
-    padding: 5px;
-    width: 30px;
-    height: 30px;
-    font-weight: bold;
-    border-style: solid;
-    border-width: 1px;
-    background: white;
-    color:  #e59866;
-}
-
 .page-container {
+    display: flex;
+    background: #FAF8F9;
     width: 100%;
     height: 100%;
-    background-color:  white ;
+    justify-content: center; /* Centers the .card horizontally */
+    align-items: center;
+    min-height: 100vh;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+
+.edit-icon {
+    position: absolute;
+    top: 5px;    /* Slight offset to avoid touching edges */
+    right: 5px;  /* Slight offset for better spacing */
+    background: #F1F2F0;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.edit-icon:hover {
+    background: #F1F2F0;
+}
+
+.edit-pen {
+    color: #D3BEA3;
+    font-size: 14px;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #CAB4A8;
+    color: white;
+}
+
+button:hover {
+    background-color: #B5A49D;
+}
+button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
 }
 
 .plus-minus-buttons{
@@ -245,46 +187,22 @@ tr{
     color: white;
 }
 
-input[type=text], select {
-    width: 100%;
-    padding: 5px 20px;
-    /*margin: 8px 0;*/
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    color: #2b2b2b;
+.information-textbox {
+    font-size: 12px;
+    color: #B4AAA5;
+    padding: 20px;
 }
 
-input[type=number], select {
+input {
     width: 100%;
-    padding: 5px 20px;
-    /*margin: 8px 0;*/
+    padding: 8px 20px;
+    margin: 5px;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
     color: #2b2b2b;
-}
-
-input[type=date], select {
-    width: 100%;
-    padding: 5px 20px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    color: #2b2b2b;
-}
-
-input[type=file] {
-    width: 100%;
-    padding: 5px 20px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    color: #2b2b2b;
+    background-color: #FAF7F5;
 }
 
 select{
@@ -308,23 +226,12 @@ select{
     color: #2b2b2b;
 }
 
-.input-label{
-    text-align: center;
+label {
+    text-align: left;
     display: block;
     padding: 8px;
     font-size: 14px;
-    color: #5a6268;
-}
-
-.get-button{
-    height: 100%;
-    width: 100%;
-    border: solid;
-    border-width: 1px;
-    border-radius: 4px;
-    border-color: grey;
-    background: white;
-    color: grey;
+    color: #B4AAA5;
 }
 
 .search-container{
@@ -396,10 +303,21 @@ ul li:hover {
 }
 
 .card{
-    border-radius: 10px;
+    border-radius: 5px;
     background: white;
     height: 100%;
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.10);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;  /* Stack elements vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center;     /* Center content horizontally */
+    gap: 15px;               /* Add space between elements */
+    padding: 20px;           /* Padding inside the body */
+    /*margin: 5px;             !* 5px margin around the card body *!*/
+    height: calc(100% - 10px);         /* Padding inside the body */
 }
 
 .card-header{

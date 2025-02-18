@@ -59,7 +59,7 @@ const InstrumentPricing = (props) => {
             </div>
 
              <div style={{padding: 5}}>
-                <Button onClick={runPricing} className={'instrument-search-button'}>Run Pricing</Button>
+                <button onClick={runPricing}>Run Pricing</button>
             </div>
 
         </Card>

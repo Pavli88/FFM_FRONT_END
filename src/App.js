@@ -8,6 +8,7 @@ import AuthContext from "./context/AuthProvider";
 
 function App(props) {
     const { auth } = useContext(AuthContext);
+    console.log(auth.user);
     if (!auth.userAllowedToLogin) {
         return <MainPage server={props.server}/>
     }

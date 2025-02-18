@@ -55,18 +55,7 @@ const Navbar = () => {
                 <Notifications server={server}/>
             </div>
             <div className="nav-user-menu" style={{position: 'relative'}} ref={dropdownRef}>
-                <button className="icon-button" onClick={() => setDropdownOpen(!dropdownOpen)} style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    backgroundColor: '#f0f0f0',
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'background 0.3s'
-                }}>
+                <button className="icon-button" onClick={() => setDropdownOpen(!dropdownOpen)}>
                     <FaUserCircle size={24}/>
                 </button>
                 {dropdownOpen && (
@@ -80,7 +69,7 @@ const Navbar = () => {
                         padding: '10px',
                         minWidth: '150px'
                     }}>
-                        <Link to="/profil" style={{
+                        <Link to="/profile" style={{
                             display: 'block',
                             padding: '8px 12px',
                             textDecoration: 'none',
@@ -105,14 +94,7 @@ const Navbar = () => {
                             color: '#333'
                         }}>Broker Accounts</Link>
                         <hr/>
-                        <button onClick={userLogout} style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            border: 'none',
-                            background: 'none',
-                            cursor: 'pointer',
-                            textAlign: 'left'
-                        }}>Sign Out
+                        <button onClick={userLogout}>Sign Out
                         </button>
                     </div>
                 )}
