@@ -9,6 +9,84 @@ import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
 
+const TaskComponent = () => {
+    const server = useContext(ServerContext)['server'];
+    const [taskId, setTaskId] = useState(null);
+    const [taskStatus, setTaskStatus] = useState(null);
+
+    // Function to start the Celery task
+    const startTask = async () => {
+        try {
+            const response = await fetch(`${server}start-task/`);
+            const data = await response.json();
+            setTaskId(data.task_id);
+            setTaskStatus("Task started...");
+        } catch (error) {
+            console.error("Error starting task:", error);
+        }
+    };
+
+    // Function to check task status
+    const checkTaskStatus = async () => {
+        if (!taskId) return;
+
+        try {
+            const response = await fetch(`${server}task-status/${taskId}/`);
+            const data = await response.json();
+            setTaskStatus(`Status: ${data.status}, Result: ${data.result}`);
+        } catch (error) {
+            console.error("Error checking task status:", error);
+        }
+    };
+
+    return (
+        <div>
+            <button onClick={startTask}>Start Task</button>
+            {taskId && (
+                <div>
+                    <p>Task ID: {taskId}</p>
+                    <p>{taskStatus}</p>
+                    <button onClick={checkTaskStatus}>Check Task Status</button>
+                </div>
+            )}
+        </div>
+    );
+};
+
+const CeleryStatus = () => {
+    const server = useContext(ServerContext)['server'];
+    const [status, setStatus] = useState("Checking...");
+    const [workers, setWorkers] = useState([]);
+
+    const checkStatus = async () => {
+        try {
+            const response = await fetch(`${server}celery-status/`);
+            const data = await response.json();
+            setStatus(data.status);
+            setWorkers(data.workers);
+        } catch (error) {
+            setStatus("stopped");
+            setWorkers([]);
+        }
+    };
+
+    return (
+        <div>
+            <button onClick={checkStatus}>Check Celery Status</button>
+            <h3>Celery Worker Status: {status.toUpperCase()}</h3>
+            {workers.length > 0 ? (
+                <ul>
+                    {workers.map((worker, index) => (
+                        <li key={index}>{worker}</li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No active workers</p>
+            )}
+        </div>
+    );
+};
+
 const CalculationsPage = (props) => {
     const server = useContext(ServerContext)['server'];
     const [startDate, setStartDate] = useState(useContext(DateContext)['currentDate']);
@@ -59,6 +137,8 @@ const CalculationsPage = (props) => {
         }}>
             <div className={'page-container'}>
                 <CalculationOptions run={runCalculation}/>
+                <TaskComponent/>
+                <CeleryStatus/>
                 <div style={{display: "flex", height: 800}}>
 
                     <div style={{paddingBottom: 15, paddingLeft: 15, paddingRight: 15, width: '30%', height: '100%'}}>

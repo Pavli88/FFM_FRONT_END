@@ -5,7 +5,7 @@ const currentYear = new Date().getFullYear();
 //https://www.fractalportfolios.com/
 
 const appConfig = {
-    server: 'http://127.0.0.0:8001/',
+    server: 'https://www.fractalportfolios.com/',
     currentDate: date.toISOString().substr(0,10),
     fistDayOfCurrentYear: currentYear.toString( ) + '-01-01'
 }
