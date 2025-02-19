@@ -49,7 +49,6 @@ const Navbar = () => {
                 <Link className="menu-button" to="/instruments">Instrument</Link>
                 <Link className="menu-button" to="/trade">Trade</Link>
                 <Link className="menu-button" to="/calculations">Calculations</Link>
-                <Link className="menu-button" to="/data">Data</Link>
             </div>
             <div className="nav-notifications">
                 <Notifications server={server}/>
