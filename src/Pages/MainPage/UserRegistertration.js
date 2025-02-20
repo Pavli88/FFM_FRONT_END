@@ -10,7 +10,7 @@ export default function Registration(props) {
   const history = useHistory();
   const submitHandler = (event) => {
         event.preventDefault();
-        axios.post(props.server + 'user_register/', {
+        axios.post(props.server + 'user/register/', {
             user_name: userNameRef.current.value,
             password: passwordRef.current.value,
             email: emailRef.current.value,

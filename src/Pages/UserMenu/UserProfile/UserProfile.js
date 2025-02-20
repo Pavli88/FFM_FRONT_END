@@ -1,13 +1,12 @@
 import { FaUserCircle, FaEdit } from "react-icons/fa";
 import { useContext, useState } from "react";
-import ServerContext from "../../../context/server-context";
-import AuthContext from "../../../context/AuthProvider";
 import UserContext from "../../../context/user-context";
+import ChangePasswordModal from "./ChangePasswordModal";
 import "./UserProfile.css";
+import ServerContext from "../../../context/server-context";
+import axios from "axios";
 
 const UserProfile = () => {
-    const { setAuth } = useContext(AuthContext);
-    const server = useContext(ServerContext)["server"];
     const { user, email, firstName, lastName, dateJoined, lastLogin } = useContext(UserContext);
 
     const [formData, setFormData] = useState({
@@ -18,9 +17,31 @@ const UserProfile = () => {
         dateJoined: dateJoined || "",
         lastLogin: lastLogin || "",
     });
-
+    const server = useContext(ServerContext).server;
     const [previewImage, setPreviewImage] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    const handleChangePassword = async ({currentPassword, newPassword}) => {
+        try {
+            const response = await axios.post(`${server}user/change_password/`,
+                {
+                    current_password: currentPassword,
+                    new_password: newPassword},
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                }
+            );
+
+            alert("Password changed successfully!");
+        } catch (error) {
+            alert(error.response?.data?.error || "Failed to change password.");
+        }
+    };
+
 
     // Handle input changes
     const handleChange = (e) => {
@@ -102,8 +123,15 @@ const UserProfile = () => {
                             <label>Last login:</label>
                             <span>{formData.lastLogin}</span>
                         </div>
-                        <div className="form-buttons">
-                            <button>Change Password</button>
+                        <div className="button-group">
+                            <button onClick={() => setShowModal(true)}>Change Password</button>
+
+                            {showModal && (
+                                <ChangePasswordModal
+                                    onClose={() => setShowModal(false)}
+                                    onChangePassword={handleChangePassword}
+                                />
+                            )}
                             <button onClick={handleSave} disabled={loading}>
                                 {loading ? "Saving..." : "Save Changes"}
                             </button>

@@ -170,6 +170,14 @@ button {
     cursor: pointer;
     background-color: #CAB4A8;
     color: white;
+    height: 50px; /* Ensures all buttons are the same height */
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
 }
 
 button:hover {

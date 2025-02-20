@@ -29,7 +29,7 @@ const Navbar = () => {
 
 
     const userLogout = () => {
-        axios.get(server + 'user_logout/')
+        axios.get(server + 'user/logout/')
             .then(response => console.log(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);

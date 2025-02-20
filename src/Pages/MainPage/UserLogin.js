@@ -20,7 +20,7 @@ export default function Login({ server }) {
     e.preventDefault();
     setError(null);
     try {
-      const response = await axios.post(`${server}user_login/`, formData);
+      const response = await axios.post(`${server}user/login/`, formData);
       setAuth(response.data);
     } catch (err) {
       setError("Invalid username or password. Please try again.");
