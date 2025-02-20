@@ -7,15 +7,15 @@ import ServerContext from "../../../context/server-context";
 import axios from "axios";
 
 const UserProfile = () => {
-    const { user, email, firstName, lastName, dateJoined, lastLogin } = useContext(UserContext);
+    const { username, email, first_name, last_name, date_joined, last_login } = useContext(UserContext);
 
     const [formData, setFormData] = useState({
         email: email || "",
-        firstName: firstName || "",
-        lastName: lastName || "",
-        username: user || "",
-        dateJoined: dateJoined || "",
-        lastLogin: lastLogin || "",
+        firstName: first_name || "",
+        lastName: last_name || "",
+        username: username || "",
+        dateJoined: date_joined || "",
+        lastLogin: last_login || "",
     });
     const server = useContext(ServerContext).server;
     const [previewImage, setPreviewImage] = useState(null);
@@ -23,23 +23,26 @@ const UserProfile = () => {
     const [showModal, setShowModal] = useState(false);
 
     const handleChangePassword = async ({currentPassword, newPassword}) => {
-        try {
-            const response = await axios.post(`${server}user/change_password/`,
+        const token = localStorage.getItem("access");
+
+            if (!token) {
+                alert("Please log in again.");
+                return;
+            }
+
+            const response = await axios.post(
+                `${server}user/change_password/`,
                 {
                     current_password: currentPassword,
-                    new_password: newPassword},
+                    new_password: newPassword,
+                },
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 }
             );
-
-            alert("Password changed successfully!");
-        } catch (error) {
-            alert(error.response?.data?.error || "Failed to change password.");
-        }
     };
 
 

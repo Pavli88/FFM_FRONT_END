@@ -52,11 +52,11 @@ const Notifications = () => {
         );
     }
 
-const MainApplication = ({config, userData}) => {
+const MainApplication = ({config}) => {
     const { server, currentDate, fistDayOfCurrentYear } = config;
 
     //User related data and variables
-    const { username, email, first_name, last_name, date_joined, last_login, is_staff, is_superuser} = userData;
+    // const { username, email, first_name, last_name, date_joined, last_login, is_staff, is_superuser} = userData;
     const [portfolios, setPortfolios] = useState([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState('');
     const [newPortfolio, setNewPortfolio] = useState(0);
@@ -70,9 +70,28 @@ const MainApplication = ({config, userData}) => {
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 2);
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0, 10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0, 10));
+    const [userData, setUserData] = useState([{}]);
 
+    console.log(userData)
     // Dashboard Context
     const [portGroup, setPortGroup] = useState(null);
+
+    const fetchUserData = async () => {
+        try {
+            const token = localStorage.getItem("access");
+            const response = await axios.get(`${server}user/get/data/`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+            setUserData(response.data);
+        } catch (error) {
+            console.error("Error fetching user data:", error.response?.data || error.message);
+        }
+    };
+
+    useEffect(() => {
+            fetchUserData();
+        }, []
+    );
 
     useEffect(() => {
             axios.get(server + 'accounts/get/brokers')
@@ -85,7 +104,7 @@ const MainApplication = ({config, userData}) => {
 
     useEffect(() => {
             axios.get(server + 'portfolios/get/portfolios/', {
-                params: {owner: username}
+                params: {owner: userData.username}
             })
                 .then(response => setPortfolios(response.data))
                 .catch((error) => {
@@ -95,7 +114,7 @@ const MainApplication = ({config, userData}) => {
     );
 
     useEffect(() => {
-            axios.get(`${server}accounts/get/accounts/`, {params: {owner: username}})
+            axios.get(`${server}accounts/get/accounts/`, {params: {owner: userData.username}})
                 .then(response => setAccounts(response.data))
                 .catch((error) => {
                     console.error('Error Message:', error);
@@ -127,16 +146,7 @@ const MainApplication = ({config, userData}) => {
                             newAccount: newAccount,
                             saveAccount: setNewAccount,
                         }}>
-                            <UserContext.Provider value={{
-                                user: username,
-                                email: email,
-                                firstName: first_name,
-                                lastName: last_name,
-                                dateJoined: date_joined,
-                                lastLogin: last_login,
-                                isStaff: is_staff,
-                                isSuperuser: is_superuser
-                            }}>
+                            <UserContext.Provider value={userData}>
                                 <DashboardContext.Provider value={{
                                     portGroup: portGroup,
                                     setPortGroup: setPortGroup
@@ -152,7 +162,7 @@ const MainApplication = ({config, userData}) => {
                                         background: 'grey',
                                         zIndex: 1000
                                     }}>
-                                        <Navigation user={username}/>
+                                        <Navigation user={userData.username}/>
                                     </div>
 
                                     <div style={{
