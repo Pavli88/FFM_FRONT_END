@@ -3,7 +3,7 @@ import {useContext, useEffect, useState} from "react";
 import ServerContext from "../../../../context/server-context";
 import PortfolioPageContext from "../../context/portfolio-page-context";
 import './PortfolioSettingsPage.css'
-import {Nav, Card} from "react-bootstrap";
+import {Nav} from "react-bootstrap";
 import Form from 'react-bootstrap/Form'
 import axios from "axios";
 import Select from "react-select";
@@ -175,12 +175,6 @@ const PortfolioSettingsPage = (props) => {
                     <div style={{display: "flex"}}>
                         <div style={{padding: 5, height: '100%'}}>
                             <button className={'save-button'} onClick={savePortfolioData}>Save</button>
-                        </div>
-                        <div style={{padding: 5}}>
-                            <button className={'terminate-button'}>Terminate</button>
-                        </div>
-                        <div style={{padding: 5}}>
-                            <button className={'delete-button'}>Delete</button>
                         </div>
                     </div>
                 </div>

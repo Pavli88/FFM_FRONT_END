@@ -58,11 +58,7 @@ const NewPortfolio = (props) => {
                     <Form.Control ref={portTypeRef} as="select">
                         <option value={'Business'}>Business</option>
                         <option value={'Portfolio Group'}>Portfolio Group</option>
-                        <option value={'Automated'}>Automated</option>
-                        <option value={'Investment'}>Investment</option>
-                        <option value={'Test'}>Test</option>
-                        <option value={'Trade'}>Trade</option>
-                        <option value={'Savings'}>Savings</option>
+                        <option value={'Portfolio'}>Portfolio</option>
                     </Form.Control>
                 </div>
 

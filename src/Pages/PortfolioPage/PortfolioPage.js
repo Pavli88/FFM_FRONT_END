@@ -5,8 +5,8 @@ import ServerContext from "../../context/server-context";
 import PortfolioDashBoardPage from "./SubPages/PortfolioDashboard/PortfolioDashBoardPage";
 import PortfolioSettingsPage from "./SubPages/PortfolioSettings/PortfolioSettingsPage";
 import PortfolioTransactionsPage from "./SubPages/PortfolioTransactions/PortfolioTransactionsPage";
-import PortfolioDataImport from "./SubPages/PortfolioImport/PortfolioDataImport";
 import PortfolioNavBar from "./PortfolioNavBar/PortfolioNavBar";
+import PortfolioOverview from "./SubPages/PortfolioOverview/PortfolioOverview";
 import PortfolioPageContext from "./context/portfolio-page-context";
 import {PortfolioSidebarData} from "./PortfolioSidebarData";
 import Sidebar from "../../components/Sidebar/Sidebar";
@@ -52,7 +52,7 @@ const PortfolioPage = (props) => {
     const [showImportModal, setShowImportModal] = useState(false);
     const [descModalStatus, setDescModalStatus] = useState(false);
     const [currentHolding, setCurrentHolding] = useState({});
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(true);
     const fetchHoldingData = async () => {
         const response = await axios.post(server + 'portfolios/get/holding/', {
             date: currentDate,
@@ -114,7 +114,7 @@ const PortfolioPage = (props) => {
                             transition: "visibility 0.3s, opacity 0.3s ease",
                             height: 465,
                             paddingTop: 15}}>
-                            <Card style={{height: '100%'}}>
+                            <div className={'card'} style={{height: '100%'}}>
                                 <Card.Header>
                                     <div style={{display: 'flex'}}>
                                         <div>
@@ -130,7 +130,7 @@ const PortfolioPage = (props) => {
                                 <p style={{padding: 15}}>
                                     {selectedPortfolioData.description}
                                 </p>
-                            </Card>
+                            </div>
                         </div>
 
                         {/* Open/Close Button */}
@@ -194,6 +194,9 @@ const PortfolioPage = (props) => {
                         </div>
 
                         <Switch>
+                            <Route path="/portfolio/overview">
+                                <PortfolioOverview/>
+                            </Route>
                             <Route path="/portfolio/holdings">
                                 <PortfolioDashBoardPage server={server} portfolioData={selectedPortfolioData}/>
                             </Route>
@@ -206,7 +209,6 @@ const PortfolioPage = (props) => {
                         </Switch>
                     </div>
                 </div>
-                <PortfolioDataImport show={showImportModal} hide={() => setShowImportModal(false)} server={server}/>
             </div>
             <DescUpdateModal show={descModalStatus} server={server} portId={selectedPortfolioData.id}
                              hide={() => setDescModalStatus(false)}/>
