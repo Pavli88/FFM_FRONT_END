@@ -78,7 +78,7 @@ const TradePage = () => {
             newTransactionID: newTransactionID,
             saveNewTrnsactionID: setNewTransactionID,
         }}>
-            <div className={'page-container'} style={{overflow: "scroll", display: "flex"}}>
+            <div style={{overflow: "scroll", display: "flex"}}>
                 {/*<button onClick={pricingStream}>Pricing Stream</button>*/}
                 {/*<div style={{width: '100%'}}>*/}
                 {/*    <TradeTableData env={env} server={server}/>*/}

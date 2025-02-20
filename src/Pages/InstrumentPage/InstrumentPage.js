@@ -45,10 +45,9 @@ const InstrumentPage = () => {
                 </div>
 
 
-                    {/*<div style={{paddingTop: 15, paddingLeft: 15, paddingBottom: 15}}>*/}
-
-                    {/*    <InstrumentPricing/>*/}
-                    {/*</div>*/}
+                    <div >
+                        <InstrumentPricing/>
+                    </div>
 
                 <div style={{width: '100%', paddingTop: '20px'}}>
                         <InstrumentResuts data={instrumentSearchResults} server={server}

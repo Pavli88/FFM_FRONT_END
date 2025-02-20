@@ -135,10 +135,10 @@ const CalculationsPage = (props) => {
             endDate: endDate,
             saveEndDate: setEndDate,
         }}>
-            <div className={'page-container'}>
+            <div >
                 <CalculationOptions run={runCalculation}/>
-                <TaskComponent/>
-                <CeleryStatus/>
+                {/*<TaskComponent/>*/}
+                {/*<CeleryStatus/>*/}
                 <div style={{display: "flex", height: 800}}>
 
                     <div style={{paddingBottom: 15, paddingLeft: 15, paddingRight: 15, width: '30%', height: '100%'}}>
