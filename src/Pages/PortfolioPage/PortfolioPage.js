@@ -2,9 +2,9 @@ import {useContext, useEffect, useState} from "react";
 import {Route, Switch} from "react-router-dom";
 import 'react-pro-sidebar/dist/css/styles.css';
 import ServerContext from "../../context/server-context";
-import PortfolioDashBoardPage from "./SubPages/PortfolioDashboard/PortfolioDashBoardPage";
 import PortfolioSettingsPage from "./SubPages/PortfolioSettings/PortfolioSettingsPage";
 import PortfolioTransactionsPage from "./SubPages/PortfolioTransactions/PortfolioTransactionsPage";
+import PortfolioHoldingsPage from "./SubPages/PortfolioHoldings/PortfolioHoldingsPage";
 import PortfolioNavBar from "./PortfolioNavBar/PortfolioNavBar";
 import PortfolioOverview from "./SubPages/PortfolioOverview/PortfolioOverview";
 import PortfolioPageContext from "./context/portfolio-page-context";
@@ -75,141 +75,144 @@ const PortfolioPage = (props) => {
             savePortfolioData: setSelectedPortfolioData,
             currentHolding: currentHolding
         }}>
-            <div className={'page-container'}>
-                <div className={'page-subContainer'}>
-                    <div style={{
-                        width: isMenuOpen ? "300px" : "50px",
-                        transition: "width 0.3s ease",
-                        backgroundColor: "#eeeeee",
-                        height: "100vh",
-                        position: "fixed",
-                        zIndex: 2,
-                        top: 0,
-                        left: 0,
-                        overflow: "hidden",
-                        boxShadow: isMenuOpen ? "2px 0px 5px rgba(0, 0, 0, 0.1)" : "none",
-                        paddingTop: "80px",
-                        paddingLeft: isMenuOpen ? 20 : 0,
-                        paddingRight: 50
-                    }}>
-                        <div style={{
-                            visibility: isMenuOpen ? "visible" : "hidden",
-                            opacity: isMenuOpen ? 1 : 0,
-                            transition: "visibility 0.3s, opacity 0.3s ease",
-                        }}>
-                            <PortfolioNavBar/>
-                        </div>
 
-                        <div style={{
-                            visibility: isMenuOpen ? "visible" : "hidden",
-                            opacity: isMenuOpen ? 1 : 0,
-                            transition: "visibility 0.3s, opacity 0.3s ease",
-                            height: 300
-                        }}>
-                            <Sidebar sidebarData={PortfolioSidebarData}/>
-                        </div>
-                        <div style={{
-                            visibility: isMenuOpen ? "visible" : "hidden",
-                            opacity: isMenuOpen ? 1 : 0,
-                            transition: "visibility 0.3s, opacity 0.3s ease",
-                            height: 465,
-                            paddingTop: 15}}>
-                            <div className={'card'} style={{height: '100%'}}>
-                                <Card.Header>
-                                    <div style={{display: 'flex'}}>
-                                        <div>
-                                            <span>Description</span>
-                                        </div>
-                                        <div style={{position: "absolute", right: 5}}>
-                                            <button className={'get-button'} onClick={() => setDescModalStatus(true)}>
-                                                <BsPencil></BsPencil>
-                                            </button>
-                                        </div>
+            <div className={'page-container'} style={{height: '100%', width: '100%'}}>
+                <div style={{
+                    width: isMenuOpen ? "300px" : "50px",
+                    transition: "width 0.3s ease",
+                    backgroundColor: "#eeeeee",
+                    height: "100vh",
+                    position: "fixed",
+                    zIndex: 2,
+                    top: 0,
+                    left: 0,
+                    overflow: "hidden",
+                    boxShadow: isMenuOpen ? "2px 0px 5px rgba(0, 0, 0, 0.1)" : "none",
+                    paddingTop: "80px",
+                    paddingLeft: isMenuOpen ? 20 : 0,
+                    paddingRight: 50
+                }}>
+                    <div style={{
+                        visibility: isMenuOpen ? "visible" : "hidden",
+                        opacity: isMenuOpen ? 1 : 0,
+                        transition: "visibility 0.3s, opacity 0.3s ease",
+                    }}>
+                        <PortfolioNavBar/>
+                    </div>
+
+                    <div style={{
+                        visibility: isMenuOpen ? "visible" : "hidden",
+                        opacity: isMenuOpen ? 1 : 0,
+                        transition: "visibility 0.3s, opacity 0.3s ease",
+                        height: 300
+                    }}>
+                        <Sidebar sidebarData={PortfolioSidebarData}/>
+                    </div>
+                    <div style={{
+                        visibility: isMenuOpen ? "visible" : "hidden",
+                        opacity: isMenuOpen ? 1 : 0,
+                        transition: "visibility 0.3s, opacity 0.3s ease",
+                        height: 465,
+                        paddingTop: 15
+                    }}>
+                        <div className={'card'} style={{height: '100%'}}>
+                            <Card.Header>
+                                <div style={{display: 'flex'}}>
+                                    <div>
+                                        <span>Description</span>
                                     </div>
-                                </Card.Header>
-                                <p style={{padding: 15}}>
-                                    {selectedPortfolioData.description}
-                                </p>
-                            </div>
+                                    <div style={{position: "absolute", right: 5}}>
+                                        <button className={'get-button'} onClick={() => setDescModalStatus(true)}>
+                                            <BsPencil></BsPencil>
+                                        </button>
+                                    </div>
+                                </div>
+                            </Card.Header>
+                            <p style={{padding: 15}}>
+                                {selectedPortfolioData.description}
+                            </p>
                         </div>
-
-                        {/* Open/Close Button */}
-                        <div
-                            onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            style={{
-                                position: "absolute",
-                                right: "5px",
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                cursor: "pointer",
-                                fontSize: "16px",
-                                backgroundColor: "#fff",
-                                borderRadius: "80%",
-                                padding: "10px",
-                                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                                zIndex: 3,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                        >
-                            {isMenuOpen ? <BsChevronLeft/> : <BsChevronRight/>}
-                        </div>
-
                     </div>
 
-                    {/*Main Area*/}
-                    <div style={{
-                        marginLeft: isMenuOpen ? "300px" : "50px",
-                        transition: "margin-left 0.3s ease",
-                        flex: 1,
-                        padding: 10,
-                        // width: '85%'
-                    }}>
-                        <div style={{
+                    {/* Open/Close Button */}
+                    <div
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        style={{
+                            position: "absolute",
+                            right: "5px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            cursor: "pointer",
+                            fontSize: "16px",
+                            backgroundColor: "#fff",
+                            borderRadius: "80%",
+                            padding: "10px",
+                            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+                            zIndex: 3,
                             display: "flex",
-                            paddingTop: 15,
-                            paddingLeft: 15,
-                            paddingBottom: 0,
-                            fontSize: 20,
-                            fontWeight: "bold"
-                        }}>
-                            <span style={{paddingLeft: 5}}>{selectedPortfolioData.portfolio_name}</span>
-                            <span style={{
-                                paddingLeft: 5,
-                                paddingTop: 6,
-                                fontSize: 14
-                            }}>{selectedPortfolioData.portfolio_type}</span>
-                            <span style={{
-                                paddingLeft: 5,
-                                paddingTop: 6,
-                                fontSize: 14
-                            }}>{selectedPortfolioData.currency}</span>
-                            <span style={{
-                                paddingLeft: 5,
-                                paddingTop: 6,
-                                fontSize: 14,
-                                color: selectedPortfolioData.status === 'Not Funded' ? 'red' : selectedPortfolioData.status === 'Funded' ? 'green' : 'orange'
-                            }}>{selectedPortfolioData.status}</span>
-                        </div>
-
-                        <Switch>
-                            <Route path="/portfolio/overview">
-                                <PortfolioOverview/>
-                            </Route>
-                            <Route path="/portfolio/holdings">
-                                <PortfolioDashBoardPage server={server} portfolioData={selectedPortfolioData}/>
-                            </Route>
-                            <Route path="/portfolio/transactions">
-                                <PortfolioTransactionsPage server={server}/>
-                            </Route>
-                            <Route path="/portfolio/settings">
-                                <PortfolioSettingsPage/>
-                            </Route>
-                        </Switch>
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        {isMenuOpen ? <BsChevronLeft/> : <BsChevronRight/>}
                     </div>
+
+                </div>
+
+                {/*Main Area*/}
+                <div style={{
+                    marginLeft: isMenuOpen ? "300px" : "40px",
+                    transition: "margin-left 0.3s ease",
+                    flex: 1,
+                    padding: 10,
+                    width: '100%',
+                    height: '100%',
+                    // background: "blue"
+                }}>
+                    <div style={{
+                        display: "flex",
+                        paddingTop: 15,
+                        paddingLeft: 15,
+                        paddingBottom: 0,
+                        fontSize: 20,
+                        fontWeight: "bold"
+                    }}>
+                        <span style={{paddingLeft: 5}}>{selectedPortfolioData.portfolio_name}</span>
+                        <span style={{
+                            paddingLeft: 5,
+                            paddingTop: 6,
+                            fontSize: 14
+                        }}>{selectedPortfolioData.portfolio_type}</span>
+                        <span style={{
+                            paddingLeft: 5,
+                            paddingTop: 6,
+                            fontSize: 14
+                        }}>{selectedPortfolioData.currency}</span>
+                        <span style={{
+                            paddingLeft: 5,
+                            paddingTop: 6,
+                            fontSize: 14,
+                            color: selectedPortfolioData.status === 'Not Funded' ? 'red' : selectedPortfolioData.status === 'Funded' ? 'green' : 'orange'
+                        }}>{selectedPortfolioData.status}</span>
+                    </div>
+
+                    <Switch>
+                        <Route path="/portfolio/overview">
+                            <PortfolioOverview/>
+                        </Route>
+                        <Route path="/portfolio/holdings">
+                            <PortfolioHoldingsPage/>
+                        </Route>
+                        <Route path="/portfolio/transactions">
+                            <PortfolioTransactionsPage server={server}/>
+                        </Route>
+                        <Route path="/portfolio/settings">
+                            <PortfolioSettingsPage/>
+                        </Route>
+                    </Switch>
                 </div>
             </div>
+
             <DescUpdateModal show={descModalStatus} server={server} portId={selectedPortfolioData.id}
                              hide={() => setDescModalStatus(false)}/>
         </PortfolioPageContext.Provider>

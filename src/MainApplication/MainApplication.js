@@ -155,11 +155,10 @@ const MainApplication = ({config, userData}) => {
                                         <Navigation user={username}/>
                                     </div>
 
-                                    <div style={{
+                                    <div  style={{
                                         marginTop: 85,
                                         height: 'calc(100vh - 60px)',
                                         width: '100%',
-                                        overflow: 'auto'
                                     }}>
                                         <Switch>
                                             <Route path="/risk">

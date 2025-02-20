@@ -127,9 +127,10 @@ tr{
     background: #FAF8F9;
     width: 100%;
     height: 100%;
+    padding: 20px;
     justify-content: center; /* Centers the .card horizontally */
     align-items: center;
-    min-height: 100vh;
+    /*min-height: 100vh;*/
 }
 
 h2 {
@@ -238,8 +239,17 @@ label {
     text-align: left;
     display: block;
     padding: 8px;
+    margin: 0px;
     font-size: 14px;
     color: #B4AAA5;
+    /*font-weight: bold;*/
+}
+
+.vertical-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
 }
 
 .search-container{

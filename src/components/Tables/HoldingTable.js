@@ -117,24 +117,27 @@ const HoldingsTable = ({ data }) => {
     }, [data]);
 
     return (
-        <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-            <div className='card' style={{ backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '8px' }}>
-                <table {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse' }}>
+
+        <div className='card'
+             style={{backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '8px', overflow: 'hidden'}}>
+            <div style={{overflowX: 'auto'}}>
+                <table {...getTableProps()} style={{width: '100%', borderCollapse: 'collapse', minWidth: '600px'}}>
                     <thead>
-                        {headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: '#eeeeee', fontWeight: 'bold' }}>
-                                {headerGroup.headers.map(column => (
-                                    <th {...column.getHeaderProps()}>
-                                        {column.canGroupBy && (
-                                            <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
-                                                {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
-                                            </span>
-                                        )}
-                                        {column.render('Header')}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
+                    {headerGroups.map(headerGroup => (
+                        <tr {...headerGroup.getHeaderGroupProps()}
+                            style={{backgroundColor: '#eeeeee', fontWeight: 'bold'}}>
+                            {headerGroup.headers.map(column => (
+                                <th {...column.getHeaderProps()}>
+                                    {column.canGroupBy && (
+                                        <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
+                                        {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
+                                    </span>
+                                    )}
+                                    {column.render('Header')}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
                     {firstPageRows.map(row => {
@@ -142,12 +145,13 @@ const HoldingsTable = ({ data }) => {
                         return (
                             <tr {...row.getRowProps()}>
                                 {row.cells.map(cell => (
-                                    <td {...cell.getCellProps()} style={row.isGrouped ? { backgroundColor: "white", fontWeight: 'bold' } : {}}>
+                                    <td {...cell.getCellProps()}
+                                        style={row.isGrouped ? {backgroundColor: 'white', fontWeight: 'bold'} : {}}>
                                         {cell.isGrouped ? (
                                             <>
-                                                    <span {...row.getToggleRowExpandedProps()}>
-                                                        {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
-                                                    </span>{' '}
+                                            <span {...row.getToggleRowExpandedProps()}>
+                                                {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
+                                            </span>{' '}
                                                 {cell.render('Cell')} ({row.subRows.length})
                                             </>
                                         ) : cell.isAggregated ? (
@@ -164,6 +168,7 @@ const HoldingsTable = ({ data }) => {
                 </table>
             </div>
         </div>
+
     );
 };
 

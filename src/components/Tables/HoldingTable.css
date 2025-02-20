@@ -1,0 +1,57 @@
+.table-container {
+    width: 100%;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 80vh;
+    border-radius: 8px;
+    background: #f8f9fa;
+    padding: 10px;
+}
+
+.holdings-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.holdings-table thead {
+    position: sticky;
+    top: 0;
+    background: #eeeeee;
+    font-weight: bold;
+}
+
+.holdings-table th,
+.holdings-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.grouped-row {
+    background-color: white;
+    font-weight: bold;
+}
+
+.negative {
+    color: red;
+    display: flex;
+    align-items: center;
+}
+
+.positive {
+    color: green;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    margin-right: 5px;
+}
+
+.group-toggle {
+    padding-right: 5px;
+}

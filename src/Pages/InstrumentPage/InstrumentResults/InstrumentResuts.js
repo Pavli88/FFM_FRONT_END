@@ -20,26 +20,28 @@ const InstrumentResuts = (props) => {
     </tr>)
     return (
         <div style={{display: 'flex', height: '100%'}}>
-            <Card header={'Instruments'} style={{width: '100%', height: '100%'}}>
-                <Card.Header>
-                    <div style={{display: 'flex'}}>
-                        <div>
-                            Instruments
-                        </div>
+            <div className={'card'} header={'Instruments'} style={{width: '100%', height: '100%'}}>
 
-                        <div style={{display: "flex", position: "absolute", right: 15}}>
-                            <div>
-                                <button className={'get-button'}>Info</button>
-                            </div>
-                            <div style={{paddingLeft: 5}}>
-                                <button className={'get-button'} onClick={() => setShowPrices(value => !value)}>Prices</button>
-                            </div>
-                            <div style={{paddingLeft: 5}}>
-                                <button className={'get-button'} onClick={() => setShowTickers(value => !value)}>Tickers</button>
-                            </div>
+                <div style={{display: 'flex'}}>
+                    <div>
+                        Instruments
+                    </div>
+
+                    <div style={{display: "flex", position: "absolute", right: 15}}>
+                        <div>
+                            <button className={'get-button'}>Info</button>
+                        </div>
+                        <div style={{paddingLeft: 5}}>
+                            <button className={'get-button'} onClick={() => setShowPrices(value => !value)}>Prices
+                            </button>
+                        </div>
+                        <div style={{paddingLeft: 5}}>
+                            <button className={'get-button'} onClick={() => setShowTickers(value => !value)}>Tickers
+                            </button>
                         </div>
                     </div>
-                </Card.Header>
+                </div>
+
                 <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
                     <Table style={{width: '100%'}}>
                         <thead>
@@ -58,7 +60,7 @@ const InstrumentResuts = (props) => {
                     </Table>
                 </div>
 
-            </Card>
+            </div>
             {showPrices ? <InstrumentPrices server={props.server} instrument={props.instrument}/>: <></>}
             {showTickers ? <InstrumentBrokerTickers server={props.server} id={props.instrument.id}/>: <></>}
 

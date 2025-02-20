@@ -1,9 +1,3 @@
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Card from "react-bootstrap/Card";
-import {Nav} from "react-bootstrap";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import Select from 'react-select'
 import {useState, useContext, useRef} from "react";
 import InstrumentNew from "../InstrumentNew";
@@ -70,49 +64,45 @@ const InstrumentSearchBar = () => {
     };
 
     return (
-        <div className={'card'} style={{padding: 10}}>
+        <div className={'card'} style={{padding: 10, width: '100%'}}>
             <div style={{display: "flex", height: '100%'}}>
-                <div style={{display: "flex"}}>
-                    <div className={'input-label'}>
-                        Name
-                    </div>
+                <div className='vertical-box'>
+                    <label>Name</label>
                     <div >
                         <input ref={nameRef} type="text" />
                     </div>
                 </div>
 
-                <div style={{display: "flex"}}>
-                    <div className={'input-label'}>
+                <div className='vertical-box'>
+                    <label>
                         Country
-                    </div>
+                    </label>
                     <div >
                         <Select
                             isMulti
                             options={countries}
                             onChange={(e) => setSelectedCountries(e)}
-                            className={'instrument-search-input-field'}
+                            // className={'instrument-search-input-field'}
                         />
                     </div>
                 </div>
 
-                <div style={{display: "flex"}}>
-                    <div className={'input-label'}>
+                <div className='vertical-box'>
+                    <label>
                         Group
-                    </div>
+                    </label>
                     <div>
                         <Select
                             options={secGroup}
                             isClearable
                             onChange={(e) => e === null ? setSelectedGroup([]) : setSelectedGroup(e)}
-                            className={'instrument-search-input-field'}
+                            // className={'instrument-search-input-field'}
                         />
                     </div>
                 </div>
 
-                <div style={{display: "flex"}}>
-                    <div className={'input-label'}>
-                        Type
-                    </div>
+                <div className='vertical-box'>
+                    <label>Type</label>
                     <div>
                         <Select
                             isMulti
@@ -126,10 +116,8 @@ const InstrumentSearchBar = () => {
                     </div>
                 </div>
 
-                <div style={{display: "flex"}}>
-                    <div className={'input-label'}>
-                        Currency
-                    </div>
+                <div className='vertical-box'>
+                    <label>Currency</label>
                     <div>
                         <Select
                             isMulti
@@ -140,7 +128,7 @@ const InstrumentSearchBar = () => {
                     </div>
                 </div>
 
-                <div style={{display: "flex"}}>
+                <div className='vertical-box'>
                     <div style={{height: '100%', paddingLeft: 5}}>
                         <button onClick={fetchInstruments}>Search</button>
                     </div>

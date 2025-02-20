@@ -13,7 +13,7 @@ const PortfolioHoldings = ({ date, changeDate, data }) => {
     };
 
     return (
-        <div style={{ padding: 20, backgroundColor: "#f8f9fa", borderRadius: "8px" }}>
+        <div style={{  backgroundColor: "#f8f9fa", borderRadius: "8px" , width: '100%'}}>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "15px" }}>
                 <span className="input-label" style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
                     Holdings

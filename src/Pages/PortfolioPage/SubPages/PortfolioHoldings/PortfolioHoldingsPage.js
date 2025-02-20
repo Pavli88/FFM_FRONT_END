@@ -1,40 +1,52 @@
-import PortfolioHoldings from "./PortfolioHoldings/PortfolioHoldings";
-import './PortfolioHoldingsPage.css'
-import axios from "axios";
-import {useState} from "react";
-const PortfolioHoldingsPage = (props) => {
-    const [holdingData, setHoldingData] = useState([{}]);
-    const [date, setDate] = useState();
-    console.log(date)
-    const fetchData = (parameters) => {
-        axios.get(props.server + 'portfolios/get/holding/', {
-            params: {
-                portfolio_code: 'TST',
-                date: date
-            }
-        })
-            .then(response => setHoldingData(response.data))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
+import { useRef } from "react";
+import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import { CSVLink } from "react-csv";
+import HoldingsTable from "../../../../components/Tables/HoldingTable";
+
+const PortfolioHoldingsPage = ({ date, changeDate, data }) => {
+    const dateRef = useRef();
+
+    const changeOneDay = (currentDate, side) => {
+        let date = new Date(currentDate);
+        date.setDate(date.getDate() + side);
+        changeDate(date.toISOString().split('T')[0]);
     };
 
     return (
-        <div className={'port-holding-page-container'}>
-            <div style={{display: 'flex', padding: 15}}>
-                <div>
-                    <button onClick={fetchData}>Get Holding</button>
-                </div>
-                <div>
-                    <input type={'date'} onChange={(e) => setDate(e.target.value)}/>
-                </div>
+        <div style={{  backgroundColor: "#f8f9fa", borderRadius: "8px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "15px" }}>
+                <span className="input-label" style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+                    Holdings
+                </span>
+                <button
+                    className="nav-button"
+                    onClick={() => changeOneDay(dateRef.current.value, -1)}
+                    style={{ background: "none", border: "none", cursor: "pointer" }}
+                >
+                    <BsArrowLeft size={20} />
+                </button>
+                <input
+                    type="date"
+                    value={date}
+                    ref={dateRef}
+                    onChange={(e) => changeDate(e.target.value)}
+                    style={{ padding: "5px 10px", borderRadius: "5px", border: "1px solid #ccc" }}
+                />
+                <button
+                    className="nav-button"
+                    onClick={() => changeOneDay(dateRef.current.value, 1)}
+                    style={{ background: "none", border: "none", cursor: "pointer" }}
+                >
+                    <BsArrowRight size={20} />
+                </button>
+                <CSVLink data={data} className="download-link" style={{ marginLeft: "auto", textDecoration: "none", color: "#007bff", fontWeight: "bold" }}>
+                    Download CSV
+                </CSVLink>
             </div>
-
-            <div style={{padding: 15}}>
-                <PortfolioHoldings data={holdingData}/>
-            </div>
+            <HoldingsTable data={data} />
         </div>
     );
 };
+
 
 export default PortfolioHoldingsPage;
