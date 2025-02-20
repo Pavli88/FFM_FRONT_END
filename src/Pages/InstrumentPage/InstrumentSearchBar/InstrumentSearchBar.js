@@ -142,10 +142,10 @@ const InstrumentSearchBar = () => {
 
                 <div style={{display: "flex"}}>
                     <div style={{height: '100%', paddingLeft: 5}}>
-                        <button onClick={fetchInstruments} className={'get-button'}>Search</button>
+                        <button onClick={fetchInstruments}>Search</button>
                     </div>
                     <div style={{height: '100%', paddingLeft: 5}}>
-                        <InstrumentNew className={'instrument-search-button'}/>
+                        <InstrumentNew />
                     </div>
                 </div>
             </div>

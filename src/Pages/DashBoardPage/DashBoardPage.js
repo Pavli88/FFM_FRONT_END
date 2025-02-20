@@ -7,7 +7,7 @@ import DashboardContext from "../../context/dashboard-context";
 import {BarChartGrouped, StackedBarChart} from "../../components/Charts/BarCharts";
 import {PieChart} from "../../components/Charts/PieCharts";
 import {PositionExposures} from "../../components/Widgets/Risk/PositionExposures";
-import PortfolioGroup from "../ProfilPage/PortfolioGroup/PortfolioGroup";
+import PortfolioGroup from "../UserMenu/PortfolioGroup/PortfolioGroup";
 import {cumulativeSum} from "../../calculations/cumulative";
 import PortfolioTransactionPnl
     from "../PortfolioPage/SubPages/PortfolioReturn/PortfolioTransactionPnl/PortfolioTransactionPnl";
@@ -195,7 +195,7 @@ const DashBoardPage = () => {
     const navChange = totalNav - totalSecondNav
     const cashChange = totalCash - secondTotalCash
     return (
-        <div style={{display: "flex", width: "100%", height: "100%"}}>
+        <div className={'page-container'}>
             {/* Side Menu */}
             <div style={{
                 width: isMenuOpen ? "500px" : "50px",

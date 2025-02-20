@@ -1,6 +1,5 @@
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import axios from "axios";
 import Select from 'react-select'
 import {useState, useRef, useContext} from "react";
@@ -109,9 +108,9 @@ const InstrumentNew = (props) => {
 
     return (
         <div>
-            <Button variant="primary" onClick={()=>setShowNewInstrumentModal(true)} style={{width: '100%'}}>
+            <button onClick={()=>setShowNewInstrumentModal(true)} style={{width: '100%'}}>
                 New Instrument
-            </Button>
+            </button>
             <Modal show={showNewInstrumentModal} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>New Instrument</Modal.Title>
@@ -159,12 +158,12 @@ const InstrumentNew = (props) => {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <button onClick={handleClose}>
                         Close
-                    </Button>
-                    <Button variant="primary" onClick={submitHandler}>
+                    </button>
+                    <button onClick={submitHandler}>
                         Save
-                    </Button>
+                    </button>
                 </Modal.Footer>
             </Modal>
         </div>

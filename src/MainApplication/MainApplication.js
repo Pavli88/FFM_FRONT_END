@@ -1,5 +1,4 @@
 import ServerContext from "../context/server-context";
-import EntityContext from "../context/entity-context";
 import PortfolioContext from "../context/portfolio-context";
 import DateContext from "../context/date-context";
 import UserContext from "../context/user-context";
@@ -15,10 +14,12 @@ import PortfolioPage from "../Pages/PortfolioPage/PortfolioPage";
 import CalculationsPage from "../Pages/CalculationsPage/CalculationsPage";
 import InstrumentPage from "../Pages/InstrumentPage/InstrumentPage";
 import DashBoardPage from "../Pages/DashBoardPage/DashBoardPage";
-import ProfilPage from "../Pages/ProfilPage/ProfilPage";
+import UserProfile from "../Pages/UserMenu/UserProfile/UserProfile";
+import MyPortfoliosPage from "../Pages/UserMenu/MyPortfolios/MyPortfoliosPage";
 import DataPage from "../Pages/DataPage/DataPage";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import BrokerAccountsPage from "../Pages/UserMenu/BrokerAccounts/BrokerAccountsPage";
 
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
@@ -55,7 +56,7 @@ const MainApplication = ({config, userData}) => {
     const { server, currentDate, fistDayOfCurrentYear } = config;
 
     //User related data and variables
-    const { username, email, firstName, lastName, dateJoined, lastLogin, isStaff, isSuperuser} = userData;
+    const { username, email, first_name, last_name, date_joined, last_login, is_staff, is_superuser} = userData;
     const [portfolios, setPortfolios] = useState([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState('');
     const [newPortfolio, setNewPortfolio] = useState(0);
@@ -129,12 +130,12 @@ const MainApplication = ({config, userData}) => {
                             <UserContext.Provider value={{
                                 user: username,
                                 email: email,
-                                firstName: firstName,
-                                lastName: lastName,
-                                dateJoined: dateJoined,
-                                lastLogin: lastLogin,
-                                isStaff: isStaff,
-                                isSuperuser: isSuperuser
+                                firstName: first_name,
+                                lastName: last_name,
+                                dateJoined: date_joined,
+                                lastLogin: last_login,
+                                isStaff: is_staff,
+                                isSuperuser: is_superuser
                             }}>
                                 <DashboardContext.Provider value={{
                                     portGroup: portGroup,
@@ -185,8 +186,14 @@ const MainApplication = ({config, userData}) => {
                                             <Route path="/instruments">
                                                 <InstrumentPage/>
                                             </Route>
-                                            <Route path="/profil">
-                                                <ProfilPage/>
+                                            <Route path="/profile">
+                                                <UserProfile/>
+                                            </Route>
+                                            <Route path="/myPortfolios">
+                                                <MyPortfoliosPage/>
+                                            </Route>
+                                            <Route path="/brokerAccounts">
+                                                <BrokerAccountsPage/>
                                             </Route>
                                             <Route path='*' element={<Redirect to='/dashboard'/>}/>
                                         </Switch>

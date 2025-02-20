@@ -29,7 +29,7 @@ const Navbar = () => {
 
 
     const userLogout = () => {
-        axios.get(server + 'user_logout/')
+        axios.get(server + 'user/logout/')
             .then(response => console.log(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
@@ -54,18 +54,7 @@ const Navbar = () => {
                 <Notifications server={server}/>
             </div>
             <div className="nav-user-menu" style={{position: 'relative'}} ref={dropdownRef}>
-                <button className="icon-button" onClick={() => setDropdownOpen(!dropdownOpen)} style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    backgroundColor: '#f0f0f0',
-                    border: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'background 0.3s'
-                }}>
+                <button className="icon-button" onClick={() => setDropdownOpen(!dropdownOpen)}>
                     <FaUserCircle size={24}/>
                 </button>
                 {dropdownOpen && (
@@ -79,21 +68,32 @@ const Navbar = () => {
                         padding: '10px',
                         minWidth: '150px'
                     }}>
-                        <Link to="/profil" style={{
+                        <Link to="/profile" style={{
                             display: 'block',
                             padding: '8px 12px',
                             textDecoration: 'none',
                             color: '#333'
-                        }}>Profile</Link>
-                        <hr/>
-                        <button onClick={userLogout} style={{
-                            width: '100%',
+                        }}>My Profile</Link>
+                        <Link to="/myPortfolios" style={{
+                            display: 'block',
                             padding: '8px 12px',
-                            border: 'none',
-                            background: 'none',
-                            cursor: 'pointer',
-                            textAlign: 'left'
-                        }}>Sign Out
+                            textDecoration: 'none',
+                            color: '#333'
+                        }}>My Portfolios</Link>
+                        <Link to="/subscriptions" style={{
+                            display: 'block',
+                            padding: '8px 12px',
+                            textDecoration: 'none',
+                            color: '#333'
+                        }}>Subscriptions</Link>
+                        <Link to="/brokerAccounts" style={{
+                            display: 'block',
+                            padding: '8px 12px',
+                            textDecoration: 'none',
+                            color: '#333'
+                        }}>Broker Accounts</Link>
+                        <hr/>
+                        <button onClick={userLogout}>Sign Out
                         </button>
                     </div>
                 )}

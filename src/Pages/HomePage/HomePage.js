@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const HomePage = () => {
     return (
-       <div>
+       <div className="main-container">
 
        </div>
     );
