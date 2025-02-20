@@ -4,6 +4,11 @@ import { BsGear, BsExclamationDiamond, BsReverseLayoutTextSidebarReverse, BsColu
 
 export const PortfolioSidebarData = [
   {
+    title: "Overview",
+    path: "/portfolio/overview",
+    icon: <BsColumns size={20}/>,
+  },
+    {
     title: "Holdings",
     path: "/portfolio/holdings",
     icon: <BsColumns size={20}/>,
