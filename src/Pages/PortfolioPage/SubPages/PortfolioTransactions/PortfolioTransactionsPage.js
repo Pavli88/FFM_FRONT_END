@@ -34,14 +34,9 @@ const PortfolioTransactionsPage = (props) => {
             newTransaction: newTransaction,
             saveNewTransaction: setNewTransaction,
         }}>
-            <div style={{height: '100%', width: '100%', padding: 15}}>
-                <div>
-                    <PortfolioTransactionsFilter updateParams={(e) => setParameters(e)}/>
-                </div>
-
-                <div style={{height: 900}}>
-                    <PortfolioTransactions data={transactionsData} server={props.server} fetch={() => setIsInitialRender(isInitialRender + 1)}/>
-                </div>
+            <div style={{height: '100%', width: '100%'}}>
+                <PortfolioTransactionsFilter updateParams={(e) => setParameters(e)}/>
+                <PortfolioTransactions data={transactionsData} server={props.server} fetch={() => setIsInitialRender(isInitialRender + 1)}/>
             </div>
         </TransactionContext.Provider>
     );

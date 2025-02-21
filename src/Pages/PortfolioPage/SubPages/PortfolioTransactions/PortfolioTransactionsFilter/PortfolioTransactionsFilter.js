@@ -1,11 +1,8 @@
 import './PortfolioTransactionsFilter.css'
-import Form from "react-bootstrap/Form";
 import {useContext, useEffect, useRef, useState} from "react";
 import PortfolioPageContext from "../../../context/portfolio-page-context";
 import TransactionContext from "../context/transaction-context";
 import DateContext from "../../../../../context/date-context";
-import Card from "react-bootstrap/Card";
-import PortfolioTransactionEntry from "../PortfolioTransactionEntry/PortfolioTransactionEntry";
 import Select from "react-select";
 
 
@@ -41,84 +38,89 @@ const PortfolioTransactionsFilter = (props) => {
     // }, [newTransaction])
 
     return (
-        <div className={'card'} style={{padding: 10}}>
-            <div style={{display: "flex"}}>
+        <div style={{padding: '15px', width: '100%'}}>
+            <div className={'card'}>
+                <div className={'search-container'}>
 
-                <div>
-                    <span className={'input-label'}>
-                        Show Only Active Transactions
-                    </span>
+                    <div className={'search-container-label-box'}>
+                        <label>
+                            Show Only Active Transactions
+                        </label>
+                        <div>
+                            <input type={'checkbox'} onClick={() => setOpenStatus(!openStatus)}/>
+                        </div>
+                    </div>
+
+
+                    <div className={'search-container-label-box'}>
+                        <label>
+                            Inventory ID
+                        </label>
+                        <div>
+                            <input ref={invRef} type="number" style={{width: 100}}/>
+                        </div>
+                    </div>
+
+
+                    <div className={'search-container-label-box'}>
+                        <label>
+                            Security ID
+                        </label>
+                        <div>
+                            <input ref={securityRef} type="number" style={{width: 100}}/>
+                        </div>
+                    </div>
+
+
+                    <div className={'search-container-label-box'}>
+                        <label>
+                            Transaction Type
+                        </label>
+                        <div>
+                            <Select
+                                isMulti
+                                options={[
+                                    {value: 'Purchase', label: 'Purchase'},
+                                    {value: 'Sale', label: 'Sale'},
+                                    {value: 'Subscription', label: 'Subscription'},
+                                    {value: 'Redemption', label: 'Redemption'},
+                                    {value: 'Commission', label: 'Commission'},
+                                    {value: 'Financing', label: 'Financing'}
+                                ]}
+                                onChange={(e) => setTransactionType(e)}
+
+                            />
+                        </div>
+                    </div>
+
+
+                    <div className={'search-container-label-box'}>
+                        <label>
+                            From
+                        </label>
+                        <div>
+                            <input ref={startDateRef} defaultValue={currentDate} type="date" style={{width: 200}}/>
+                        </div>
+                    </div>
+
+                    <div className={'search-container-label-box'}>
+                        <label>
+                            To
+                        </label>
+                        <div>
+                            <input ref={endDateRef} defaultValue={currentDate} type="date" style={{width: 200}}/>
+                        </div>
+                    </div>
+
+                    <div className={'search-container-label-box'}>
+                        <button onClick={submitHandler} className={'normal-button'}>Search
+                        </button>
+                    </div>
+
                 </div>
-
-                <div style={{width: 30}}>
-                    <input type={'checkbox'}
-                           style={{position: "absolute", top: 18, width: 30, paddingTop: 15, paddingBottom: 5}}
-                           onClick={() => setOpenStatus(!openStatus)}/>
-                </div>
-
-                <div>
-                    <span className={'input-label'}>
-                        Inv ID
-                    </span>
-                </div>
-                <div>
-                    <input ref={invRef} type="number" style={{width: 100}}/>
-                </div>
-
-                <div>
-                    <span className={'input-label'}>
-                        Security ID
-                    </span>
-                </div>
-                <div>
-                    <input ref={securityRef} type="number" style={{width: 100}}/>
-                </div>
-
-                <div>
-                    <span className={'input-label'}>
-                        Transaction Type
-                    </span>
-                </div>
-
-                <div>
-                    <Select
-                        isMulti
-                        options={[
-                            {value: 'Purchase', label: 'Purchase'},
-                            {value: 'Sale', label: 'Sale'},
-                            {value: 'Subscription', label: 'Subscription'},
-                            {value: 'Redemption', label: 'Redemption'},
-                            {value: 'Commission', label: 'Commission'},
-                            {value: 'Financing', label: 'Financing'}
-                        ]}
-                        onChange={(e) => setTransactionType(e)}
-                        className={'instrument-search-input-field'}
-                    />
-                </div>
-
-                <div>
-                    <span className={'input-label'}>
-                        From
-                    </span>
-                </div>
-
-
-                <input ref={startDateRef} defaultValue={currentDate} type="date" style={{width: 200}}/>
-
-
-                <div>
-                    <span className={'input-label'}>
-                        To
-                    </span>
-                </div>
-                <input ref={endDateRef} defaultValue={currentDate} type="date" style={{width: 200}}/>
-
-                <div style={{paddingLeft: 10}}>
-                    <button onClick={submitHandler} className={'normal-button'} style={{fontSize: 12}}>Search</button>
-                </div>
-
             </div>
         </div>
+
     )
 };
 export default PortfolioTransactionsFilter;

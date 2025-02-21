@@ -117,9 +117,11 @@ const TableGrouped = (props) => {
     };
 
     return (
-        <>
-            <table {...getTableProps()} className="table">
-                <thead>
+        <div className='card'
+             style={{backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '8px', overflow: 'hidden'}}>
+            <div style={{overflowX: 'auto'}}>
+                <table {...getTableProps()} style={{width: '100%', borderCollapse: 'collapse', minWidth: '600px'}}>
+                    <thead>
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
@@ -127,8 +129,8 @@ const TableGrouped = (props) => {
                             ))}
                         </tr>
                     ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
                     {firstPageRows.map(row => {
                         prepareRow(row);
                         return (
@@ -139,26 +141,28 @@ const TableGrouped = (props) => {
                             </tr>
                         );
                     })}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
 
-                       <Modal show={showModal} onHide={() => setShowModal(false)}>
+
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Update Transaction {selectedTransaction.id}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div style={{padding: '5px', width: '100%'}}>
-                        {selectedTransaction.sec_group === 'Cash' ? '':
-                        <div style={{width: '100%'}}>
-                            <Form.Label>Open Status</Form.Label>
-                            <Select style={{height: '100%'}}
-                                    value={selectedTransaction.open_status}
-                                    options={[
-                                        {value: 'Open', label: 'Open'},
-                                        {value: 'Closed', label: 'Closed'}
-                                    ]}
-                                    placeholder={selectedTransaction.open_status}
-                                    onChange={(e) => setSelectedTransaction({
+                        {selectedTransaction.sec_group === 'Cash' ? '' :
+                            <div style={{width: '100%'}}>
+                                <Form.Label>Open Status</Form.Label>
+                                <Select style={{height: '100%'}}
+                                        value={selectedTransaction.open_status}
+                                        options={[
+                                            {value: 'Open', label: 'Open'},
+                                            {value: 'Closed', label: 'Closed'}
+                                        ]}
+                                        placeholder={selectedTransaction.open_status}
+                                        onChange={(e) => setSelectedTransaction({
                                         ...selectedTransaction,
                                         open_status: e.value,
                                         is_active: e.value === 'Open' ? 1: 0
@@ -315,7 +319,7 @@ const TableGrouped = (props) => {
         <button className="save-button" onClick={newLinkedTransaction}>Save</button>
     </Modal.Footer>
 </Modal>
-        </>
+        </div>
     );
 };
 
@@ -363,9 +367,9 @@ const PortfolioTransactions = ({ server, data, fetch, portfolio }) => {
             </div>
 
             {/* Transactions Table */}
-            <div className="bg-white rounded-lg shadow-md p-4 overflow-auto max-h-[600px]">
-                <TableGrouped data={data} server={server} fetch={fetch} updateSelected={(e) => setSelectedIds(e)} />
-            </div>
+
+            <TableGrouped data={data} server={server} fetch={fetch} updateSelected={(e) => setSelectedIds(e)} />
+
 
             {/* Transaction Entry Modal */}
             {showTransactionPanel && (

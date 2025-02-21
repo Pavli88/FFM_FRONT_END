@@ -128,6 +128,7 @@ tr{
     width: 100%;
     height: 100%;
     padding: 20px;
+    padding-top: 0px;
     justify-content: center; /* Centers the .card horizontally */
     align-items: center;
     /*min-height: 100vh;*/
@@ -253,12 +254,27 @@ label {
 
 }
 
+/*Search container CSS*/
 .search-container{
-    height: 50px;
+    height: 40px;
     /*width: 100%;*/
     padding: 5px;
     margin: 15px;
     display: flex;
+}
+
+.search-container-label-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2b2b2b;
+
+}
+
+.search-container-label-box label{
+    color: #2b2b2b;
+    font-size: 14px;
+    /*font-weight: bold;*/
 }
 
 ul {
@@ -334,7 +350,7 @@ ul li:hover {
     justify-content: center; /* Center content vertically */
     align-items: center;     /* Center content horizontally */
     gap: 15px;               /* Add space between elements */
-    padding: 20px;           /* Padding inside the body */
+    padding: 10px;           /* Padding inside the body */
     /*margin: 5px;             !* 5px margin around the card body *!*/
     height: calc(100% - 10px);         /* Padding inside the body */
 }

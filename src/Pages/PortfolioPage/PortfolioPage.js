@@ -164,38 +164,11 @@ const PortfolioPage = (props) => {
                     marginLeft: isMenuOpen ? "300px" : "40px",
                     transition: "margin-left 0.3s ease",
                     flex: 1,
-                    padding: 10,
+                    // padding: 10,
                     width: '100%',
                     height: '100%',
                     // background: "blue"
                 }}>
-                    <div style={{
-                        display: "flex",
-                        paddingTop: 15,
-                        paddingLeft: 15,
-                        paddingBottom: 0,
-                        fontSize: 20,
-                        fontWeight: "bold"
-                    }}>
-                        <span style={{paddingLeft: 5}}>{selectedPortfolioData.portfolio_name}</span>
-                        <span style={{
-                            paddingLeft: 5,
-                            paddingTop: 6,
-                            fontSize: 14
-                        }}>{selectedPortfolioData.portfolio_type}</span>
-                        <span style={{
-                            paddingLeft: 5,
-                            paddingTop: 6,
-                            fontSize: 14
-                        }}>{selectedPortfolioData.currency}</span>
-                        <span style={{
-                            paddingLeft: 5,
-                            paddingTop: 6,
-                            fontSize: 14,
-                            color: selectedPortfolioData.status === 'Not Funded' ? 'red' : selectedPortfolioData.status === 'Funded' ? 'green' : 'orange'
-                        }}>{selectedPortfolioData.status}</span>
-                    </div>
-
                     <Switch>
                         <Route path="/portfolio/overview">
                             <PortfolioOverview/>
