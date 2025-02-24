@@ -34,7 +34,7 @@ const PortfolioTransactionsPage = (props) => {
             newTransaction: newTransaction,
             saveNewTransaction: setNewTransaction,
         }}>
-            <div style={{height: '100%', width: '100%'}}>
+            <div style={{padding: 20}}>
                 <PortfolioTransactionsFilter updateParams={(e) => setParameters(e)}/>
                 <PortfolioTransactions data={transactionsData} server={props.server} fetch={() => setIsInitialRender(isInitialRender + 1)}/>
             </div>

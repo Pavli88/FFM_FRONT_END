@@ -1,12 +1,30 @@
-import { useMemo, useEffect } from 'react';
-import { useTable, useGroupBy, useExpanded } from 'react-table';
-import { BsDashSquare, BsPlusSquare, BsCaretUpFill, BsCaretDownFill } from 'react-icons/bs';
-import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import {useMemo, useEffect, useState, useContext, useCallback} from 'react';
+import { useTable, useGroupBy, useExpanded, useSortBy } from 'react-table';
+import { FaArrowUp, FaArrowDown, FaTimes, FaPencilAlt } from 'react-icons/fa';
+import {BsCaretDownFill, BsCaretUpFill} from "react-icons/bs";
+import {ButtonGroupVertical} from "../Buttons/ButtonGroups";
+import axios from "axios";
+import ServerContext from "../../context/server-context";
+import PortfolioPageContext from "../../Pages/PortfolioPage/context/portfolio-page-context";
+import {CSVLink} from "react-csv";
+import DateContext from "../../context/date-context";
+import {DateSelect} from "../Dates/DateWidgets";
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
-const HoldingsTable = ({ data }) => {
-    const columns = useMemo(() => [
+const HoldingsTable = () => {
+    const server = useContext(ServerContext).server;
+    const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
+    const currentDate = useContext(DateContext).currentDate;
+    const [holdingData, setHoldingdata] = useState([]);
+    const [holdingDate, setHoldingDate] = useState(currentDate);
+    const [groupBy, setGroupBy] = useState(["name"]);
+    const [showOnlyGrouped, setShowOnlyGrouped] = useState(false);
+    const [showActions, setShowActions] = useState(false);
+    // const [selectedRows, setSelectedRows] = useState({});
+
+    const columns = useMemo(() => {
+    const baseColumns = [
         { Header: 'Portfolio', accessor: 'portfolio_code' },
         { Header: 'Date', accessor: 'date' },
         { Header: 'Name', accessor: 'name' },
@@ -16,142 +34,287 @@ const HoldingsTable = ({ data }) => {
         { Header: 'Transaction ID', accessor: 'trd_id', disableGroupBy: true },
         { Header: 'Instrument ID', accessor: 'instrument_id', disableGroupBy: true },
         { Header: 'Trade Date', accessor: 'trade_date', disableGroupBy: true },
+        { Header: 'Trade Type', accessor: 'trade_type', disableGroupBy: true },
         {
-            Header: 'Trade Type', accessor: 'trade_type', disableGroupBy: true,
+            Header: 'Quantity',
+            accessor: 'quantity',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => formatFloat(value),
+        },
+        {
+            Header: 'Trade Price',
+            accessor: 'trade_price',
+            disableGroupBy: true,
+            Cell: ({ value }) => formatFloat(value),
+        },
+        {
+            Header: 'Market Price',
+            accessor: 'market_price',
+            disableGroupBy: true,
+            Cell: ({ value }) => formatFloat(value),
+        },
+        {
+            Header: 'FX Rate',
+            accessor: 'fx_rate',
+            disableGroupBy: true,
+            Cell: ({ value }) => formatFloat(value),
+        },
+        {
+            Header: 'Book Value',
+            accessor: 'bv',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            ),
+        },
+        {
+            Header: 'Market Value',
+            accessor: 'mv',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            ),
+        },
+        {
+            Header: 'Unrealized P&L',
+            accessor: 'ugl',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            ),
+        },
+        {
+            Header: 'Realized P&L',
+            accessor: 'rgl',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            ),
+        },
+        {
+            Header: 'Weight',
+            accessor: 'weight',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => `${formatFloat(value)}%`,
+            Cell: ({ value }) => `${formatFloat(value)}%`,
+        },
+        {
+            Header: 'Leverage',
+            accessor: 'pos_lev',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => `${formatFloat(value)}%`,
+            Cell: ({ value }) => `${formatFloat(value)}%`,
+        },
+    ];
 
-        },
-        {
-            Header: 'Quantity', accessor: 'quantity', aggregate: 'sum', disableGroupBy: true,
-            Aggregated: ({ value }) => formatFloat(value)
-        },
-        {
-            Header: 'Trade Price', accessor: 'trade_price', disableGroupBy: true,
-            Cell: ({ value }) => formatFloat(value)
-        },
-        {
-            Header: 'Market Price', accessor: 'market_price', disableGroupBy: true,
-            Cell: ({ value }) => formatFloat(value)
-        },
-        {
-            Header: 'FX Rate', accessor: 'fx_rate', disableGroupBy: true,
-            Cell: ({ value }) => formatFloat(value)
-        },
-        {
-            Header: 'Book Value', accessor: 'bv', aggregate: 'sum', disableGroupBy: true,
-            Aggregated: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
-                    {formatFloat(value)}
-                </span>
+    if (showActions) {
+        baseColumns.push({
+            Header: 'Actions',
+            accessor: 'actions',
+            disableGroupBy: true,
+            Cell: ({ row }) => (
+                <div style={{ display: 'flex', gap: '5px' }}>
+                    {!row.isGrouped && (
+                        <button onClick={() => handleEdit(row)} style={actionButtonStyle} className="icon-button edit-button">
+                            <FaPencilAlt />
+                        </button>
+                    )}
+                    <button onClick={() => handleClose(row)} style={actionButtonStyle} className="icon-button close-button">
+                        <FaTimes />
+                    </button>
+                </div>
             ),
-            Cell: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
-                    {formatFloat(value)}
-                </span>
-            )
-        },
-        {
-            Header: 'Market Value', accessor: 'mv', aggregate: 'sum', disableGroupBy: true,
-            Aggregated: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
-                    {formatFloat(value)}
-                </span>
-            ),
-            Cell: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
-                    {formatFloat(value)}
-                </span>
-            )
-        },
-        {
-            Header: 'Unrealized P&L', accessor: 'ugl', aggregate: 'sum', disableGroupBy: true,
-             Aggregated: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
-                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
-                    {formatFloat(value)}
-                </span>
-            ),
-            Cell: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
-                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
-                    {formatFloat(value)}
-                </span>
-            )
-        },
-        {
-            Header: 'Realized P&L', accessor: 'rgl', aggregate: 'sum', disableGroupBy: true,
-            Aggregated: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
-                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
-                    {formatFloat(value)}
-                </span>
-            ),
-            Cell: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
-                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
-                    {formatFloat(value)}
-                </span>
-            )
-        },
-         {
-            Header: 'Weight', accessor: 'weight', aggregate: 'sum', disableGroupBy: true,
-            Aggregated: ({ value }) => `${formatFloat(value)}%`,
-            Cell: ({ value }) => `${formatFloat(value)}%`
-        },
-        {
-            Header: 'Leverage', accessor: 'pos_lev', aggregate: 'sum', disableGroupBy: true,
-            Aggregated: ({ value }) => `${formatFloat(value)}%`,
-            Cell: ({ value }) => `${formatFloat(value)}%`
-        }
-    ], []);
+        });
+    }
+
+    return baseColumns;
+}, [showActions]);
+
+    const actionButtonStyle = {
+        padding: '5px 10px',
+        backgroundColor: '#007bff',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer'
+    };
+
+    const handleClose = (row) => {
+        console.log("Close clicked for", row);
+        // Add close logic here
+    };
+
+    const handleEdit = (row) => {
+        console.log("Edit clicked for", row);
+        // Add edit logic here
+    };
 
     const tableInstance = useTable(
-        { columns, data, initialState: { groupBy: ['type'] } },
-        useGroupBy, useExpanded
+        {
+            columns,
+            data: Array.isArray(holdingData) ? holdingData : [],
+            initialState: {groupBy}
+        },
+        useGroupBy,
+        useSortBy,
+        useExpanded
     );
 
-    const { getTableProps, getTableBodyProps, headerGroups, rows, setGroupBy, prepareRow } = tableInstance;
-    const firstPageRows = rows.slice(0, 200);
+    const { getTableProps, getTableBodyProps, headerGroups, rows, setGroupBy: tableSetGroupBy, prepareRow } = tableInstance;
+
+    const fetchHoldingData = async() => {
+        const response = await axios.post(`${server}portfolios/get/holding/`, {
+                date: holdingDate,
+                portfolio_code: [portfolioCode]
+            })
+        setHoldingdata(response.data)
+    };
 
     useEffect(() => {
-        setGroupBy(['name']);
-    }, [data]);
+        if (portfolioCode !== undefined) {
+            fetchHoldingData()
+        }
+    }, [portfolioCode, holdingDate])
+
+    const buttonDict = {
+        "Portfolio": () => tableSetGroupBy(["portfolio_code"]),
+        "Security": () => tableSetGroupBy(["name"]),
+        "Group": () => tableSetGroupBy(["group"]),
+        "Type": () => tableSetGroupBy(["type"]),
+    };
+
+    // Filter rows: Show only grouped rows when checkbox is checked
+    const displayedRows = showOnlyGrouped ? rows.filter(row => row.isGrouped) : rows;
 
     return (
-
         <div className='card'
              style={{backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '8px', overflow: 'hidden'}}>
+            <div style={{display: "flex", height: 60, alignItems: "center"}}>
+                <ButtonGroupVertical buttonDict={buttonDict}/>
+
+                <div style={{width: 300}}>
+                    <DateSelect onDateChange={setHoldingDate}/>
+                </div>
+
+                <div style={{
+                    width: 300,
+                    display: "flex",        // Enables flexbox
+                    justifyContent: "center", // Centers horizontally
+                    alignItems: "center",    // Centers vertically
+                    textAlign: "center"     // Ensures text is centered
+                }}>
+                    <label style={{display: "flex", alignItems: "center", cursor: "pointer", whiteSpace: "nowrap"}}>
+                        <input
+                            type="checkbox"
+                            checked={showActions}
+                            onChange={() => setShowActions(prev => !prev)}
+                            style={{marginRight: "5px"}}
+                        />
+                        Eneable Trading
+                    </label>
+                </div>
+
+                <div style={{
+                    paddingLeft: 15,
+                    width: 200,
+                    display: "flex",        // Enables flexbox
+                    justifyContent: "center", // Centers horizontally
+                    alignItems: "center",    // Centers vertically
+                    textAlign: "center"     // Ensures text is centered
+                }}>
+                <CSVLink
+                        data={holdingData}
+                        className="download-link"
+                        style={{
+                            textDecoration: "none",
+                            color: "#007bff",
+                            fontWeight: "bold"
+                        }}
+                    >
+                        Download CSV
+                    </CSVLink>
+                </div>
+
+            </div>
+
             <div style={{overflowX: 'auto'}}>
                 <table {...getTableProps()} style={{width: '100%', borderCollapse: 'collapse', minWidth: '600px'}}>
                     <thead>
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}
                             style={{backgroundColor: '#eeeeee', fontWeight: 'bold'}}>
-                            {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps()}>
-                                    {column.canGroupBy && (
-                                        <span {...column.getGroupByToggleProps()} style={{paddingRight: 5}}>
-                                        {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
-                                    </span>
-                                    )}
+                        {headerGroup.headers.map(column => (
+                                <th {...column.getHeaderProps(column.getSortByToggleProps())} className={column.Header === 'Actions' ? 'sticky-column' : ''}>
                                     {column.render('Header')}
+                                    {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
                                 </th>
                             ))}
                         </tr>
                     ))}
                     </thead>
+
                     <tbody {...getTableBodyProps()}>
-                    {firstPageRows.map(row => {
+                    {displayedRows.map(row => {
                         prepareRow(row);
                         return (
                             <tr {...row.getRowProps()}>
                                 {row.cells.map(cell => (
                                     <td {...cell.getCellProps()}
-                                        style={row.isGrouped ? {backgroundColor: 'white', fontWeight: 'bold'} : {}}>
+                                        style={row.isGrouped ? {backgroundColor: 'white', fontWeight: 'bold'} : {}} className={cell.column.Header === 'Actions' ? 'sticky-column' : ''}>
                                         {cell.isGrouped ? (
                                             <>
-                                            <span {...row.getToggleRowExpandedProps()}>
-                                                {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
-                                            </span>{' '}
+                                                {!showOnlyGrouped && (
+                                                    <span {...row.getToggleRowExpandedProps()}>
+                                                            {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
+                                                        </span>
+                                                )}
+                                                {' '}
                                                 {cell.render('Cell')} ({row.subRows.length})
                                             </>
                                         ) : cell.isAggregated ? (
@@ -168,7 +331,6 @@ const HoldingsTable = ({ data }) => {
                 </table>
             </div>
         </div>
-
     );
 };
 
