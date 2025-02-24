@@ -12,9 +12,9 @@ import {DateSelect} from "../Dates/DateWidgets";
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
-const HoldingsTable = () => {
+const HoldingsTable = ( {portfolioCode} ) => {
     const server = useContext(ServerContext).server;
-    const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
+    // const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
     const currentDate = useContext(DateContext).currentDate;
     const [holdingData, setHoldingdata] = useState([]);
     const [holdingDate, setHoldingDate] = useState(currentDate);
@@ -211,7 +211,7 @@ const HoldingsTable = () => {
     const fetchHoldingData = async() => {
         const response = await axios.post(`${server}portfolios/get/holding/`, {
                 date: holdingDate,
-                portfolio_code: [portfolioCode]
+                portfolio_code: portfolioCode
             })
         setHoldingdata(response.data)
     };

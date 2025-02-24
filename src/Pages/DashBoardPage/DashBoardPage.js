@@ -14,6 +14,7 @@ import PortfolioTransactionPnl
 import TradingMetrics from "../../calculations/tradeMetrics";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { BsCaretUpFill, BsCaretDownFill } from 'react-icons/bs';
+import HoldingTable from "../../components/Tables/HoldingTable";
 
 // Custom hook for fetching dashboard data
 const useDashboardData = (server, currentDate, portCodes) => {
@@ -115,7 +116,7 @@ const DashBoardPage = () => {
     const [returnTypes, setReturnsTypes] = useState('dtd');
     const [portfolioNavData, setPortfolioNavData] = useState([]);
     const [startDate, setStartDate] = useState(firstDayOfYear);
-    console.log(portfolioNavData)
+    console.log(childPortfolios)
     // Fetch child portfolios whenever portGroup changes
     useEffect(() => {
         const fetchPortChildCodes = async () => {
@@ -399,6 +400,9 @@ const DashBoardPage = () => {
                         </div>
                     </div>
                 </div>
+
+                <HoldingTable portfolioCode={childPortfolios}/>
+
             </div>
         </div>
     );
