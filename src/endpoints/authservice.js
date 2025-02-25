@@ -25,7 +25,7 @@ export const logout = async () => {
         }
 
         await axios.post(`${API_URL}/user/logout/`, { refresh_token: refreshToken }, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+            headers: { Authorization: `Bearer ${localStorage.getItem("access")}`},
         });
 
         // Clear tokens from local storage

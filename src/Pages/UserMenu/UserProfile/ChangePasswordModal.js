@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import "./ChangePasswordModal.css";
 
 const ChangePasswordModal = ({ onClose, onChangePassword }) => {
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);  // ✅ Added loading state
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
+    if (!oldPassword || !newPassword || !confirmPassword) {
       setError("All fields are required.");
       return;
     }
@@ -21,44 +22,62 @@ const ChangePasswordModal = ({ onClose, onChangePassword }) => {
     }
 
     setError("");
-    onChangePassword({ currentPassword, newPassword });
+    setLoading(true);
+
+    try {
+      await onChangePassword({ oldPassword, newPassword });  // ✅ Await ensures promise is handled
+    } catch (err) {
+      setError(err.message || "Failed to change password. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <label className={"title"}>Change Password</label>
+        <label className="title">Change Password</label>
 
         {error && <p className="error-message">{error}</p>}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <input
-            type="password"
-            placeholder="Current Password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
+              type="password"
+              name="oldPassword"
+              autoComplete="off"
+              placeholder="Current Password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+            required
           />
           <input
             type="password"
+            name="newPassword"
+            autoComplete="off"
             placeholder="New Password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
+            required
           />
           <input
-            type="password"
-            placeholder="Confirm New Password"
-            value={confirmPassword}
+              type="password"
+              name="confirmPassword"
+              autoComplete="off"
+              placeholder="Confirm New Password"
+              value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
           />
 
-            <div className="button-group" style={{ margin: "5px"}}>
-                <button type="submit">
-                    Change Password
-                </button>
-                <button type="button" onClick={onClose}>
-                    Close
-                </button>
-            </div>
+          <div className="button-group" style={{ margin: "5px" }}>
+            <button type="submit" disabled={loading}>
+              {loading ? "Changing..." : "Change Password"}
+            </button>
+            <button type="button" onClick={onClose}>
+              Close
+            </button>
+          </div>
         </form>
       </div>
     </div>
