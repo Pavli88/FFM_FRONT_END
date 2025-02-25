@@ -6,6 +6,7 @@ import AuthContext from "../context/AuthProvider";
 import axios from "axios";
 import UserContext from "../context/user-context";
 import { FaUserCircle } from 'react-icons/fa';
+import { logout } from "../endpoints/authservice";
 
 const Navbar = () => {
     const server = useContext(ServerContext)['server'];
@@ -29,11 +30,7 @@ const Navbar = () => {
 
 
     const userLogout = () => {
-        axios.get(server + 'user/logout/')
-            .then(response => console.log(response.data))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
+        logout();
         setAuth({ userAllowedToLogin: false });
     };
 
