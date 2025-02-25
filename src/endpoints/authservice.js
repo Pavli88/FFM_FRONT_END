@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_URL = 'http://127.0.0.0:8001' //process.env.REACT_APP_API_URL; // Set backend URL
+const API_URL = process.env.REACT_APP_SERVER_URL;
 
 // Login function
 export const login = async (username, password) => {
     try {
-        const response = await axios.post(`${API_URL}/api/token/`, { username, password });
+        const response = await axios.post(`${API_URL}token/`, { username, password });
         localStorage.setItem("access", response.data.access);
         localStorage.setItem("refresh", response.data.refresh);
         return response.data;
@@ -44,7 +44,7 @@ export const refreshToken = async () => {
         const refresh = localStorage.getItem("refresh");
         if (!refresh) throw "No refresh token found.";
 
-        const response = await axios.post(`${API_URL}/api/token/refresh/`, { refresh });
+        const response = await axios.post(`${API_URL}token/refresh/`, { refresh });
         localStorage.setItem("access", response.data.access);
         return response.data.access;
     } catch (error) {
