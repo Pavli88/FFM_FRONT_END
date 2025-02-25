@@ -5,16 +5,16 @@ import {BsCaretDownFill, BsCaretUpFill} from "react-icons/bs";
 import {ButtonGroupVertical} from "../Buttons/ButtonGroups";
 import axios from "axios";
 import ServerContext from "../../context/server-context";
-import PortfolioPageContext from "../../Pages/PortfolioPage/context/portfolio-page-context";
 import {CSVLink} from "react-csv";
 import DateContext from "../../context/date-context";
 import {DateSelect} from "../Dates/DateWidgets";
+import PortfolioTransactionsTable
+    from "../../Pages/PortfolioPage/SubPages/PortfolioTransactions/PortfolioTransactionsTable/PortfolioTransactionsTable";
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
 const HoldingsTable = ( {portfolioCode} ) => {
     const server = useContext(ServerContext).server;
-    // const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
     const currentDate = useContext(DateContext).currentDate;
     const [holdingData, setHoldingdata] = useState([]);
     const [holdingDate, setHoldingDate] = useState(currentDate);
@@ -25,14 +25,38 @@ const HoldingsTable = ( {portfolioCode} ) => {
 
     const columns = useMemo(() => {
     const baseColumns = [
-        { Header: 'Portfolio', accessor: 'portfolio_code' },
-        { Header: 'Date', accessor: 'date' },
-        { Header: 'Name', accessor: 'name' },
-        { Header: 'Group', accessor: 'group' },
-        { Header: 'Type', accessor: 'type' },
-        { Header: 'Currency', accessor: 'currency', disableGroupBy: true },
-        { Header: 'Transaction ID', accessor: 'trd_id', disableGroupBy: true },
-        { Header: 'Instrument ID', accessor: 'instrument_id', disableGroupBy: true },
+        { Header: 'Portfolio', accessor: 'portfolio_code',
+            aggregate: (values) => values[0],
+            Aggregated: ({ value }) => <strong>{value}</strong>  },
+        { Header: 'Date', accessor: 'date',
+            aggregate: (values) => values[0],
+            Aggregated: ({ value }) => <strong>{value}</strong> },
+        { Header: 'Name', accessor: 'name'},
+        {
+            Header: 'Group',
+            accessor: 'group'
+        },
+        {Header: 'Type', accessor: 'type'},
+        {Header: 'Currency', accessor: 'currency', disableGroupBy: true},
+        {
+            Header: 'Inventory ID',
+            accessor: 'trd_id',
+            disableGroupBy: true,
+            Cell: ({row, value}) => {
+                // Show normal text for grouped rows
+                if (row.isGrouped) {
+                    return value;
+                }
+
+                // Make clickable link for non-grouped rows
+                return (
+                    <a href={`#trd/${value}`} style={{color: 'blue', textDecoration: 'underline', cursor: 'pointer'}}>
+                        {value}
+                    </a>
+                );
+            }
+        },
+        {Header: 'Instrument ID', accessor: 'instrument_id', disableGroupBy: true},
         { Header: 'Trade Date', accessor: 'trade_date', disableGroupBy: true },
         { Header: 'Trade Type', accessor: 'trade_type', disableGroupBy: true },
         {
@@ -153,12 +177,23 @@ const HoldingsTable = ( {portfolioCode} ) => {
         },
     ];
 
-    if (showActions) {
-        baseColumns.push({
-            Header: 'Actions',
-            accessor: 'actions',
-            disableGroupBy: true,
-            Cell: ({ row }) => (
+        if (showActions) {
+    baseColumns.push({
+        Header: 'Actions',
+        accessor: 'actions',
+        disableGroupBy: true,
+        Cell: ({ row }) => {
+            // Get the parent group value if it's a grouped row
+            const parentGroupValue = row.depth === 0 ? row.groupByVal : row.original?.parentGroupVal;
+
+            // Condition to hide buttons
+            const shouldHideButtons = parentGroupValue === "Cash" || (!row.isGrouped && row.original?.trd_id === 0);
+
+            if (shouldHideButtons) {
+                return null; // Do not render buttons
+            }
+
+            return (
                 <div style={{ display: 'flex', gap: '5px' }}>
                     {!row.isGrouped && (
                         <button onClick={() => handleEdit(row)} style={actionButtonStyle} className="icon-button edit-button">
@@ -169,9 +204,10 @@ const HoldingsTable = ( {portfolioCode} ) => {
                         <FaTimes />
                     </button>
                 </div>
-            ),
-        });
-    }
+            );
+        },
+    });
+}
 
     return baseColumns;
 }, [showActions]);
@@ -330,6 +366,10 @@ const HoldingsTable = ( {portfolioCode} ) => {
                     </tbody>
                 </table>
             </div>
+
+            {/*<div>*/}
+            {/*    <PortfolioTransactionsTable data={{}} server={server} fetch={fetch} updateSelected={(e) => console.log(e)}/>*/}
+            {/*</div>*/}
         </div>
     );
 };
