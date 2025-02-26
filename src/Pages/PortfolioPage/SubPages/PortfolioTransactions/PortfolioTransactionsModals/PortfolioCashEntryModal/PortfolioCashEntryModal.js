@@ -2,18 +2,16 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import {useContext, useEffect, useRef, useState} from "react";
-import DateContext from "../../../../../context/date-context";
-import PortfolioPageContext from "../../../context/portfolio-page-context";
+import DateContext from "../../../../../../context/date-context";
+import PortfolioPageContext from "../../../../context/portfolio-page-context";
 import Select from "react-select";
 
-const PortfolioCashEntry = (props) => {
+const PortfolioCashEntryModal = (props) => {
     const {portfolioCode, portfolioData} = useContext(PortfolioPageContext);
     const { currentDate } = useContext(DateContext);
-
     const [currencies, setCurrencies] = useState([]);
     const [selectedCurrency, setSelectedCurrency] = useState(null);
     const [type, setType] = useState(null)
-
     const dateRef = useRef();
     const quantityRef = useRef();
 
@@ -53,7 +51,7 @@ const PortfolioCashEntry = (props) => {
     ]
 
     const onlySubscription = [{ value: 'Subscription', label: 'Subscription' }]
-    console.log(portfolioData)
+
     return (
         <Modal show={props.show} onHide={() => props.close()}>
             <Modal.Header closeButton>
@@ -103,4 +101,4 @@ const PortfolioCashEntry = (props) => {
         </Modal>
     )
 };
-export default PortfolioCashEntry;
+export default PortfolioCashEntryModal;

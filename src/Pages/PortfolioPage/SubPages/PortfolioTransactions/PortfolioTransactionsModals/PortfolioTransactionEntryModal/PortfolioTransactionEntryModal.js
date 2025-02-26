@@ -2,10 +2,10 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import {useContext, useRef, useState} from "react";
-import DateContext from "../../../../../context/date-context";
-import PortfolioPageContext from "../../../context/portfolio-page-context";
+import DateContext from "../../../../../../context/date-context";
+import PortfolioPageContext from "../../../../context/portfolio-page-context";
 
-const PortfolioTransactionEntry = (props) => {
+const PortfolioTransactionEntryModal = (props) => {
     const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
@@ -227,4 +227,4 @@ const PortfolioTransactionEntry = (props) => {
         </Modal>
     )
 };
-export default PortfolioTransactionEntry;
+export default PortfolioTransactionEntryModal;

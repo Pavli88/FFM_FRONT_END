@@ -58,7 +58,7 @@ const MainApplication = ({config}) => {
     //User related data and variables
     // const { username, email, first_name, last_name, date_joined, last_login, is_staff, is_superuser} = userData;
     const [portfolios, setPortfolios] = useState([]);
-    const [selectedPortfolio, setSelectedPortfolio] = useState('');
+    const [selectedPortfolio, setSelectedPortfolio] = useState({});
     const [newPortfolio, setNewPortfolio] = useState(0);
 
     const [brokerData, setBrokerData] = useState([{}]);
@@ -72,7 +72,6 @@ const MainApplication = ({config}) => {
     const [endDate, setEndDate] = useState(date.toISOString().substr(0, 10));
     const [userData, setUserData] = useState([{}]);
 
-    console.log(userData)
     // Dashboard Context
     const [portGroup, setPortGroup] = useState(null);
 

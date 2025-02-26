@@ -1,9 +1,9 @@
 import HoldingsTable from "../../../../components/Tables/HoldingTable";
 import {useContext} from "react";
-import PortfolioPageContext from "../../context/portfolio-page-context";
+import PortfolioContext from "../../../../context/portfolio-context";
 
 const PortfolioHoldingsPage = () => {
-    const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
+    const portfolioCode = useContext(PortfolioContext).selectedPortfolio.portfolio_code;
     return (
         <div style={{ padding: 20 }}>
             <HoldingsTable portfolioCode={[portfolioCode]}/>

@@ -5,7 +5,6 @@ import ServerContext from "../../context/server-context";
 import PortfolioSettingsPage from "./SubPages/PortfolioSettings/PortfolioSettingsPage";
 import PortfolioTransactionsPage from "./SubPages/PortfolioTransactions/PortfolioTransactionsPage";
 import PortfolioHoldingsPage from "./SubPages/PortfolioHoldings/PortfolioHoldingsPage";
-import PortfolioNavBar from "./PortfolioNavBar/PortfolioNavBar";
 import PortfolioOverview from "./SubPages/PortfolioOverview/PortfolioOverview";
 import PortfolioPageContext from "./context/portfolio-page-context";
 import {PortfolioSidebarData} from "./PortfolioSidebarData";
@@ -17,6 +16,7 @@ import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import DateContext from "../../context/date-context";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
+import PortfolioSearch from "./PortfolioSearch/PortfolioSearch";
 
 const DescUpdateModal = (props) => {
     const [newDesc, setNewDesc] = useState('');
@@ -75,7 +75,7 @@ const PortfolioPage = (props) => {
                 opacity: isMenuOpen ? 1 : 0,
                 transition: "visibility 0.3s, opacity 0.3s ease",
             }}>
-                <PortfolioNavBar/>
+                <PortfolioSearch/>
             </div>
 
             <div style={{
