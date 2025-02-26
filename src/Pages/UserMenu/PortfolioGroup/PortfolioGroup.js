@@ -177,7 +177,9 @@ const PortfolioGroup = ({ allowSelect = false }) => {
     const [node, setNode] = useState(null);
 
     const fetchPortGroupData = async () => {
-        const response = await axios.get(server + "portfolios/get/port_groups/");
+        const response = await axios.get(`${server}portfolios/get/port_groups/`,
+            {headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}}
+        );
         setPortGroupData(response.data);
     };
 

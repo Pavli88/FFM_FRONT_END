@@ -24,7 +24,7 @@ export const logout = async () => {
             return;
         }
 
-        await axios.post(`${API_URL}/user/logout/`, { refresh_token: refreshToken }, {
+        await axios.post(`${API_URL}user/logout/`, { refresh_token: refreshToken }, {
             headers: { Authorization: `Bearer ${localStorage.getItem("access")}`},
         });
 

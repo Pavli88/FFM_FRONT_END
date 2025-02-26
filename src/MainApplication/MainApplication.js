@@ -94,34 +94,29 @@ const MainApplication = ({config}) => {
     );
 
     useEffect(() => {
-            axios.get(server + 'accounts/get/brokers')
-                .then(response => setBrokerData(response['data']))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, []
-    );
+        axios
+            .get(`${server}accounts/get/brokers`)
+            .then((response) => setBrokerData(response.data))
+            .catch((error) => console.error("Error fetching brokers:", error));
+    }, []);
 
     useEffect(() => {
-            axios.get(server + 'portfolios/get/portfolios/', {
-                params: {owner: userData.username}
-            })
-                .then(response => setPortfolios(response.data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        }, [newPortfolio]
-    );
+        if (userData?.username) {
+            axios
+                .get(`${server}portfolios/get/portfolios/`, {headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}})
+                .then((response) => setPortfolios(response.data))
+                .catch((error) => console.error("Error fetching portfolios:", error));
+        }
+    }, [userData, newPortfolio]);
 
     useEffect(() => {
-            axios.get(`${server}accounts/get/accounts/`, {params: {owner: userData.username}})
-                .then(response => setAccounts(response.data))
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
-        },[ newAccount ]
-    );
-
+        if (userData?.username) {
+            axios
+                .get(`${server}accounts/get/accounts/`, {params: {owner: userData.username}})
+                .then((response) => setAccounts(response.data))
+                .catch((error) => console.error("Error fetching accounts:", error));
+        }
+    }, [newAccount]);
 
     return (
         <div style={{background: '#FBFAFA', padding: 0}}>

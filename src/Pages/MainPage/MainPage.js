@@ -12,11 +12,11 @@ const MainPage = (props) => {
         backgroundPosition: 'center', // Center the image
     };
     return (
-        <div style={divStyle}>
+        <div>
             <div style={{width: '100%', padding: 15, display: "flex"}}>
                 <div>
                     <h2 stlye={{margin: 0, height: '100%', color: 'white'}}>FractalPortfolios</h2>
-                    <p>Investment & Trading System</p>
+                    <p>Trade like a Pro. Manage like an Expert</p>
                 </div>
                 <div style={{position: "absolute", right: 10, display: "flex"}}>
                     <Link to={"/register"}>
