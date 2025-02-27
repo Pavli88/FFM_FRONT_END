@@ -1,11 +1,18 @@
 import DataNavBar from "./DataNavBar/DataNavBar";
 import InstrumentPricing from "../InstrumentPage/InstrumentPricing/InstrumentPricing";
+import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
+
 const DataPage = () => {
+    const panel = <div>
+        <InstrumentPricing/>
+    </div>
+
+    const mainArea = <div>
+        <DataNavBar/>
+    </div>
+
     return(
-        <div className={'page-container'}>
-            <DataNavBar/>
-            <InstrumentPricing/>
-        </div>
+        <ContainerWithSideMenu panel={panel} mainArea={mainArea}/>
     )
 }
 export default DataPage;

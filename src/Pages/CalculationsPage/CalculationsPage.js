@@ -8,6 +8,8 @@ import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
+import PortfolioContext from "../../context/portfolio-context";
+import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
 
 const TaskComponent = () => {
     const server = useContext(ServerContext)['server'];
@@ -87,24 +89,14 @@ const CeleryStatus = () => {
     );
 };
 
-const CalculationsPage = (props) => {
+const CalculationsPage = () => {
     const server = useContext(ServerContext)['server'];
+    const portfolios = useContext(PortfolioContext).portfolios;
     const [startDate, setStartDate] = useState(useContext(DateContext)['currentDate']);
     const [endDate, setEndDate] = useState(useContext(DateContext)['currentDate']);
     const [selectedPortfolios, setSelectedPortfolios] = useState([]);
-    const [portfolios, setPortfolios] = useState([{}]);
     const [calcResponse, setCalcResponse] = useState([{}]);
     const [showModal, setShowModal] = useState(false);
-
-    const fetchPortfolios = async() => {
-        const response = await axios.get(server + 'portfolios/get/portfolios/'
-        )
-        setPortfolios(response.data)
-    };
-
-    useEffect(() => {
-        fetchPortfolios()
-    }, [])
 
     const runCalculation = async (parameters) => {
         console.log(parameters)
@@ -126,6 +118,19 @@ const CalculationsPage = (props) => {
         }
     };
 
+    const panel = <div>
+        <CalculationPortfoliosTable data={portfolios}/>
+    </div>
+
+    const mainArea = <div style={{padding: 20}}>
+        <CalculationOptions run={runCalculation}/>
+        {/*<TaskComponent/>*/}
+        {/*<CeleryStatus/>*/}
+        <div >
+            <CalculationResponseTable data={calcResponse}/>
+        </div>
+    </div>
+
     return (
         <CalculationContext.Provider value={{
             selectedPortfolios: selectedPortfolios,
@@ -135,39 +140,7 @@ const CalculationsPage = (props) => {
             endDate: endDate,
             saveEndDate: setEndDate,
         }}>
-            <div >
-                <CalculationOptions run={runCalculation}/>
-                {/*<TaskComponent/>*/}
-                {/*<CeleryStatus/>*/}
-                <div style={{display: "flex", height: 800}}>
-
-                    <div style={{paddingBottom: 15, paddingLeft: 15, paddingRight: 15, width: '30%', height: '100%'}}>
-                        <span className="input-label"
-                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Porftolios</span>
-                        <CalculationPortfoliosTable data={portfolios}/>
-                    </div>
-
-                    <div style={{paddingBottom: 15, paddingRight: 15, width: '70%', height: '100%'}}>
-                    <CalculationResponseTable data={calcResponse}/>
-                    </div>
-                </div>
-            </div>
-            <Modal show={showModal}>
-                <Modal.Body>
-                    <div style={{display: "flex"}}>
-                    <Spinner
-                        as="span"
-                        animation="border"
-                        role="primary"
-                        aria-hidden="true"
-                    />
-                        <div className={'input-label'}>
-                            Calculating...
-                        </div>
-                </div>
-
-                </Modal.Body>
-            </Modal>
+            <ContainerWithSideMenu panel={panel} mainArea={mainArea} sidebarWidth={"500px"}/>
         </CalculationContext.Provider>
     );
 };
