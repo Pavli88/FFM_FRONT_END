@@ -1,11 +1,12 @@
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
+import CustomModal from "../../../../../../components/Modals/Modals";
 import axios from "axios";
 import {useContext, useRef, useState} from "react";
 import DateContext from "../../../../../../context/date-context";
 import PortfolioPageContext from "../../../../context/portfolio-page-context";
+import ServerContext from "../../../../../../context/server-context";
 
-const PortfolioTransactionEntryModal = (props) => {
+const PortfolioTransactionEntryModal = ( {show, close} ) => {
+    const server = useContext(ServerContext).server;
     const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
@@ -23,7 +24,7 @@ const PortfolioTransactionEntryModal = (props) => {
     const brokerIdRef = useRef();
 
     const submitHandler = async () => {
-        const response = await axios.post(props.server + 'portfolios/new/transaction/', {
+        const response = await axios.post(`${server}portfolios/new/transaction/`, {
             portfolio_code: portfolioCode,
             security_id: instrumentData.id,
             transaction_type: transactionType,
@@ -41,14 +42,13 @@ const PortfolioTransactionEntryModal = (props) => {
         })
         if (response.data.success){
             setTransactionType('Purchase')
-            props.close()
+            close()
             console.log('CLOSING')
         };
     };
 
     const getSecurity = () => {
-        const url = 'instruments/get/instrument/'
-        axios.get(props.server + url, {
+        axios.get(`${server}instruments/get/instrument/`, {
             params: {
                 id: relatedID,
             }
@@ -60,39 +60,30 @@ const PortfolioTransactionEntryModal = (props) => {
     };
 
     return (
-        <Modal show={props.show} onHide={() => props.close()}>
-            <div className={'card-header'}>
-                New Transaction
-            </div>
+        <CustomModal show={show} onClose={close} title={'New Transaction'}
+            footer={
+                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
+                    Save
+                </button>
+            }>
             <div>
                 <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Active Transaction</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10}}>
+                    <div className="block">
+                            <label className={'input-label'}>Active Transaction</label>
                             <input type="checkbox" onChange={() => setActive(!active)}/>
-                        </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Option</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10}}>
+                    <div className="block">
+                            <label className={'input-label'}>Option</label>
                             <input type="checkbox" onChange={(e) => {
                                 setOptionSelected(e.target.checked)
                                 setOptionType('C')
                             }}/>
-                        </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Security ID</span>
-                        </div>
-
+                    <div className="block">
+                            <label className={'input-label'}>Security ID</label>
                         <div style={{position: "absolute", right: 10, display: "flex"}}>
                             <div>
                                 <input value={relatedID}
@@ -107,124 +98,76 @@ const PortfolioTransactionEntryModal = (props) => {
                                 >Get
                                 </button>
                             </div>
-
                         </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Transaction Type</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
-                            <Form.Control onChange={(e) => setTransactionType(e.target.value)} as="select">
+                    <div className="block">
+                        <label className={'input-label'}>Transaction Type</label>
+                            <select onChange={(e) => setTransactionType(e.target.value)} >
                                 <option value={'Purchase'}>Purchase</option>
                                 <option value={'Sale'}>Sale</option>
-                            </Form.Control>
-                        </div>
+                            </select>
+
                     </div>
 
-
-                    {optionSelected ? <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Option Type</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
-                            <Form.Control onChange={(e) => setOptionType(e.target.value)} as="select">
+                    {optionSelected ? <div className="block">
+                        <label className={'input-label'}>Option Type</label>
+                        <select onChange={(e) => setOptionType(e.target.value)}>
                                 <option value={'C'}>Call</option>
                                 <option value={'P'}>Put</option>
-                            </Form.Control>
-                        </div>
+                        </select>
                     </div> : ""
                     }
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Security Name</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
+                    <div className="block">
+                            <label className={'input-label'}>Security Name</label>
                             <input value={instrumentData.name} type="text" disabled/>
-                        </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Security Group</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
+                    <div className="block">
+                            <label className={'input-label'}>Security Group</label>
                             <input value={instrumentData.group} type="text" disabled/>
-                        </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Currency</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
+                    <div className="block">
+                            <label className={'input-label'}>Currency</label>
                             <input value={instrumentData.currency} type="text" disabled/>
-                        </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Date</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
+                    <div className="block">
+                            <label className={'input-label'}>Date</label>
                             <input ref={dateRef} defaultValue={currentDate} type="date"/>
-                        </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Quantity</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
+                    <div className="block">
+                            <label className={'input-label'}>Quantity</label>
                             <input ref={quantityRef} type="number"/>
-                        </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Price</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
+                    <div className="block">
+                            <label className={'input-label'}>Price</label>
                             <input ref={priceRef} type="number" min={0.0}/>
-                        </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>FX Rate</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
+                    <div className="block">
+                            <label className={'input-label'}>FX Rate</label>
                             <input ref={fxRef} type="number" defaultValue={1.0}/>
-                        </div>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Broker</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
-                            <Form.Control onChange={(e) => setBroker(e.target.value)} as="select">
+                    <div className="block">
+                        <label className={'input-label'}>Broker</label>
+                        <select onChange={(e) => setBroker(e.target.value)}>
                                 <option value={'oanda'}>Oanda</option>
-                            </Form.Control>
-                        </div>
+                        </select>
                     </div>
 
-                    <div style={{display: "flex", margin: 5}}>
-                        <div>
-                            <span className={'input-label'}>Broker ID</span>
-                        </div>
-                        <div style={{position: "absolute", right: 10, width: 200}}>
-                            <input ref={brokerIdRef} type="number" defaultValue={1.0}/>
-                        </div>
+                    <div className="block">
+                        <label className={'input-label'}>Broker ID</label>
+                        <input ref={brokerIdRef} type="number" defaultValue={1.0}/>
                     </div>
                 </div>
             </div>
-            <Modal.Footer>
-                <button onClick={submitHandler} className={'save-button'}>Save</button>
-            </Modal.Footer>
-        </Modal>
+        </CustomModal>
     )
 };
 export default PortfolioTransactionEntryModal;

@@ -2,7 +2,6 @@ import {useContext, useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {BsArrowBarDown, BsPencil, BsPlusLg, BsArrowLeftRight } from "react-icons/bs";
 import {useExpanded, useGroupBy, useSortBy, useTable} from "react-table";
-import Modal from "react-bootstrap/Modal";
 import ServerContext from "../../../../../context/server-context";
 import {ButtonGroupVertical} from "../../../../../components/Buttons/ButtonGroups";
 import PortfolioTransactionEntryModal from "../PortfolioTransactionsModals/PortfolioTransactionEntryModal/PortfolioTransactionEntryModal";
@@ -19,16 +18,14 @@ const PortfolioTransactionsTable = (props) => {
     const portfolioCode = useContext(PortfolioContext).selectedPortfolio.portfolio_code;
     const queryParameters = useContext(TransactionContext).queryParameters;
     const [transactionsData, setTransactionsData] = useState([]);
-    const [showTransactionPanel, setShowTransactionPanel] = useState(false);
-    const [showCashPanel, setShowCashPanel] = useState(false);
+    const [showEntryModal, setShowEntryModal] = useState(false);
+    const [showCashModal, setShowCashModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [showLinkedModal, setShowLinkedModal] = useState(false);
 
     const [selectedIds, setSelectedIds] = useState([]);
     const [selectedTransaction, setSelectedTransaction] = useState({});
     const [linkedTransaction, setLinkedTransaction] = useState({});
-
-    console.log(selectedIds)
 
     const data = useMemo(() => transactionsData, [transactionsData]);
 
@@ -47,6 +44,11 @@ const PortfolioTransactionsTable = (props) => {
         setSelectedIds((prev) =>
             e.target.checked ? [...prev, id] : prev.filter((item) => item !== id)
         );
+    };
+
+    const onEditTransaction = (transaction) => {
+        setSelectedTransaction(transaction);
+        setShowUpdateModal(true);
     };
 
     const columns = useMemo(() => [
@@ -118,11 +120,6 @@ const PortfolioTransactionsTable = (props) => {
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
-    const onEditTransaction = (transaction) => {
-        setSelectedTransaction(transaction);
-        setShowUpdateModal(true);
-    };
-
     const onAddTransaction = (transaction) => {
         setLinkedTransaction({
             ...transaction,
@@ -139,7 +136,7 @@ const PortfolioTransactionsTable = (props) => {
             const response = await axios.post(`${server}portfolios/delete/transaction/`, { ids: selectedIds });
             if (response.data.success) {
                 fetchTransactionData();
-                setSelectedIds([]); // Clear selection after deletion
+                setSelectedIds([]);
             }
         } catch (error) {
             console.error("Error deleting transaction:", error);
@@ -147,9 +144,10 @@ const PortfolioTransactionsTable = (props) => {
     };
 
     const buttonDict = {
-        "New Transaction": () => setShowTransactionPanel(!showTransactionPanel),
-        "Cash Transaction": () => setShowCashPanel(!showCashPanel),
+        "New Transaction": () => setShowEntryModal(!showEntryModal),
+        "Cash Transaction": () => setShowCashModal(!showCashModal),
         "Delete Transaction": () => deleteTransaction(),
+        "Inactivate": () => deleteTransaction(),
     };
 
     return (
@@ -179,7 +177,7 @@ const PortfolioTransactionsTable = (props) => {
                         {rows.map(row => {
                             prepareRow(row);
                             return (
-                                <tr {...row.getRowProps()}>
+                                <tr {...row.getRowProps()} className={row.original.is_active ? 'tr-active': 'tr-inactive'}>
                                     {row.cells.map(cell => (
                                         <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                                     ))}
@@ -189,6 +187,18 @@ const PortfolioTransactionsTable = (props) => {
                     </tbody>
                 </table>
             </div>
+
+            <PortfolioCashEntryModal show={showCashModal}
+                                     close={() => setShowCashModal(!showCashModal)}/>
+            <PortfolioUpdateModal show={showUpdateModal}
+                                  close={() => setShowUpdateModal(!showUpdateModal)}
+                                  selectedTransaction={selectedTransaction}
+                                  fetchTransactionData={() => fetchTransactionData()}
+            />
+            <PortfolioTransactionEntryModal show={showEntryModal}
+                                            close={() => setShowEntryModal(!showEntryModal)}
+                                            fetchTransactionData={() => fetchTransactionData()}
+            />
         </div>
     );
 };

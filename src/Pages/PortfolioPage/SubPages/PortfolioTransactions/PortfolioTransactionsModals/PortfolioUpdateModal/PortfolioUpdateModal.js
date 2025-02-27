@@ -1,108 +1,98 @@
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import Select from "react-select";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import Select from "react-select";
+import ServerContext from "../../../../../../context/server-context";
+import CustomModal from "../../../../../../components/Modals/Modals";
 
-const PortfolioUpdateModal = ( {server, show, selectedTransaction, close } ) => {
+const PortfolioUpdateModal = ({ show, selectedTransaction, close, fetchTransactionData }) => {
+    const server = useContext(ServerContext).server;
+    const [updatedTransaction, setUpdatedTransaction] = useState(selectedTransaction);
+    console.log(updatedTransaction)
+    useEffect(() => {
+        setUpdatedTransaction(selectedTransaction);
+    }, [selectedTransaction]);
 
     const updateTransaction = () => {
-        axios.post(`${server}portfolios/update/transaction/`, selectedTransaction)
-            .then(response => alert(response.data.response))
+        axios.post(`${server}portfolios/update/transaction/`, updatedTransaction)
+            .then(response => {
+                fetchTransactionData();
+                alert(response.data.response);
+            })
             .catch(error => console.error("Error:", error));
-        close(false);
+        close();
     };
 
     return (
-        <Modal show={show} onHide={() => close()}>
-            <Modal.Header closeButton>
-                <Modal.Title>Update Transaction {selectedTransaction.id}</Modal.Title>
-            </Modal.Header>
-            {/*<Modal.Body>*/}
-            {/*    <div style={{padding: '5px', width: '100%'}}>*/}
-            {/*        {selectedTransaction.sec_group === 'Cash' ? '' :*/}
-            {/*            <div style={{width: '100%'}}>*/}
-            {/*                <Form.Label>Open Status</Form.Label>*/}
-            {/*                <Select style={{height: '100%'}}*/}
-            {/*                        value={selectedTransaction.open_status}*/}
-            {/*                        options={[*/}
-            {/*                            {value: 'Open', label: 'Open'},*/}
-            {/*                            {value: 'Closed', label: 'Closed'}*/}
-            {/*                        ]}*/}
-            {/*                        placeholder={selectedTransaction.open_status}*/}
-            {/*                        onChange={(e) => setSelectedTransaction({*/}
-            {/*                            ...selectedTransaction,*/}
-            {/*                            open_status: e.value,*/}
-            {/*                            is_active: e.value === 'Open' ? 1 : 0*/}
-            {/*                        })}*/}
-            {/*                >*/}
-            {/*                </Select>*/}
-            {/*            </div>*/}
-            {/*        }*/}
-
-            {/*        <div style={{width: '100%', marginTop: 15}}>*/}
-            {/*            <Form.Label>Trade Date</Form.Label>*/}
-            {/*            <Form.Control defaultValue={selectedTransaction.trade_date}*/}
-            {/*                          type="date"*/}
-            {/*                          onChange={(e) => setSelectedTransaction({*/}
-            {/*                              ...selectedTransaction,*/}
-            {/*                              trade_date: e.target.value*/}
-            {/*                          })}*/}
-            {/*            />*/}
-            {/*        </div>*/}
-
-            {/*        <div style={{width: '100%', marginTop: 15}}>*/}
-            {/*            <Form.Label>Units</Form.Label>*/}
-            {/*            <Form.Control defaultValue={Math.abs(selectedTransaction.quantity)}*/}
-            {/*                          type="number"*/}
-            {/*                          onChange={(e) => setSelectedTransaction({*/}
-            {/*                              ...selectedTransaction,*/}
-            {/*                              quantity: Math.abs(e.target.value)*/}
-            {/*                          })}*/}
-            {/*            />*/}
-            {/*        </div>*/}
-
-            {/*        <div style={{width: '100%', marginTop: 15}}>*/}
-            {/*            <Form.Label>Price</Form.Label>*/}
-            {/*            <Form.Control defaultValue={selectedTransaction.price}*/}
-            {/*                          type="number"*/}
-            {/*                          onChange={(e) => setSelectedTransaction({*/}
-            {/*                              ...selectedTransaction,*/}
-            {/*                              price: e.target.value,*/}
-            {/*                          })}*/}
-            {/*            />*/}
-            {/*        </div>*/}
-
-            {/*        <div style={{width: '100%', marginTop: 15}}>*/}
-            {/*            <Form.Label>FX Rate</Form.Label>*/}
-            {/*            <Form.Control defaultValue={selectedTransaction.fx_rate}*/}
-            {/*                          type="number"*/}
-            {/*                          onChange={(e) => setSelectedTransaction({*/}
-            {/*                              ...selectedTransaction,*/}
-            {/*                              fx_rate: e.target.value,*/}
-            {/*                          })}*/}
-            {/*            />*/}
-            {/*        </div>*/}
-
-            {/*        {selectedTransaction.sec_group === 'Cash' ? '' :*/}
-            {/*            <div style={{width: '100%', marginTop: 15}}>*/}
-            {/*                <Form.Label>Broker ID</Form.Label>*/}
-            {/*                <Form.Control defaultValue={selectedTransaction.broker_id}*/}
-            {/*                              type="number"*/}
-            {/*                              onChange={(e) => setSelectedTransaction({*/}
-            {/*                                  ...selectedTransaction,*/}
-            {/*                                  broker_id: e.target.value,*/}
-            {/*                              })}*/}
-            {/*                />*/}
-            {/*            </div>}*/}
-
-            {/*    </div>*/}
-            {/*</Modal.Body>*/}
-            <Modal.Footer>
-                <button className={'save-button'} onClick={updateTransaction}>
+        <CustomModal show={show} onClose={close} title={`Update Transaction ${updatedTransaction?.id}`}
+            footer={
+                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={updateTransaction}>
                     Save
                 </button>
-            </Modal.Footer>
-        </Modal>
+            }
+        >
+            <div className="space-y-4">
+                {/*{updatedTransaction?.sec_group === "Cash" ? null : (*/}
+                {/*    <div>*/}
+                {/*        <label className="block">Open Status</label>*/}
+                {/*        <Select*/}
+                {/*            value={{value: updatedTransaction.open_status, label: updatedTransaction.open_status}}*/}
+                {/*            options={[{value: "Open", label: "Open"}, {value: "Closed", label: "Closed"}]}*/}
+                {/*            onChange={(e) => setUpdatedTransaction({...updatedTransaction, open_status: e.value})}*/}
+                {/*        />*/}
+                {/*    </div>*/}
+                {/*)}*/}
+
+                <div className="block">
+                    <label className="block">Transaction Type</label>
+                    <input
+                        value={updatedTransaction?.transaction_type || ""}
+                        type="text"
+                        disabled
+                    />
+                </div>
+
+                <div>
+                    <label className="block">Trade Date</label>
+                    <input
+                        value={updatedTransaction?.trade_date || ""}
+                        type="date"
+                        onChange={(e) => setUpdatedTransaction({...updatedTransaction, trade_date: e.target.value})}
+                    />
+                </div>
+
+                <div>
+                    <label className="block">Units</label>
+                    <input
+                        value={Math.abs(updatedTransaction?.quantity) || ""}
+                        type="number"
+                        onChange={(e) => setUpdatedTransaction({
+                            ...updatedTransaction,
+                            quantity: Math.abs(e.target.value)
+                        })}
+                    />
+                </div>
+
+                <div>
+                    <label className="block">Price</label>
+                    <input
+                        value={updatedTransaction?.price || ""}
+                        type="number"
+                        onChange={(e) => setUpdatedTransaction({...updatedTransaction, price: e.target.value})}
+                    />
+                </div>
+
+                <div>
+                    <label className="block">FX Rate</label>
+                    <input
+                        value={updatedTransaction?.fx_rate || ""}
+                        type="number"
+                        onChange={(e) => setUpdatedTransaction({...updatedTransaction, fx_rate: e.target.value})}
+                    />
+                </div>
+
+            </div>
+        </CustomModal>
     );
 };
+
 export default PortfolioUpdateModal;

@@ -48,6 +48,14 @@ tr{
 
 }
 
+.tr-active{
+    border-left: 4px solid green;
+}
+
+.tr-inactive{
+    border-left: 4px solid red;
+}
+
 .sticky-column {
     position: sticky;
     right: 0;
@@ -272,12 +280,18 @@ input {
 
 select{
     width: 100%;
-    padding: 5px 20px;
+    padding: 8px 20px;
+    margin: 5px;
     display: inline-block;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
     color: #2b2b2b;
+    background-color: #FAF7F5;
+}
+
+option{
+    padding: 5px;
 }
 
 .multi-select {
