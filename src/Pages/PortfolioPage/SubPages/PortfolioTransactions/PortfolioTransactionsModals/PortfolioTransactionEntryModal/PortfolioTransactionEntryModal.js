@@ -61,29 +61,29 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
 
     return (
         <CustomModal show={show} onClose={close} title={'New Transaction'}
-            footer={
-                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
-                    Save
-                </button>
-            }>
+                     footer={
+                         <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
+                             Save
+                         </button>
+                     }>
             <div>
                 <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
 
                     <div className="block">
-                            <label className={'input-label'}>Active Transaction</label>
-                            <input type="checkbox" onChange={() => setActive(!active)}/>
+                        <label className={'input-label'}>Active Transaction</label>
+                        <input type="checkbox" onChange={() => setActive(!active)}/>
                     </div>
 
                     <div className="block">
-                            <label className={'input-label'}>Option</label>
-                            <input type="checkbox" onChange={(e) => {
-                                setOptionSelected(e.target.checked)
-                                setOptionType('C')
-                            }}/>
+                        <label className={'input-label'}>Option</label>
+                        <input type="checkbox" onChange={(e) => {
+                            setOptionSelected(e.target.checked)
+                            setOptionType('C')
+                        }}/>
                     </div>
 
                     <div className="block">
-                            <label className={'input-label'}>Security ID</label>
+                        <label className={'input-label'}>Security ID</label>
                         <div style={{position: "absolute", right: 10, display: "flex"}}>
                             <div>
                                 <input value={relatedID}
@@ -103,61 +103,61 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
 
                     <div className="block">
                         <label className={'input-label'}>Transaction Type</label>
-                            <select onChange={(e) => setTransactionType(e.target.value)} >
-                                <option value={'Purchase'}>Purchase</option>
-                                <option value={'Sale'}>Sale</option>
-                            </select>
+                        <select onChange={(e) => setTransactionType(e.target.value)}>
+                            <option value={'Purchase'}>Purchase</option>
+                            <option value={'Sale'}>Sale</option>
+                        </select>
 
                     </div>
 
                     {optionSelected ? <div className="block">
                         <label className={'input-label'}>Option Type</label>
                         <select onChange={(e) => setOptionType(e.target.value)}>
-                                <option value={'C'}>Call</option>
-                                <option value={'P'}>Put</option>
+                            <option value={'C'}>Call</option>
+                            <option value={'P'}>Put</option>
                         </select>
                     </div> : ""
                     }
 
                     <div className="block">
-                            <label className={'input-label'}>Security Name</label>
-                            <input value={instrumentData.name} type="text" disabled/>
+                        <label className={'input-label'}>Security Name</label>
+                        <input value={instrumentData.name} type="text" disabled/>
                     </div>
 
                     <div className="block">
-                            <label className={'input-label'}>Security Group</label>
-                            <input value={instrumentData.group} type="text" disabled/>
+                        <label className={'input-label'}>Security Group</label>
+                        <input value={instrumentData.group} type="text" disabled/>
                     </div>
 
                     <div className="block">
-                            <label className={'input-label'}>Currency</label>
-                            <input value={instrumentData.currency} type="text" disabled/>
+                        <label className={'input-label'}>Currency</label>
+                        <input value={instrumentData.currency} type="text" disabled/>
                     </div>
 
                     <div className="block">
-                            <label className={'input-label'}>Date</label>
-                            <input ref={dateRef} defaultValue={currentDate} type="date"/>
+                        <label className={'input-label'}>Date</label>
+                        <input ref={dateRef} defaultValue={currentDate} type="date"/>
                     </div>
 
                     <div className="block">
-                            <label className={'input-label'}>Quantity</label>
-                            <input ref={quantityRef} type="number"/>
+                        <label className={'input-label'}>Quantity</label>
+                        <input ref={quantityRef} type="number"/>
                     </div>
 
                     <div className="block">
-                            <label className={'input-label'}>Price</label>
-                            <input ref={priceRef} type="number" min={0.0}/>
+                        <label className={'input-label'}>Price</label>
+                        <input ref={priceRef} type="number" min={0.0}/>
                     </div>
 
                     <div className="block">
-                            <label className={'input-label'}>FX Rate</label>
-                            <input ref={fxRef} type="number" defaultValue={1.0}/>
+                        <label className={'input-label'}>FX Rate</label>
+                        <input ref={fxRef} type="number" defaultValue={1.0}/>
                     </div>
 
                     <div className="block">
                         <label className={'input-label'}>Broker</label>
                         <select onChange={(e) => setBroker(e.target.value)}>
-                                <option value={'oanda'}>Oanda</option>
+                            <option value={'oanda'}>Oanda</option>
                         </select>
                     </div>
 

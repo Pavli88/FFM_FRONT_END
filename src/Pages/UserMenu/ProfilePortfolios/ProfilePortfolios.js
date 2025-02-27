@@ -82,7 +82,7 @@ const ProfilePortfolios = () => {
                     <tbody>{portfolios}</tbody>
                 </table>
             </div>
-            <NewPortfolio parameters={{ ...generalParameters }} show={showNewPortModal} hide={() => setNewPortModal(false)} />
+            <NewPortfolio parameters={{ ...generalParameters }} show={showNewPortModal} close={() => setNewPortModal(false)} />
         </div>
     );
 };
