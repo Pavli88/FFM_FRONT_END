@@ -7,32 +7,43 @@ const ChangePasswordModal = ({ onClose, onChangePassword }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);  // ✅ Added loading state
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!oldPassword || !newPassword || !confirmPassword) {
-      setError("All fields are required.");
-      return;
+        setError("All fields are required.");
+        return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
+        setError("Passwords do not match.");
+        return;
     }
 
     setError("");
     setLoading(true);
 
     try {
-      await onChangePassword({ oldPassword, newPassword });  // ✅ Await ensures promise is handled
+        await onChangePassword({ oldPassword, newPassword });
+
+        setSuccess("Password changed successfully! Redirecting to login...");
+        setOldPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+
+        setTimeout(() => {
+            window.location.href = "/login";
+        }, 2000);
+
     } catch (err) {
-      setError(err.message || "Failed to change password. Please try again.");
-      console.error(err);
+        setError(err.message || "Failed to change password. Please try again.");
+        console.error(err);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   return (
     <div className="modal-overlay" onClick={onClose}>

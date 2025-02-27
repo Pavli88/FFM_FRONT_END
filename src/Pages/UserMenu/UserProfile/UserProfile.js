@@ -22,39 +22,65 @@ const UserProfile = () => {
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    // ✅ Bug-fixed function to handle password change request
-    const handleChangePassword = async ({ oldPassword, newPassword }) => {
-        const token = localStorage.getItem("access");
 
-        if (!token) {
-            alert("Please log in again.");
-            return;
-        }
+const handleChangePassword = async ({ oldPassword, newPassword }) => {
+    const token = localStorage.getItem("access");
 
-        try {
-            const response = await axios.post(
-                `${server}user/change_password/`,
-                {
-                    old_password: oldPassword,  // ✅ Ensure field names are correct
-                    new_password: newPassword,
+    if (!token) {
+        setShowModal(false);
+        alert("Session expired. Please log in again.");
+        return;
+    }
+
+    try {
+        const response = await axios.post(
+            `${server}user/change_password/`,
+            { old_password: oldPassword, new_password: newPassword },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
                 },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
+            }
+        );
+
+        // ✅ Invalidate tokens & force logout
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+
+        alert("Password changed successfully! Please log in again.");
+        window.location.href = "/login"; // Redirect to login page
+
+    } catch (error) {
+        console.error("Error response:", error.response?.data);  // ✅ Debugging remains
+
+        if (error.response) {
+            const errorData = error.response.data;
+
+            // Check if the error contains a nested object with error messages
+            let errorMessage = "";
+            if (errorData.error) {
+                // If errorData.error is an object, handle it properly
+                if (errorData.error.new_password) {
+                    // Handle specific new_password errors and join them
+                    errorMessage = errorData.error.new_password.join(" ");
+                } else {
+                    errorMessage = Object.values(errorData.error)
+                        .flat()
+                        .join("");
                 }
-            );
-            setShowModal(false);
-            return response.data.message;  // ✅ Show success message
+            } else {
+                errorMessage = errorData?.error || "Something went wrong.";
+            }
 
-
-        } catch (error) {
-            console.error("Error response:", error.response?.data);  // ✅ Debugging
-            const errorMessage = error.response?.data?.error || "Something went wrong.";
-            throw new Error(errorMessage);
+            // Ensure we throw the error message as a string
+            throw new Error(String(errorMessage));
+        } else {
+            // If there is no response from the server
+            throw new Error("No response from server.");
         }
-    };
+    }
+};
 
     return (
         <div className="page-container">
