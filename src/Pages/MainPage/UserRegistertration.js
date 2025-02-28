@@ -1,85 +1,110 @@
-import { Col, Button, Row, Container, Card, Form } from 'react-bootstrap';
-import { useHistory, Link } from "react-router-dom";
-import axios from "axios";
-import {useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
+import { registerUser } from "../../endpoints/authservice";
+import "./UserRegistration.css";
 
-export default function Registration(props) {
-  const userNameRef = useRef();
-  const passwordRef = useRef();
-  const emailRef = useRef();
-  const history = useHistory();
-  const submitHandler = (event) => {
-        event.preventDefault();
-        axios.post(props.server + 'user/register/', {
-            user_name: userNameRef.current.value,
-            password: passwordRef.current.value,
-            email: emailRef.current.value,
-        })
-            .then(response => alert(response.data.response))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
-        history.push("login/");
+const UserRegistration = () => {
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errors, setErrors] = useState({});
+    const history = useHistory();
+    const modalRef = useRef(null);  // Create a ref for the modal
+
+    useEffect(() => {
+        // Reset form and errors when component is mounted
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setErrors({});
+
+        // Add event listener to close modal if clicked outside
+        const handleOutsideClick = (event) => {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
+                // Close the modal (here we just log it, you can do other actions)
+                history.push("/login"); // Redirect to another page or do something else
+            }
+        };
+
+        document.addEventListener("mousedown", handleOutsideClick);
+
+        // Cleanup event listener on component unmount
+        return () => {
+            document.removeEventListener("mousedown", handleOutsideClick);
+        };
+    }, [history]);
+
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        setErrors({}); // Reset previous errors
+
+        try {
+            await registerUser(username, email, password);
+            setUsername("");
+            setEmail("");
+            setPassword("");
+            history.push("/login"); // Redirect to login page on success
+        } catch (err) {
+            if (typeof err === "object") {
+                setErrors(err); // Store field-based errors
+            } else {
+                setErrors({ general: err }); // Store generic error message
+            }
+        }
     };
-  return (
-        <Row className="vh-100 d-flex justify-content-center align-items-center">
-          <Col md={8} lg={6} xs={12}>
-            <Card className="shadow">
-              <Card.Body>
-                <div className="mb-3 mt-md-4">
-                  <div className="mb-3">
-                    <Form>
-                      <Form.Group className="mb-3" controlId="Name">
-                        <Form.Label className="text-center">User Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter Name" ref={userNameRef}/>
-                      </Form.Group>
 
-                      <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className="text-center">
-                          Email address
-                        </Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" ref={emailRef}/>
-                      </Form.Group>
-
-                      <Form.Group
-                        className="mb-3"
-                        controlId="formBasicPassword"
-                      >
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" ref={passwordRef}/>
-                      </Form.Group>
-
-                      {/*<Form.Group*/}
-                      {/*  className="mb-3"*/}
-                      {/*  controlId="formBasicPassword"*/}
-                      {/*>*/}
-                      {/*  <Form.Label>Confirm Password</Form.Label>*/}
-                      {/*  <Form.Control type="password" placeholder="Password" />*/}
-                      {/*</Form.Group>*/}
-
-                      <Form.Group
-                        className="mb-3"
-                        controlId="formBasicCheckbox"
-                      ></Form.Group>
-                      <div className="d-grid">
-                        <Button variant="primary" type="submit" style={{width: '100%'}} onClick={submitHandler}>
-                          Create Account
-                        </Button>
-                      </div>
-                    </Form>
-                    <div className="mt-3">
-                      <p className="mb-0  text-center">
-                        Already have an account??{' '}
-                          <Link to={"/login"}>
-                              Sign In
-                          </Link>
-                      </p>
+    return (
+        <div className="modal-overlay">
+            <div className="modal-container" ref={modalRef}>
+                <h2 className="modal-title">Register</h2>
+                <form onSubmit={handleRegister} className="register-form" autoComplete="off">
+                    <div className="form-group">
+                        <label>Username:</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Enter username"
+                            autoComplete="off"
+                            required={true}
+                        />
+                        {errors.username && <p className="error">{errors.username}</p>}
                     </div>
-                  </div>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-  );
-}
+
+                    <div className="form-group">
+                        <label>Email:</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Enter email"
+                            autoComplete="off"
+                            required={true}
+                        />
+                        {errors.email && <p className="error">{errors.email}</p>}
+                    </div>
+
+                    <div className="form-group">
+                        <label>Password:</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter password"
+                            autoComplete="off"
+                            required={true}
+                        />
+                        {errors.password && <p className="error">{errors.password}</p>}
+                    </div>
+
+                    {errors.general && <p className="error general-error">{errors.general}</p>}
+                    <div>
+                        <button type="submit">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default UserRegistration;
