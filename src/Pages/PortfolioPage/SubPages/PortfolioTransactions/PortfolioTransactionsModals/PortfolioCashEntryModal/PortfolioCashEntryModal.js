@@ -20,6 +20,7 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
     const submitHandler = () => {
         const parameters = {
             portfolio_code: portfolioData.portfolio_code,
+            portfolio_id: portfolioData.id,
             security_id: selectedCurrency.id,
             transaction_type: type,
             trade_date: dateRef.current.value,
@@ -105,7 +106,6 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
                     }}>
                         Portfolio is not funded. Please enter the initial cashflow of the fund.
                     </div>}
-
             </div>
         </CustomModal>
     )

@@ -1,45 +1,36 @@
-import "./InstrumentPage.css"
-import {useContext, useEffect, useState, useRef} from "react";
+import {useState} from "react";
 import InstrumentSearchBar from "./InstrumentSearchBar/InstrumentSearchBar";
 import InstrumentResuts from "./InstrumentResults/InstrumentResuts";
-import ServerContext from "../../context/server-context";
+import InstrumentPrices from "./InstrumentPrices/InstrumentPrices";
+import InstrumentNew from "./InstrumentNew/InstrumentNew";
 import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-context";
-import axios from "axios";
-import MyInstruments from "./MyInstruments/MyInstruments";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
+import InstrumentBrokerTickers from "./InstrumentBrokerTickers/InstrumentBrokerTickers";
 
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
     const [selectedInstrument, setSelectedInstrument] = useState({});
-    const [requestParameters, setRequestParameters] = useState({});
-    const isMounted = useRef(false);
-    const server = useContext(ServerContext)['server'];
+    const [showNewInstrumentModal, setShowNewInstrumentModal] = useState(false);
 
-    useEffect(() => {
-            if (isMounted.current) {
-                axios.post(server + 'instruments/get/instruments/',
-                    requestParameters,
-                )
-                    .then(data => setInstrumentSearchResults(data.data))
-                    .catch((error) => {
-                        console.error('Error Message:', error);
-                    });
-            } else {
-                isMounted.current = true;
-            }
-        }, [requestParameters]
-    );
+    const panel = <div style={{width: '100%'}}>
+        <div style={{padding: 15}}>
+            <button onClick={() => setShowNewInstrumentModal(!showNewInstrumentModal)}>New Instrument</button>
+        </div>
+        <InstrumentNew show={showNewInstrumentModal} close={() => setShowNewInstrumentModal(!showNewInstrumentModal)}/>
+        <InstrumentPrices/>
+        <div style={{paddingTop: 15}}>
+            <InstrumentBrokerTickers/>
+        </div>
+    </div>
 
-    const mainArea = <div className={'page-container'} style={{height: '100%', width: '100%'}}>
+    const mainArea = <div style={{padding: 20}}>
         <div style={{width: '100%'}}>
             <InstrumentSearchBar/>
         </div>
 
         <div style={{width: '100%', paddingTop: '20px'}}>
-            <InstrumentResuts data={instrumentSearchResults} server={server}
-                              instrument={selectedInstrument}/>
+            <InstrumentResuts data={instrumentSearchResults}/>
         </div>
-        <MyInstruments data={instrumentSearchResults}/>
     </div>
 
     return (
@@ -49,9 +40,8 @@ const InstrumentPage = () => {
                 saveInstrumentSearchResults: setInstrumentSearchResults,
                 selectedInstrument: selectedInstrument,
                 saveSelectedInstrument: setSelectedInstrument,
-                saveRequestParameters: setRequestParameters
             }}>
-            <ContainerWithSideMenu mainArea={mainArea}/>
+            <ContainerWithSideMenu panel={panel} mainArea={mainArea} sidebarWidth={"400px"}/>
         </InstrumentSearchContext.Provider>
     );
 };

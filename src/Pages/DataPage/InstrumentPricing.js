@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import {useContext, useRef, useState} from "react";
-import ServerContext from "../../../context/server-context";
+import ServerContext from "../../context/server-context";
 
 const InstrumentPricing = (props) => {
     const server = useContext(ServerContext)['server'];

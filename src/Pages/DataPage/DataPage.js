@@ -1,5 +1,5 @@
 import DataNavBar from "./DataNavBar/DataNavBar";
-import InstrumentPricing from "../InstrumentPage/InstrumentPricing/InstrumentPricing";
+import InstrumentPricing from "./InstrumentPricing";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
 
 const DataPage = () => {

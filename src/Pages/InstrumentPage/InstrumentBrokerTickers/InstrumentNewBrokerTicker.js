@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import {useContext, useRef} from "react";
 import axios from "axios";
-import BrokerContext from "../../../../context/broker-context";
+import BrokerContext from "../../../context/broker-context";
 
 
 const InstrumentNewBrokerTicker = (props) => {

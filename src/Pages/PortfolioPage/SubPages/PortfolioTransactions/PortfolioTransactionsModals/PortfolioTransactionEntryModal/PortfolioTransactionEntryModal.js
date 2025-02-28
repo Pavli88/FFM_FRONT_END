@@ -7,7 +7,7 @@ import ServerContext from "../../../../../../context/server-context";
 
 const PortfolioTransactionEntryModal = ( {show, close} ) => {
     const server = useContext(ServerContext).server;
-    const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
+    const portfolio = useContext(PortfolioPageContext);
     const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
     const [transactionType, setTransactionType] = useState('Purchase');
@@ -25,7 +25,8 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
 
     const submitHandler = async () => {
         const response = await axios.post(`${server}portfolios/new/transaction/`, {
-            portfolio_code: portfolioCode,
+            portfolio_code: portfolio.portfolioCode,
+            portfolio_id: portfolio.id,
             security_id: instrumentData.id,
             transaction_type: transactionType,
             trade_date: dateRef.current.value,

@@ -1,11 +1,13 @@
 import Select from 'react-select'
 import {useState, useContext, useRef} from "react";
-import InstrumentNew from "../InstrumentNew";
 import InstrumentSearchContext from "../InstrumentPageContext/instrument-search-context";
 import './InstrumentSearchBar.css'
+import axios from "axios";
+import ServerContext from "../../../context/server-context";
 
 const InstrumentSearchBar = () => {
-    const saveRequestParameters = useContext(InstrumentSearchContext)['saveRequestParameters'];
+    const server = useContext(ServerContext).server;
+    const saveInstrumentResults = useContext(InstrumentSearchContext).saveInstrumentSearchResults;
     const nameRef = useRef();
     const [selectedCountries, setSelectedCountries] = useState([]);
     const [selectedGroup, setSelectedGroup] = useState([]);
@@ -53,14 +55,19 @@ const InstrumentSearchBar = () => {
     ];
 
     const fetchInstruments = () => {
-        saveRequestParameters({
-            name: nameRef.current.value,
-            country: selectedCountries.map(data=>data.value),
-            group: selectedGroup.value,
-            type: selectedTypes.map(data=>data.value),
-            currency: selectedCurrencies.map(data=>data.value)
-
-        });
+        axios.post(`${server}instruments/get/instruments/`,
+            {
+                name: nameRef.current.value,
+                country: selectedCountries.map(data => data.value),
+                group: selectedGroup.value,
+                type: selectedTypes.map(data => data.value),
+                currency: selectedCurrencies.map(data => data.value)
+            },
+        )
+            .then(data => saveInstrumentResults(data.data))
+            .catch((error) => {
+                console.error('Error Message:', error);
+            });
     };
 
     return (
@@ -131,9 +138,6 @@ const InstrumentSearchBar = () => {
                 <div className='vertical-box'>
                     <div style={{height: '100%', paddingLeft: 5}}>
                         <button onClick={fetchInstruments}>Search</button>
-                    </div>
-                    <div style={{height: '100%', paddingLeft: 5}}>
-                        <InstrumentNew />
                     </div>
                 </div>
             </div>
