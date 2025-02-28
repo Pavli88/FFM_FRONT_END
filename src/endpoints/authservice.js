@@ -2,6 +2,33 @@ import axios from "axios";
 
 const API_URL = process.env.REACT_APP_SERVER_URL;
 
+export const registerUser = async (username, email, password) => {
+    try {
+        const response = await fetch(`${API_URL}user/register/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            let errorMessages = {};
+
+            // Iterate over all keys in the error response
+            Object.keys(errorData).forEach((field) => {
+                errorMessages[field] = errorData[field].join(" "); // Join multiple errors
+            });
+
+            throw errorMessages; // Throw object instead of single string
+        }
+
+        return { success: true, message: "Registration successful!" };
+    } catch (error) {
+        throw error; // Throw the error object
+    }
+};
+
+
 // Login function
 export const login = async (username, password) => {
     try {
