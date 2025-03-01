@@ -71,7 +71,7 @@ const MainApplication = ({config}) => {
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0, 10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0, 10));
     const [userData, setUserData] = useState([{}]);
-
+    console.log(userData)
     // Dashboard Context
     const [portGroup, setPortGroup] = useState(null);
 

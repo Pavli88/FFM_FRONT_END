@@ -48,14 +48,6 @@ tr{
 
 }
 
-.tr-active{
-    border-left: 4px solid green;
-}
-
-.tr-inactive{
-    border-left: 4px solid red;
-}
-
 .sticky-column {
     position: sticky;
     right: 0;
@@ -437,10 +429,11 @@ ul li:hover {
 }
 
 .card{
-    border-radius: 5px;
+    border-radius: 8px;
     background: white;
     height: 100%;
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+    border: none;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 .card-body {

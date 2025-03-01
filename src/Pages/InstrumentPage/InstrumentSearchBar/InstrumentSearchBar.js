@@ -4,11 +4,14 @@ import InstrumentSearchContext from "../InstrumentPageContext/instrument-search-
 import './InstrumentSearchBar.css'
 import axios from "axios";
 import ServerContext from "../../../context/server-context";
+import UserContext from "../../../context/user-context";
+import { FaSearch } from 'react-icons/fa'
 
 const InstrumentSearchBar = () => {
     const server = useContext(ServerContext).server;
     const saveInstrumentResults = useContext(InstrumentSearchContext).saveInstrumentSearchResults;
     const nameRef = useRef();
+    const userId = useContext(UserContext).id;
     const [selectedCountries, setSelectedCountries] = useState([]);
     const [selectedGroup, setSelectedGroup] = useState([]);
     const [selectedTypes, setSelectedTypes] = useState([]);
@@ -55,20 +58,34 @@ const InstrumentSearchBar = () => {
     ];
 
     const fetchInstruments = () => {
-        axios.post(`${server}instruments/get/instruments/`,
-            {
-                name: nameRef.current.value,
-                country: selectedCountries.map(data => data.value),
-                group: selectedGroup.value,
-                type: selectedTypes.map(data => data.value),
-                currency: selectedCurrencies.map(data => data.value)
-            },
-        )
-            .then(data => saveInstrumentResults(data.data))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
-    };
+    const token = localStorage.getItem("access");
+    const params = new URLSearchParams();
+
+    // Add name if it exists
+    if (nameRef.current.value) {
+        params.append('name', nameRef.current.value);
+    }
+    if (selectedCountries.length > 0) {
+        selectedCountries.forEach(country => params.append('country', country.value));
+    }
+    if (selectedGroup.length > 0) {
+        selectedGroup.forEach(group => params.append('group', group.value));
+    }
+    if (selectedTypes.length > 0) {
+        selectedTypes.forEach(type => params.append('type', type.value));
+    }
+    if (selectedCurrencies.length > 0) {
+        selectedCurrencies.forEach(currency => params.append('currency', currency.value));
+    }
+
+    axios.get(`${server}instruments/get/instruments/?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` },
+    })
+    .then(response => saveInstrumentResults(response.data))
+    .catch(error => {
+        console.error('Error Message:', error);
+    });
+};
 
     return (
         <div className={'card'} style={{padding: 10, width: '100%'}}>
@@ -100,9 +117,10 @@ const InstrumentSearchBar = () => {
                     </label>
                     <div>
                         <Select
+                            isMulti
                             options={secGroup}
-                            isClearable
-                            onChange={(e) => e === null ? setSelectedGroup([]) : setSelectedGroup(e)}
+                            // isClearable
+                            onChange={(e) => setSelectedGroup(e)}
                             // className={'instrument-search-input-field'}
                         />
                     </div>
@@ -118,7 +136,6 @@ const InstrumentSearchBar = () => {
                                     selectedGroup.value === 'Cash' ? cashType :
                                         selectedGroup.value === 'CFD' ? cfdType : equityType}
                             onChange={(e) => setSelectedTypes(e)}
-                            className={'instrument-search-input-field'}
                         />
                     </div>
                 </div>
@@ -130,15 +147,12 @@ const InstrumentSearchBar = () => {
                             isMulti
                             options={currencies}
                             onChange={(e) => setSelectedCurrencies(e)}
-                            className={'instrument-search-input-field'}
                         />
                     </div>
                 </div>
 
-                <div className='vertical-box'>
-                    <div style={{height: '100%', paddingLeft: 5}}>
-                        <button onClick={fetchInstruments}>Search</button>
-                    </div>
+                <div className="vertical-box search-icon-container">
+                    <FaSearch className="search-icon" onClick={fetchInstruments} />
                 </div>
             </div>
         </div>

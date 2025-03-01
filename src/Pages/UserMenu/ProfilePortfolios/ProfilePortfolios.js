@@ -10,7 +10,7 @@ const ProfilePortfolios = () => {
     const portfolioData = useContext(PortfolioContext).portfolios;
     const [showNewPortModal, setNewPortModal] = useState(false);
     const [selectedPortfolios, setSelectedPortfolios] = useState(new Set());
-    console.log(selectedPortfolios)
+
     const generalParameters = {
         user: useContext(UserContext).user,
         server: useContext(ServerContext).server

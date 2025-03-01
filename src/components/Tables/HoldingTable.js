@@ -27,10 +27,10 @@ const HoldingsTable = ( {portfolioCode} ) => {
     const baseColumns = [
         { Header: 'Portfolio', accessor: 'portfolio_code',
             aggregate: (values) => values[0],
-            Aggregated: ({ value }) => <strong>{value}</strong>  },
+            Aggregated: ({ value }) => <div>{value}</div>  },
         { Header: 'Date', accessor: 'date',
             aggregate: (values) => values[0],
-            Aggregated: ({ value }) => <strong>{value}</strong> },
+            Aggregated: ({ value }) => <div>{value}</div> },
         { Header: 'Name', accessor: 'name'},
         {
             Header: 'Group',
@@ -342,7 +342,7 @@ const HoldingsTable = ( {portfolioCode} ) => {
                             <tr {...row.getRowProps()}>
                                 {row.cells.map(cell => (
                                     <td {...cell.getCellProps()}
-                                        style={row.isGrouped ? {backgroundColor: 'white', fontWeight: 'bold'} : {}} className={cell.column.Header === 'Actions' ? 'sticky-column' : ''}>
+                                        style={row.isGrouped ? {backgroundColor: 'white'} : {}} className={cell.column.Header === 'Actions' ? 'sticky-column' : ''}>
                                         {cell.isGrouped ? (
                                             <>
                                                 {!showOnlyGrouped && (

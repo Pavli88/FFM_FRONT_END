@@ -1,14 +1,14 @@
 /* Sidebar styles */
 .sidebar {
     height: 100vh;
-    background-color: #eeeeee;
+    /*background-color: #eeeeee;*/
     position: fixed;
     top: 0;
     left: 0;
     z-index: 2;
     overflow: hidden;
     transition: width 0.3s ease, box-shadow 0.3s ease, padding-left 0.3s ease;
-    box-shadow: none;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
     padding-top: 80px;
     padding-left: 0;
     padding-right: 50px;

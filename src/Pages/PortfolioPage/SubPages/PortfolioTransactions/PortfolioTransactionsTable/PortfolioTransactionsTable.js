@@ -10,6 +10,7 @@ import PortfolioUpdateModal from "../PortfolioTransactionsModals/PortfolioUpdate
 import {CSVLink} from "react-csv";
 import TransactionContext from "../context/transaction-context";
 import PortfolioContext from "../../../../../context/portfolio-context";
+import "./PortfolioTransactionsTable.css"
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
@@ -179,7 +180,7 @@ const PortfolioTransactionsTable = (props) => {
                             return (
                                 <tr {...row.getRowProps()} className={row.original.is_active ? 'tr-active': 'tr-inactive'}>
                                     {row.cells.map(cell => (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        <td {...cell.getCellProps()} >{cell.render("Cell")}</td>
                                     ))}
                                 </tr>
                             );

@@ -13,22 +13,44 @@ const InstrumentNew = ( { show, close }) => {
     const currencyRef = useRef();
 
     const submitHandler = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await axios.post(`${server}instruments/new/`, {
-                name: nameRef.current.value,
-                country: countryRef.current.value,
-                group: selectedGroup,
-                type: typeRef.current.value,
-                currency: currencyRef.current.value,
-            });
-            alert(response.data);
-            close(); // Close modal after successful submission
-        } catch (error) {
-            console.error("Error submitting data:", error);
-            alert("Failed to create instrument.");
+    event.preventDefault();
+
+    try {
+        const token = localStorage.getItem("access");  // Get token for authentication
+
+        // Construct request data
+        const requestData = {
+            name: nameRef.current.value,
+            country: countryRef.current.value,
+            group: selectedGroup,
+            type: typeRef.current.value,
+            currency: currencyRef.current.value,
+        };
+
+        // Send the POST request
+        const response = await axios.post(`${server}instruments/new/`, requestData, {
+            headers: {
+                Authorization: `Bearer ${token}`,  // Include token in headers
+                "Content-Type": "application/json",  // Ensure correct content type
+            },
+        });
+
+        // Show success message
+        alert(response.data.message || "Instrument saved successfully!");
+        close(); // Close modal after successful submission
+
+    } catch (error) {
+        console.error("Error submitting data:", error);
+
+        // Handle errors from backend
+        if (error.response) {
+            alert(error.response.data.error || "Failed to create instrument.");
+        } else {
+            alert("Network error. Please try again.");
         }
-    };
+    }
+};
+
 
     const optionGenerator = (values) =>
         values.map((data) => (

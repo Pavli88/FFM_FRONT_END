@@ -1,0 +1,15 @@
+.tr-active{
+    border-left: 4px solid green;
+}
+
+.tr-inactive{
+    border-left: 4px solid red;
+}
+
+.tr-open{
+    background: cornflowerblue;
+}
+
+.tr-close{
+    background: rebeccapurple;
+}

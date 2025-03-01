@@ -5,7 +5,7 @@ import "./InstrumentResults.css"
 const InstrumentResuts = ( {data} ) => {
     const saveSelectedInstrument = useContext(InstrumentSearchContext)['saveSelectedInstrument']
 
-    const instruments = data.map((data) => <tr key={data['id']} onClick={() => saveSelectedInstrument(data)} className={'table-row-all'}>
+    const instruments = data.map((data) => <tr key={data['id']} onClick={() => saveSelectedInstrument(data)}>
         <td>{data['id']}</td>
         <td>{data['name']}</td>
         <td>{data['country']}</td>
@@ -15,7 +15,7 @@ const InstrumentResuts = ( {data} ) => {
     </tr>)
 
     return (
-        <div className={'card'}>
+        <div className={'card'} style={{padding:15}}>
 
             <div style={{height: '100%', overflowY: 'scroll', overflowX: 'hidden'}}>
                 <table style={{width: '100%'}}>
