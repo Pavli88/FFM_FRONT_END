@@ -5,15 +5,17 @@ import ServerContext from "../context/server-context";
 import AuthContext from "../context/AuthProvider";
 import axios from "axios";
 import UserContext from "../context/user-context";
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaSearch } from 'react-icons/fa';
 import { logout } from "../endpoints/authservice";
 
 const Navbar = () => {
     const server = useContext(ServerContext)['server'];
-    const {user, email} = useContext(UserContext);
-    const {setAuth} = useContext(AuthContext);
+    const { user, email } = useContext(UserContext);
+    const { setAuth } = useContext(AuthContext);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchType, setSearchType] = useState("user");
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -27,7 +29,6 @@ const Navbar = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
 
     const userLogout = () => {
         logout();
@@ -48,12 +49,32 @@ const Navbar = () => {
                 <Link className="menu-button" to="/calculations">Calculations</Link>
                 <Link className="menu-button" to="/data">Data</Link>
             </div>
-            <div className="nav-notifications">
-                <Notifications server={server}/>
+            <div className="nav-search" style={{ display: 'flex', alignItems: 'center', borderRadius: '20px', overflow: 'hidden', border: '1px solid #ccc', padding: '5px', background: '#fff' }}>
+                <FaSearch size={26} style={{ marginLeft: '10px', color: '#888', width: 50 }} />
+                <input
+                    type="text"
+                    placeholder={`Search ${searchType}`}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="search-input"
+                    style={{ flex: 1, padding: '8px 12px', border: 'none', outline: 'none', width: 200 }}
+                />
+                <select
+                    value={searchType}
+                    onChange={(e) => setSearchType(e.target.value)}
+                    className="search-dropdown"
+                    style={{ padding: '8px', border: 'none', background: '#f8f8f8', cursor: 'pointer' }}
+                >
+                    <option value="user">User</option>
+                    <option value="portfolio">Portfolio</option>
+                </select>
             </div>
-            <div className="nav-user-menu" style={{position: 'relative'}} ref={dropdownRef}>
+            <div className="nav-notifications">
+                <Notifications server={server} />
+            </div>
+            <div className="nav-user-menu" style={{ position: 'relative' }} ref={dropdownRef}>
                 <button className="icon-button" onClick={() => setDropdownOpen(!dropdownOpen)}>
-                    <FaUserCircle size={24}/>
+                    <FaUserCircle size={24} />
                 </button>
                 {dropdownOpen && (
                     <div className="dropdown-content" style={{
@@ -66,33 +87,12 @@ const Navbar = () => {
                         padding: '10px',
                         minWidth: '150px'
                     }}>
-                        <Link to="/profile" style={{
-                            display: 'block',
-                            padding: '8px 12px',
-                            textDecoration: 'none',
-                            color: '#333'
-                        }}>My Profile</Link>
-                        <Link to="/myPortfolios" style={{
-                            display: 'block',
-                            padding: '8px 12px',
-                            textDecoration: 'none',
-                            color: '#333'
-                        }}>My Portfolios</Link>
-                        <Link to="/subscriptions" style={{
-                            display: 'block',
-                            padding: '8px 12px',
-                            textDecoration: 'none',
-                            color: '#333'
-                        }}>Subscriptions</Link>
-                        <Link to="/brokerAccounts" style={{
-                            display: 'block',
-                            padding: '8px 12px',
-                            textDecoration: 'none',
-                            color: '#333'
-                        }}>Broker Accounts</Link>
-                        <hr/>
-                        <button onClick={userLogout}>Sign Out
-                        </button>
+                        <Link to="/profile" className="dropdown-item">My Profile</Link>
+                        <Link to="/myPortfolios" className="dropdown-item">My Portfolios</Link>
+                        <Link to="/subscriptions" className="dropdown-item">Subscriptions</Link>
+                        <Link to="/brokerAccounts" className="dropdown-item">Broker Accounts</Link>
+                        <hr />
+                        <button onClick={userLogout} className="dropdown-item">Sign Out</button>
                     </div>
                 )}
             </div>

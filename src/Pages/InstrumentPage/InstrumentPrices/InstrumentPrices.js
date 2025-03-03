@@ -4,20 +4,16 @@ import axios from "axios";
 import DateContext from "../../../context/date-context";
 import {ButtonGroupVertical} from "../../../components/Buttons/ButtonGroups";
 import InstrumentSearchContext from "../InstrumentPageContext/instrument-search-context";
+import NewPriceEntry from "./NewPriceEntry/NewPriceEntry";
 
 const InstrumentPrices = () => {
     const server = useContext(ServerContext).server;
     const currentDate = useContext(DateContext).currentDate;
     const selectedInstrument = useContext(InstrumentSearchContext).selectedInstrument;
-
     const [queryDate, setQueryDate] = useState(currentDate);
-    const [showModal, setShowModal] = useState(false);
+    const [showPriceModal, setShowPriceModal] = useState(false);
     const [priceData, setPriceData] = useState([]);
     const [selectedPriceID, setSelectedPriceID] = useState(null);
-    const [priceSource, setPriceSource] = useState("oanda");
-
-    const dateRef = useRef();
-    const priceRef = useRef();
 
     useEffect(() => {
         if (selectedInstrument && selectedInstrument.id) {
@@ -39,21 +35,6 @@ const InstrumentPrices = () => {
         }
     };
 
-    const saveNewPrice = async () => {
-        try {
-            const response = await axios.post(`${server}instruments/new/price/`, {
-                instrument_id: selectedInstrument.id,
-                date: dateRef.current.value,
-                price: priceRef.current.value,
-                source: priceSource
-            });
-            alert(response.data.response);
-            fetchPrices(queryDate);
-        } catch (error) {
-            console.error("Error saving price:", error);
-        }
-    };
-
     const deletePrice = async () => {
         if (!selectedPriceID) {
             alert("No price selected for deletion.");
@@ -70,13 +51,8 @@ const InstrumentPrices = () => {
         }
     };
 
-    const priceSources = [
-        { value: "oanda", label: "Oanda" },
-        { value: "saxo", label: "Saxo Bank" },
-    ];
-
     const buttonDict = {
-        "New": () => saveNewPrice(),
+        "New": () => setShowPriceModal(!showPriceModal),
         "Delete": () => deletePrice()
     };
 
@@ -119,6 +95,11 @@ const InstrumentPrices = () => {
                     </table>
                 </div>
             </div>
+            <NewPriceEntry
+                show={showPriceModal}
+                close={()=>setShowPriceModal(!showPriceModal)}
+                refreshPrices={() => fetchPrices(queryDate)}
+            />
         </div>
     );
 };

@@ -1,8 +1,70 @@
 import CustomModal from "../../../../components/Modals/Modals";
 import Select from "react-select";
-const NewPriceEntry = () => {
+import {useContext, useRef, useState} from "react";
+import ServerContext from "../../../../context/server-context";
+import DateContext from "../../../../context/date-context";
+import axios from "axios";
+import InstrumentSearchContext from "../../InstrumentPageContext/instrument-search-context";
+
+const NewPriceEntry = ({show, close, refreshPrices}) => {
+    const server = useContext(ServerContext).server;
+    const currentDate = useContext(DateContext).currentDate;
+    const [priceSource, setPriceSource] = useState();
+    const dateRef = useRef();
+    const priceRef = useRef();
+    const selectedInstrument = useContext(InstrumentSearchContext).selectedInstrument;
+
+    const submitHandler = async (event) => {
+        event.preventDefault();
+
+        try {
+            const token = localStorage.getItem("access");  // Get token for authentication
+
+            // Construct request data
+            const requestData = {
+                instrument_id: selectedInstrument.id,
+                date: dateRef.current.value,
+                price: priceRef.current.value,
+                source: priceSource
+            };
+
+            // Send the POST request
+            const response = await axios.post(`${server}instruments/new/price/`, requestData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,  // Include token in headers
+                    "Content-Type": "application/json",  // Ensure correct content type
+                },
+            });
+
+            // Show success message
+            alert(response.data.message || "Instrument saved successfully!");
+            refreshPrices();
+            close(); // Close modal after successful submission
+
+        } catch (error) {
+            console.error("Error submitting data:", error);
+
+            // Handle errors from backend
+            if (error.response) {
+                alert(error.response.data.error || "Failed to create instrument.");
+            } else {
+                alert("Network error. Please try again.");
+            }
+        }
+    };
+
+    const priceSources = [
+        {value: "oanda", label: "Oanda"},
+        {value: "saxo", label: "Saxo Bank"},
+    ];
+
     return (
-        <CustomModal>
+        <CustomModal show={show} onClose={close} title={'New Price'}
+                     footer={
+                         <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
+                             Save
+                         </button>
+                     }>
             <div style={{width: '100%'}}>
 
                 <div className={'block'}>
@@ -17,14 +79,13 @@ const NewPriceEntry = () => {
 
                 <div className={'block'}>
                     <label>Source</label>
-                    <div style={{width: 300, position: "absolute", right: 15}}>
-                        <Select
-                            options={priceSources}
-                            defaultValue={priceSource}
-                            onChange={(e) => setPriceSource(e.value)}
-                            className={'instrument-search-input-field'}
-                        />
-                    </div>
+
+                    <Select
+                        options={priceSources}
+                        defaultValue={priceSource}
+                        onChange={(e) => setPriceSource(e.value)}
+                    />
+
                 </div>
 
             </div>
