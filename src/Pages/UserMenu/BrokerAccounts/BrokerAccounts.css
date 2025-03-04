@@ -1,0 +1,61 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 12px;
+}
+
+.table-container {
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f5f5f5;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-button, .delete-button {
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    font-size: 16px;
+}
+
+.edit-button {
+    color: #007bff;
+}
+
+.delete-button {
+    color: #d9534f;
+}
+
+.edit-button:hover {
+    color: #0056b3;
+}
+
+.delete-button:hover {
+    color: #c9302c;
+}

@@ -5,8 +5,8 @@ import {BsFillCaretRightFill, BsFillPauseFill, BsTrash, BsArrowRepeat, BsPlus} f
 import './PortfolioTradeRouting.css'
 import Form from "react-bootstrap/Form";
 import ServerContext from "../../../../../context/server-context";
-import PortfolioPageContext from "../../../context/portfolio-page-context";
 import axios from "axios";
+import PortfolioContext from "../../../../../context/portfolio-context";
 
 
 const TradeRoute = (props) => {
@@ -16,7 +16,6 @@ const TradeRoute = (props) => {
 
     const brokerOptions = [
         { value: 'oanda', label: 'Oanda' },
-        { value: 'tasty', label: 'Tasty Trade' },
     ];
 
     const updateRouting = async () => {
@@ -89,16 +88,16 @@ const TradeRoute = (props) => {
             <td>
                 <div style={{display: 'flex'}}>
                     <div style={{width: '33%', padding: 2}}>
-                        <button className="action-button add-button"
+                        <button className="icon-button add-button"
                         onClick={() => {setData({...data, is_active: data.is_active === 1 ? 0 : 1})
                         }}> {data.is_active === 1 ?
                     <BsFillCaretRightFill/> : <BsFillPauseFill/>}</button>
                     </div>
                     <div style={{width: '33%', padding: 2}}>
-                        <button className="action-button edit-button" onClick={() => updateRouting()}><BsArrowRepeat/></button>
+                        <button className="icon-button" onClick={() => updateRouting()}><BsArrowRepeat/></button>
                     </div>
                     <div style={{width: '33%', padding: 2}}>
-                        <button className={'delete-button'} onClick={() => deleteRouting(data['id'])}><BsTrash/></button>
+                        <button className={'icon-button delete-button'} onClick={() => deleteRouting(data['id'])}><BsTrash/></button>
                     </div>
                 </div>
             </td>
@@ -106,9 +105,9 @@ const TradeRoute = (props) => {
     );
 };
 
-const PortfolioTradeRouting = (props) => {
+const PortfolioTradeRouting = () => {
     const server = useContext(ServerContext)['server'];
-    const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
+    const portfolioCode = useContext(PortfolioContext).selectedPortfolio.portfolio_code;
     const [newRoutingModalStatus, setNewRoutingModalStatus] = useState(false)
     const [tradeRoutes, setTradeRoutes] = useState([]);
     const records = tradeRoutes.map((data) => <TradeRoute data={data} fetch={() => fetchTradeRoutes()}/>)
@@ -123,12 +122,13 @@ const PortfolioTradeRouting = (props) => {
     };
 
     useEffect(() => {
+        console.log(portfolioCode)
         fetchTradeRoutes();
     }, [portfolioCode])
 
     return (
         <div className={'portfolio-trade-routing-container'}>
-            <div style={{overflow: "scroll", height: '620px'}}>
+            <div >
                 <table style={{width: '100%'}}>
                     <thead style={{width: '100%'}}>
                     <tr>

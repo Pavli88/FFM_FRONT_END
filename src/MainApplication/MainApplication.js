@@ -71,7 +71,7 @@ const MainApplication = ({config}) => {
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0, 10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0, 10));
     const [userData, setUserData] = useState([{}]);
-    console.log(userData)
+
     // Dashboard Context
     const [portGroup, setPortGroup] = useState(null);
 
@@ -102,7 +102,9 @@ const MainApplication = ({config}) => {
     useEffect(() => {
         if (userData?.username) {
             axios
-                .get(`${server}portfolios/get/portfolios/`, {headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}})
+                .get(`${server}portfolios/get/portfolios/`, {
+                    headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
+                })
                 .then((response) => setPortfolios(response.data))
                 .catch((error) => console.error("Error fetching portfolios:", error));
         }
@@ -111,11 +113,16 @@ const MainApplication = ({config}) => {
     useEffect(() => {
         if (userData?.username) {
             axios
-                .get(`${server}accounts/get/accounts/`, {params: {owner: userData.username}})
+                .get(`${server}accounts/get/accounts/`, {
+                    params: {
+                        user: userData.username
+                    },
+                    headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
+                })
                 .then((response) => setAccounts(response.data))
                 .catch((error) => console.error("Error fetching accounts:", error));
         }
-    }, [newAccount]);
+    }, [userData, newAccount]);
 
     return (
         <div style={{background: '#FBFAFA', padding: 0}}>

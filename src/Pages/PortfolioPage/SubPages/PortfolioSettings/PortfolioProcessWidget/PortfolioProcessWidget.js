@@ -4,10 +4,8 @@ import PortfolioTradeRouting from "../PortfolioTradeRouting/PortfolioTradeRoutin
 import Card from "react-bootstrap/Card";
 const PortfolioProcessWidget = (props) => {
     return (
-        <Card style={{height: '100%'}}>
-            <Card.Header>
-                Process Setup
-            </Card.Header>
+        <div className={'card'}>
+
             <Card.Body>
                 <Tabs defaultActiveKey="valuation">
                     <Tab eventKey="valuation" title="Valuation">
@@ -24,7 +22,7 @@ const PortfolioProcessWidget = (props) => {
                     </Tab>
                 </Tabs>
             </Card.Body>
-        </Card>
+        </div>
     )
 };
 export default PortfolioProcessWidget;
