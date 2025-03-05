@@ -61,9 +61,13 @@ const MainApplication = ({config}) => {
     const [selectedPortfolio, setSelectedPortfolio] = useState({});
     const [newPortfolio, setNewPortfolio] = useState(0);
 
+    // Broker Data
     const [brokerData, setBrokerData] = useState([{}]);
     const [accounts, setAccounts] = useState([]);
     const [newAccount, setNewAccount] = useState(0)
+
+    const apiNotSupportedBroker = brokerData.filter(data => data.api_support === false)
+    const apiSupportedBroker = brokerData.filter(data => data.api_support === true)
 
     // Date variables
     const date = new Date();
@@ -87,16 +91,39 @@ const MainApplication = ({config}) => {
         }
     };
 
+    const fetchAccountData = async () => {
+        try {
+            const token = localStorage.getItem("access");
+            const response = await axios.get(`${server}accounts/get/accounts/`, {
+                    params: {
+                        user: userData.username
+                    },
+                    headers: {Authorization: `Bearer ${token}`}
+                });
+            setAccounts(response.data);
+        } catch (error) {
+            console.error("Error fetching user data:", error.response?.data || error.message);
+        }
+    };
+
+    const fetchBrokers = async () => {
+        try {
+            const response = await axios.get(`${server}accounts/get/brokers`, {
+                    headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
+                });
+            setBrokerData(response.data);
+        } catch (error) {
+            console.error("Error fetching user data:", error.response?.data || error.message);
+        }
+    };
+
     useEffect(() => {
             fetchUserData();
         }, []
     );
 
     useEffect(() => {
-        axios
-            .get(`${server}accounts/get/brokers`)
-            .then((response) => setBrokerData(response.data))
-            .catch((error) => console.error("Error fetching brokers:", error));
+        fetchBrokers();
     }, []);
 
     useEffect(() => {
@@ -112,15 +139,7 @@ const MainApplication = ({config}) => {
 
     useEffect(() => {
         if (userData?.username) {
-            axios
-                .get(`${server}accounts/get/accounts/`, {
-                    params: {
-                        user: userData.username
-                    },
-                    headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
-                })
-                .then((response) => setAccounts(response.data))
-                .catch((error) => console.error("Error fetching accounts:", error));
+            fetchAccountData();
         }
     }, [userData, newAccount]);
 
@@ -144,8 +163,10 @@ const MainApplication = ({config}) => {
                         <BrokerContext.Provider value={{
                             brokerData: brokerData,
                             accounts: accounts,
-                            newAccount: newAccount,
-                            saveAccount: setNewAccount,
+                            fetchAccounts: fetchAccountData,
+                            fetchBrokers: fetchBrokers,
+                            apiSupportedBrokers: apiSupportedBroker,
+                            apiNotSupportedBrokers: apiNotSupportedBroker
                         }}>
                             <UserContext.Provider value={userData}>
                                 <DashboardContext.Provider value={{

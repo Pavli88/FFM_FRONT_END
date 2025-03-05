@@ -1,119 +1,126 @@
-import Form from "react-bootstrap/Form";
 import {useState, useRef, useContext} from "react";
 import axios from "axios";
 import BrokerContext from "../../../context/broker-context";
+import ServerContext from "../../../context/server-context";
+import CustomModal from "../../../components/Modals/Modals";
 
-const NewBrokerAccount = (props) => {
-    const { user, server} = props.parameters;
-    const saveAccount = useContext(BrokerContext).saveAccount;
-    const newAccount = useContext(BrokerContext).newAccount;
+const NewBrokerAccount = ({ show, close }) => {
+    const server = useContext(ServerContext).server;
+    const { apiSupportedBrokers, fetchAccounts } = useContext(BrokerContext);
     const [env, setEnv] = useState('live');
     const [currency, setCurrency] = useState('USD');
+    const [brokerName, setBrokerName] = useState('');  // State for selected broker name
     const accountNameRef = useRef();
     const accountNumberRef = useRef();
     const tokenRef = useRef();
-    const brokerNameRef = useRef();
-    const [marginAllowed, setMarginAllowed] = useState(0);
-    const [marginPercentage, setMarginPercentage] = useState(0.0);
 
+    // Submit Handler
     const submitHandler = () => {
-        axios.post(server + 'accounts/new_account/', {
-            broker_name: brokerNameRef.current.value,
+        if (!accountNameRef.current.value.trim()) {
+            alert("Account Name is required.");
+            accountNameRef.current.focus(); // Optionally focus the input
+            return;
+        }
+
+        if (!accountNumberRef.current.value.trim()) {
+            alert("Account Number is required.");
+            accountNumberRef.current.focus(); // Optionally focus the input
+            return;
+        }
+
+        if (!tokenRef.current.value.trim()) {
+            alert("Token is required.");
+            tokenRef.current.focus(); // Optionally focus the input
+            return;
+        }
+
+        if (!brokerName) {
+            alert("Broker has to be selected.");
+            return;
+        }
+        const token = localStorage.getItem("access");
+        axios.post(`${server}accounts/new_account/`, {
+            broker_name: brokerName,  // Use the selected broker
             account_number: accountNumberRef.current.value,
             account_name: accountNameRef.current.value,
             env: env,
             token: tokenRef.current.value,
             currency: currency,
-            owner: user,
-            margin_account: marginAllowed,
-            margin_percentage: marginPercentage,
+        }, {
+            headers: {Authorization: `Bearer ${token}`}
         })
-                .then(function(response){
-                    if (response.data === 'Account is created successfully!'){
-                        saveAccount(newAccount + 1)
-                        alert(response.data)
-                    }else{
-                        alert(response.data)
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error Message:', error);
-                });
+            .then(() => fetchAccounts())
+            .catch((error) => {
+                alert(error.response.data.message)
+                console.error('Error Message:', error);
+            });
+
+        // Reset state after form submission
         setEnv('live');
         setCurrency('USD');
-        setMarginAllowed(0);
-        setMarginPercentage(0.0)
-        props.hide();
+        setBrokerName('');
+        close();
     };
-
-    const envHandler = (event) => {
-        setEnv(event.target.value);
-    };
-
-    const currencyHandler = (event) => {
-        setCurrency(event.target.value);
-    };
-
-    const marginPercentageDiv = <div style={{margin: 10}}>
-        <Form.Label>Margin Percentage</Form.Label>
-        <Form.Control onChange={(e) => setMarginPercentage(e.target.value)} type="number" min={0.0} step={0.05}/>
-    </div>
 
     return (
-        <div className={'card'}>
-            <div className={'card-header'}>
-                <div>
-                    <span>New</span>
+        <CustomModal show={show} onClose={close} title={'New Transaction'}
+                     footer={
+                         <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
+                             Save
+                         </button>
+                     }>
+            <div style={{ height: '600px', overflowY: 'scroll', padding: 5 }}>
+                {/* Broker Selection */}
+                <div style={{ margin: 10 }}>
+                    <label>Broker</label>
+                    <select onChange={(e) => setBrokerName(e.target.value)}>
+                        <option value="">Select Broker</option>
+                        {apiSupportedBrokers.map((broker, index) => (
+                            <option key={index} value={broker.broker_code}>
+                                {broker.broker}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
-                <div style={{position: "absolute", right: 10}}>
-                    <button className={'normal-button'} onClick={submitHandler}>Create</button>
+                {/* Account Name */}
+                <div style={{ margin: 10 }}>
+                    <label>Account Name</label>
+                    <input ref={accountNameRef} type="text" />
                 </div>
+
+                {/* Account Number */}
+                <div style={{ margin: 10 }}>
+                    <label>Account Number</label>
+                    <input ref={accountNumberRef} type="text" />
+                </div>
+
+                {/* Token */}
+                <div style={{ margin: 10 }}>
+                    <label>Token</label>
+                    <input ref={tokenRef} type="text" />
+                </div>
+
+                {/* Environment */}
+                <div style={{ margin: 10 }}>
+                    <label>Environment</label>
+                    <select onChange={(e) => setEnv(e.target.value)} value={env}>
+                        <option value="live">Live</option>
+                        <option value="demo">Demo</option>
+                    </select>
+                </div>
+
+                {/* Currency */}
+                <div style={{ margin: 10 }}>
+                    <label>Currency</label>
+                    <select onChange={(e) => setCurrency(e.target.value)} value={currency}>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                    </select>
+                </div>
+
             </div>
-            <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
-                <div style={{margin: 10}}>
-                    <Form.Label>Broker</Form.Label>
-                    <Form.Control ref={brokerNameRef} type="text"/>
-                </div>
-                <div style={{margin: 10}}>
-                    <Form.Label>Account Name</Form.Label>
-                    <Form.Control ref={accountNameRef} type="text"/>
-                </div>
-                <div style={{margin: 10}}>
-                    <Form.Label>Account Number</Form.Label>
-                    <Form.Control ref={accountNumberRef} type="text"/>
-                </div>
-                <div style={{margin: 10}}>
-                    <Form.Label>Token</Form.Label>
-                    <Form.Control ref={tokenRef} type="text"/>
-                </div>
-                <div style={{margin: 10}}>
-                    <Form.Label>Environment</Form.Label>
-                    <Form.Control onChange={envHandler} as="select">
-                        <option value={'live'}>Live</option>
-                        <option value={'demo'}>Demo</option>
-                    </Form.Control>
-                </div>
-                <div style={{margin: 10}}>
-                    <Form.Label>Currency</Form.Label>
-                    <Form.Control onChange={currencyHandler} as="select">
-                        <option value={'USD'}>USD</option>
-                        <option value={'EUR'}>EUR</option>
-                    </Form.Control>
-                </div>
-
-                <div style={{margin: 10}}>
-                    <Form.Label>Margin Account</Form.Label>
-                    <Form.Control value={marginAllowed} onChange={(e) => setMarginAllowed(e.target.value)} as="select">
-                        <option value={0}>Disabled</option>
-                        <option value={1}>Allowed</option>
-                    </Form.Control>
-                </div>
-
-                {marginAllowed === '1' ? marginPercentageDiv: ''}
-
-            </div>
-        </div>
+        </CustomModal>
     );
 };
 

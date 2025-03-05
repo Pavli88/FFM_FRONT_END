@@ -12,9 +12,9 @@ const BrokerAccountsPage = () => {
 
     return (
         <div style={{display: 'flex', width: '100%', height: '800px'}}>
-            <div style={{width: '500px', margin: 10}}>
-                <NewBrokerAccount parameters={{...generalParameters}}/>
-            </div>
+            {/*<div style={{width: '500px', margin: 10}}>*/}
+            {/*    <NewBrokerAccount parameters={{...generalParameters}}/>*/}
+            {/*</div>*/}
             <div style={{width: '100%', margin: 10}}>
                 <BrokerAccounts parameters={{...generalParameters}}/>
             </div>
