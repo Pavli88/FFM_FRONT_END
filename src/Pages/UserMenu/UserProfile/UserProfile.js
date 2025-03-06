@@ -3,12 +3,10 @@ import { useContext, useState } from "react";
 import UserContext from "../../../context/user-context";
 import ChangePasswordModal from "./ChangePasswordModal";
 import "./UserProfile.css";
-import ServerContext from "../../../context/server-context";
-import axios from "axios";
+import {changePassword} from "../../../endpoints/authservice";
 
 const UserProfile = () => {
     const { username, email, first_name, last_name, date_joined, last_login } = useContext(UserContext);
-    const server = useContext(ServerContext).server;
 
     const [formData, setFormData] = useState({
         email: email || "",
@@ -32,54 +30,7 @@ const handleChangePassword = async ({ oldPassword, newPassword }) => {
         return;
     }
 
-    try {
-        const response = await axios.post(
-            `${server}user/change_password/`,
-            { old_password: oldPassword, new_password: newPassword },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-
-        // ✅ Invalidate tokens & force logout
-        localStorage.removeItem("access");
-        localStorage.removeItem("refresh");
-
-        alert("Password changed successfully! Please log in again.");
-        window.location.href = "/login"; // Redirect to login page
-
-    } catch (error) {
-        console.error("Error response:", error.response?.data);  // ✅ Debugging remains
-
-        if (error.response) {
-            const errorData = error.response.data;
-
-            // Check if the error contains a nested object with error messages
-            let errorMessage = "";
-            if (errorData.error) {
-                // If errorData.error is an object, handle it properly
-                if (errorData.error.new_password) {
-                    // Handle specific new_password errors and join them
-                    errorMessage = errorData.error.new_password.join(" ");
-                } else {
-                    errorMessage = Object.values(errorData.error)
-                        .flat()
-                        .join("");
-                }
-            } else {
-                errorMessage = errorData?.error || "Something went wrong.";
-            }
-
-            // Ensure we throw the error message as a string
-            throw new Error(String(errorMessage));
-        } else {
-            // If there is no response from the server
-            throw new Error("No response from server.");
-        }
-    }
+    await changePassword(oldPassword, newPassword, token);
 };
 
     return (

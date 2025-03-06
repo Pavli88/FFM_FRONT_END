@@ -32,12 +32,78 @@ export const registerUser = async (username, email, password) => {
 // Login function
 export const login = async (username, password) => {
     try {
-        const response = await axios.post(`${API_URL}token/`, { username, password });
+        const response = await axios.post(`${API_URL}user/login/`, { username, password });
         localStorage.setItem("access", response.data.access);
         localStorage.setItem("refresh", response.data.refresh);
         return response.data;
     } catch (error) {
-        throw error.response?.data?.detail || "Login failed";
+        let message = "Login failed";
+        if (error.response && error.response.data) {
+            message = error.response.data.detail || "Something went wrong";
+        }
+        throw message;
+    }
+};
+
+//Forgot password function
+export const forgotPassword = async (email) => {
+    try {
+        const response = await axios.post(`${API_URL}user/forgot_password/`, { email });
+        return response.data.detail;
+    } catch (error) {
+        throw error.response?.data?.detail || "Failed to send password reset email";
+    }
+};
+
+//Change password function
+export const changePassword = async (oldPassword, newPassword, token) => {
+    try {
+        const response = await axios.post(
+            `${API_URL}user/change_password/`,
+            {old_password: oldPassword, new_password: newPassword},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        // ✅ Invalidate tokens & force logout
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+
+        alert("Password changed successfully! Please log in again.");
+        window.location.href = "/login"; // Redirect to login page
+
+    } catch (error) {
+        console.error("Error response:", error.response?.data);  // ✅ Debugging remains
+
+        if (error.response) {
+            const errorData = error.response.data;
+
+            // Check if the error contains a nested object with error messages
+            let errorMessage = "";
+            if (errorData.error) {
+                // If errorData.error is an object, handle it properly
+                if (errorData.error.new_password) {
+                    // Handle specific new_password errors and join them
+                    errorMessage = errorData.error.new_password.join(" ");
+                } else {
+                    errorMessage = Object.values(errorData.error)
+                        .flat()
+                        .join("");
+                }
+            } else {
+                errorMessage = errorData?.error || "Something went wrong.";
+            }
+
+            // Ensure we throw the error message as a string
+            throw new Error(String(errorMessage));
+        } else {
+            // If there is no response from the server
+            throw new Error("No response from server.");
+        }
     }
 };
 

@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { registerUser } from "../../endpoints/authservice";
 import "./UserRegistration.css";
 
-const UserRegistration = () => {
+const UserRegistration = ({ onClose }) => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -12,7 +12,7 @@ const UserRegistration = () => {
     const modalRef = useRef(null);  // Create a ref for the modal
 
     useEffect(() => {
-        // Reset form and errors when component is mounted
+        // Reset form and errors when compoconst navigate = useNavigate();nent is mounted
         setUsername("");
         setEmail("");
         setPassword("");
@@ -21,8 +21,9 @@ const UserRegistration = () => {
         // Add event listener to close modal if clicked outside
         const handleOutsideClick = (event) => {
             if (modalRef.current && !modalRef.current.contains(event.target)) {
-                // Close the modal (here we just log it, you can do other actions)
-                history.push("/login"); // Redirect to another page or do something else
+                // Close the modal
+                onClose(); // Use the onClose prop passed from the parent
+                history.push("/");
             }
         };
 
@@ -32,7 +33,7 @@ const UserRegistration = () => {
         return () => {
             document.removeEventListener("mousedown", handleOutsideClick);
         };
-    }, [history]);
+    }, [onClose]);
 
     const handleRegister = async (e) => {
         e.preventDefault();

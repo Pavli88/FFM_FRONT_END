@@ -6,7 +6,7 @@ import BrokerContext from "../context/broker-context";
 import DashboardContext from "../context/dashboard-context";
 import ReactNotification from "react-notifications-component";
 import Navigation from "../NavBar/NavBar";
-import {Route, Switch, Redirect, useHistory } from "react-router-dom";
+import {Route, Switch, Redirect } from "react-router-dom";
 import RiskPage from "../Pages/RiskPage/RiskPage";
 import HomePage from "../Pages/HomePage/HomePage";
 import TradePage from "../Pages/TradePage/TradePage";
@@ -20,6 +20,7 @@ import DataPage from "../Pages/DataPage/DataPage";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import BrokerAccountsPage from "../Pages/UserMenu/BrokerAccounts/BrokerAccountsPage";
+import ResetPassword from "../Pages/MainPage/ResetPassword";
 
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
@@ -198,7 +199,7 @@ const MainApplication = ({config}) => {
                                             <Route path="/brokerAccounts">
                                                 <BrokerAccountsPage/>
                                             </Route>
-                                            <Route path='*' element={<Redirect to='/dashboard'/>}/>
+                                            <Route path='*' element={<Redirect to='/dashboard'/>}/>A
                                         </Switch>
                                     </div>
                                 </DashboardContext.Provider>
