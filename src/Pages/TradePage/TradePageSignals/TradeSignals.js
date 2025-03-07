@@ -13,7 +13,6 @@ const TradeSignals = (props) => {
         () => signalData,
         [signalData]
     )
-    console.log(signalData)
     const columns = useMemo(
         () => [
             {

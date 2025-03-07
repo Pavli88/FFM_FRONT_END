@@ -3,7 +3,6 @@ import axios from "axios";
 import TradeContext from "../context/trade-context";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import TradeExecution from "../TradeExecution/TradeExecution";
 import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare} from "react-icons/bs";
 import {useExpanded, useGroupBy, useTable} from "react-table";
 
@@ -88,11 +87,9 @@ const UnitModal = (props) => {
 
 const OpenTransactions = (props) => {
     const newTransactionID = useContext(TradeContext).newTransactionID;
-    const saveNewTransactionID = useContext(TradeContext).saveNewTrnsactionID;
     const [openTransactionsData, setOpenTransactionsData] =  useState([{}]);
     const [showModal, setShowModal] = useState(false);
     const [selectedTransaction, setSelectedTransaction] = useState({});
-    const [showTradeModal, setShowTradeModal] = useState(false);
 
     const MINUTE_MS = 10000;
 
@@ -204,16 +201,12 @@ const OpenTransactions = (props) => {
     }, [openTransactionsData])
 
     return (
-        <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-            <div className='card' style={{backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '8px'}}>
-
+            <div className='card'>
                 <div className={'card-header'}>
-                    <div style={{position: "absolute", left: 10, padding: 15}}>
-                        <button className={'normal-button'} onClick={() => setShowTradeModal(true)}>New</button>
-                    </div>
+                    <span>Open Trades</span>
                 </div>
 
-                <div style={{height: '100%', overflowY: 'scroll'}}>
+                <div style={{padding: 15}}>
                     <table {...getTableProps()}>
                         <thead>
                         {
@@ -303,10 +296,7 @@ const OpenTransactions = (props) => {
                            server={props.server}
                            update={() => fetchTransactions()}
                 />
-                <TradeExecution server={props.server} show={showTradeModal} hide={() => setShowTradeModal(false)}
-                                update={() => fetchTransactions()}/>
             </div>
-        </div>
     )
 };
 export default OpenTransactions;
