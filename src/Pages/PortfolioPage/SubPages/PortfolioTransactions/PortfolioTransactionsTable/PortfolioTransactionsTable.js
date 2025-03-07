@@ -152,7 +152,7 @@ const PortfolioTransactionsTable = (props) => {
     };
 
     return (
-        <div className='card' style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '8px', overflow: 'hidden' }}>
+        <div className='card' style={{ padding: '15px', borderRadius: '8px', overflow: 'hidden' }}>
             <div style={{ display: "flex", height: 60, alignItems: "center" }}>
                 <ButtonGroupVertical buttonDict={buttonDict} />
                 <CSVLink filename="transactions.csv" data={data} className="download-link">

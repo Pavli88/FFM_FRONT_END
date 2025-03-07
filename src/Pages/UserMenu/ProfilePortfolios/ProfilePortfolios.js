@@ -54,30 +54,35 @@ const ProfilePortfolios = () => {
             <td className={'table-row'} style={{ width: '100%', color: data.status === 'Not Funded' ? 'red' : data.status === 'Funded' ? 'green' : 'orange' }}>
                 {data.status}
             </td>
-            <td className={'table-row'} style={{ width: '100%' }}>{data.public}</td>
+            {/*<td className={'table-row'} style={{ width: '100%' }}>{data.public}</td>*/}
         </tr>
     ));
 
     return (
-        <div style={{ height: '100%' }}>
+        <div className={'card'}>
+
+            <div className={'card-header'}>
+                Portfolios
+            </div>
+
             <div style={{display: "flex"}}>
                 <button className={'normal-button'} onClick={() => setNewPortModal(true)}>New Portfolio</button>
                 <button className={'normal-button'} onClick={() => deletePortfolios()}>Terminate</button>
                 <button className={'normal-button'} onClick={() => deletePortfolios()}>Delete Selected</button>
             </div>
 
-            <div className={'card'} style={{height: '100%', overflowY: 'scroll'}}>
-            <table style={{ width: '100%' }}>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Code</th>
-                            <th>Type</th>
-                            <th>Currency</th>
-                            <th>Funded</th>
-                        </tr>
+            <div style={{height: '100%', overflowY: 'scroll', paddingTop: 10}}>
+                <table style={{width: '100%'}}>
+                    <thead style={{width: '100%'}}>
+                    <tr>
+                        <th></th>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Code</th>
+                        <th>Type</th>
+                        <th>Currency</th>
+                        <th>Funded</th>
+                    </tr>
                     </thead>
                     <tbody>{portfolios}</tbody>
                 </table>

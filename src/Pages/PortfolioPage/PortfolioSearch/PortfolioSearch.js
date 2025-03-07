@@ -35,13 +35,13 @@ const PortfolioSearch = () => {
   };
 
   return (
-    <div style={{padding: 10, paddingLeft: 0}}>
+    <div className={'card'}>
       <input
         type="text"
         placeholder="Search Portfolio..."
         value={search}
         onChange={handleSearch}
-        style={{ width: "100%" }}
+        style={{ padding: '8px 8px', border: 'none', outline: 'none', width: '100%', background: '#f1f1f1' }}
       />
 
       {/* Show filtered results */}

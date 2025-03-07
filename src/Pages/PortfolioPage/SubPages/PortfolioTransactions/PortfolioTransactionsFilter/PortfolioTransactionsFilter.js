@@ -45,8 +45,7 @@ const PortfolioTransactionsFilter = (props) => {
     };
 
     return (
-        <div style={{ padding: "15px", width: "100%" }}>
-            <div className={"card"}>
+        <div className={"card"} style={{ padding: "15px", width: "100%" }}>
                 <div className={"search-container"}>
                     <div className={"search-container-label-box"}>
                         <label>Show Only Active Transactions</label>
@@ -118,7 +117,6 @@ const PortfolioTransactionsFilter = (props) => {
                     </div>
                 </div>
             </div>
-        </div>
     );
 };
 export default PortfolioTransactionsFilter;

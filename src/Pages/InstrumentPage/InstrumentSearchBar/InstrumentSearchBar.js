@@ -151,9 +151,12 @@ const InstrumentSearchBar = () => {
                     </div>
                 </div>
 
-                <div className="vertical-box search-icon-container">
-                    <FaSearch className="search-icon" onClick={fetchInstruments} />
+                <div style={{padding: 10}}>
+                    <button className={'icon-button'}>
+                        <FaSearch style={{fontSize: 22}}  onClick={fetchInstruments}/>
+                    </button>
                 </div>
+
             </div>
         </div>
     );

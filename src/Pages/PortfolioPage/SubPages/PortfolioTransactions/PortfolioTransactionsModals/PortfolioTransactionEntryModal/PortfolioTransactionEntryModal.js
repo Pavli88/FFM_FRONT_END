@@ -4,18 +4,25 @@ import {useContext, useRef, useState} from "react";
 import DateContext from "../../../../../../context/date-context";
 import PortfolioPageContext from "../../../../context/portfolio-page-context";
 import ServerContext from "../../../../../../context/server-context";
+import InstrumentSearch from "../../../../../../components/Search/InstrumentSearch/InstrumentSearch";
+import ToogleSwitch from "../../../../../../components/Buttons/SliderButton/ToogleSwitch";
+import BuySellButtonGroup from "../../../../../../components/Buttons/BuySellButtonGroup/BuySellButtonGroup";
 
 const PortfolioTransactionEntryModal = ( {show, close} ) => {
     const server = useContext(ServerContext).server;
-    const portfolio = useContext(PortfolioPageContext);
-    const portfolioData = useContext(PortfolioPageContext).portfolioData;
     const currentDate = useContext(DateContext).currentDate;
+
+
+    const portfolio = useContext(PortfolioPageContext);
+
+    const [active, setActive] = useState(false);
+
+
     const [transactionType, setTransactionType] = useState('Purchase');
     const [relatedID, setRelatedID] = useState('');
     const [instrumentData, setInstrumentData] = useState({});
     const [optionSelected, setOptionSelected] = useState(false);
-    const [optionType, setOptionType] = useState("C");
-    const [active, setActive] = useState(false);
+
     const [broker, setBroker] = useState('oanda');
     const dateRef = useRef();
     const quantityRef = useRef();
@@ -24,7 +31,7 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
     const brokerIdRef = useRef();
 
     const submitHandler = async () => {
-        const response = await axios.post(`${server}portfolios/new/transaction/`, {
+        const parameters = {
             portfolio_code: portfolio.portfolioCode,
             portfolio_id: portfolio.id,
             security_id: instrumentData.id,
@@ -36,11 +43,12 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
             is_active: active,
             open_status: 'Open',
             transaction_link_code: 0,
-            option: optionSelected ? optionType : '',
             fx_rate: fxRef.current.value,
             broker: broker,
             broker_id: brokerIdRef.current.value
-        })
+        }
+        console.log(parameters)
+        const response = await axios.post(`${server}portfolios/new/transaction/`, parameters)
         if (response.data.success){
             setTransactionType('Purchase')
             close()
@@ -48,18 +56,10 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
         };
     };
 
-    const getSecurity = () => {
-        axios.get(`${server}instruments/get/instrument/`, {
-            params: {
-                id: relatedID,
-            }
-        })
-            .then(response => setInstrumentData(response.data[0]))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
+    const handleInstrumentSelect = (instrument) => {
+        setInstrumentData(instrument)
     };
-
+    console.log(transactionType)
     return (
         <CustomModal show={show} onClose={close} title={'New Transaction'}
                      footer={
@@ -71,64 +71,18 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
                 <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
 
                     <div className="block">
-                        <label className={'input-label'}>Active Transaction</label>
-                        <input type="checkbox" onChange={() => setActive(!active)}/>
+                        <label className={'input-label'}>Portfolio</label>
+                        <label className={'input-label'}>{portfolio.portfolio_code}</label>
                     </div>
+
+                    <ToogleSwitch label={'Active'} isChecked={active} onToggle={() => setActive(!active)}/>
 
                     <div className="block">
-                        <label className={'input-label'}>Option</label>
-                        <input type="checkbox" onChange={(e) => {
-                            setOptionSelected(e.target.checked)
-                            setOptionType('C')
-                        }}/>
+                        <label className={'input-label'}>Instrument</label>
+                        <InstrumentSearch onSelect={handleInstrumentSelect}/>
                     </div>
 
-                    <div className="block">
-                        <label className={'input-label'}>Security ID</label>
-                        <div style={{position: "absolute", right: 10, display: "flex"}}>
-                            <div>
-                                <input value={relatedID}
-                                       onChange={(e) => setRelatedID(e.target.value)}
-                                       type="number"
-                                       style={{width: 135}}/>
-                            </div>
-                            <div style={{paddingLeft: 15}}>
-                                <button className={'normal-button'}
-                                        style={{width: 50}}
-                                        onClick={getSecurity}
-                                >Get
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="block">
-                        <label className={'input-label'}>Transaction Type</label>
-                        <select onChange={(e) => setTransactionType(e.target.value)}>
-                            <option value={'Purchase'}>Purchase</option>
-                            <option value={'Sale'}>Sale</option>
-                        </select>
-
-                    </div>
-
-                    {optionSelected ? <div className="block">
-                        <label className={'input-label'}>Option Type</label>
-                        <select onChange={(e) => setOptionType(e.target.value)}>
-                            <option value={'C'}>Call</option>
-                            <option value={'P'}>Put</option>
-                        </select>
-                    </div> : ""
-                    }
-
-                    <div className="block">
-                        <label className={'input-label'}>Security Name</label>
-                        <input value={instrumentData.name} type="text" disabled/>
-                    </div>
-
-                    <div className="block">
-                        <label className={'input-label'}>Security Group</label>
-                        <input value={instrumentData.group} type="text" disabled/>
-                    </div>
+                    <BuySellButtonGroup side={transactionType} change={(value) => setTransactionType(value)}/>
 
                     <div className="block">
                         <label className={'input-label'}>Currency</label>

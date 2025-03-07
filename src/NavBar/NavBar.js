@@ -42,21 +42,21 @@ const Navbar = () => {
             </div>
             <div className="nav-links">
                 <Link className="menu-button" to="/dashboard">Dashboard</Link>
-                <Link className="menu-button" to="/portfolio/holdings">Portfolio</Link>
-                <Link className="menu-button" to="/risk">Risk</Link>
+                <Link className="menu-button" to="/portfolio/overview">Portfolio</Link>
+                {/*<Link className="menu-button" to="/risk">Risk</Link>*/}
                 <Link className="menu-button" to="/instruments">Instrument</Link>
                 <Link className="menu-button" to="/trade">Trade</Link>
                 <Link className="menu-button" to="/calculations">Calculations</Link>
                 <Link className="menu-button" to="/data">Data</Link>
             </div>
-            <div className="nav-search" style={{ display: 'flex', alignItems: 'center', borderRadius: '20px', overflow: 'hidden', border: '1px solid #ccc', padding: '5px', background: '#fff' }}>
+            <div  style={{ display: 'flex', alignItems: 'center', borderRadius: '20px', overflow: 'hidden', border: '1px solid #ccc', padding: '5px', background: '#fff', height: 45 }}>
                 <FaSearch size={26} style={{ marginLeft: '10px', color: '#888', width: 50 }} />
                 <input
                     type="text"
                     placeholder={`Search ${searchType}`}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="search-input"
+                    // className="search-input"
                     style={{ flex: 1, padding: '8px 12px', border: 'none', outline: 'none', width: 200 }}
                 />
                 <select

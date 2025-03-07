@@ -54,6 +54,7 @@ const PortfolioPage = (props) => {
     const [descModalStatus, setDescModalStatus] = useState(false);
     const [currentHolding, setCurrentHolding] = useState({});
     const [isMenuOpen, setIsMenuOpen] = useState(true);
+
     const fetchHoldingData = async () => {
         const response = await axios.post(server + 'portfolios/get/holding/', {
             date: currentDate,
@@ -74,6 +75,8 @@ const PortfolioPage = (props) => {
                 // visibility: isMenuOpen ? "visible" : "hidden",
                 opacity: isMenuOpen ? 1 : 0,
                 transition: "visibility 0.3s, opacity 0.3s ease",
+                paddingTop: 10,
+                paddingBottom: 10
             }}>
                 <PortfolioSearch/>
             </div>

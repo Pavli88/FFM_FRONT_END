@@ -17,7 +17,11 @@ const PortfolioTransactionsPage = (props) => {
         }}>
             <div style={{padding: 20}}>
                 <PortfolioTransactionsFilter/>
-                <PortfolioTransactionsTable/>
+
+                <div style={{paddingTop: 15}}>
+                    <PortfolioTransactionsTable/>
+                </div>
+
             </div>
         </TransactionContext.Provider>
     );

@@ -1,0 +1,76 @@
+.buy-button{
+    background: #00a59a;
+    color: white;
+    border: 1px solid #00a59a;
+    cursor: pointer; /* Makes it clear it's clickable */
+    transition: all 0.3s ease-in-out;
+}
+
+.buy-button:hover{
+    background: #00a59a;
+    color: white;
+    border: 1px solid #00a59a;
+    cursor: pointer; /* Makes it clear it's clickable */
+    transition: all 0.3s ease-in-out;
+}
+
+.buy-button-unselected {
+    background: white;
+    color: #00a59a;
+    border: 1px solid #00a59a; /* Adds a border with the same color */
+    /*padding: 10px 20px; !* Optional: Adds some spacing *!*/
+    cursor: pointer; /* Makes it clear it's clickable */
+    transition: all 0.3s ease-in-out;
+}
+
+.buy-button-unselected:hover {
+    background: #00a59a;
+    color: white;
+    border: 1px solid #00a59a;
+    cursor: pointer; /* Makes it clear it's clickable */
+    transition: all 0.3s ease-in-out;
+}
+
+.sell-button{
+    background: #ee7d8b;
+    color: white;
+    border: 1px solid #ee7d8b;
+    cursor: pointer; /* Makes it clear it's clickable */
+    transition: all 0.3s ease-in-out;
+}
+
+.sell-button:hover{
+    background: #ee7d8b;
+    color: white;
+    border: 1px solid #ee7d8b;
+    cursor: pointer; /* Makes it clear it's clickable */
+    transition: all 0.3s ease-in-out;
+}
+
+.sell-button-unselected{
+    background: white;
+    color: #ee7d8b;
+    border: 1px solid #ee7d8b; /* Adds a border with the same color */
+    cursor: pointer; /* Makes it clear it's clickable */
+    transition: all 0.3s ease-in-out;
+}
+
+.sell-button-unselected:hover {
+    background: #ee7d8b;
+    color: white;
+    border: 1px solid #ee7d8b;
+    cursor: pointer; /* Makes it clear it's clickable */
+    transition: all 0.3s ease-in-out;
+}
+
+.unselected-button{
+    background: white;
+    color: #2b2b2b;
+}
+
+.buy-sell-button-group{
+    display: flex;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    gap: 10px;
+}

@@ -193,9 +193,9 @@ const MainApplication = ({config}) => {
                                         width: '100%',
                                     }}>
                                         <Switch>
-                                            <Route path="/risk">
-                                                <RiskPage/>
-                                            </Route>
+                                            {/*<Route path="/risk">*/}
+                                            {/*    <RiskPage/>*/}
+                                            {/*</Route>*/}
                                             <Route path="/dashboard">
                                                 <DashBoardPage/>
                                             </Route>
