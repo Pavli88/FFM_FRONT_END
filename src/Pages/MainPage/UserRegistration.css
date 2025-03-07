@@ -12,7 +12,6 @@
     text-align: left;
 }
 
-
 /* Error messages */
 .error {
     color: red;
@@ -25,3 +24,9 @@
     font-weight: bold;
 }
 
+/* Password group styling */
+.password-group {
+    display: flex;
+    flex-direction: column;  /* Ensure label, icon, and input are stacked vertically */
+    align-items: flex-start;
+}

@@ -339,6 +339,14 @@ label {
     /*font-weight: bold;*/
 }
 
+/* Label and info icon row */
+.password-label-container {
+    display: flex;
+    align-items: center;  /* Align label and icon horizontally */
+    gap: 10px;  /* Space between label and icon */
+}
+
+
 .vertical-box {
     display: flex;
     align-items: center;

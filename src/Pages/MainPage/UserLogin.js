@@ -81,7 +81,10 @@ const UserLogin = ({ onClose }) => {
                                 id="username"
                                 type="text"
                                 value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                onChange={(e) => {
+                                    setUsername(e.target.value);
+                                    setError(""); // Clear error on user input
+                                }}
                                 placeholder="Enter username"
                                 autoComplete="off"
                                 required
@@ -94,7 +97,10 @@ const UserLogin = ({ onClose }) => {
                                 id="password"
                                 type="password"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    setError(""); // Clear error on user input
+                                }}
                                 placeholder="Enter password"
                                 autoComplete="off"
                                 required
@@ -106,7 +112,7 @@ const UserLogin = ({ onClose }) => {
                             </button>
 
                             <p
-                                onClick={() => setShowForgotPassword(true)}
+                                onClick={() => {setShowForgotPassword(true); setError(""); setResetMessage("")}}
                                 style={{
                                     color: "blue",
                                     textDecoration: "underline",
@@ -127,7 +133,10 @@ const UserLogin = ({ onClose }) => {
                                 id="email"
                                 type="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    setError(""); // Clear error on user input
+                                }}
                                 placeholder="Enter your email"
                                 autoComplete="off"
                                 required
@@ -140,7 +149,11 @@ const UserLogin = ({ onClose }) => {
                             </button>
 
 
-                            <button type="button" onClick={() => setShowForgotPassword(false)}>
+                            <button type="button" onClick={() => {
+                                setShowForgotPassword(false);
+                                setError("");
+                                setResetMessage("");
+                            }}>
                                 Back to Login
                             </button>
                         </div>

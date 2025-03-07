@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { registerUser } from "../../endpoints/authservice";
 import "./UserRegistration.css";
+import Tooltip from '../../components/Tooltips/Tooltip'
 
 const UserRegistration = ({ onClose }) => {
     const [username, setUsername] = useState("");
@@ -9,27 +10,25 @@ const UserRegistration = ({ onClose }) => {
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({});
     const history = useHistory();
-    const modalRef = useRef(null);  // Create a ref for the modal
+    const modalRef = useRef(null);
+    const passwordPolicyText = "Your password must contain at least 8 characters, including a number, an uppercase letter, " +
+    "and at least one of the following special characters: !@#$%^&*()_+=-{}[]:;\"'<>,.?/";
 
     useEffect(() => {
-        // Reset form and errors when compoconst navigate = useNavigate();nent is mounted
         setUsername("");
         setEmail("");
         setPassword("");
         setErrors({});
 
-        // Add event listener to close modal if clicked outside
         const handleOutsideClick = (event) => {
             if (modalRef.current && !modalRef.current.contains(event.target)) {
-                // Close the modal
-                onClose(); // Use the onClose prop passed from the parent
+                onClose();
                 history.push("/");
             }
         };
 
         document.addEventListener("mousedown", handleOutsideClick);
 
-        // Cleanup event listener on component unmount
         return () => {
             document.removeEventListener("mousedown", handleOutsideClick);
         };
@@ -37,19 +36,19 @@ const UserRegistration = ({ onClose }) => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setErrors({}); // Reset previous errors
+        setErrors({});
 
         try {
             await registerUser(username, email, password);
             setUsername("");
             setEmail("");
             setPassword("");
-            history.push("/login"); // Redirect to login page on success
+            history.push("/login");
         } catch (err) {
             if (typeof err === "object") {
-                setErrors(err); // Store field-based errors
+                setErrors(err);
             } else {
-                setErrors({ general: err }); // Store generic error message
+                setErrors({ general: err });
             }
         }
     };
@@ -64,10 +63,10 @@ const UserRegistration = ({ onClose }) => {
                         <input
                             type="text"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => { setUsername(e.target.value); setErrors("") }}
                             placeholder="Enter username"
                             autoComplete="off"
-                            required={true}
+                            required
                         />
                         {errors.username && <p className="error">{errors.username}</p>}
                     </div>
@@ -77,26 +76,37 @@ const UserRegistration = ({ onClose }) => {
                         <input
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setErrors("")
+                            }}
                             placeholder="Enter email"
                             autoComplete="off"
-                            required={true}
+                            required
                         />
                         {errors.email && <p className="error">{errors.email}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label>Password:</label>
+                    <div className="form-group password-group">
+                        <div className="password-label-container">
+                            <label>Password:</label>
+                             <Tooltip text={passwordPolicyText}/>
+                        </div>
+
                         <input
                             type="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setErrors("");
+                            }}
                             placeholder="Enter password"
                             autoComplete="off"
-                            required={true}
+                            required
                         />
                         {errors.password && <p className="error">{errors.password}</p>}
                     </div>
+
 
                     {errors.general && <p className="error general-error">{errors.general}</p>}
                     <div>

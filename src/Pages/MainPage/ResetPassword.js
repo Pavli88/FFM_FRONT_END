@@ -1,15 +1,20 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
+import {FiInfo} from "react-icons/fi";
+import Tooltip from "../../components/Tooltips/Tooltip";
 
 
-const ResetPassword = () => {
+const ResetPassword = ( ) => {
   const { reset_token } = useParams();
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const API_URL = process.env.REACT_APP_SERVER_URL;
   const history = useHistory();
+  const passwordPolicyText = "Your password must contain at least 8 characters, including a number, an uppercase letter, " +
+    "and at least one of the following special characters: !@#$%^&*()_+=-{}[]:;\"'<>,.?/";
+
 
 const handleResetPassword = async (e) => {
     e.preventDefault();
@@ -31,19 +36,15 @@ const handleResetPassword = async (e) => {
         if (typeof errorData === "object" && errorData !== null) {
             console.log("HERE WE ARE");
 
-            // Check if error contains a 'detail' field
             if (errorData.detail) {
                 setError(Array.isArray(errorData.detail) ? errorData.detail.join(" ") : errorData.detail);
             }
-            // Check if error contains specific field errors (like 'new_password')
             else if (errorData.new_password) {
                 setError(errorData.new_password.join(" "));
             }
-            // Handle the generic error structure returned from your backend
             else if (errorData.error) {
-                setError(errorData.error);  // Handle error from "error" field
+                setError(errorData.error);
             }
-            // Handle unknown object-based errors
             else {
                 setError("An unknown error occurred.");
             }
@@ -62,18 +63,23 @@ const handleResetPassword = async (e) => {
           {error && <p style={{color: 'red'}}>{error}</p>}
           {success && <p style={{color: 'green'}}>{success}</p>}
           <form onSubmit={handleResetPassword}>
-            <div>
-              <label>New Password</label>
-              <input
+              <div>
+                  <div className="password-label-container">
+                      <label>New password:</label>
+                      <Tooltip
+                          text={passwordPolicyText}/>
+                  </div>
+
+                  <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
               />
             </div>
-            <div>
-              <button style={{margin: "5px"}} type="submit">Reset Password</button>
-            </div>
+              <div>
+                  <button style={{margin: "5px"}} type="submit">Reset Password</button>
+              </div>
           </form>
         </div>
     </div>

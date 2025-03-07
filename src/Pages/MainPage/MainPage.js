@@ -3,7 +3,7 @@ import UserLogin from "./UserLogin";
 import {Route, Switch, Link} from "react-router-dom";
 import ResetPassword from "./ResetPassword";
 import React, {useState} from "react";
-import ChangePasswordModal from "../UserMenu/UserProfile/ChangePasswordModal";
+
 
 const MainPage = (props) => {
     const [showLogin, setShowLogin] = useState(false);
@@ -56,7 +56,7 @@ const MainPage = (props) => {
                     )}
                 </Route>
                 <Route path="/reset_password/:reset_token">
-                    <ResetPassword/>
+                    <ResetPassword />
                 </Route>
             </Switch>
         </div>

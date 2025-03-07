@@ -1,0 +1,38 @@
+/* Tooltip container for positioning */
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Tooltip box styling */
+.tooltip {
+    position: absolute;
+    bottom: 100%; /* Position above the icon */
+    left: 100%; /* Align to the right of the icon */
+    transform: translate(-20%, -5px); /* Fine-tune position */
+    background-color: #FAF7F5;
+    color: #B4AAA5;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 12px;
+    width: 300px; /* Fixed width */
+    white-space: normal; /* Allow text wrapping */
+    word-wrap: break-word; /* Ensure words wrap properly */
+    text-align: left;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Show tooltip when hovering */
+.tooltip-container:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Info icon styling */
+.info-icon {
+    cursor: pointer;
+    color: #555;
+}

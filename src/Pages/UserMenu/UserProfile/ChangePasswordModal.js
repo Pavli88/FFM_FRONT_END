@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./ChangePasswordModal.css";
+import Tooltip from "../../../components/Tooltips/Tooltip";
 
 const ChangePasswordModal = ({ onClose, onChangePassword }) => {
   const [oldPassword, setOldPassword] = useState("");
@@ -8,6 +9,8 @@ const ChangePasswordModal = ({ onClose, onChangePassword }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);  // ✅ Added loading state
   const [success, setSuccess] = useState("");
+  const passwordPolicyText = "Your password must contain at least 8 characters, including a number, an uppercase letter, " +
+    "and at least one of the following special characters: !@#$%^&*()_+=-{}[]:;\"'<>,.?/";
 
  const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,11 +51,14 @@ const ChangePasswordModal = ({ onClose, onChangePassword }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <label className="title">Change Password</label>
+          <div className="password-label-container">
+              <label className="title">Change Password</label>
+              <Tooltip
+                  text={passwordPolicyText}/>
+          </div>
+          {error && <p className="error-message">{error}</p>}
 
-        {error && <p className="error-message">{error}</p>}
-
-        <form onSubmit={handleSubmit} autoComplete="off">
+          <form onSubmit={handleSubmit} autoComplete="off">
           <input
               type="password"
               name="oldPassword"
