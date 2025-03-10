@@ -7,9 +7,12 @@ import TransactionContext from "./context/transaction-context";
 const PortfolioTransactionsPage = (props) => {
     const [newTransaction, setNewTransaction] = useState(0);
     const [parameters, setParameters] = useState();
+    const [transactions, setTransactions] = useState([]);
 
     return (
         <TransactionContext.Provider value={{
+            transactions: transactions,
+            saveTransactions: setTransactions,
             newTransaction: newTransaction,
             saveNewTransaction: setNewTransaction,
             queryParameters : parameters,

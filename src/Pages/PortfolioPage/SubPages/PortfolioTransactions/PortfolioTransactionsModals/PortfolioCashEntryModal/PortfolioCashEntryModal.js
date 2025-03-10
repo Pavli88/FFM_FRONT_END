@@ -29,7 +29,10 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
             ...(portfolioData.status === 'Not Funded' && {initial_cash: true})
         }
 
-        axios.post(`${server}portfolios/new/transaction/`, parameters)
+        axios.post(`${server}portfolios/new/transaction/`, parameters,
+            {
+                headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
+            })
             .then(response => alert(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
@@ -38,11 +41,16 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
     };
 
     useEffect(() => {
-        axios.post(`${server}instruments/get/instruments/`, {
-            // name: '',
-            currency: portfolioData.currency,
-            type: 'Cash'
-        }).then(response => setCurrencies(response.data))
+        axios.get(`${server}instruments/get/instruments/`, {
+            params: {  // ✅ Move parameters inside `params`
+                // name: '',
+                currency: portfolioData.currency,
+                type: 'Cash'
+            },
+            headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
+        })
+            .then(response => setCurrencies(response.data))
+            .catch(error => console.error("Error fetching currencies:", error));
     }, [])
 
     const transactionType = [

@@ -1,39 +1,57 @@
 import {useContext, useState} from "react";
 import PortfolioContext from "../../../context/portfolio-context";
 import NewPortfolio from "./NewPortfolio";
-import UserContext from "../../../context/user-context";
 import ServerContext from "../../../context/server-context";
 import axios from "axios";
 
 const ProfilePortfolios = () => {
     const server = useContext(ServerContext).server;
     const portfolioData = useContext(PortfolioContext).portfolios;
+    const { fetchPortfolios } = useContext(PortfolioContext);
     const [showNewPortModal, setNewPortModal] = useState(false);
-    const [selectedPortfolios, setSelectedPortfolios] = useState(new Set());
-
-    const generalParameters = {
-        user: useContext(UserContext).user,
-        server: useContext(ServerContext).server
-    };
+    const [selectedPortfolios, setSelectedPortfolios] = useState([]);
 
     const toggleSelection = (id) => {
         setSelectedPortfolios(prevSelected => {
-            const newSelected = new Set(prevSelected);
-            if (newSelected.has(id)) {
-                newSelected.delete(id);
+            if (prevSelected.includes(id)) {
+                return prevSelected.filter(portId => portId !== id);
             } else {
-                newSelected.add(id);
+                return [...prevSelected, id];
             }
-            return newSelected;
         });
     };
+    console.log(selectedPortfolios);
 
     const deletePortfolios = async () => {
-        const response = await axios.post(`${server}portfolios/delete/portfolios/`, {
-            ids: Array.from(selectedPortfolios)
-        });
-        if (response.data.success) {
-            alert(response.data.message)
+        try {
+            if (selectedPortfolios.length === 0) {
+                alert("No portfolios selected for deletion.");
+                return;
+            }
+
+            const response = await axios.post(`${server}portfolios/delete/portfolios/`, {
+                ids: selectedPortfolios
+            }, {
+                headers: {Authorization: `Bearer ${localStorage.getItem("access")}`},
+            });
+
+            if (response.data.success) {
+                fetchPortfolios();
+                alert(response.data.message);
+            } else {
+                alert("Failed to delete portfolios. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error deleting portfolios:", error);
+            alert("An error occurred while deleting portfolios. Please try again later.");
+        }
+    };
+
+
+    const confirmAndDelete = () => {
+        if (window.confirm("Deleting portfolios will result in deleting all related transactions, holdings and NAV values! " +
+            "Are you sure you want to delete the selected portfolios?")) {
+            deletePortfolios();
         }
     };
 
@@ -42,7 +60,7 @@ const ProfilePortfolios = () => {
             <td className={'table-row'}>
                 <input
                     type="checkbox"
-                    checked={selectedPortfolios.has(data.id)}
+                    checked={selectedPortfolios.includes(data.id)}
                     onChange={() => toggleSelection(data.id)}
                 />
             </td>
@@ -54,13 +72,11 @@ const ProfilePortfolios = () => {
             <td className={'table-row'} style={{ width: '100%', color: data.status === 'Not Funded' ? 'red' : data.status === 'Funded' ? 'green' : 'orange' }}>
                 {data.status}
             </td>
-            {/*<td className={'table-row'} style={{ width: '100%' }}>{data.public}</td>*/}
         </tr>
     ));
 
     return (
         <div className={'card'}>
-
             <div className={'card-header'}>
                 Portfolios
             </div>
@@ -68,7 +84,7 @@ const ProfilePortfolios = () => {
             <div style={{display: "flex"}}>
                 <button className={'normal-button'} onClick={() => setNewPortModal(true)}>New Portfolio</button>
                 <button className={'normal-button'} onClick={() => deletePortfolios()}>Terminate</button>
-                <button className={'normal-button'} onClick={() => deletePortfolios()}>Delete Selected</button>
+                <button className={'normal-button'} onClick={() => confirmAndDelete()}>Delete Selected</button>
             </div>
 
             <div style={{height: '100%', overflowY: 'scroll', paddingTop: 10}}>
@@ -87,7 +103,7 @@ const ProfilePortfolios = () => {
                     <tbody>{portfolios}</tbody>
                 </table>
             </div>
-            <NewPortfolio parameters={{ ...generalParameters }} show={showNewPortModal} close={() => setNewPortModal(false)} />
+            <NewPortfolio show={showNewPortModal} close={() => setNewPortModal(false)} />
         </div>
     );
 };

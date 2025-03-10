@@ -56,10 +56,8 @@ const MainApplication = ({config}) => {
     const { server, currentDate, fistDayOfCurrentYear } = config;
 
     //User related data and variables
-    // const { username, email, first_name, last_name, date_joined, last_login, is_staff, is_superuser} = userData;
     const [portfolios, setPortfolios] = useState([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState({});
-    const [newPortfolio, setNewPortfolio] = useState(0);
 
     // Broker Data
     const [brokerData, setBrokerData] = useState([{}]);
@@ -117,6 +115,17 @@ const MainApplication = ({config}) => {
         }
     };
 
+    const fetchPortfolios = async () => {
+        try {
+            const response = await axios.get(`${server}portfolios/get/portfolios/`, {
+                    headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
+                });
+            setPortfolios(response.data);
+        } catch (error) {
+            console.error("Error fetching user data:", error.response?.data || error.message);
+        }
+    };
+
     useEffect(() => {
             fetchUserData();
         }, []
@@ -128,14 +137,9 @@ const MainApplication = ({config}) => {
 
     useEffect(() => {
         if (userData?.username) {
-            axios
-                .get(`${server}portfolios/get/portfolios/`, {
-                    headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
-                })
-                .then((response) => setPortfolios(response.data))
-                .catch((error) => console.error("Error fetching portfolios:", error));
+            fetchPortfolios();
         }
-    }, [userData, newPortfolio]);
+    }, [userData]);
 
     useEffect(() => {
         if (userData?.username) {
@@ -150,7 +154,7 @@ const MainApplication = ({config}) => {
                     portfolios: portfolios,
                     selectedPortfolio: selectedPortfolio,
                     selectPortfolio: setSelectedPortfolio,
-                    saveNewPortfolio: setNewPortfolio,
+                    fetchPortfolios: fetchPortfolios,
                 }}>
                     <DateContext.Provider value={{
                         startDate: startDate,

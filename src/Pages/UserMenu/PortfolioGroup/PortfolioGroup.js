@@ -9,6 +9,7 @@ const AddModal = (props) => {
     const server = useContext(ServerContext)['server'];
     const [response, setResponse] = useState(null);
     const idRef = useRef();
+
     const submitHandler = async (event) => {
         event.preventDefault();
         try {

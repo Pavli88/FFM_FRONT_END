@@ -5,10 +5,11 @@ import axios from "axios";
 import DateContext from "../../../context/date-context";
 import PortfolioContext from "../../../context/portfolio-context";
 import CustomModal from "../../../components/Modals/Modals";
+import ServerContext from "../../../context/server-context";
 
 const NewPortfolio = ({show, close, parameters}) => {
-    const saveNewPortfolio = useContext(PortfolioContext)['saveNewPortfolio'];
-    const { user, server} = parameters;
+    const server = useContext(ServerContext).server;
+    const { fetchPortfolios } = useContext(PortfolioContext);
     const portNameRef = useRef();
     const portCodeRef = useRef();
     const currencyRef = useRef();
@@ -24,14 +25,13 @@ const NewPortfolio = ({show, close, parameters}) => {
             port_type: portTypeRef.current.value,
             port_currency: currencyRef.current.value,
             inception_date: dateRef.current.value,
-            owner: user,
         }, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(function (response) {
                 if (response.data.msg === 'New Portfolio is created!') {
                     alert('New portfolio is created!')
-                    saveNewPortfolio(response.data.port);
+                    fetchPortfolios();
                     close();
                 } else {
                     alert(response.data.msg);

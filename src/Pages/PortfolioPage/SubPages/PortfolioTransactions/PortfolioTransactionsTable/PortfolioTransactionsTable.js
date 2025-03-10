@@ -16,9 +16,8 @@ const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
 const PortfolioTransactionsTable = (props) => {
     const server = useContext(ServerContext).server;
-    const portfolioCode = useContext(PortfolioContext).selectedPortfolio.portfolio_code;
-    const queryParameters = useContext(TransactionContext).queryParameters;
-    const [transactionsData, setTransactionsData] = useState([]);
+    const transactions = useContext(TransactionContext).transactions;
+
     const [showEntryModal, setShowEntryModal] = useState(false);
     const [showCashModal, setShowCashModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -28,17 +27,7 @@ const PortfolioTransactionsTable = (props) => {
     const [selectedTransaction, setSelectedTransaction] = useState({});
     const [linkedTransaction, setLinkedTransaction] = useState({});
 
-    const data = useMemo(() => transactionsData, [transactionsData]);
-
-    const fetchTransactionData = () => {
-        axios.post(`${server}portfolios/get/transactions/`, queryParameters)
-            .then(response => setTransactionsData(response.data))
-            .catch((error) => console.error('Error fetching transactions:', error));
-    };
-
-    useEffect(() => {
-        fetchTransactionData();
-    }, [queryParameters, portfolioCode]);
+    const data = useMemo(() => transactions, [transactions]);
 
     // ✅ Handle checkbox selection
     const handleCheckboxChange = (e, id) => {
@@ -136,7 +125,6 @@ const PortfolioTransactionsTable = (props) => {
         try {
             const response = await axios.post(`${server}portfolios/delete/transaction/`, { ids: selectedIds });
             if (response.data.success) {
-                fetchTransactionData();
                 setSelectedIds([]);
             }
         } catch (error) {
@@ -194,11 +182,9 @@ const PortfolioTransactionsTable = (props) => {
             <PortfolioUpdateModal show={showUpdateModal}
                                   close={() => setShowUpdateModal(!showUpdateModal)}
                                   selectedTransaction={selectedTransaction}
-                                  fetchTransactionData={() => fetchTransactionData()}
             />
             <PortfolioTransactionEntryModal show={showEntryModal}
                                             close={() => setShowEntryModal(!showEntryModal)}
-                                            fetchTransactionData={() => fetchTransactionData()}
             />
         </div>
     );

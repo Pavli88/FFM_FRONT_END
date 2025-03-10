@@ -1,17 +1,18 @@
 import './PortfolioTransactionsFilter.css'
 import {useContext, useEffect, useRef, useState} from "react";
-import PortfolioPageContext from "../../../context/portfolio-page-context";
 import TransactionContext from "../context/transaction-context";
 import DateContext from "../../../../../context/date-context";
 import Select from "react-select";
 import PortfolioContext from "../../../../../context/portfolio-context";
+import axios from "axios";
+import ServerContext from "../../../../../context/server-context";
 
 
 const PortfolioTransactionsFilter = (props) => {
-    const saveParameters = useContext(TransactionContext).saveQueryParameters;
-    const newTransaction = useContext(TransactionContext).newTransaction;
+    const server = useContext(ServerContext).server;
     const currentDate = useContext(DateContext).currentDate;
     const portfolioCode = useContext(PortfolioContext).selectedPortfolio.portfolio_code;
+    const saveTransactions = useContext(TransactionContext).saveTransactions;
 
     const securityRef = useRef();
     const startDateRef = useRef();
@@ -35,13 +36,18 @@ const PortfolioTransactionsFilter = (props) => {
         });
     };
 
-    // Automatically update `parameters` when `portfolioCode` changes
+    const fetchTransactionData = () => {
+        axios.post(`${server}portfolios/get/transactions/`, parameters)
+            .then(response => saveTransactions(response.data))
+            .catch((error) => console.error('Error fetching transactions:', error));
+    };
+
     useEffect(() => {
         updateParameters();
-    }, [portfolioCode]); // Runs only when portfolioCode changes
+    }, [portfolioCode]);
 
     const submitHandler = () => {
-        saveParameters(parameters);
+        fetchTransactionData();
     };
 
     return (
