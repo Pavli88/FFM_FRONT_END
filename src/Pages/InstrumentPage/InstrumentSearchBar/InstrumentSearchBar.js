@@ -6,6 +6,7 @@ import axios from "axios";
 import ServerContext from "../../../context/server-context";
 import UserContext from "../../../context/user-context";
 import { FaSearch } from 'react-icons/fa'
+import fetchAPI from "../../../config files/api";
 
 const InstrumentSearchBar = () => {
     const server = useContext(ServerContext).server;
@@ -78,9 +79,7 @@ const InstrumentSearchBar = () => {
         selectedCurrencies.forEach(currency => params.append('currency', currency.value));
     }
 
-    axios.get(`${server}instruments/get/instruments/?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
-    })
+    fetchAPI.get(`instruments/get/instruments/?${params.toString()}` )
     .then(response => saveInstrumentResults(response.data))
     .catch(error => {
         console.error('Error Message:', error);

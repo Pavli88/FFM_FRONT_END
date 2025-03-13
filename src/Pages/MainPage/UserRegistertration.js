@@ -2,56 +2,59 @@ import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { registerUser } from "../../endpoints/authservice";
 import "./UserRegistration.css";
+import Tooltip from '../../components/Tooltips/Tooltip'
 
-const UserRegistration = () => {
+const UserRegistration = ({ onClose }) => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({});
     const history = useHistory();
-    const modalRef = useRef(null);  // Create a ref for the modal
+    const modalRef = useRef(null);
+    const passwordPolicyText = "Your password must contain at least 8 characters, including a number, an uppercase letter, " +
+    "and at least one of the following special characters: !@#$%^&*()_+=-{}[]:;\"'<>,.?/";
 
     useEffect(() => {
-        // Reset form and errors when component is mounted
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setErrors({});
 
-        // Add event listener to close modal if clicked outside
         const handleOutsideClick = (event) => {
             if (modalRef.current && !modalRef.current.contains(event.target)) {
-                // Close the modal (here we just log it, you can do other actions)
-                history.push("/login"); // Redirect to another page or do something else
+                onClose();
+                history.push("/");
             }
         };
 
         document.addEventListener("mousedown", handleOutsideClick);
 
-        // Cleanup event listener on component unmount
         return () => {
             document.removeEventListener("mousedown", handleOutsideClick);
         };
-    }, [history]);
+    }, [onClose]);
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        setErrors({}); // Reset previous errors
+const handleRegister = async (e) => {
+    e.preventDefault();
+    setErrors({});
 
-        try {
-            await registerUser(username, email, password);
-            setUsername("");
-            setEmail("");
-            setPassword("");
-            history.push("/login"); // Redirect to login page on success
-        } catch (err) {
-            if (typeof err === "object") {
-                setErrors(err); // Store field-based errors
-            } else {
-                setErrors({ general: err }); // Store generic error message
-            }
+    try {
+        await registerUser(username, email, password);
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        alert("Registration successful!");
+        history.push("/login");
+    } catch (err) {
+        // Log to check the structure of the error
+        console.log("err:", err);  // Expecting validation error object
+
+        if (err && typeof err === "object") {
+            // Update the errors state with the validation errors
+            setErrors(err);
+        } else {
+            // Handle generic error (if any)
+            setErrors({ general: "Something went wrong during registration." });
         }
-    };
+    }
+};
+
 
     return (
         <div className="modal-overlay">
@@ -63,10 +66,10 @@ const UserRegistration = () => {
                         <input
                             type="text"
                             value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => { setUsername(e.target.value); setErrors({}) }}
                             placeholder="Enter username"
                             autoComplete="off"
-                            required={true}
+                            required
                         />
                         {errors.username && <p className="error">{errors.username}</p>}
                     </div>
@@ -76,26 +79,37 @@ const UserRegistration = () => {
                         <input
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setErrors({})
+                            }}
                             placeholder="Enter email"
                             autoComplete="off"
-                            required={true}
+                            required
                         />
                         {errors.email && <p className="error">{errors.email}</p>}
                     </div>
 
-                    <div className="form-group">
-                        <label>Password:</label>
+                    <div className="form-group password-group">
+                        <div className="password-label-container">
+                            <label>Password:</label>
+                             <Tooltip text={passwordPolicyText}/>
+                        </div>
+
                         <input
                             type="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setErrors({});
+                            }}
                             placeholder="Enter password"
                             autoComplete="off"
-                            required={true}
+                            required
                         />
                         {errors.password && <p className="error">{errors.password}</p>}
                     </div>
+
 
                     {errors.general && <p className="error general-error">{errors.general}</p>}
                     <div>

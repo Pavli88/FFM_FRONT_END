@@ -6,7 +6,7 @@ import BrokerContext from "../context/broker-context";
 import DashboardContext from "../context/dashboard-context";
 import ReactNotification from "react-notifications-component";
 import Navigation from "../NavBar/NavBar";
-import {Route, Switch, Redirect, useHistory } from "react-router-dom";
+import {Route, Switch, Redirect } from "react-router-dom";
 import RiskPage from "../Pages/RiskPage/RiskPage";
 import HomePage from "../Pages/HomePage/HomePage";
 import TradePage from "../Pages/TradePage/TradePage";
@@ -20,6 +20,8 @@ import DataPage from "../Pages/DataPage/DataPage";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import BrokerAccountsPage from "../Pages/UserMenu/BrokerAccounts/BrokerAccountsPage";
+import ResetPassword from "../Pages/MainPage/ResetPassword";
+import fetchAPI from "../config files/api";
 
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
@@ -76,13 +78,11 @@ const MainApplication = ({config}) => {
 
     // Dashboard Context
     const [portGroup, setPortGroup] = useState(null);
+    console.log(userData)
 
-    const fetchUserData = async () => {
+     const fetchUserData = async () => {
         try {
-            const token = localStorage.getItem("access");
-            const response = await axios.get(`${server}user/get/data/`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
+            const response = await fetchAPI.get('user/get/data/');
             setUserData(response.data);
         } catch (error) {
             console.error("Error fetching user data:", error.response?.data || error.message);
@@ -91,12 +91,10 @@ const MainApplication = ({config}) => {
 
     const fetchAccountData = async () => {
         try {
-            const token = localStorage.getItem("access");
-            const response = await axios.get(`${server}accounts/get/accounts/`, {
+            const response = await fetchAPI.get('accounts/get/accounts/', {
                     params: {
                         user: userData.username
-                    },
-                    headers: {Authorization: `Bearer ${token}`}
+                    }
                 });
             setAccounts(response.data);
         } catch (error) {
@@ -106,9 +104,7 @@ const MainApplication = ({config}) => {
 
     const fetchBrokers = async () => {
         try {
-            const response = await axios.get(`${server}accounts/get/brokers`, {
-                    headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
-                });
+            const response = await fetchAPI.get('accounts/get/brokers');
             setBrokerData(response.data);
         } catch (error) {
             console.error("Error fetching user data:", error.response?.data || error.message);
@@ -117,9 +113,7 @@ const MainApplication = ({config}) => {
 
     const fetchPortfolios = async () => {
         try {
-            const response = await axios.get(`${server}portfolios/get/portfolios/`, {
-                    headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
-                });
+            const response = await fetchAPI.get('portfolios/get/portfolios/');
             setPortfolios(response.data);
         } catch (error) {
             console.error("Error fetching user data:", error.response?.data || error.message);
@@ -147,9 +141,12 @@ const MainApplication = ({config}) => {
         }
     }, [userData, newAccount]);
 
+
     return (
         <div style={{background: '#FBFAFA', padding: 0}}>
-            <ServerContext.Provider value={{server: server}}>
+            <ServerContext.Provider value={{
+                server: server,
+            }}>
                 <PortfolioContext.Provider value={{
                     portfolios: portfolios,
                     selectedPortfolio: selectedPortfolio,
