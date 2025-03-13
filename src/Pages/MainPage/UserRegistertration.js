@@ -34,25 +34,20 @@ const handleRegister = async (e) => {
     e.preventDefault();
     setErrors({});
 
-    try {
-        await registerUser(username, email, password);
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        alert("Registration successful!");
-        history.push("/login");
-    } catch (err) {
-        // Log to check the structure of the error
-        console.log("err:", err);  // Expecting validation error object
+    const response = await registerUser(username, email, password);
 
-        if (err && typeof err === "object") {
-            // Update the errors state with the validation errors
-            setErrors(err);
-        } else {
-            // Handle generic error (if any)
-            setErrors({ general: "Something went wrong during registration." });
-        }
+    if (!response.success) {
+        // ✅ Update errors state properly
+        setErrors(response.errors);
+        return;
     }
+
+    // ✅ Clear inputs and redirect if successful
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    alert("Registration successful!");
+    history.push("/login");
 };
 
 

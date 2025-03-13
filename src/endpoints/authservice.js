@@ -3,22 +3,32 @@ import fetchAPI from "../config files/api";
 export const registerUser = async (username, email, password) => {
     try {
         const response = await fetchAPI.post('user/register/', { username, email, password });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            let errorMessages = {};
-
-            // Iterate over all keys in the error response and join multiple errors
-            Object.keys(errorData).forEach((field) => {
-                errorMessages[field] = errorData[field].join(" ");
-            });
-
-            throw errorMessages; // Throw the error object directly
-        }
-
         return { success: true, message: "Registration successful!" };
     } catch (error) {
-        throw error; // Ensure the error is properly thrown with its object structure
+        console.error("Error response:", error.response?.data);
+
+        let errors = {};
+
+        if (error.response) {
+            // ✅ Backend responded with an error (Validation, Server issue)
+            const errorData = error.response.data;
+
+            if (typeof errorData === "object") {
+                Object.keys(errorData).forEach((field) => {
+                    errors[field] = errorData[field].join(" ");
+                });
+            } else {
+                errors.general = "An unexpected error occurred. Please try again.";
+            }
+        } else if (error.request) {
+            // ✅ No response from the server (Network issue)
+            errors.general = "Unable to connect to the server. Please check your internet connection.";
+        } else {
+            // ✅ Other unexpected errors
+            errors.general = "Something went wrong. Please try again.";
+        }
+
+        return { success: false, errors };
     }
 };
 

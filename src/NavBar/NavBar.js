@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import { useContext , useState, useEffect, useRef} from 'react';
 import Notifications from "./Notifications/Notifications";
 import ServerContext from "../context/server-context";
@@ -16,6 +16,7 @@ const Navbar = () => {
     const dropdownRef = useRef(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchType, setSearchType] = useState("user");
+    const history = useHistory();
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -33,6 +34,7 @@ const Navbar = () => {
     const userLogout = () => {
         logout();
         setAuth({ userAllowedToLogin: false });
+        history.push("/");
     };
 
     return (

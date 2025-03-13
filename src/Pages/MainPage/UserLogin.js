@@ -25,7 +25,8 @@ const UserLogin = ({ onClose }) => {
             await login(username, password);
             alert("Login successful!");
             setAuth({ userAllowedToLogin: true });
-            onClose(); // Close modal after login
+            onClose();
+            history.push("/");
         } catch (err) {
             setError(err);
         } finally {

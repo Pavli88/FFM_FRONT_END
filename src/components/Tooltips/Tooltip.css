@@ -10,8 +10,8 @@
     bottom: 100%; /* Position above the icon */
     left: 100%; /* Align to the right of the icon */
     transform: translate(-20%, -5px); /* Fine-tune position */
-    background-color: #FAF7F5;
-    color: #B4AAA5;
+    background-color: #f1f1f1;
+    color: #494f54;
     padding: 8px;
     border-radius: 5px;
     font-size: 12px;
