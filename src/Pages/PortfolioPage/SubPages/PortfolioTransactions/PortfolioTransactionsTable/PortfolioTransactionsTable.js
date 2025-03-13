@@ -97,8 +97,7 @@ const PortfolioTransactionsTable = (props) => {
         { Header: "Margin Rate %", accessor: "margin_rate", sortType: 'basic' },
         { Header: "Account ID", accessor: "account_id", sortType: 'basic' },
         { Header: "Broker", accessor: "broker", sortType: 'basic' },
-        { Header: "Broker ID", accessor: "broker_id", sortType: 'basic' },
-        { Header: "Option", accessor: "option", sortType: 'basic' },
+        { Header: "Broker ID", accessor: "broker_id", sortType: 'basic' }
     ], [selectedIds]);
 
     const tableInstance = useTable(
