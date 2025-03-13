@@ -16,14 +16,14 @@ const AddModal = (props) => {
             const response = await axios.post(server + 'portfolios/group/add/', {
                 portfolio_id: idRef.current.value,
                 parent_id: props.data.id
-            })
+            }, {headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}})
             if (response.data.success) {
                 props.hide();
             }
         } catch (error) {
             if (error.response.status === 409) {
                 setResponse(error.response.data);
-            } else if (error.request){
+            } else if (error.request) {
                 // Handle other errors (e.g., network issues or server errors)
                 console.error('Anx error occurred:', error);
                 // setResponse({ error: 'An unexpected error occurred. Please try again.' });
@@ -106,7 +106,9 @@ const TreeView = ({ data, update, allowSelect = false }) => {
 
     const handleMenuClick = async (action) => {
         if (action === "delete") {
-            const response = await axios.post(server + "portfolios/delete/port_group/", { id: selectedNode.id });
+            const response = await axios.post(server + "portfolios/delete/port_group/",
+                {id: selectedNode.id},
+                {headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}});
             if (response.data.success) update(selectedNode.id);
             else alert(response.data.message);
         } else if (action === "add-child") {
