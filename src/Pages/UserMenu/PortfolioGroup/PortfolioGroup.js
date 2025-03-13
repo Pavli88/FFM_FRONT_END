@@ -4,19 +4,19 @@ import ServerContext from "../../../context/server-context";
 import DashboardContext from "../../../context/dashboard-context";
 import axios from "axios";
 import Modal from "react-bootstrap/Modal";
+import fetchAPI from "../../../config files/api";
 
 const AddModal = (props) => {
-    const server = useContext(ServerContext)['server'];
     const [response, setResponse] = useState(null);
     const idRef = useRef();
 
     const submitHandler = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(server + 'portfolios/group/add/', {
+            const response = await fetchAPI.post('portfolios/group/add/', {
                 portfolio_id: idRef.current.value,
                 parent_id: props.data.id
-            }, {headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}})
+            })
             if (response.data.success) {
                 props.hide();
             }
@@ -93,7 +93,6 @@ const TreeNode = ({ node, onRightClick }) => {
 };
 
 const TreeView = ({ data, update, allowSelect = false }) => {
-    const server = useContext(ServerContext)["server"];
     const [contextMenu, setContextMenu] = useState(null);
     const [selectedNode, setSelectedNode] = useState(null);
     const [addModalShow, setAddModalShow] = useState(false);
@@ -106,9 +105,8 @@ const TreeView = ({ data, update, allowSelect = false }) => {
 
     const handleMenuClick = async (action) => {
         if (action === "delete") {
-            const response = await axios.post(server + "portfolios/delete/port_group/",
-                {id: selectedNode.id},
-                {headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}});
+            const response = await fetchAPI.post("portfolios/delete/port_group/",
+                {id: selectedNode.id});
             if (response.data.success) update(selectedNode.id);
             else alert(response.data.message);
         } else if (action === "add-child") {
@@ -175,14 +173,11 @@ const TreeView = ({ data, update, allowSelect = false }) => {
 };
 
 const PortfolioGroup = ({ allowSelect = false }) => {
-    const server = useContext(ServerContext)["server"];
     const [portGroupData, setPortGroupData] = useState([]);
     const [node, setNode] = useState(null);
 
     const fetchPortGroupData = async () => {
-        const response = await axios.get(`${server}portfolios/get/port_groups/`,
-            {headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}}
-        );
+        const response = await fetchAPI.get('portfolios/get/port_groups/');
         setPortGroupData(response.data);
     };
 
