@@ -116,7 +116,7 @@ const DashBoardPage = () => {
     const [returnTypes, setReturnsTypes] = useState('dtd');
     const [portfolioNavData, setPortfolioNavData] = useState([]);
     const [startDate, setStartDate] = useState(firstDayOfYear);
-    console.log(childPortfolios)
+    console.log(typeof portfolioNavData)
     // Fetch child portfolios whenever portGroup changes
     useEffect(() => {
         const fetchPortChildCodes = async () => {
@@ -158,7 +158,6 @@ const DashBoardPage = () => {
                         date__gte: startDate
                     }),
                 ]);
-
                 setPortfolioNavData(portfolioNavRes.data);
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);
