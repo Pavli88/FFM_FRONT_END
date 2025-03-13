@@ -1,30 +1,24 @@
-import axios from "axios";
-
-const API_URL = process.env.REACT_APP_SERVER_URL;
+import fetchAPI from "../config files/api";
 
 export const registerUser = async (username, email, password) => {
     try {
-        const response = await fetch(`${API_URL}user/register/`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, password }),
-        });
+        const response = await fetchAPI.post('user/register/', { username, email, password });
 
         if (!response.ok) {
             const errorData = await response.json();
             let errorMessages = {};
 
-            // Iterate over all keys in the error response
+            // Iterate over all keys in the error response and join multiple errors
             Object.keys(errorData).forEach((field) => {
-                errorMessages[field] = errorData[field].join(" "); // Join multiple errors
+                errorMessages[field] = errorData[field].join(" ");
             });
 
-            throw errorMessages; // Throw object instead of single string
+            throw errorMessages; // Throw the error object directly
         }
 
         return { success: true, message: "Registration successful!" };
     } catch (error) {
-        throw error; // Throw the error object
+        throw error; // Ensure the error is properly thrown with its object structure
     }
 };
 
@@ -32,12 +26,25 @@ export const registerUser = async (username, email, password) => {
 // Login function
 export const login = async (username, password) => {
     try {
-        const response = await axios.post(`${API_URL}user/login/`, { username, password });
-        localStorage.setItem("access", response.data.access);
-        localStorage.setItem("refresh", response.data.refresh);
-        return response.data;
+        const response = await fetchAPI.post('user/login/', { username, password });
+        return response.data; // The response will just contain {"detail": "Login successful"}
     } catch (error) {
         let message = "Login failed";
+
+        if (error.response && error.response.data && error.response.data.code === "token_not_valid") {
+            // // If the token is expired or invalid, try to refresh the token
+            try {
+                const newAccessToken = await refreshToken(); // Call refreshToken to get a new access token
+                // Optionally, you can store the new access token here (e.g., in cookies or localStorage)
+                // After getting the new token, retry the login or proceed with the session
+                return { access_token: newAccessToken };
+            } catch (refreshError) {
+                // Handle error when refresh token fails (e.g., session expired, user needs to log in again)
+                throw "Session expired. Please login again.";
+            }
+            console.log('EXPIRED TOKEN')
+        }
+
         if (error.response && error.response.data) {
             message = error.response.data.detail || "Something went wrong";
         }
@@ -48,30 +55,27 @@ export const login = async (username, password) => {
 //Forgot password function
 export const forgotPassword = async (email) => {
     try {
-        const response = await axios.post(`${API_URL}user/forgot_password/`, { email });
+        const response = await fetchAPI.post('user/forgot_password/', { email });
         return response.data.detail;
     } catch (error) {
-        throw error.response?.data?.detail || "Failed to send password reset email";
+        // Handle specific error response or provide a fallback message
+        if (error.response) {
+            // Backend returned an error response (e.g., 400 or 404)
+            return error.response.data.detail || "Failed to send password reset email";
+        } else if (error.request) {
+            // No response was received from the server
+            return "Network error, please try again later.";
+        } else {
+            // General error in setting up the request
+            return "An unexpected error occurred. Please try again.";
+        }
     }
 };
 
 //Change password function
 export const changePassword = async (oldPassword, newPassword, token) => {
     try {
-        const response = await axios.post(
-            `${API_URL}user/change_password/`,
-            {old_password: oldPassword, new_password: newPassword},
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-
-        // ✅ Invalidate tokens & force logout
-        localStorage.removeItem("access");
-        localStorage.removeItem("refresh");
+        const response = await fetchAPI.post('user/change_password/',{old_password: oldPassword, new_password: newPassword});
 
         alert("Password changed successfully! Please log in again.");
         window.location.href = "/login"; // Redirect to login page
@@ -110,21 +114,7 @@ export const changePassword = async (oldPassword, newPassword, token) => {
 // Logout function
 export const logout = async () => {
     try {
-        const refreshToken = localStorage.getItem("refresh"); // Get refresh token
-
-        if (!refreshToken) {
-            console.error("No refresh token found!");
-            return;
-        }
-
-        await axios.post(`${API_URL}user/logout/`, { refresh_token: refreshToken }, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("access")}`},
-        });
-
-        // Clear tokens from local storage
-        localStorage.removeItem("access");
-        localStorage.removeItem("refresh");
-
+        await fetchAPI.post('user/logout/');
         console.log("Logged out successfully");
     } catch (error) {
         console.error("Logout failed:", error.response?.data || error.message);
@@ -134,33 +124,30 @@ export const logout = async () => {
 // Refresh token if access token expires
 export const refreshToken = async () => {
     try {
-        const refresh = localStorage.getItem("refresh");
-        if (!refresh) throw "No refresh token found.";
-
-        const response = await axios.post(`${API_URL}token/refresh/`, { refresh });
-        localStorage.setItem("access", response.data.access);
+        const response = await fetchAPI.post('token/refresh/');
+        console.log(response)
         return response.data.access;
     } catch (error) {
         logout(); // Logout if refresh token fails
         throw "Session expired. Please login again.";
     }
 };
-
-// API call with token auto-refresh
-export const fetchWithAuth = async (url, method = "GET", data = null) => {
-    try {
-        let token = localStorage.getItem("access");
-        const headers = { Authorization: `Bearer ${token}` };
-
-        let response = await axios({ url: `${API_URL}${url}`, method, data, headers });
-        return response.data;
-    } catch (error) {
-        if (error.response?.status === 401) {
-            const token = await refreshToken(); // Try refreshing token
-            const headers = { Authorization: `Bearer ${token}` };
-            const response = await axios({ url: `${API_URL}${url}`, method, data, headers });
-            return response.data;
-        }
-        throw error.response?.data?.detail || "Request failed.";
-    }
-};
+//
+// // API call with token auto-refresh
+// export const fetchWithAuth = async (url, method = "GET", data = null) => {
+//     try {
+//         let token = localStorage.getItem("access");
+//         const headers = { Authorization: `Bearer ${token}` };
+//
+//         let response = await axios({ url: `${API_URL}${url}`, method, data, headers });
+//         return response.data;
+//     } catch (error) {
+//         if (error.response?.status === 401) {
+//             const token = await refreshToken(); // Try refreshing token
+//             const headers = { Authorization: `Bearer ${token}` };
+//             const response = await axios({ url: `${API_URL}${url}`, method, data, headers });
+//             return response.data;
+//         }
+//         throw error.response?.data?.detail || "Request failed.";
+//     }
+// };

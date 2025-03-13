@@ -21,6 +21,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import BrokerAccountsPage from "../Pages/UserMenu/BrokerAccounts/BrokerAccountsPage";
 import ResetPassword from "../Pages/MainPage/ResetPassword";
+import fetchAPI from "../config files/api";
 
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
@@ -72,38 +73,30 @@ const MainApplication = ({config}) => {
     const [startDate, setStartDate] = useState(firstDay.toISOString().substr(0, 10));
     const [endDate, setEndDate] = useState(date.toISOString().substr(0, 10));
     const [userData, setUserData] = useState([{}]);
-    console.log(userData)
+
     // Dashboard Context
     const [portGroup, setPortGroup] = useState(null);
-
-    const fetchUserData = async () => {
-        try {
-            const token = localStorage.getItem("access");
-            const response = await axios.get(`${server}user/get/data/`, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-            setUserData(response.data);
-        } catch (error) {
-            console.error("Error fetching user data:", error.response?.data || error.message);
-        }
-    };
+    console.log(userData)
 
     useEffect(() => {
-            fetchUserData();
-        }, []
-    );
+        fetchAPI
+            .get('user/get/data/')
+            .then((response) => setUserData(response.data)) // Ensure response structure is correct
+            .catch((error) => console.error("Error fetching user data:", error.response?.data || error.message));
+    }, []);
+
 
     useEffect(() => {
-        axios
-            .get(`${server}accounts/get/brokers`)
+        fetchAPI
+            .get('accounts/get/brokers')
             .then((response) => setBrokerData(response.data))
             .catch((error) => console.error("Error fetching brokers:", error));
     }, []);
 
     useEffect(() => {
         if (userData?.username) {
-            axios
-                .get(`${server}portfolios/get/portfolios/`, {headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}})
+            fetchAPI
+                .get('portfolios/get/portfolios/')
                 .then((response) => setPortfolios(response.data))
                 .catch((error) => console.error("Error fetching portfolios:", error));
         }
@@ -111,8 +104,8 @@ const MainApplication = ({config}) => {
 
     useEffect(() => {
         if (userData?.username) {
-            axios
-                .get(`${server}accounts/get/accounts/`, {params: {owner: userData.username}})
+            fetchAPI
+                .get('accounts/get/accounts/', {params: {owner: userData.username}})
                 .then((response) => setAccounts(response.data))
                 .catch((error) => console.error("Error fetching accounts:", error));
         }
@@ -120,7 +113,9 @@ const MainApplication = ({config}) => {
 
     return (
         <div style={{background: '#FBFAFA', padding: 0}}>
-            <ServerContext.Provider value={{server: server}}>
+            <ServerContext.Provider value={{
+                server: server,
+            }}>
                 <PortfolioContext.Provider value={{
                     portfolios: portfolios,
                     selectedPortfolio: selectedPortfolio,

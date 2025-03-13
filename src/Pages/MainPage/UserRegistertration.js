@@ -15,10 +15,6 @@ const UserRegistration = ({ onClose }) => {
     "and at least one of the following special characters: !@#$%^&*()_+=-{}[]:;\"'<>,.?/";
 
     useEffect(() => {
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setErrors({});
 
         const handleOutsideClick = (event) => {
             if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -34,24 +30,31 @@ const UserRegistration = ({ onClose }) => {
         };
     }, [onClose]);
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        setErrors({});
+const handleRegister = async (e) => {
+    e.preventDefault();
+    setErrors({});
 
-        try {
-            await registerUser(username, email, password);
-            setUsername("");
-            setEmail("");
-            setPassword("");
-            history.push("/login");
-        } catch (err) {
-            if (typeof err === "object") {
-                setErrors(err);
-            } else {
-                setErrors({ general: err });
-            }
+    try {
+        await registerUser(username, email, password);
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        alert("Registration successful!");
+        history.push("/login");
+    } catch (err) {
+        // Log to check the structure of the error
+        console.log("err:", err);  // Expecting validation error object
+
+        if (err && typeof err === "object") {
+            // Update the errors state with the validation errors
+            setErrors(err);
+        } else {
+            // Handle generic error (if any)
+            setErrors({ general: "Something went wrong during registration." });
         }
-    };
+    }
+};
+
 
     return (
         <div className="modal-overlay">
@@ -63,7 +66,7 @@ const UserRegistration = ({ onClose }) => {
                         <input
                             type="text"
                             value={username}
-                            onChange={(e) => { setUsername(e.target.value); setErrors("") }}
+                            onChange={(e) => { setUsername(e.target.value); setErrors({}) }}
                             placeholder="Enter username"
                             autoComplete="off"
                             required
@@ -78,7 +81,7 @@ const UserRegistration = ({ onClose }) => {
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value);
-                                setErrors("")
+                                setErrors({})
                             }}
                             placeholder="Enter email"
                             autoComplete="off"
@@ -98,7 +101,7 @@ const UserRegistration = ({ onClose }) => {
                             value={password}
                             onChange={(e) => {
                                 setPassword(e.target.value);
-                                setErrors("");
+                                setErrors({});
                             }}
                             placeholder="Enter password"
                             autoComplete="off"

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
-import {FiInfo} from "react-icons/fi";
 import Tooltip from "../../components/Tooltips/Tooltip";
 
 
@@ -14,7 +13,6 @@ const ResetPassword = ( ) => {
   const history = useHistory();
   const passwordPolicyText = "Your password must contain at least 8 characters, including a number, an uppercase letter, " +
     "and at least one of the following special characters: !@#$%^&*()_+=-{}[]:;\"'<>,.?/";
-
 
 const handleResetPassword = async (e) => {
     e.preventDefault();
@@ -29,32 +27,30 @@ const handleResetPassword = async (e) => {
         // If the response is successful
         setSuccess("Password reset successfully!");
         alert("Password reset successfully!");
-        history.push("/")
+        history.push("/");  // Redirect user after success
     } catch (err) {
         const errorData = err.response?.data;
 
-        if (typeof errorData === "object" && errorData !== null) {
-            console.log("HERE WE ARE");
-
+        if (errorData && typeof errorData === "object") {
             if (errorData.detail) {
+                // Handling specific backend error (e.g., invalid or expired reset token)
                 setError(Array.isArray(errorData.detail) ? errorData.detail.join(" ") : errorData.detail);
-            }
-            else if (errorData.new_password) {
+            } else if (errorData.new_password) {
+                // Handle validation errors for the new password
                 setError(errorData.new_password.join(" "));
-            }
-            else if (errorData.error) {
+            } else if (errorData.error) {
+                // General errors (for unexpected backend errors)
                 setError(errorData.error);
-            }
-            else {
-                setError("An unknown error occurred.");
+            } else {
+                // Fallback for unknown errors
+                setError("An unknown error occurred. Please try again.");
             }
         } else {
+            // Handle unexpected errors (like network issues or bad responses)
             setError("Something went wrong. Please try again.");
         }
     }
 };
-
-
 
   return (
       <div className="modal-overlay">
@@ -62,7 +58,7 @@ const handleResetPassword = async (e) => {
           <h2 className="modal-title">Reset Your Password</h2>
           {error && <p style={{color: 'red'}}>{error}</p>}
           {success && <p style={{color: 'green'}}>{success}</p>}
-          <form onSubmit={handleResetPassword}>
+          <form onSubmit={handleResetPassword} style={{marginTop: "30px"}}>
               <div>
                   <div className="password-label-container">
                       <label>New password:</label>
@@ -73,7 +69,7 @@ const handleResetPassword = async (e) => {
                   <input
                   type="password"
                   value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={(e) => {setNewPassword(e.target.value); setError("")}}
                   required
               />
             </div>
