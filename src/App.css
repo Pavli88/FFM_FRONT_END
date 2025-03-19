@@ -103,7 +103,7 @@ tr{
 }
 
 .table-row-all:hover{
-    background:   #d6eaf8;
+    background:   #f1f1f1;
     border: none;
 }
 
@@ -681,4 +681,19 @@ ul li:hover {
     color: #ee7d8b;
     border-radius: 15px;
     text-align: center;
+}
+
+.counter-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /*background-color: #494f54;*/
+    color: #494f54;
+    /*border-radius: 50%;*/
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    /*margin-left: 8px;*/
+    font-weight: bold;
+    padding: 5px;
 }

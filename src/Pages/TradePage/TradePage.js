@@ -1,6 +1,6 @@
 import TradeSignals from "./TradePageSignals/TradeSignals";
 import OpenTransactions from "./OpenTransactions/OpenTransactions";
-import React from "react";
+import React, {useEffect} from "react";
 import {useContext, useState} from "react";
 import ServerContext from "../../context/server-context";
 import TradeContext from "./context/trade-context";
@@ -8,10 +8,12 @@ import {BsChevronLeft, BsChevronRight} from "react-icons/bs";
 import PortfolioContext from "../../context/portfolio-context";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
 import TradeTerminal from "./TradeTerminal/TradeTerminal";
+import fetchAPI from "../../config files/api";
 
 const TradePage = () => {
     const server = useContext(ServerContext)['server'];
     const portfolios = useContext(PortfolioContext).portfolios;
+    const [openTransactionsData, setOpenTransactionsData] = useState([]);
     const [newTransactionID, setNewTransactionID] = useState(0);
     const [selectedPortfolioCode, setSelectedPortfolioCode] = useState(null);
 
@@ -19,6 +21,15 @@ const TradePage = () => {
     const MINUTE_MS = 10000;
 
     const allowedForTradePortfolios = portfolios.filter(data => data['trading_allowed'] === true)
+
+    const fetchTransactions = async () => {
+        const response = await fetchAPI.get("portfolios/get/open_transactions/");
+        setOpenTransactionsData(response.data);
+    };
+
+    useEffect(() => {
+        fetchTransactions();
+    }, []);
 
     // const url = "https://stream-fxtrade.oanda.com/v3/accounts/001-004-2840244-004/pricing/stream?instruments=EUR_USD"
     // const token = 'acc56198776d1ce7917137567b23f9a1-c5f7a43c7c6ef8563d0ebdd4a3b496ac'
@@ -116,11 +127,13 @@ const TradePage = () => {
     };
 
     const panel = <div style={{overflow: "scroll", height: '100%'}}>
-        <div style={{padding:10}}>
-            <PortfolioTable portfolios={allowedForTradePortfolios}/>
-        </div>
-        <div style={{padding:10}}>
-            <TradeTerminal portfolioCode={selectedPortfolioCode}/>
+        <div style={{padding:10, display: "flex"}}>
+            <div style={{width:'50%', paddingRight: 15}}>
+                <PortfolioTable portfolios={allowedForTradePortfolios}/>
+            </div>
+            <div style={{width:'50%'}}>
+                <TradeTerminal portfolioCode={selectedPortfolioCode}/>
+            </div>
         </div>
         <div style={{padding:10, height: 500}}>
             <TradeSignals server={server}/>
@@ -129,13 +142,14 @@ const TradePage = () => {
 
     const mainArea = <div style={{padding: 30}}>
 
-        <OpenTransactions server={server}/>
+        <OpenTransactions server={server} openTransactions={openTransactionsData}/>
     </div>
 
     return (
         <TradeContext.Provider value={{
             newTransactionID: newTransactionID,
             saveNewTrnsactionID: setNewTransactionID,
+            fetchTransactions: fetchTransactions
         }}>
             <ContainerWithSideMenu panel={panel} mainArea={mainArea} sidebarWidth={'800px'}/>
         </TradeContext.Provider>

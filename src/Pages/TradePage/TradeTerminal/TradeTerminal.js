@@ -5,6 +5,7 @@ import BrokerContext from "../../../context/broker-context";
 import ServerContext from "../../../context/server-context";
 import "./TradeTerminal.css"
 import fetchAPI from "../../../config files/api";
+import TradeContext from "../context/trade-context";
 
 const OandaPriceStream = ({instrument, sendPrice}) => {
     const [status, setStatus] = useState("Connecting...");
@@ -68,8 +69,9 @@ const OandaPriceStream = ({instrument, sendPrice}) => {
     // );
 };
 
-const TradeTerminal = ({show, close, portfolioCode}) => {
+const TradeTerminal = ({portfolioCode}) => {
     const {apiSupportedBrokers, accounts} = useContext(BrokerContext);
+    const { fetchTransactions } = useContext(TradeContext);
 
     const [panelParameters, setPanelParameters] = useState({
         selectedBroker: null,
@@ -118,6 +120,7 @@ const TradeTerminal = ({show, close, portfolioCode}) => {
         try {
             const response = await fetchAPI.post('trade_page/new/signal/', requestParameters);
             console.log("Trade submitted successfully:", response.data);
+            fetchTransactions()
         } catch (error) {
             console.error("Error submitting trade:", error);
             alert("Error submitting trade. Please try again.");
@@ -156,11 +159,6 @@ const TradeTerminal = ({show, close, portfolioCode}) => {
 
     return (
         <div className={'card'}>
-
-            <div className={'card-header'}>
-                <p>Trade Panel</p>
-            </div>
-
 
             <div style={{padding: 15}}>
                 <div className={'block'}>
