@@ -298,18 +298,6 @@ modal-overlay {
     padding: 20px;
 }
 
-input {
-    width: 100%;
-    padding: 8px 20px;
-    margin: 5px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    color: #2b2b2b;
-    cursor: pointer;
-}
-
 select{
     width: 100%;
     padding: 8px 20px;
@@ -606,10 +594,6 @@ ul li:hover {
     padding: 5px 0;
 }
 
-.input-value {
-    color: #555;
-}
-
 .info-row {
     display: flex;
     justify-content: space-between;
@@ -630,30 +614,4 @@ ul li:hover {
     font-size: 18px;
     font-weight: bold;
     border-bottom: 1px solid #dee2e6;
-}
-
-.input-label {
-    font-weight: bold;
-    color: #333;
-}
-
-.input-value {
-    color: #555;
-}
-
-.input-group {
-    margin: 10px 0;
-}
-
-.input-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
 }

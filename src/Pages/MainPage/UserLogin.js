@@ -2,6 +2,8 @@ import React, { useState, useContext, useRef, useEffect } from "react";
 import { login, forgotPassword } from "../../endpoints/authservice";
 import AuthContext from "../../context/AuthProvider";
 import {useHistory} from "react-router-dom";
+import InputField from "../../components/InputField/InputField";
+import Form from "../../components/Form/Form";
 
 const UserLogin = ({ onClose }) => {
     const [username, setUsername] = useState("");
@@ -75,45 +77,43 @@ const UserLogin = ({ onClose }) => {
                 {resetMessage && <p className="success-message">{resetMessage}</p>}
 
                 {!showForgotPassword ? (
-                    <form onSubmit={handleLogin} className="login-form" autoComplete="off">
-                        <div className="form-group">
-                            <label htmlFor="username">Username:</label>
-                            <input
-                                id="username"
-                                type="text"
-                                value={username}
-                                onChange={(e) => {
-                                    setUsername(e.target.value);
-                                    setError(""); // Clear error on user input
-                                }}
-                                placeholder="Enter username"
-                                autoComplete="off"
-                                required
-                            />
-                        </div>
+                    <Form onSubmit={handleLogin} className="form-body">
+                        <InputField
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                                setError("");
+                            }}
+                            placeholder="Enter username"
+                            label="Username"
+                            required
+                        />
 
-                        <div className="form-group">
-                            <label htmlFor="password">Password:</label>
-                            <input
-                                id="password"
-                                type="password"
-                                value={password}
-                                onChange={(e) => {
-                                    setPassword(e.target.value);
-                                    setError(""); // Clear error on user input
-                                }}
-                                placeholder="Enter password"
-                                autoComplete="off"
-                                required
-                            />
-                        </div>
+                        <InputField
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setError("");
+                            }}
+                            placeholder="Enter password"
+                            label="Password"
+                            required
+                        />
                         <div>
                             <button type="submit" disabled={loading} style={{display: "block", marginBottom: "10px"}}>
                                 {loading ? "Logging in..." : "Login"}
                             </button>
 
                             <p
-                                onClick={() => {setShowForgotPassword(true); setError(""); setResetMessage("")}}
+                                onClick={() => {
+                                    setShowForgotPassword(true);
+                                    setError("");
+                                    setResetMessage("")
+                                }}
                                 style={{
                                     color: "blue",
                                     textDecoration: "underline",
@@ -125,24 +125,21 @@ const UserLogin = ({ onClose }) => {
                             </p>
                         </div>
 
-                    </form>
+                    </Form>
                 ) : (
-                    <form onSubmit={handleForgotPassword} className="forgot-password-form" autoComplete="off">
-                        <div className="form-group">
-                            <label htmlFor="email">Enter your email:</label>
-                            <input
-                                id="email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => {
-                                    setEmail(e.target.value);
-                                    setError(""); // Clear error on user input
-                                }}
-                                placeholder="Enter your email"
-                                autoComplete="off"
-                                required
-                            />
-                        </div>
+                    <Form onSubmit={handleForgotPassword}>
+                        <InputField
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                                setError(""); // Clear error on user input
+                            }}
+                            placeholder="Enter your email"
+                            label="Enter your email"
+                            required
+                        />
 
                         <div className='button-group'>
                             <button type="submit" disabled={loading}>
@@ -158,7 +155,7 @@ const UserLogin = ({ onClose }) => {
                                 Back to Login
                             </button>
                         </div>
-                    </form>
+                    </Form>
                 )}
             </div>
         </div>

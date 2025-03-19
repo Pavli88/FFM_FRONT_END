@@ -1,27 +1,30 @@
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import {useContext, useRef} from "react";
+import React, {useContext, useRef, useState} from "react";
 import axios from "axios";
 import DateContext from "../../../context/date-context";
 import PortfolioContext from "../../../context/portfolio-context";
 import CustomModal from "../../../components/Modals/Modals";
 import ServerContext from "../../../context/server-context";
+import InputField from "../../../components/InputField/InputField";
 
 const NewPortfolio = ({show, close, parameters}) => {
     const server = useContext(ServerContext).server;
     const { fetchPortfolios } = useContext(PortfolioContext);
-    const portNameRef = useRef();
-    const portCodeRef = useRef();
+    const [portfolioName, setPortfolioName] = useState(null);
+    const [portfolioCode, setPortfolioCode] = useState(null);
     const currencyRef = useRef();
     const portTypeRef = useRef();
     const dateRef = useRef();
 
     const submitHandler = (event) => {
         event.preventDefault();
+
+
         const token = localStorage.getItem("access");
         axios.post(`${server}portfolios/new/portfolio/`, {
-            port_name: portNameRef.current.value,
-            port_code: portCodeRef.current.value,
+            port_name: portfolioName,
+            port_code: portfolioCode,
             port_type: portTypeRef.current.value,
             port_currency: currencyRef.current.value,
             inception_date: dateRef.current.value,
@@ -53,7 +56,7 @@ const NewPortfolio = ({show, close, parameters}) => {
             }
         });
     };
-
+    console.log("Portfolio name: ", portfolioName)
     return (
         <CustomModal show={show} onClose={close} title={'New Portfolio'}
             footer={
@@ -72,16 +75,22 @@ const NewPortfolio = ({show, close, parameters}) => {
                         <option value={'Portfolio'}>Portfolio</option>
                     </select>
                 </div>
-
-                <div className="block">
-                    <label>Portfolio Name</label>
-                    <input ref={portNameRef} type="text" required/>
-                </div>
-
-                <div className="block">
-                    <label>Portfolio Code</label>
-                    <input ref={portCodeRef} type="text" required/>
-                </div>
+                <InputField
+                    id="portfolioName"
+                    type="text"
+                    label="Portfolio Name"
+                    onChange={(e) => setPortfolioName(e.target.value)}
+                    value={portfolioName}
+                    required
+                />
+                <InputField
+                    id="portfolioCode"
+                    type="text"
+                    label="Portfolio Code"
+                    onChange={(e) => setPortfolioCode(e.target.value)}
+                    value={portfolioCode}
+                    required
+                />
 
                 <div className="block">
                     <label>Portfolio Currency</label>

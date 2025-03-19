@@ -1,7 +1,8 @@
-import {useCallback, useContext, useState} from "react";
+import React, {useCallback, useContext, useState} from "react";
 import ServerContext from "../../../context/server-context";
 import axios from "axios";
 import _ from "lodash"
+import InputField from "../../InputField/InputField";
 
 const InstrumentSearch = ({ onSelect }) => {
     const server = useContext(ServerContext).server;
@@ -50,12 +51,12 @@ const InstrumentSearch = ({ onSelect }) => {
     return (
         <div className="relative w-80">
             {/* 🔹 Search Input */}
-            <input
+            <InputField
+                id="search"
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 placeholder="Search for an instrument..."
-                // className="w-full p-2 border rounded"
             />
 
             {/* 🔹 Loading Indicator */}

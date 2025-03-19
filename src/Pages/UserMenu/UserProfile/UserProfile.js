@@ -1,9 +1,10 @@
 import { FaUserCircle, FaEdit } from "react-icons/fa";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import UserContext from "../../../context/user-context";
 import ChangePasswordModal from "./ChangePasswordModal";
 import "./UserProfile.css";
 import {changePassword} from "../../../endpoints/authservice";
+import InputField from "../../../components/InputField/InputField";
 
 const UserProfile = () => {
     const { username, email, first_name, last_name, date_joined, last_login } = useContext(UserContext);
@@ -53,22 +54,34 @@ const handleChangePassword = async ({ oldPassword, newPassword }) => {
 
                     {/* Form Section */}
                     <div className="container-section form-section">
-                        <div className="form-group">
-                            <label>Email:</label>
-                            <input type="email" name="email" value={formData.email} readOnly />
-                        </div>
-                        <div className="form-group">
-                            <label>First Name:</label>
-                            <input type="text" name="firstName" value={formData.firstName} readOnly />
-                        </div>
-                        <div className="form-group">
-                            <label>Last Name:</label>
-                            <input type="text" name="lastName" value={formData.lastName} readOnly />
-                        </div>
-                        <div className="form-group">
-                            <label>Username:</label>
-                            <input type="text" name="username" value={formData.username} readOnly />
-                        </div>
+                        <InputField
+                            id="email"
+                            type="text"
+                            value={formData.email}
+                            label={"Email"}
+                            readOnly
+                        />
+                        <InputField
+                            id="firstName"
+                            type="text"
+                            value={formData.firstName}
+                            label={"First Name"}
+                            readOnly
+                        />
+                        <InputField
+                            id="lastName"
+                            type="text"
+                            value={formData.lastName}
+                            label={"Last Name"}
+                            readOnly
+                        />
+                        <InputField
+                            id="user"
+                            type="text"
+                            value={formData.username}
+                            label={"User Name"}
+                            readOnly
+                        />
                         <div className="form-group">
                             <label>Date joined:</label>
                             <span>{formData.dateJoined}</span>

@@ -1,11 +1,12 @@
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
-import {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import DateContext from "../../../../../../context/date-context";
 import Select from "react-select";
 import ServerContext from "../../../../../../context/server-context";
 import PortfolioContext from "../../../../../../context/portfolio-context";
 import CustomModal from "../../../../../../components/Modals/Modals";
+import InputField from "../../../../../../components/InputField/InputField";
 
 const PortfolioCashEntryModal = ( {show, close} ) => {
     const server = useContext(ServerContext).server;
@@ -14,8 +15,8 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
     const [currencies, setCurrencies] = useState([]);
     const [selectedCurrency, setSelectedCurrency] = useState(null);
     const [type, setType] = useState(null)
-    const dateRef = useRef();
-    const quantityRef = useRef();
+    const [date, setDate] = useState(null);
+    const [quantity, setQuantity] = useState(null);
 
     const submitHandler = () => {
         const parameters = {
@@ -23,8 +24,8 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
             portfolio_id: portfolioData.id,
             security_id: selectedCurrency.id,
             transaction_type: type,
-            trade_date: dateRef.current.value,
-            quantity: quantityRef.current.value,
+            trade_date: date,
+            quantity: quantity,
             currency: selectedCurrency.currency,
             ...(portfolioData.status === 'Not Funded' && {initial_cash: true})
         }
@@ -92,16 +93,21 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
                     >
                     </Select>
                 </div>
-
-                <div className="block">
-                    <label>Date</label>
-                    <input ref={dateRef} defaultValue={currentDate} type="date" min={portfolioData.inception_date}/>
-                </div>
-
-                <div className="block">
-                    <label>Quantity</label>
-                    <input ref={quantityRef} type="number" required min={0.0}/>
-                </div>
+                <InputField
+                    id="date"
+                    type="date"
+                    defaultValue={currentDate}
+                    onChange={e => setDate(e.target.value)}
+                    label="Date"
+                    min={portfolioData.inception_date}
+                />
+                <InputField
+                    id="quantity"
+                    type="number"
+                    onChange={e => setQuantity(e.target.value)}
+                    label="Quantity"
+                    min={0.0}
+                />
 
                 {portfolioData.status === 'Not Funded' &&
                     <div style={{

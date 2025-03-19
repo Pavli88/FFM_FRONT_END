@@ -1,12 +1,13 @@
 import CustomModal from "../../../../../../components/Modals/Modals";
 import axios from "axios";
-import {useContext, useRef, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import DateContext from "../../../../../../context/date-context";
 import PortfolioPageContext from "../../../../context/portfolio-page-context";
 import ServerContext from "../../../../../../context/server-context";
 import InstrumentSearch from "../../../../../../components/Search/InstrumentSearch/InstrumentSearch";
 import ToogleSwitch from "../../../../../../components/Buttons/SliderButton/ToogleSwitch";
 import BuySellButtonGroup from "../../../../../../components/Buttons/BuySellButtonGroup/BuySellButtonGroup";
+import InputField from "../../../../../../components/InputField/InputField";
 
 const PortfolioTransactionEntryModal = ( {show, close} ) => {
     const server = useContext(ServerContext).server;
@@ -24,11 +25,11 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
     const [optionSelected, setOptionSelected] = useState(false);
 
     const [broker, setBroker] = useState('oanda');
-    const dateRef = useRef();
-    const quantityRef = useRef();
-    const priceRef = useRef();
-    const fxRef = useRef();
-    const brokerIdRef = useRef();
+    const [date, setDate] = useState(null);
+    const [quantityNumber, setQuantityNumber] = useState(null);
+    const [price, setPrice] = useState(null);
+    const [fxRate, setFxRate] = useState(null);
+    const [brokerId, setBrokerId] = useState(null);
 
     const submitHandler = async () => {
         const parameters = {
@@ -36,16 +37,16 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
             portfolio_id: portfolio.id,
             security_id: instrumentData.id,
             transaction_type: transactionType,
-            trade_date: dateRef.current.value,
-            quantity: quantityRef.current.value,
-            price: priceRef.current.value,
+            trade_date: date,
+            quantity: quantityNumber,
+            price: price,
             currency: instrumentData.currency,
             is_active: active,
             open_status: 'Open',
             transaction_link_code: 0,
-            fx_rate: fxRef.current.value,
+            fx_rate: fxRate,
             broker: broker,
-            broker_id: brokerIdRef.current.value
+            broker_id: brokerId
         }
         console.log(parameters)
         const response = await axios.post(`${server}portfolios/new/transaction/`, parameters)
@@ -83,43 +84,53 @@ const PortfolioTransactionEntryModal = ( {show, close} ) => {
                     </div>
 
                     <BuySellButtonGroup side={transactionType} change={(value) => setTransactionType(value)}/>
-
-                    <div className="block">
-                        <label className={'input-label'}>Currency</label>
-                        <input value={instrumentData.currency} type="text" disabled/>
-                    </div>
-
-                    <div className="block">
-                        <label className={'input-label'}>Date</label>
-                        <input ref={dateRef} defaultValue={currentDate} type="date"/>
-                    </div>
-
-                    <div className="block">
-                        <label className={'input-label'}>Quantity</label>
-                        <input ref={quantityRef} type="number"/>
-                    </div>
-
-                    <div className="block">
-                        <label className={'input-label'}>Price</label>
-                        <input ref={priceRef} type="number" min={0.0}/>
-                    </div>
-
-                    <div className="block">
-                        <label className={'input-label'}>FX Rate</label>
-                        <input ref={fxRef} type="number" defaultValue={1.0}/>
-                    </div>
-
+                    <InputField
+                        id="currency"
+                        type="text"
+                        value={instrumentData.currency}
+                        label="Currency"
+                        readOnly
+                    />
+                    <InputField
+                        id="date"
+                        type="date"
+                        defaultValue={currentDate}
+                        onChange={e => setDate(e.target.value)}
+                        label="Date"
+                    />
+                    <InputField
+                        id="quantity"
+                        type="number"
+                        onChange={e => setQuantityNumber(e.target.value)}
+                        label="Quantity"
+                    />
+                    <InputField
+                        id="price"
+                        type="number"
+                        onChange={e => setPrice(e.target.value)}
+                        label="Price"
+                        min={0.0}
+                    />
+                    <InputField
+                        id="fxRate"
+                        type="number"
+                        onChange={e => setFxRate(e.target.value)}
+                        label="FX Rate"
+                        defaultValue={1.0}
+                    />
                     <div className="block">
                         <label className={'input-label'}>Broker</label>
                         <select onChange={(e) => setBroker(e.target.value)}>
                             <option value={'oanda'}>Oanda</option>
                         </select>
                     </div>
-
-                    <div className="block">
-                        <label className={'input-label'}>Broker ID</label>
-                        <input ref={brokerIdRef} type="number" defaultValue={1.0}/>
-                    </div>
+                    <InputField
+                        id="brokerId"
+                        type="number"
+                        onChange={e => setBrokerId(e.target.value)}
+                        label="Broker ID"
+                        defaultValue={1.0}
+                    />
                 </div>
             </div>
         </CustomModal>
