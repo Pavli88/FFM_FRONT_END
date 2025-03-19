@@ -1,15 +1,12 @@
-import Modal from "react-bootstrap/Modal";
-import axios from "axios";
 import {useContext, useEffect, useRef, useState} from "react";
 import DateContext from "../../../../../../context/date-context";
 import Select from "react-select";
-import ServerContext from "../../../../../../context/server-context";
 import PortfolioContext from "../../../../../../context/portfolio-context";
 import CustomModal from "../../../../../../components/Modals/Modals";
+import fetchAPI from "../../../../../../config files/api";
 
 const PortfolioCashEntryModal = ( {show, close} ) => {
-    const server = useContext(ServerContext).server;
-    const portfolioData = useContext(PortfolioContext).selectedPortfolio;
+    const { selectedPortfolio, fetchPortfolios } = useContext(PortfolioContext);
     const { currentDate } = useContext(DateContext);
     const [currencies, setCurrencies] = useState([]);
     const [selectedCurrency, setSelectedCurrency] = useState(null);
@@ -18,36 +15,45 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
     const quantityRef = useRef();
 
     const submitHandler = () => {
+        const defaultCurrency = currencies.find(currency => currency.currency === selectedPortfolio.currency);
         const parameters = {
-            portfolio_code: portfolioData.portfolio_code,
-            portfolio_id: portfolioData.id,
-            security_id: selectedCurrency.id,
-            transaction_type: type,
+            portfolio_code: selectedPortfolio.portfolio_code,
+            portfolio_id: selectedPortfolio.id,
+            security: selectedPortfolio.multicurrency_allowed ? selectedCurrency.id : defaultCurrency.id,
+            quantity: parseFloat(quantityRef.current.value),
             trade_date: dateRef.current.value,
-            quantity: quantityRef.current.value,
-            currency: selectedCurrency.currency,
-            ...(portfolioData.status === 'Not Funded' && {initial_cash: true})
+            transaction_type: type
         }
-
-        axios.post(`${server}portfolios/new/transaction/`, parameters,
-            {
-                headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
-            })
+        console.log(parameters)
+        fetchAPI.post('portfolios/transactions/new/', parameters)
             .then(response => alert(response.data))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
-        close()
+
+        if (selectedPortfolio.status === 'Not Funded') {
+            fetchAPI.post('portfolios/update/portfolio/', {
+                id: selectedPortfolio.id,
+                status: "Funded"
+            })
+                .then(response => {
+                    console.log(response.data.response);
+                    fetchPortfolios();
+                })
+                .catch((error) => {
+                    console.error('Error Message:', error);
+                });
+        }
+
+        // close()
     };
 
     useEffect(() => {
-        axios.get(`${server}instruments/get/instruments/`, {
+        fetchAPI.get('instruments/get/instruments/', {
             params: {  // ✅ Move parameters inside `params`
-                // name: '',
-                currency: portfolioData.currency,
+                group: 'Cash',
                 type: 'Cash'
-            },
-            headers: {Authorization: `Bearer ${localStorage.getItem("access")}`}
+            }
         })
             .then(response => setCurrencies(response.data))
             .catch(error => console.error("Error fetching currencies:", error));
@@ -56,13 +62,13 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
     const transactionType = [
         { value: 'Subscription', label: 'Subscription' },
         { value: 'Redemption', label: 'Redemption' },
-        { value: 'Interest Paid', label: 'Interest Paid' },
+        // { value: 'Interest Paid', label: 'Interest Paid' },
         { value: 'Commission', label: 'Commission' },
         { value: 'Financing', label: 'Financing' },
     ]
 
     const onlySubscription = [{ value: 'Subscription', label: 'Subscription' }]
-
+    console.log(currencies)
     return (
         <CustomModal show={show} onClose={close} title={'New Cash'}
                      footer={
@@ -76,13 +82,14 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
                 <div className="block">
                     <label>Transaction Type</label>
                     <Select style={{height: '100%'}}
-                            options={portfolioData.status === 'Not Funded' ? onlySubscription : transactionType}
+                            options={selectedPortfolio.status === 'Not Funded' ? onlySubscription : transactionType}
                             onChange={(e) => setType(e.value)}
                     >
                     </Select>
                 </div>
 
-                <div className="block">
+                {
+                    selectedPortfolio.multicurrency_allowed && <div className="block">
                     <label>Currency</label>
                     <Select style={{height: '100%'}}
                             options={currencies.map(function (data) {
@@ -92,10 +99,12 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
                     >
                     </Select>
                 </div>
+                }
+
 
                 <div className="block">
                     <label>Date</label>
-                    <input ref={dateRef} defaultValue={currentDate} type="date" min={portfolioData.inception_date}/>
+                    <input ref={dateRef} defaultValue={currentDate} type="date" min={selectedPortfolio.inception_date}/>
                 </div>
 
                 <div className="block">
@@ -103,7 +112,7 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
                     <input ref={quantityRef} type="number" required min={0.0}/>
                 </div>
 
-                {portfolioData.status === 'Not Funded' &&
+                {selectedPortfolio.status === 'Not Funded' &&
                     <div style={{
                         color: "red",
                         border: "solid",

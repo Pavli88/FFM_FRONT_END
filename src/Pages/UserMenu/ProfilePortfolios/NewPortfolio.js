@@ -1,11 +1,10 @@
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
 import {useContext, useRef} from "react";
 import axios from "axios";
 import DateContext from "../../../context/date-context";
 import PortfolioContext from "../../../context/portfolio-context";
 import CustomModal from "../../../components/Modals/Modals";
 import ServerContext from "../../../context/server-context";
+import fetchAPI from "../../../config files/api";
 
 const NewPortfolio = ({show, close, parameters}) => {
     const server = useContext(ServerContext).server;
@@ -18,15 +17,12 @@ const NewPortfolio = ({show, close, parameters}) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const token = localStorage.getItem("access");
-        axios.post(`${server}portfolios/new/portfolio/`, {
+        fetchAPI.post(`${server}portfolios/new/portfolio/`, {
             port_name: portNameRef.current.value,
             port_code: portCodeRef.current.value,
             port_type: portTypeRef.current.value,
-            port_currency: currencyRef.current.value,
+            currency: currencyRef.current.value,
             inception_date: dateRef.current.value,
-        }, {
-            headers: { Authorization: `Bearer ${token}` },
         })
             .then(function (response) {
                 if (response.data.msg === 'New Portfolio is created!') {
@@ -96,6 +92,7 @@ const NewPortfolio = ({show, close, parameters}) => {
                     <label>Portfolio Inception Date</label>
                     <input ref={dateRef} type="date" defaultValue={useContext(DateContext).currentDate}/>
                 </div>
+
             </div>
         </CustomModal>
     );

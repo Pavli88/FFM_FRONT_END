@@ -78,9 +78,8 @@ const MainApplication = ({config}) => {
 
     // Dashboard Context
     const [portGroup, setPortGroup] = useState(null);
-    console.log(userData)
 
-     const fetchUserData = async () => {
+    const fetchUserData = async () => {
         try {
             const response = await fetchAPI.get('user/get/data/');
             setUserData(response.data);

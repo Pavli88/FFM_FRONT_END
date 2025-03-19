@@ -1,128 +1,201 @@
 import CustomModal from "../../../../../../components/Modals/Modals";
-import axios from "axios";
-import {useContext, useRef, useState} from "react";
+import {useContext, useMemo, useState} from "react";
 import DateContext from "../../../../../../context/date-context";
-import PortfolioPageContext from "../../../../context/portfolio-page-context";
-import ServerContext from "../../../../../../context/server-context";
 import InstrumentSearch from "../../../../../../components/Search/InstrumentSearch/InstrumentSearch";
 import ToogleSwitch from "../../../../../../components/Buttons/SliderButton/ToogleSwitch";
 import BuySellButtonGroup from "../../../../../../components/Buttons/BuySellButtonGroup/BuySellButtonGroup";
+import fetchAPI from "../../../../../../config files/api";
+import BrokerContext from "../../../../../../context/broker-context";
+import PortfolioContext from "../../../../../../context/portfolio-context";
 
-const PortfolioTransactionEntryModal = ( {show, close} ) => {
-    const server = useContext(ServerContext).server;
-    const currentDate = useContext(DateContext).currentDate;
+const PortfolioTransactionEntryModal = ({ show, close }) => {
+    const { currentDate } = useContext(DateContext);
+    const { selectedPortfolio } = useContext(PortfolioContext);
+    const { accounts, brokerData } = useContext(BrokerContext);
 
+    const [formData, setFormData] = useState({
+        transactionType: 'Purchase',
+        instrumentData: {},
+        broker: '',
+        active: false,
+        trade_date: currentDate,
+        quantity: '',
+        price: '',
+        fx_rate: 1.0,
+        broker_id: '',
+        account_id: ''
+    });
 
-    const portfolio = useContext(PortfolioPageContext);
+    // Filters accounts dynamically based on the selected broker
+    const filteredAccounts = useMemo(() => {
+        return accounts.filter((account) => account.broker_name === formData.broker);
+    }, [formData.broker, accounts]);
 
-    const [active, setActive] = useState(false);
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData((prev) => {
+            let updatedValue = type === 'checkbox' ? checked : value;
+            let updatedOptional = { ...prev.optional };
 
+            if (name === 'broker_id' || name === 'active') {
+                if (updatedValue !== '') {
+                    updatedOptional[name === 'broker_id' ? 'broker_id' : 'is_active'] = updatedValue;
+                } else {
+                    delete updatedOptional[name === 'broker_id' ? 'broker_id' : 'is_active'];
+                }
+            }
 
-    const [transactionType, setTransactionType] = useState('Purchase');
-    const [relatedID, setRelatedID] = useState('');
-    const [instrumentData, setInstrumentData] = useState({});
-    const [optionSelected, setOptionSelected] = useState(false);
+            // Reset account_id when broker changes
+            if (name === 'broker') {
+                return {
+                    ...prev,
+                    [name]: updatedValue,
+                    account_id: '', // Reset account when broker changes
+                    optional: Object.keys(updatedOptional).length ? updatedOptional : {}
+                };
+            }
 
-    const [broker, setBroker] = useState('oanda');
-    const dateRef = useRef();
-    const quantityRef = useRef();
-    const priceRef = useRef();
-    const fxRef = useRef();
-    const brokerIdRef = useRef();
-
-    const submitHandler = async () => {
-        const parameters = {
-            portfolio_code: portfolio.portfolioCode,
-            portfolio_id: portfolio.id,
-            security_id: instrumentData.id,
-            transaction_type: transactionType,
-            trade_date: dateRef.current.value,
-            quantity: quantityRef.current.value,
-            price: priceRef.current.value,
-            currency: instrumentData.currency,
-            is_active: active,
-            open_status: 'Open',
-            transaction_link_code: 0,
-            fx_rate: fxRef.current.value,
-            broker: broker,
-            broker_id: brokerIdRef.current.value
-        }
-        console.log(parameters)
-        const response = await axios.post(`${server}portfolios/new/transaction/`, parameters)
-        if (response.data.success){
-            setTransactionType('Purchase')
-            close()
-            console.log('CLOSING')
-        };
+            return {
+                ...prev,
+                [name]: updatedValue,
+                optional: Object.keys(updatedOptional).length ? updatedOptional : {}
+            };
+        });
     };
 
     const handleInstrumentSelect = (instrument) => {
-        setInstrumentData(instrument)
+        setFormData((prev) => ({ ...prev, instrumentData: instrument }));
     };
-    console.log(transactionType)
+
+    const handleTransactionTypeChange = (value) => {
+        setFormData((prev) => ({ ...prev, transactionType: value }));
+    };
+
+    const submitHandler = async () => {
+        const parameters = {
+            portfolio_code: selectedPortfolio.portfolio_code,
+            portfolio_id: selectedPortfolio.id,
+            security: formData.instrumentData.id,
+            quantity: formData.quantity,
+            price: formData.price,
+            fx_rate: formData.fx_rate,
+            trade_date: formData.trade_date,
+            transaction_type: formData.transactionType,
+            broker: formData.broker,
+            optional: {
+                ...formData.optional,
+                account_id: formData.account_id || undefined // Include only if selected
+            }
+        };
+
+        console.log(parameters);
+        const response = await fetchAPI.post('portfolios/transactions/new/', parameters);
+
+        if (response.data.success) {
+            setFormData({
+                transactionType: 'Purchase',
+                instrumentData: {},
+                broker: '',
+                active: false,
+                trade_date: currentDate,
+                quantity: '',
+                price: '',
+                fx_rate: 1.0,
+                broker_id: '',
+                account_id: '',
+                optional: {}
+            });
+            close();
+            console.log('CLOSING');
+        }
+    };
+
+    const brokerOptions = useMemo(
+        () => brokerData.map((data) => <option key={data.broker_code} value={data.broker_code}>{data.broker}</option>),
+        [brokerData]
+    );
+
+    const accountOptions = useMemo(
+        () => filteredAccounts.map((account) => (
+            <option key={account.id} value={account.id}>
+                {account.account_name} ({account.account_number})
+            </option>
+        )),
+        [filteredAccounts]
+    );
+
     return (
-        <CustomModal show={show} onClose={close} title={'New Transaction'}
-                     footer={
-                         <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
-                             Save
-                         </button>
-                     }>
+        <CustomModal show={show} onClose={close} title="New Transaction"
+            footer={
+                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
+                    Save
+                </button>
+            }>
             <div>
-                <div style={{height: '600px', overflowY: 'scroll', padding: 5}}>
-
+                <div style={{ height: '600px', overflowY: 'scroll', padding: 5 }}>
                     <div className="block">
-                        <label className={'input-label'}>Portfolio</label>
-                        <label className={'input-label'}>{portfolio.portfolio_code}</label>
+                        <label className="input-label">Portfolio</label>
+                        <label className="input-label">{selectedPortfolio.portfolio_code}</label>
                     </div>
 
-                    <ToogleSwitch label={'Active'} isChecked={active} onToggle={() => setActive(!active)}/>
+                    <ToogleSwitch
+                        label="Active"
+                        isChecked={formData.active}
+                        onToggle={() => handleChange({ target: { name: 'active', type: 'checkbox', checked: !formData.active } })}
+                    />
 
                     <div className="block">
-                        <label className={'input-label'}>Instrument</label>
-                        <InstrumentSearch onSelect={handleInstrumentSelect}/>
+                        <label className="input-label">Instrument</label>
+                        <InstrumentSearch onSelect={handleInstrumentSelect} />
                     </div>
 
-                    <BuySellButtonGroup side={transactionType} change={(value) => setTransactionType(value)}/>
+                    <BuySellButtonGroup side={formData.transactionType} change={handleTransactionTypeChange} />
 
                     <div className="block">
-                        <label className={'input-label'}>Currency</label>
-                        <input value={instrumentData.currency} type="text" disabled/>
-                    </div>
-
-                    <div className="block">
-                        <label className={'input-label'}>Date</label>
-                        <input ref={dateRef} defaultValue={currentDate} type="date"/>
-                    </div>
-
-                    <div className="block">
-                        <label className={'input-label'}>Quantity</label>
-                        <input ref={quantityRef} type="number"/>
+                        <label className="input-label">Date</label>
+                        <input name="trade_date" value={formData.trade_date} onChange={handleChange} type="date" />
                     </div>
 
                     <div className="block">
-                        <label className={'input-label'}>Price</label>
-                        <input ref={priceRef} type="number" min={0.0}/>
+                        <label className="input-label">Quantity</label>
+                        <input name="quantity" value={formData.quantity} onChange={handleChange} type="number" />
                     </div>
 
                     <div className="block">
-                        <label className={'input-label'}>FX Rate</label>
-                        <input ref={fxRef} type="number" defaultValue={1.0}/>
+                        <label className="input-label">Price</label>
+                        <input name="price" value={formData.price} onChange={handleChange} type="number" min="0" />
                     </div>
 
                     <div className="block">
-                        <label className={'input-label'}>Broker</label>
-                        <select onChange={(e) => setBroker(e.target.value)}>
-                            <option value={'oanda'}>Oanda</option>
+                        <label className="input-label">FX Rate</label>
+                        <input name="fx_rate" value={formData.fx_rate} onChange={handleChange} type="number" />
+                    </div>
+
+                    <div className="block">
+                        <label className="input-label">Broker</label>
+                        <select name="broker" value={formData.broker} onChange={handleChange}>
+                            <option value="">Select Broker</option>
+                            {brokerOptions}
                         </select>
                     </div>
 
                     <div className="block">
-                        <label className={'input-label'}>Broker ID</label>
-                        <input ref={brokerIdRef} type="number" defaultValue={1.0}/>
+                        <label className="input-label">Broker ID</label>
+                        <input name="broker_id" value={formData.broker_id} onChange={handleChange} type="number" />
                     </div>
+
+                    {formData.broker && (
+                        <div className="block">
+                            <label className="input-label">Accounts</label>
+                            <select name="account_id" value={formData.account_id} onChange={handleChange}>
+                                <option value="">Select Account</option>
+                                {accountOptions}
+                            </select>
+                        </div>
+                    )}
                 </div>
             </div>
         </CustomModal>
-    )
+    );
 };
 export default PortfolioTransactionEntryModal;

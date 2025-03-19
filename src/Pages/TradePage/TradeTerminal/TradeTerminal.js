@@ -4,8 +4,7 @@ import axios from "axios";
 import BrokerContext from "../../../context/broker-context";
 import ServerContext from "../../../context/server-context";
 import "./TradeTerminal.css"
-
-
+import fetchAPI from "../../../config files/api";
 
 const OandaPriceStream = ({instrument, sendPrice}) => {
     const [status, setStatus] = useState("Connecting...");
@@ -70,7 +69,6 @@ const OandaPriceStream = ({instrument, sendPrice}) => {
 };
 
 const TradeTerminal = ({show, close, portfolioCode}) => {
-    const server = useContext(ServerContext).server;
     const {apiSupportedBrokers, accounts} = useContext(BrokerContext);
 
     const [panelParameters, setPanelParameters] = useState({
@@ -118,7 +116,7 @@ const TradeTerminal = ({show, close, portfolioCode}) => {
         console.log("Submitting request with parameters:", requestParameters);
 
         try {
-            const response = await axios.post(server + 'trade_page/new/signal/', requestParameters);
+            const response = await fetchAPI.post('trade_page/new/signal/', requestParameters);
             console.log("Trade submitted successfully:", response.data);
         } catch (error) {
             console.error("Error submitting trade:", error);
@@ -127,7 +125,7 @@ const TradeTerminal = ({show, close, portfolioCode}) => {
     };
 
     const getTicker = () => {
-        axios.get(server + 'instruments/get/broker/tickers/', {
+        fetchAPI.get('instruments/get/broker/tickers/', {
             params: {
                 inst_code: panelParameters.selectedInstrument.id,
                 source: panelParameters.selectedBroker,
