@@ -82,7 +82,7 @@ const handleRegister = async (e) => {
                     />
 
                     {errors.general && <p className="error general-error">{errors.general}</p>}
-                    <div>
+                    <div className="button-group">
                         <ModalButton type="submit" label={"Register"}
                                      variant="primary"/>
                     </div>

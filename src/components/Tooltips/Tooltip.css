@@ -8,9 +8,9 @@
 /* Tooltip box styling */
 .tooltip {
     position: absolute;
-    bottom: 100%; /* Position above the icon */
-    left: 100%; /* Align to the right of the icon */
-    transform: translate(-20%, -5px); /* Fine-tune position */
+    top: 100%; /* Position below the icon */
+    left: 50%;
+    transform: translate(-50%, 5px);  /* Fine-tune position */
     background-color: #f1f1f1;
     color: #494f54;
     padding: 8px;
