@@ -51,78 +51,64 @@ const PortfolioTransactionsFilter = (props) => {
     };
 
     return (
-        <div className={"card"} style={{ padding: "15px", width: "100%" }}>
-                <div className={"search-container"}>
-                    <div className={"search-container-label-box"}>
-                        <label>Show Only Active Transactions</label>
-                        <div>
-                            <input
-                                type={"checkbox"}
-                                checked={openStatus}
-                                onChange={() => {
-                                    setOpenStatus(!openStatus);
-                                    updateParameters();
-                                }}
-                            />
-                        </div>
-                    </div>
+        <div className={"card"} style={{ padding: "5px", width: "100%" }}>
+            <div className="search-bar" style={{ display: "flex", alignItems: "center", gap: "15px", flexWrap: "wrap" }}>
+                <div className="search-item" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    <label>Show Active</label>
+                    <input
+                        type="checkbox"
+                        checked={openStatus}
+                        onChange={() => {
+                            setOpenStatus(!openStatus);
+                            updateParameters();
+                        }}
+                    />
+                </div>
 
-                    <div className={"search-container-label-box"}>
-                        <label>Inventory ID</label>
-                        <div>
-                            <input ref={invRef} type="number" style={{ width: 100 }} onChange={updateParameters} />
-                        </div>
-                    </div>
+                <div className="search-item" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    <label>Inventory ID</label>
+                    <input ref={invRef} type="number" style={{ width: 100 }} onChange={updateParameters} />
+                </div>
 
-                    <div className={"search-container-label-box"}>
-                        <label>Security ID</label>
-                        <div>
-                            <input ref={securityRef} type="number" style={{ width: 100 }} onChange={updateParameters} />
-                        </div>
-                    </div>
+                <div className="search-item" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    <label>Security ID</label>
+                    <input ref={securityRef} type="number" style={{ width: 100 }} onChange={updateParameters} />
+                </div>
 
-                    <div className={"search-container-label-box"}>
-                        <label>Transaction Type</label>
-                        <div>
-                            <Select
-                                isMulti
-                                options={[
-                                    { value: "Purchase", label: "Purchase" },
-                                    { value: "Sale", label: "Sale" },
-                                    { value: "Subscription", label: "Subscription" },
-                                    { value: "Redemption", label: "Redemption" },
-                                    { value: "Commission", label: "Commission" },
-                                    { value: "Financing", label: "Financing" }
-                                ]}
-                                onChange={(e) => {
-                                    setTransactionType(e);
-                                    updateParameters();
-                                }}
-                            />
-                        </div>
-                    </div>
+                <div className="search-item" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    <label>Transaction Type</label>
+                    <Select
+                        isMulti
+                        options={[
+                            { value: "Purchase", label: "Purchase" },
+                            { value: "Sale", label: "Sale" },
+                            { value: "Subscription", label: "Subscription" },
+                            { value: "Redemption", label: "Redemption" },
+                            { value: "Commission", label: "Commission" },
+                            { value: "Financing", label: "Financing" }
+                        ]}
+                        onChange={(e) => {
+                            setTransactionType(e);
+                            updateParameters();
+                        }}
+                    />
+                </div>
 
-                    <div className={"search-container-label-box"}>
-                        <label>From</label>
-                        <div>
-                            <input ref={startDateRef} defaultValue={currentDate} type="date" style={{ width: 200 }} onChange={updateParameters} />
-                        </div>
-                    </div>
+                <div className="search-item" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    <label>From</label>
+                    <input ref={startDateRef} defaultValue={currentDate} type="date" style={{ width: 200 }} onChange={updateParameters} />
+                </div>
 
-                    <div className={"search-container-label-box"}>
-                        <label>To</label>
-                        <div>
-                            <input ref={endDateRef} defaultValue={currentDate} type="date" style={{ width: 200 }} onChange={updateParameters} />
-                        </div>
-                    </div>
+                <div className="search-item" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                    <label>To</label>
+                    <input ref={endDateRef} defaultValue={currentDate} type="date" style={{ width: 200 }} onChange={updateParameters} />
+                </div>
 
-                    <div className={"search-container-label-box"}>
-                        <button onClick={submitHandler} className={"normal-button"}>
-                            Search
-                        </button>
-                    </div>
+                <div>
+                    <button onClick={submitHandler} className="normal-button">Search</button>
                 </div>
             </div>
+        </div>
     );
 };
 export default PortfolioTransactionsFilter;

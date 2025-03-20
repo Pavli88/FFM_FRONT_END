@@ -1,26 +1,22 @@
 import {useContext, useState} from "react";
 import PortfolioContext from "../../../context/portfolio-context";
 import NewPortfolio from "./NewPortfolio";
-import ServerContext from "../../../context/server-context";
-import axios from "axios";
+import { FaPlus, FaTrashAlt, FaCheckSquare } from "react-icons/fa";
+import fetchAPI from "../../../config files/api";
 
 const ProfilePortfolios = () => {
-    const server = useContext(ServerContext).server;
     const portfolioData = useContext(PortfolioContext).portfolios;
     const { fetchPortfolios } = useContext(PortfolioContext);
     const [showNewPortModal, setNewPortModal] = useState(false);
     const [selectedPortfolios, setSelectedPortfolios] = useState([]);
 
     const toggleSelection = (id) => {
-        setSelectedPortfolios(prevSelected => {
-            if (prevSelected.includes(id)) {
-                return prevSelected.filter(portId => portId !== id);
-            } else {
-                return [...prevSelected, id];
-            }
-        });
+        setSelectedPortfolios(prevSelected =>
+            prevSelected.includes(id)
+                ? prevSelected.filter(portId => portId !== id)
+                : [...prevSelected, id]
+        );
     };
-    console.log(selectedPortfolios);
 
     const deletePortfolios = async () => {
         try {
@@ -29,10 +25,8 @@ const ProfilePortfolios = () => {
                 return;
             }
 
-            const response = await axios.post(`${server}portfolios/delete/portfolios/`, {
+            const response = await fetchAPI.post('portfolios/delete/portfolios/', {
                 ids: selectedPortfolios
-            }, {
-                headers: {Authorization: `Bearer ${localStorage.getItem("access")}`},
             });
 
             if (response.data.success) {
@@ -47,10 +41,11 @@ const ProfilePortfolios = () => {
         }
     };
 
-
     const confirmAndDelete = () => {
-        if (window.confirm("Deleting portfolios will result in deleting all related transactions, holdings and NAV values! " +
-            "Are you sure you want to delete the selected portfolios?")) {
+        if (window.confirm(
+            "Deleting portfolios will result in deleting all related transactions, holdings, and NAV values! " +
+            "Are you sure you want to delete the selected portfolios?"
+        )) {
             deletePortfolios();
         }
     };
@@ -69,7 +64,10 @@ const ProfilePortfolios = () => {
             <td className={'table-row'} style={{ width: '100%' }}>{data.portfolio_code}</td>
             <td className={'table-row'} style={{ width: '100%' }}>{data.portfolio_type}</td>
             <td className={'table-row'} style={{ width: '100%' }}>{data.currency}</td>
-            <td className={'table-row'} style={{ width: '100%', color: data.status === 'Not Funded' ? 'red' : data.status === 'Funded' ? 'green' : 'orange' }}>
+            <td className={'table-row'} style={{
+                width: '100%',
+                color: data.status === 'Not Funded' ? 'red' : data.status === 'Funded' ? 'green' : 'orange'
+            }}>
                 {data.status}
             </td>
         </tr>
@@ -77,28 +75,33 @@ const ProfilePortfolios = () => {
 
     return (
         <div className={'card'}>
-            <div className={'card-header'}>
-                Portfolios
+            <div className={'card-header'} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <label>Portfolios</label>
+                <div style={{ display: "flex", gap: "10px" }}>
+                    <button className={'icon-button'} onClick={() => setNewPortModal(true)} title="Add New Portfolio">
+                        <FaPlus size={20} />
+                    </button>
+                    <button className={'icon-button'} title="Terminate Selected">
+                        <FaCheckSquare size={20} />
+                    </button>
+                    <button className={'icon-button'} onClick={() => confirmAndDelete()} title="Delete Selected">
+                        <FaTrashAlt size={20} />
+                    </button>
+                </div>
             </div>
 
-            <div style={{display: "flex"}}>
-                <button className={'normal-button'} onClick={() => setNewPortModal(true)}>New Portfolio</button>
-                <button className={'normal-button'} onClick={() => deletePortfolios()}>Terminate</button>
-                <button className={'normal-button'} onClick={() => confirmAndDelete()}>Delete Selected</button>
-            </div>
-
-            <div style={{height: '100%', overflowY: 'scroll', paddingTop: 10}}>
-                <table style={{width: '100%'}}>
-                    <thead style={{width: '100%'}}>
-                    <tr>
-                        <th></th>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Code</th>
-                        <th>Type</th>
-                        <th>Currency</th>
-                        <th>Funded</th>
-                    </tr>
+            <div style={{ height: '100%', overflowY: 'scroll', paddingTop: 10 }}>
+                <table style={{ width: '100%' }}>
+                    <thead style={{ width: '100%' }}>
+                        <tr>
+                            <th></th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Type</th>
+                            <th>Currency</th>
+                            <th>Funded</th>
+                        </tr>
                     </thead>
                     <tbody>{portfolios}</tbody>
                 </table>

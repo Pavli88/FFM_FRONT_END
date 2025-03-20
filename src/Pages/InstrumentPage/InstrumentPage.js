@@ -10,13 +10,10 @@ import InstrumentBrokerTickers from "./InstrumentBrokerTickers/InstrumentBrokerT
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
     const [selectedInstrument, setSelectedInstrument] = useState({});
-    const [showNewInstrumentModal, setShowNewInstrumentModal] = useState(false);
 
-    const panel = <div style={{width: '100%'}}>
-        <div style={{padding: 15}}>
-            <button onClick={() => setShowNewInstrumentModal(!showNewInstrumentModal)}>New Instrument</button>
-        </div>
-        <InstrumentNew show={showNewInstrumentModal} close={() => setShowNewInstrumentModal(!showNewInstrumentModal)}/>
+
+    const panel = <div style={{width: '100%', paddingTop: 20}}>
+
         <InstrumentPrices/>
         <div style={{paddingTop: 15}}>
             <InstrumentBrokerTickers/>

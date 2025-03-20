@@ -3,7 +3,6 @@ import axios from "axios";
 import {BsArrowBarDown, BsPencil, BsPlusLg, BsArrowLeftRight } from "react-icons/bs";
 import {useExpanded, useGroupBy, useSortBy, useTable} from "react-table";
 import ServerContext from "../../../../../context/server-context";
-import {ButtonGroupVertical} from "../../../../../components/Buttons/ButtonGroups";
 import PortfolioTransactionEntryModal from "../PortfolioTransactionsModals/PortfolioTransactionEntryModal/PortfolioTransactionEntryModal";
 import PortfolioCashEntryModal from "../PortfolioTransactionsModals/PortfolioCashEntryModal/PortfolioCashEntryModal";
 import PortfolioUpdateModal from "../PortfolioTransactionsModals/PortfolioUpdateModal/PortfolioUpdateModal";
@@ -11,10 +10,12 @@ import {CSVLink} from "react-csv";
 import TransactionContext from "../context/transaction-context";
 import PortfolioContext from "../../../../../context/portfolio-context";
 import "./PortfolioTransactionsTable.css"
+import {FaCheckSquare, FaPlus, FaTrashAlt, FaMoneyBillWave, FaBan} from "react-icons/fa";
+import CardHeader from "../../../../../components/Card/CardHeader";
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
-const PortfolioTransactionsTable = (props) => {
+const PortfolioTransactionsTable = () => {
     const server = useContext(ServerContext).server;
     const transactions = useContext(TransactionContext).transactions;
 
@@ -43,37 +44,38 @@ const PortfolioTransactionsTable = (props) => {
 
     const columns = useMemo(() => [
         {
-        Header: "Actions",
-        accessor: "actions",
-        Cell: ({ row }) => (
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                {/* Checkbox */}
-                <input
-                    type="checkbox"
-                    checked={selectedIds.includes(row.original.id)}
-                    onChange={(e) => handleCheckboxChange(e, row.original.id)}
-                />
+            Header: "Actions",
+            accessor: "actions",
+            Cell: ({row}) => (
+                <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", width: 150}}>
+                    {/* Checkbox aligned to the left */}
+                    <div>
+                        <input
+                            type="checkbox"
+                            checked={selectedIds.includes(row.original.id)}
+                            onChange={(e) => handleCheckboxChange(e, row.original.id)}
+                        />
+                    </div>
 
-                {/* Edit Button */}
-                <button className="icon-button" onClick={() => onEditTransaction(row.original)}>
-                    <BsPencil size={16} />
-                </button>
-
-                {/* Conditional Buttons */}
-                {row.original.id === row.original.transaction_link_code  &&
-                    // If id === transaction_link_code → Show Transfer Button
-                    <>
-                        <button className="icon-button">
-                            <BsArrowLeftRight size={16}/> {/* Transfer Icon */}
+                    {/* Buttons aligned to the right */}
+                    <div style={{display: "flex", alignItems: "center", gap: "8px"}}>
+                        <button className="icon-button" onClick={() => onEditTransaction(row.original)} title={'Edit'}>
+                            <BsPencil size={20}/>
                         </button>
 
-                        <button className="icon-button" onClick={() => onAddTransaction(row.original)}>
-                            <BsPlusLg size={16}/>
-                        </button>
-                    </>
-                }
-            </div>
-        ),
+                        {row.original.id === row.original.transaction_link_code && (
+                            <>
+                                <button className="icon-button">
+                                    <BsArrowLeftRight size={20} title={'Move Transaction'}/>
+                                </button>
+                                <button className="icon-button" onClick={() => onAddTransaction(row.original)}>
+                                    <BsPlusLg size={20} title={'Add Linked Transaction'}/>
+                                </button>
+                            </>
+                        )}
+                    </div>
+                </div>
+            ),
         },
         {Header: "ID", accessor: "id", sortType: 'basic'},
         {Header: "Linked Transaction", accessor: "transaction_link_code", sortType: 'basic',},
@@ -131,21 +133,29 @@ const PortfolioTransactionsTable = (props) => {
         }
     };
 
-    const buttonDict = {
-        "New Transaction": () => setShowEntryModal(!showEntryModal),
-        "Cash Transaction": () => setShowCashModal(!showCashModal),
-        "Delete Transaction": () => deleteTransaction(),
-        "Inactivate": () => deleteTransaction(),
-    };
+    const headerContent = <div style={{display: "flex", gap: "10px"}}>
+        <button className={'icon-button'} onClick={() => setShowEntryModal(!showEntryModal)}
+                title="New Transaction">
+            <FaPlus size={20}/>
+        </button>
+        <button className={'icon-button'} onClick={() => setShowCashModal(!showCashModal)}
+                title="New Capital Transaction">
+            <FaMoneyBillWave size={20}/>
+        </button>
+        <button className={'icon-button'} title="Inactivate Selected">
+            <FaBan size={20}/>
+        </button>
+        <button className={'icon-button'} onClick={() => deleteTransaction()} title="Delete Selected">
+            <FaTrashAlt size={20}/>
+        </button>
+        <CSVLink filename="transactions.csv" data={data}>
+            <BsArrowBarDown size={20} className={'icon-button'}/>
+        </CSVLink>
+    </div>
 
     return (
         <div className='card' style={{ padding: '15px', borderRadius: '8px', overflow: 'hidden' }}>
-            <div style={{ display: "flex", height: 60, alignItems: "center" }}>
-                <ButtonGroupVertical buttonDict={buttonDict} />
-                <CSVLink filename="transactions.csv" data={data} className="download-link">
-                    <BsArrowBarDown size={20} className={'icon-button'} />
-                </CSVLink>
-            </div>
+            <CardHeader title={'Transaction'} content={headerContent}/>
 
             <div style={{ overflowX: 'auto' }}>
                 <table {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>

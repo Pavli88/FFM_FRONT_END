@@ -15,7 +15,7 @@ import TradingMetrics from "../../calculations/tradeMetrics";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { BsCaretUpFill, BsCaretDownFill } from 'react-icons/bs';
 import HoldingTable from "../../components/Tables/HoldingTable";
-
+import fetchAPI from "../../config files/api";
 // Custom hook for fetching dashboard data
 const useDashboardData = (server, currentDate, portCodes) => {
     const [data, setData] = useState({
@@ -117,11 +117,14 @@ const DashBoardPage = () => {
     const [portfolioNavData, setPortfolioNavData] = useState([]);
     const [startDate, setStartDate] = useState(firstDayOfYear);
     console.log(typeof portfolioNavData)
+    console.log(portfolioNavData)
+    console.log(childPortfolios, portGroup)
+
     // Fetch child portfolios whenever portGroup changes
     useEffect(() => {
         const fetchPortChildCodes = async () => {
             try {
-                const response = await axios.get(`${server}portfolios/group/${portGroup}/`);
+                const response = await fetchAPI.get(`portfolios/group/${portGroup}/`);
                 setChildPortfolios(response.data.child_portfolios);
             } catch (error) {
                 console.error("Error fetching child portfolios:", error);
@@ -153,7 +156,7 @@ const DashBoardPage = () => {
         const fetchNavData = async () => {
             try {
                 const [portfolioNavRes] = await Promise.all([
-                    axios.post(`${server}portfolios/get/nav/`, {
+                    fetchAPI.post('portfolios/get/nav/', {
                         portfolio_code__in: childPortfolios,
                         date__gte: startDate
                     }),

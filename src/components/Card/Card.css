@@ -1,0 +1,32 @@
+.card{
+    border-radius: 8px;
+    background: white;
+    height: 100%;
+    border: none;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;  /* Stack elements vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center;     /* Center content horizontally */
+    gap: 15px;               /* Add space between elements */
+    padding: 10px;           /* Padding inside the body */
+    /*margin: 5px;             !* 5px margin around the card body *!*/
+    height: calc(100% - 10px);         /* Padding inside the body */
+}
+
+.card-header{
+    /*border-radius: 10px;*/
+    background:   white ;
+    border-bottom: none;
+    padding: 5px;
+    padding-bottom: 15px;
+    display: flex;
+    font-size: 14px;
+    font-weight: bold;
+    color: #494f54;
+    align-items: center;
+    justify-content: space-between;
+}
