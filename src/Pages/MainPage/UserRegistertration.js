@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { registerUser } from "../../endpoints/authservice";
 import InputField from "../../components/InputField/InputField";
@@ -6,30 +6,15 @@ import Form from "../../components/Form/Form";
 import { passwordPolicyText } from "../../config files/constants";
 import "./UserRegistration.css";
 import "../../components/Form/Form.css";
+import CustomModal from "../../components/Modals/Modals";
+import ModalButton from "../../components/Modals/ModalButton";
 
-const UserRegistration = ({ onClose }) => {
+const UserRegistration = ({ show, close }) => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({});
     const history = useHistory();
-    const modalRef = useRef(null);
-
-    useEffect(() => {
-
-        const handleOutsideClick = (event) => {
-            if (modalRef.current && !modalRef.current.contains(event.target)) {
-                onClose();
-                history.push("/");
-            }
-        };
-
-        document.addEventListener("mousedown", handleOutsideClick);
-
-        return () => {
-            document.removeEventListener("mousedown", handleOutsideClick);
-        };
-    }, [onClose]);
 
 const handleRegister = async (e) => {
     e.preventDefault();
@@ -38,7 +23,6 @@ const handleRegister = async (e) => {
     const response = await registerUser(username, email, password);
 
     if (!response.success) {
-        // ✅ Update errors state properly
         setErrors(response.errors);
         return;
     }
@@ -53,9 +37,7 @@ const handleRegister = async (e) => {
 
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-container" ref={modalRef}>
-                <h2 className="modal-title">Register</h2>
+        <CustomModal show={show} onClose={close} title={"Registration"}>
                 <Form onSubmit={handleRegister} className="form-body">
                     <InputField
                         id="username"
@@ -101,11 +83,11 @@ const handleRegister = async (e) => {
 
                     {errors.general && <p className="error general-error">{errors.general}</p>}
                     <div>
-                        <button type="submit">Register</button>
+                        <ModalButton type="submit" label={"Register"}
+                                     variant="primary"/>
                     </div>
                 </Form>
-            </div>
-        </div>
+        </CustomModal>
     );
 };
 

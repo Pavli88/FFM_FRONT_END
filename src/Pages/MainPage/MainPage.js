@@ -44,14 +44,14 @@ const MainPage = (props) => {
                 <Route path="/login">
                     {showModal && (
                         <UserLogin
-                            onClose={() => setShowModal(false)}
+                           show={showModal} close={() => setShowModal(false)}
                         />
                     )}
                 </Route>
                 <Route path="/register">
                     {showModal && (
                         <UserRegistration
-                            onClose={() => setShowModal(false)}
+                            show={showModal} close={() => setShowModal(false)}
                         />
                     )}
                 </Route>

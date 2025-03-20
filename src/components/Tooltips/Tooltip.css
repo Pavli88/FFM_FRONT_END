@@ -2,6 +2,7 @@
 .tooltip-container {
     position: relative;
     display: inline-block;
+    margin-left: 12px;
 }
 
 /* Tooltip box styling */

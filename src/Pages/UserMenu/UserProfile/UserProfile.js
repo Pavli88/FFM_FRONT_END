@@ -91,13 +91,13 @@ const handleChangePassword = async ({ oldPassword, newPassword }) => {
                             <span>{formData.lastLogin}</span>
                         </div>
 
-                        {/* Buttons */}
                         <div className="button-group">
                             <button onClick={() => setShowModal(true)}>Change Password</button>
 
                             {showModal && (
                                 <ChangePasswordModal
-                                    onClose={() => setShowModal(false)}
+                                    show={showModal}
+                                    close={() => setShowModal(false)}
                                     onChangePassword={handleChangePassword}
                                 />
                             )}

@@ -194,6 +194,7 @@ button {
     justify-content: space-between;
     width: 100%;
     gap: 10px;
+    margin: 5px;
 }
 
 button:hover {
@@ -204,38 +205,6 @@ button:hover {
 button:disabled {
     background: #aaa;
     cursor: not-allowed;
-}
-
-/* Full-screen overlay */
-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-/* Modal box */
-.modal-container {
-    background: white;
-    padding: 20px;
-    width: 100%;
-    max-width: 400px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    position: relative;
-    text-align: center; /* Center the heading */
-    z-index: 1001;
-}
-
-.modal-title {
-    margin-bottom: 15px;
-    color: #494f54;
 }
 
 .button-group-vertical {
@@ -335,14 +304,6 @@ label {
     color: #494f54;
     font-weight: bold;
 }
-
-/* Label and info icon row */
-.password-label-container {
-    display: flex;
-    align-items: center;  /* Align label and icon horizontally */
-    gap: 10px;  /* Space between label and icon */
-}
-
 
 .vertical-box {
     display: flex;
@@ -606,12 +567,4 @@ ul li:hover {
     flex-direction: column;
     gap: 10px;
     padding: 10px;
-}
-
-.modal-header {
-    background: #f8f9fa;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    border-bottom: 1px solid #dee2e6;
 }
