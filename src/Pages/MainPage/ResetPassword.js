@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
-import Tooltip from "../../components/Tooltips/Tooltip";
-
+import { passwordPolicyText } from "../../config files/constants";
+import InputField from "../../components/InputField/InputField";
+import "../../components/Modals/Modals.css";
 
 const ResetPassword = ( ) => {
   const { reset_token } = useParams();
@@ -11,11 +12,8 @@ const ResetPassword = ( ) => {
   const [success, setSuccess] = useState('');
   const API_URL = process.env.REACT_APP_SERVER_URL;
   const history = useHistory();
-  const passwordPolicyText = "Your password must contain at least 8 characters, including a number, an uppercase letter, " +
-    "and at least one of the following special characters: !@#$%^&*()_+=-{}[]:;\"'<>,.?/";
 
 const handleResetPassword = async (e) => {
-    e.preventDefault();
     setError(null);
     setSuccess(null);
 
@@ -54,31 +52,29 @@ const handleResetPassword = async (e) => {
 
   return (
       <div className="modal-overlay">
-        <div className="modal-container">
-          <h2 className="modal-title">Reset Your Password</h2>
-          {error && <p style={{color: 'red'}}>{error}</p>}
-          {success && <p style={{color: 'green'}}>{success}</p>}
-          <form onSubmit={handleResetPassword} style={{marginTop: "30px"}}>
+          <div className="modal-container" style={{padding: "20px"}}>
+              <h2 className="modal-title" style={{marginBottom: "20px"}}>Reset Your Password</h2>
+              {error && <p style={{color: 'red'}}>{error}</p>}
+              {success && <p style={{color: 'green'}}>{success}</p>}
               <div>
-                  <div className="password-label-container">
-                      <label>New password:</label>
-                      <Tooltip
-                          text={passwordPolicyText}/>
-                  </div>
-
-                  <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => {setNewPassword(e.target.value); setError("")}}
-                  required
-              />
-            </div>
-              <div>
-                  <button style={{margin: "5px"}} type="submit">Reset Password</button>
+                  <InputField
+                      id="password"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => {
+                          setNewPassword(e.target.value);
+                          setError("");
+                      }}
+                      label="Enter new password"
+                      tooltipText={passwordPolicyText}
+                      required
+                  />
               </div>
-          </form>
-        </div>
-    </div>
+              <div className="button-group">
+                  <button className="modal-button" onClick={() => handleResetPassword()}>Save</button>
+              </div>
+          </div>
+      </div>
   );
 };
 

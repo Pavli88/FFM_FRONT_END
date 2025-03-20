@@ -1,9 +1,13 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { login, forgotPassword } from "../../endpoints/authservice";
 import AuthContext from "../../context/AuthProvider";
 import {useHistory} from "react-router-dom";
+import InputField from "../../components/InputField/InputField";
+import Form from "../../components/Form/Form";
+import CustomModal from "../../components/Modals/Modals";
+import ModalButton from "../../components/Modals/ModalButton";
 
-const UserLogin = ({ onClose }) => {
+const UserLogin = ({ close, show }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -14,18 +18,17 @@ const UserLogin = ({ onClose }) => {
     const history = useHistory();
 
     const { setAuth } = useContext(AuthContext);
-    const modalRef = useRef(null);
 
     // Handle login
-    const handleLogin = async (e) => {
-        e.preventDefault();
+    const handleLogin = async () => {
         setError("");
         setLoading(true);
         try {
             await login(username, password);
             alert("Login successful!");
             setAuth({ userAllowedToLogin: true });
-            onClose(); // Close modal after login
+            close();
+            history.push("/");
         } catch (err) {
             setError(err);
         } finally {
@@ -33,9 +36,7 @@ const UserLogin = ({ onClose }) => {
         }
     };
 
-    // Handle forgot password
-    const handleForgotPassword = async (e) => {
-        e.preventDefault();
+    const handleForgotPassword = async () => {
         setResetMessage("");
         setError("");
         setLoading(true);
@@ -49,119 +50,91 @@ const UserLogin = ({ onClose }) => {
         }
     };
 
-    // Close modal when clicking outside
-    const handleClickOutside = (e) => {
-        if (modalRef.current && !modalRef.current.contains(e.target)) {
-            onClose();
-            history.push("/");
-        }
-    };
+    const forgotButtons =
+        <div className="button-group">
+            <button onClick={() => handleForgotPassword()} disabled={loading}>
+                {loading ? "Sending..." : "Send Reset Link"}
+            </button>
+            <button onClick={() => {
+                setShowForgotPassword(false);
+                setError("");
+                setResetMessage("");
+            }}>Back to Login
+            </button>
+        </div>
 
-    // Add event listener when the component mounts
-    useEffect(() => {
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []); // Empty dependency array to run once when the component mounts
+    const loginButtons =
+        <div className="button-group">
+            <button onClick={() => handleLogin()} disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
+            </button>
+            <button onClick={() => {
+                setShowForgotPassword(true);
+                setError("");
+                setResetMessage("");
+            }} disabled={loading}>
+                Forgot Password
+            </button>
+        </div>
+
+    const loginForm = <div>
+        <InputField
+            id="username"
+            type="text"
+            value={username}
+            onChange={(e) => {
+                setUsername(e.target.value);
+                setError("");
+            }}
+            placeholder="Enter username"
+            label="Username"
+            required
+        />
+        <InputField
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+            }}
+            placeholder="Enter password"
+            label="Password"
+            required
+        />
+    </div>
+
+    const forgotPasswordForm = <div>
+        <InputField
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => {
+                setEmail(e.target.value);
+                setError("");
+                setResetMessage("");
+            }}
+            placeholder="Enter your email"
+            label="Enter your email"
+            required
+        />
+    </div>
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-container" ref={modalRef}>
-                <h2 className="modal-title">{showForgotPassword ? "Reset Password" : "Login"}</h2>
+        <CustomModal
+            show={show}
+            onClose={close}
+            title={showForgotPassword ? "Reset Password" : "Login"}
+            footer={!showForgotPassword ? loginButtons: forgotButtons}
+        >
+            {error && <p className="error-message">{error}</p>}
+            {resetMessage && <p className="success-message">{resetMessage}</p>}
 
-                {error && <p className="error-message">{error}</p>}
-                {resetMessage && <p className="success-message">{resetMessage}</p>}
-
-                {!showForgotPassword ? (
-                    <form onSubmit={handleLogin} className="login-form" autoComplete="off">
-                        <div className="form-group">
-                            <label htmlFor="username">Username:</label>
-                            <input
-                                id="username"
-                                type="text"
-                                value={username}
-                                onChange={(e) => {
-                                    setUsername(e.target.value);
-                                    setError(""); // Clear error on user input
-                                }}
-                                placeholder="Enter username"
-                                autoComplete="off"
-                                required
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="password">Password:</label>
-                            <input
-                                id="password"
-                                type="password"
-                                value={password}
-                                onChange={(e) => {
-                                    setPassword(e.target.value);
-                                    setError(""); // Clear error on user input
-                                }}
-                                placeholder="Enter password"
-                                autoComplete="off"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <button type="submit" disabled={loading} style={{display: "block", marginBottom: "10px"}}>
-                                {loading ? "Logging in..." : "Login"}
-                            </button>
-
-                            <p
-                                onClick={() => {setShowForgotPassword(true); setError(""); setResetMessage("")}}
-                                style={{
-                                    color: "blue",
-                                    textDecoration: "underline",
-                                    cursor: "pointer",
-                                    textAlign: "center"
-                                }}
-                            >
-                                Forgot Password?
-                            </p>
-                        </div>
-
-                    </form>
-                ) : (
-                    <form onSubmit={handleForgotPassword} className="forgot-password-form" autoComplete="off">
-                        <div className="form-group">
-                            <label htmlFor="email">Enter your email:</label>
-                            <input
-                                id="email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => {
-                                    setEmail(e.target.value);
-                                    setError(""); // Clear error on user input
-                                }}
-                                placeholder="Enter your email"
-                                autoComplete="off"
-                                required
-                            />
-                        </div>
-
-                        <div className='button-group'>
-                            <button type="submit" disabled={loading}>
-                                {loading ? "Sending..." : "Send Reset Link"}
-                            </button>
-
-
-                            <button type="button" onClick={() => {
-                                setShowForgotPassword(false);
-                                setError("");
-                                setResetMessage("");
-                            }}>
-                                Back to Login
-                            </button>
-                        </div>
-                    </form>
-                )}
-            </div>
-        </div>
+            {/* Login Form */}
+            {!showForgotPassword ? loginForm : forgotPasswordForm}
+        </CustomModal>
     );
 };
+
 
 export default UserLogin;

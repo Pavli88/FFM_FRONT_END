@@ -3,6 +3,7 @@ import ServerContext from "../../../context/server-context";
 import axios from "axios";
 import _ from "lodash"
 import fetchAPI from "../../../config files/api";
+import InputField from "../../InputField/InputField";
 
 const InstrumentSearch = ({ onSelect }) => {
     const server = useContext(ServerContext).server;
@@ -20,9 +21,10 @@ const InstrumentSearch = ({ onSelect }) => {
 
             setLoading(true);
             try {
-
-                const response = await fetchAPI.get('instruments/get/instruments/', {
-                    params: { name: query }
+                const token = localStorage.getItem("access");
+                const response = await axios.get(`${server}instruments/get/instruments/`, {
+                    params: { name: query },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
 
                 setResults(response.data || []); // Set results or empty array if no data
@@ -50,12 +52,12 @@ const InstrumentSearch = ({ onSelect }) => {
     return (
         <div className="relative w-80">
             {/* 🔹 Search Input */}
-            <input
+            <InputField
+                id="search"
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 placeholder="Search for an instrument..."
-                // className="w-full p-2 border rounded"
             />
 
             {/* 🔹 Loading Indicator */}

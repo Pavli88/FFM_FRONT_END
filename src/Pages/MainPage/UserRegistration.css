@@ -1,24 +1,3 @@
-/* Form styling */
-.register-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Form groups */
-.form-group {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-/* Error messages */
-.error {
-    color: red;
-    font-size: 14px;
-    margin-top: 5px;
-}
-
 .general-error {
     text-align: center;
     font-weight: bold;

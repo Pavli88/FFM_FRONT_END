@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import { useContext , useState, useEffect, useRef} from 'react';
 import Notifications from "./Notifications/Notifications";
 import ServerContext from "../context/server-context";
@@ -16,6 +16,7 @@ const Navbar = () => {
     const dropdownRef = useRef(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchType, setSearchType] = useState("user");
+    const history = useHistory();
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -33,6 +34,7 @@ const Navbar = () => {
     const userLogout = () => {
         logout();
         setAuth({ userAllowedToLogin: false });
+        history.push("/");
     };
 
     return (
@@ -51,6 +53,7 @@ const Navbar = () => {
             </div>
             <div  style={{ display: 'flex', alignItems: 'center', borderRadius: '20px', overflow: 'hidden', border: '1px solid #ccc', padding: '5px', background: '#fff', height: 45 }}>
                 <FaSearch size={26} style={{ marginLeft: '10px', color: '#888', width: 50 }} />
+
                 <input
                     type="text"
                     placeholder={`Search ${searchType}`}
