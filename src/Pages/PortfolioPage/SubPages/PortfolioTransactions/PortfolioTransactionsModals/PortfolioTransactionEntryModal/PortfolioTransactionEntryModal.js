@@ -7,6 +7,7 @@ import BuySellButtonGroup from "../../../../../../components/Buttons/BuySellButt
 import fetchAPI from "../../../../../../config files/api";
 import BrokerContext from "../../../../../../context/broker-context";
 import PortfolioContext from "../../../../../../context/portfolio-context";
+import InputField from "../../../../../../components/InputField/InputField";
 
 const PortfolioTransactionEntryModal = ({ show, close }) => {
     const { currentDate } = useContext(DateContext);
@@ -19,8 +20,8 @@ const PortfolioTransactionEntryModal = ({ show, close }) => {
         broker: '',
         active: false,
         trade_date: currentDate,
-        quantity: '',
-        price: '',
+        quantity: 1,
+        price: 1,
         fx_rate: 1.0,
         broker_id: '',
         account_id: ''
@@ -72,13 +73,24 @@ const PortfolioTransactionEntryModal = ({ show, close }) => {
     };
 
     const submitHandler = async () => {
+
+        if (Object.keys(formData.instrumentData).length === 0) {
+            alert("Please select an instrument.");
+            return;
+        }
+
+        if (!formData.broker) {
+            alert("Please select a broker.");
+            return;
+        }
+
         const parameters = {
             portfolio_code: selectedPortfolio.portfolio_code,
             portfolio_id: selectedPortfolio.id,
             security: formData.instrumentData.id,
-            quantity: formData.quantity,
-            price: formData.price,
-            fx_rate: formData.fx_rate,
+            quantity: parseFloat(formData.quantity),
+            price: parseFloat(formData.price),
+            fx_rate: parseFloat(formData.fx_rate),
             trade_date: formData.trade_date,
             transaction_type: formData.transactionType,
             broker: formData.broker,
@@ -126,50 +138,83 @@ const PortfolioTransactionEntryModal = ({ show, close }) => {
 
     return (
         <CustomModal show={show} onClose={close} title="New Transaction"
-            footer={
-                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
-                    Save
-                </button>
-            }>
+                     footer={
+                         <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
+                             Save
+                         </button>
+                     }>
             <div>
-                <div style={{ height: '600px', overflowY: 'scroll', padding: 5 }}>
-                    <div className="block">
+                <div style={{height: '600px', overflowY: 'scroll', padding: 15}}>
+                    <div style={{display: "flex", justifyContent: "space-between", paddingTop: 10, paddingBottom: 10}}>
                         <label className="input-label">Portfolio</label>
-                        <label className="input-label">{selectedPortfolio.portfolio_code}</label>
+                        <label className="input-label">{selectedPortfolio.portfolio_name} ({selectedPortfolio.portfolio_code})</label>
                     </div>
 
-                    <ToogleSwitch
-                        label="Active"
-                        isChecked={formData.active}
-                        onToggle={() => handleChange({ target: { name: 'active', type: 'checkbox', checked: !formData.active } })}
-                    />
+                    <div style={{paddingTop: 10, paddingBottom: 10}}>
+                        <ToogleSwitch
+                            label="Active"
+                            isChecked={formData.active}
+                            onToggle={() => handleChange({
+                                target: {
+                                    name: 'active',
+                                    type: 'checkbox',
+                                    checked: !formData.active
+                                }
+                            })}
+                        />
+                    </div>
 
                     <div className="block">
                         <label className="input-label">Instrument</label>
-                        <InstrumentSearch onSelect={handleInstrumentSelect} />
+                        <InstrumentSearch onSelect={handleInstrumentSelect}/>
                     </div>
 
-                    <BuySellButtonGroup side={formData.transactionType} change={handleTransactionTypeChange} />
+                    <BuySellButtonGroup side={formData.transactionType} change={handleTransactionTypeChange}/>
 
-                    <div className="block">
-                        <label className="input-label">Date</label>
-                        <input name="trade_date" value={formData.trade_date} onChange={handleChange} type="date" />
-                    </div>
+                    <InputField
+                        id="trade_date"
+                        type="date"
+                        name="trade_date"
+                        value={formData.trade_date}
+                        onChange={handleChange}
+                        label="Trade Date"
+                        min={selectedPortfolio.inception_date}
+                        required
+                    />
 
-                    <div className="block">
-                        <label className="input-label">Quantity</label>
-                        <input name="quantity" value={formData.quantity} onChange={handleChange} type="number" />
-                    </div>
+                    <InputField
+                        id="quantity"
+                        type="number"
+                        name="quantity"
+                        value={formData.quantity}
+                        onChange={handleChange}
+                        label="Quantity"
+                        min={0.0}
+                        required
+                    />
 
-                    <div className="block">
-                        <label className="input-label">Price</label>
-                        <input name="price" value={formData.price} onChange={handleChange} type="number" min="0" />
-                    </div>
+                    <InputField
+                        id="price"
+                        type="number"
+                        name="price"
+                        value={formData.price}
+                        onChange={handleChange}
+                        label="Price"
+                        min={0.0}
+                        required
+                    />
 
-                    <div className="block">
-                        <label className="input-label">FX Rate</label>
-                        <input name="fx_rate" value={formData.fx_rate} onChange={handleChange} type="number" />
-                    </div>
+                    <InputField
+                        id="fx_rate"
+                        type="number"
+                        name="fx_rate"
+                        value={formData.fx_rate}
+                        onChange={handleChange}
+                        label="FX Rate"
+                        min={0.0}
+                        required
+                    />
+
 
                     <div className="block">
                         <label className="input-label">Broker</label>
@@ -179,10 +224,15 @@ const PortfolioTransactionEntryModal = ({ show, close }) => {
                         </select>
                     </div>
 
-                    <div className="block">
-                        <label className="input-label">Broker ID</label>
-                        <input name="broker_id" value={formData.broker_id} onChange={handleChange} type="number" />
-                    </div>
+                    <InputField
+                        id="broker_id"
+                        type="number"
+                        name="broker_id"
+                        onChange={handleChange}
+                        label="Broker ID"
+                        min={0.0}
+                        required
+                    />
 
                     {formData.broker && (
                         <div className="block">

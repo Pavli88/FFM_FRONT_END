@@ -11,7 +11,7 @@ import ServerContext from "../../../../../context/server-context";
 const PortfolioTransactionsFilter = (props) => {
     const server = useContext(ServerContext).server;
     const currentDate = useContext(DateContext).currentDate;
-    const portfolioCode = useContext(PortfolioContext).selectedPortfolio.portfolio_code;
+    const { selectedPortfolio } = useContext(PortfolioContext);
     const saveTransactions = useContext(TransactionContext).saveTransactions;
 
     const securityRef = useRef();
@@ -26,7 +26,7 @@ const PortfolioTransactionsFilter = (props) => {
     // Function to construct parameters dynamically
     const updateParameters = () => {
         setParameters({
-            portfolio_code: portfolioCode, // Updates when portfolioCode changes
+            portfolio_code: selectedPortfolio.portfolio_code, // Updates when portfolioCode changes
             trade_date__gte: startDateRef.current?.value || currentDate,
             trade_date__lte: endDateRef.current?.value || currentDate,
             transaction_type: transactionType.map(data => data["value"]),
@@ -44,7 +44,7 @@ const PortfolioTransactionsFilter = (props) => {
 
     useEffect(() => {
         updateParameters();
-    }, [portfolioCode]);
+    }, [selectedPortfolio.portfolio_code]);
 
     const submitHandler = () => {
         fetchTransactionData();
@@ -96,7 +96,7 @@ const PortfolioTransactionsFilter = (props) => {
 
                 <div className="search-item" style={{ display: "flex", alignItems: "center", gap: "5px" }}>
                     <label>From</label>
-                    <input ref={startDateRef} defaultValue={currentDate} type="date" style={{ width: 200 }} onChange={updateParameters} />
+                    <input ref={startDateRef} defaultValue={selectedPortfolio.inception_date} min={selectedPortfolio.inception_date} type="date" style={{ width: 200 }} onChange={updateParameters} />
                 </div>
 
                 <div className="search-item" style={{ display: "flex", alignItems: "center", gap: "5px" }}>

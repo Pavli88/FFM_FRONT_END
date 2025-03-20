@@ -1,9 +1,12 @@
-import {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import DateContext from "../../../../../../context/date-context";
 import Select from "react-select";
 import PortfolioContext from "../../../../../../context/portfolio-context";
 import CustomModal from "../../../../../../components/Modals/Modals";
 import fetchAPI from "../../../../../../config files/api";
+import inputField from "../../../../../../components/InputField/InputField";
+import {passwordPolicyText} from "../../../../../../config files/constants";
+import InputField from "../../../../../../components/InputField/InputField";
 
 const PortfolioCashEntryModal = ( {show, close} ) => {
     const { selectedPortfolio, fetchPortfolios } = useContext(PortfolioContext);
@@ -11,8 +14,8 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
     const [currencies, setCurrencies] = useState([]);
     const [selectedCurrency, setSelectedCurrency] = useState(null);
     const [type, setType] = useState(null)
-    const dateRef = useRef();
-    const quantityRef = useRef();
+    const [tradeDate, setTradeDate] = useState(currentDate)
+    const [quantity, setQuantity] = useState(0);
 
     const submitHandler = () => {
         const defaultCurrency = currencies.find(currency => currency.currency === selectedPortfolio.currency);
@@ -20,8 +23,8 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
             portfolio_code: selectedPortfolio.portfolio_code,
             portfolio_id: selectedPortfolio.id,
             security: selectedPortfolio.multicurrency_allowed ? selectedCurrency.id : defaultCurrency.id,
-            quantity: parseFloat(quantityRef.current.value),
-            trade_date: dateRef.current.value,
+            quantity: quantity,
+            trade_date: tradeDate,
             transaction_type: type
         }
         console.log(parameters)
@@ -101,16 +104,25 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
                 </div>
                 }
 
+                <InputField
+                      id="trade_date"
+                      type="date"
+                      value={currentDate}
+                      onChange={(e) => {setTradeDate(e.target.value);
+                      }}
+                      label="Transaction Date"
+                      min={selectedPortfolio.inception_date}
+                      required
+                  />
 
-                <div className="block">
-                    <label>Date</label>
-                    <input ref={dateRef} defaultValue={currentDate} type="date" min={selectedPortfolio.inception_date}/>
-                </div>
-
-                <div className="block">
-                    <label>Quantity</label>
-                    <input ref={quantityRef} type="number" required min={0.0}/>
-                </div>
+                <InputField
+                      id="quantity"
+                      type="number"
+                      onChange={(e) => setQuantity(e.target.value)}
+                      label="Quantity"
+                      min={0.0}
+                      required
+                  />
 
                 {selectedPortfolio.status === 'Not Funded' &&
                     <div style={{

@@ -21,17 +21,17 @@ table{
 }
 
 th{
-    font-size: 14px;
+    font-size: 12px;
     padding: 5px 10px;
     white-space:nowrap;
-    background-color: #f1f1f1;
+    background-color: white;
     color: #494f54; /* Dark text for contrast */
 }
 
 thead{
     height: 50px;
-    background-color: #f1f1f1; /* Light gray background */
-    color: #333333; /* Dark text for contrast */
+    /*background-color: #f1f1f1; !* Light gray background *!*/
+    color: #494f54; /* Dark text for contrast */
     font-weight: bold;
     text-align: left;
     padding: 12px;
