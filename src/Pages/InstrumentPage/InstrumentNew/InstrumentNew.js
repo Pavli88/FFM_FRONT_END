@@ -1,56 +1,51 @@
-import axios from "axios";
 import CustomModal from "../../../components/Modals/Modals";
-import {useState, useRef, useContext} from "react";
-import ServerContext from "../../../context/server-context";
+import {useState, useContext} from "react";
+import fetchAPI from "../../../config files/api";
+import UserContext from "../../../context/user-context";
 
-const InstrumentNew = ( { show, close }) => {
-    const server = useContext(ServerContext).server;
-    const [selectedGroup, setSelectedGroup] = useState('BND');
-    const nameRef = useRef();
-    const countryRef = useRef();
-    const groupRef = useRef();
-    const typeRef = useRef();
-    const currencyRef = useRef();
+const InstrumentNew = ({ show, close }) => {
+    const userData = useContext(UserContext);
+
+    const [formData, setFormData] = useState({
+        name: '',
+        country: '',
+        group: '',
+        type: '',
+        currency: '',
+        user: userData?.is_superuser || userData?.is_staff ? String(userData.id) : userData?.id || null
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleUserChange = (e) => {
+        setFormData(prev => ({
+            ...prev,
+            user: e.target.value === 'None' ? null : e.target.value
+        }));
+    };
 
     const submitHandler = async (event) => {
-    event.preventDefault();
+        event.preventDefault();
 
-    try {
-        const token = localStorage.getItem("access");  // Get token for authentication
-
-        // Construct request data
-        const requestData = {
-            name: nameRef.current.value,
-            country: countryRef.current.value,
-            group: selectedGroup,
-            type: typeRef.current.value,
-            currency: currencyRef.current.value,
-        };
-
-        // Send the POST request
-        const response = await axios.post(`${server}instruments/new/`, requestData, {
-            headers: {
-                Authorization: `Bearer ${token}`,  // Include token in headers
-                "Content-Type": "application/json",  // Ensure correct content type
-            },
-        });
-
-        // Show success message
-        alert(response.data.message || "Instrument saved successfully!");
-        close(); // Close modal after successful submission
-
-    } catch (error) {
-        console.error("Error submitting data:", error);
-
-        // Handle errors from backend
-        if (error.response) {
-            alert(error.response.data.error || "Failed to create instrument.");
-        } else {
-            alert("Network error. Please try again.");
+        try {
+            const response = await fetchAPI.post('instruments/new/', formData);
+            alert(response.data.message || "Instrument saved successfully!");
+            close();
+        } catch (error) {
+            console.error("Error submitting data:", error);
+            if (error.response) {
+                alert(error.response.data.error || "Failed to create instrument.");
+            } else {
+                alert("Network error. Please try again.");
+            }
         }
-    }
-};
-
+    };
 
     const optionGenerator = (values) =>
         values.map((data) => (
@@ -59,119 +54,127 @@ const InstrumentNew = ( { show, close }) => {
             </option>
         ));
 
-    const secGroup = [
-        {value: 'Bond', label: 'Bond'},
-        {value: 'Cash', label:'Cash'},
-        {value: 'CFD', label:'CFD'},
-        {value: 'Equity', label: 'Equity'},
-        {value: 'Loan', label: 'Loan'},
-        {value: 'Option', label: 'Option'},
+    const allGroups = [
+        { value: 'Bond', label: 'Bond' },
+        { value: 'Cash', label: 'Cash' },
+        { value: 'CFD', label: 'CFD' },
+        { value: 'Equity', label: 'Equity' },
     ];
 
-    const bondType = [
-        {value:'COR', label: 'Corporate'},
-        {value:'GOV', label: 'Government'},
-    ];
+    const secGroup = (userData?.is_superuser || userData?.is_staff)
+        ? allGroups
+        : allGroups.filter(g => g.value !== 'Cash');
 
-    const cashType = [
-        {value:'Cash', label: 'Cash'},
-        {value:'Margin', label: 'Margin'},
-    ];
-
-    const cfdType = [
-        {value:'Bond', label: 'Bond'},
-        {value:'COM', label: 'Commodity'},
-        {value:'Equity', label: 'Equity'},
-        {value:'FX', label: 'Fx'},
-    ];
-
-    const equityType = [
-        {value:'Equity', label: 'Equity'},
-        {value:'Fund', label: 'Fund'},
-    ];
-
-    const optionType = [
-        {value:'Equity', label: 'Equity'},
-        {value:'FX', label: 'FX'},
-        {value:'Index', label: 'Index'},
-    ];
-
-    const loanType = [
-        {value:'Leverage', label: 'Leverage'},
-    ];
+    const types = {
+        Bond: [{ value: 'COR', label: 'Corporate' }, { value: 'GOV', label: 'Government' }],
+        Cash: [{ value: 'Cash', label: 'Cash' }, { value: 'Margin', label: 'Margin' }],
+        CFD: [
+            { value: 'Bond', label: 'Bond' },
+            { value: 'COM', label: 'Commodity' },
+            { value: 'Equity', label: 'Equity' },
+            { value: 'FX', label: 'Fx' }
+        ],
+        Equity: [
+            { value: 'Equity', label: 'Equity' },
+            { value: 'Fund', label: 'Fund' }
+        ]
+    };
 
     const currencies = [
-        {value: 'USD', label: 'USD'},
-        {value: 'EUR', label: 'EUR'},
-        {value: 'HUF', label: 'HUF'},
-        {value: 'AUD', label: 'AUD'},
-        {value: 'NZD', label: 'NZD'},
-        {value: 'JPY', label: 'JPY'},
-        {value: 'HKD', label: 'HKD'},
-        {value: 'DKK', label: 'DKK'},
-        {value: 'SEK', label: 'SEK'},
-        {value: 'NOK', label: 'NOK'},
-        {value: 'CHF', label: 'CHF'},
-        {value: 'CAD', label: 'CAD'},
-        {value: 'GBP', label: 'GBP'},
-        {value: 'CZK', label: 'CZK'},
-        {value: 'PLN', label: 'PLN'},
-        {value: 'SGD', label: 'SGD'},
-    ];
+        'USD', 'EUR', 'HUF', 'AUD', 'NZD', 'JPY', 'HKD', 'DKK',
+        'SEK', 'NOK', 'CHF', 'CAD', 'GBP', 'CZK', 'PLN', 'SGD'
+    ].map((cur) => ({ value: cur, label: cur }));
 
     const countries = [
-        {value: 'US', label: 'United States'},
-        {value: 'UK', label: 'United Kingdom'},
-        {value: 'HU', label: 'Hungary'},
-        {value: 'NON', label: '-'},
+        { value: 'US', label: 'United States' },
+        { value: 'UK', label: 'United Kingdom' },
+        { value: 'HU', label: 'Hungary' },
+        { value: 'NON', label: '-' },
     ];
 
     return (
         <CustomModal show={show} onClose={close} title={'New Instrument'}
-                     footer={
-                         <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
-                             Save
-                         </button>
-                     }>
-            <div>
-                <div className={'block'}>
+            footer={
+                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={submitHandler}>
+                    Save
+                </button>
+            }>
+            <form onSubmit={submitHandler} className="space-y-4">
+
+                {userData?.is_superuser || userData?.is_staff ? (
+                    <div className="block">
+                        <label>Owner</label>
+                        <select name="user" onChange={handleUserChange} value={formData.user ?? 'None'} required>
+                            <option value="None">System</option>
+                            <option value={userData.id}>My Instrument</option>
+                        </select>
+                    </div>
+                ) : null}
+
+                <div className="block">
                     <label>Full Name</label>
-                    <input ref={nameRef} type="text" required/>
+                    <input
+                        name="name"
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={handleChange}
+                    />
                 </div>
 
-                <div className={'block'}>
+                <div className="block">
                     <label>Country of Issue</label>
-                    <select ref={countryRef}>
+                    <select
+                        name="country"
+                        value={formData.country}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select Country</option>
                         {optionGenerator(countries)}
                     </select>
                 </div>
 
-                <div className={'block'}>
-                    <label style={{textAlign: 'left'}}>Group</label>
-                    <select ref={groupRef} onChange={(e) => setSelectedGroup(e.target.value)}>
+                <div className="block">
+                    <label>Group</label>
+                    <select
+                        name="group"
+                        value={formData.group}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select Group</option>
                         {optionGenerator(secGroup)}
                     </select>
                 </div>
 
-                <div className={'block'}>
+                <div className="block">
                     <label>Type</label>
-                    <select ref={typeRef}>
-                        {selectedGroup === 'Bond' ? optionGenerator(bondType) :
-                            selectedGroup === 'Cash' ? optionGenerator(cashType) :
-                                selectedGroup === 'CFD' ? optionGenerator(cfdType) :
-                                    selectedGroup === 'Loan' ? optionGenerator(loanType) :
-                                        selectedGroup === 'Option' ? optionGenerator(optionType) :
-                                            optionGenerator(equityType)}
+                    <select
+                        name="type"
+                        value={formData.type}
+                        onChange={handleChange}
+                        required
+                        disabled={!formData.group}
+                    >
+                        <option value="">Select Type</option>
+                        {optionGenerator(types[formData.group] || [])}
                     </select>
                 </div>
 
-                <div className={'block'}>
+                <div className="block">
                     <label>Currency</label>
-                    <select ref={currencyRef} required>
+                    <select
+                        name="currency"
+                        value={formData.currency}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select Currency</option>
                         {optionGenerator(currencies)}
                     </select>
                 </div>
-            </div>
+            </form>
         </CustomModal>
     );
 };

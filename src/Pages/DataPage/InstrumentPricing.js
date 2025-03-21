@@ -1,13 +1,10 @@
 import Card from "react-bootstrap/Card";
 import Select from "react-select";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import axios from "axios";
 import {useContext, useRef, useState} from "react";
-import ServerContext from "../../context/server-context";
+import fetchAPI from "../../config files/api";
 
 const InstrumentPricing = (props) => {
-    const server = useContext(ServerContext)['server'];
     const [vendorCode, setVendorCode] = useState('oanda');
     const startDateRef = useRef();
     const endDateRef = useRef();
@@ -16,7 +13,7 @@ const InstrumentPricing = (props) => {
     ];
 
     const runPricing = async() => {
-        const response = await axios.post(server + 'instruments/pricing/', {
+        const response = await fetchAPI.post('instruments/pricing/', {
             'broker': vendorCode,
             'start_date': startDateRef.current.value,
             'end_date': endDateRef.current.value

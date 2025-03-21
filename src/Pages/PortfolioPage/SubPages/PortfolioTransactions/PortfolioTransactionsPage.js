@@ -4,11 +4,12 @@ import PortfolioTransactionsTable from "./PortfolioTransactionsTable/PortfolioTr
 import {useState} from "react";
 import TransactionContext from "./context/transaction-context";
 
-const PortfolioTransactionsPage = (props) => {
+const PortfolioTransactionsPage = () => {
     const [newTransaction, setNewTransaction] = useState(0);
     const [parameters, setParameters] = useState();
     const [transactions, setTransactions] = useState([]);
-
+    const [showFilter, setShowFilter] = useState(false);
+    console.log(showFilter)
     return (
         <TransactionContext.Provider value={{
             transactions: transactions,
@@ -17,6 +18,8 @@ const PortfolioTransactionsPage = (props) => {
             saveNewTransaction: setNewTransaction,
             queryParameters : parameters,
             saveQueryParameters: setParameters,
+            showFilter: showFilter,
+            saveShowFilter: setShowFilter,
         }}>
             <div style={{padding: 20}}>
                 <PortfolioTransactionsFilter/>

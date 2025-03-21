@@ -1,23 +1,26 @@
-import {useState} from "react";
+import {useContext, useState} from "react";
 import InstrumentSearchBar from "./InstrumentSearchBar/InstrumentSearchBar";
 import InstrumentResuts from "./InstrumentResults/InstrumentResuts";
 import InstrumentPrices from "./InstrumentPrices/InstrumentPrices";
-import InstrumentNew from "./InstrumentNew/InstrumentNew";
 import InstrumentSearchContext from "./InstrumentPageContext/instrument-search-context";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
 import InstrumentBrokerTickers from "./InstrumentBrokerTickers/InstrumentBrokerTickers";
+import UserContext from "../../context/user-context";
+
 
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
     const [selectedInstrument, setSelectedInstrument] = useState({});
-
+    const userData = useContext(UserContext);
 
     const panel = <div style={{width: '100%', paddingTop: 20}}>
 
         <InstrumentPrices/>
-        <div style={{paddingTop: 15}}>
-            <InstrumentBrokerTickers/>
-        </div>
+        {userData?.is_superuser &&
+            <div style={{paddingTop: 15}}>
+                <InstrumentBrokerTickers/>
+            </div>
+        }
     </div>
 
     const mainArea = <div style={{padding: 20}}>

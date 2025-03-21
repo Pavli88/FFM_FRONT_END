@@ -3,6 +3,7 @@ import ServerContext from "../../../context/server-context";
 import _ from "lodash"
 import fetchAPI from "../../../config files/api";
 import InputField from "../../InputField/InputField";
+import "./InstrumentSearch.css"
 
 const InstrumentSearch = ({ onSelect }) => {
     const server = useContext(ServerContext).server;
@@ -10,7 +11,6 @@ const InstrumentSearch = ({ onSelect }) => {
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // Function to fetch instruments (debounced)
     const fetchInstruments = useCallback(
         _.debounce(async (query) => {
             if (!query) {
@@ -20,11 +20,10 @@ const InstrumentSearch = ({ onSelect }) => {
 
             setLoading(true);
             try {
-                const response = await fetchAPI.get('instruments/get/instruments/', {
+                const response = await fetchAPI.get("instruments/get/instruments/", {
                     params: { name: query },
                 });
-
-                setResults(response.data || []); // Set results or empty array if no data
+                setResults(response.data || []);
             } catch (error) {
                 console.error("Error fetching instruments:", error);
                 setResults([]);
@@ -37,18 +36,17 @@ const InstrumentSearch = ({ onSelect }) => {
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
-        fetchInstruments(value); // Debounced API call
+        fetchInstruments(value);
     };
 
     const handleSelect = (instrument) => {
-        setSearchTerm(instrument.name); // Set input value to selected item
-        setResults([]); // Hide results
-        onSelect(instrument); // Pass selected instrument to parent
+        setSearchTerm(instrument.name);
+        setResults([]);
+        onSelect(instrument);
     };
 
     return (
-        <div className="relative w-80">
-            {/* 🔹 Search Input */}
+        <div className="instrument-search-container">
             <InputField
                 id="search"
                 type="text"
@@ -57,31 +55,28 @@ const InstrumentSearch = ({ onSelect }) => {
                 placeholder="Search for an instrument..."
             />
 
-            {/* 🔹 Loading Indicator */}
-            {loading && <p className="text-gray-500 text-sm">Loading...</p>}
+            {loading && <p className="loading-text">Loading...</p>}
 
-            {/* 🔹 Results Table Dropdown */}
             {results.length > 0 && (
-                <div style={{ height: "400px", overflowY: "auto", border: "1px solid #ccc", margin: 5, width: '100%' }}>
-                    <table style={{border: "none"}}>
-                        <thead style={{height: '20px'}}>
-                            <tr >
-                                <th >Name</th>
-                                <th >Type</th>
-                                <th >Group</th>
+                <div className="dropdown-results">
+                    <table className="results-table">
+                        <thead className="results-header">
+                            <tr>
+                                <th>Name</th>
+                                <th>Group</th>
+                                <th>Type</th>
                             </tr>
                         </thead>
                         <tbody>
                             {results.map((instrument) => (
                                 <tr
                                     key={instrument.id}
-                                    // className="cursor-pointer hover:bg-gray-100"
+                                    className="result-row"
                                     onClick={() => handleSelect(instrument)}
-                                    style={{border: "none", cursor: "pointer"}}
                                 >
-                                    <td style={{border: "none"}}>{instrument.name}</td>
-                                    <td style={{border: "none"}}>{instrument.type}</td>
-                                    <td style={{border: "none"}}>{instrument.group}</td>
+                                    <td>{instrument.name}</td>
+                                    <td>{instrument.group}</td>
+                                    <td>{instrument.type}</td>
                                 </tr>
                             ))}
                         </tbody>

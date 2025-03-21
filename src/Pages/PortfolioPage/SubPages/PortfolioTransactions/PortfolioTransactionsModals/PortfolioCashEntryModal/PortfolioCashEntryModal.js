@@ -23,7 +23,7 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
             portfolio_code: selectedPortfolio.portfolio_code,
             portfolio_id: selectedPortfolio.id,
             security: selectedPortfolio.multicurrency_allowed ? selectedCurrency.id : defaultCurrency.id,
-            quantity: quantity,
+            quantity: parseFloat(quantity),
             trade_date: tradeDate,
             transaction_type: type
         }
@@ -48,7 +48,7 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
                 });
         }
 
-        // close()
+        close()
     };
 
     useEffect(() => {
@@ -71,7 +71,7 @@ const PortfolioCashEntryModal = ( {show, close} ) => {
     ]
 
     const onlySubscription = [{ value: 'Subscription', label: 'Subscription' }]
-    console.log(currencies)
+
     return (
         <CustomModal show={show} onClose={close} title={'New Cash'}
                      footer={

@@ -10,14 +10,14 @@ import {CSVLink} from "react-csv";
 import TransactionContext from "../context/transaction-context";
 import PortfolioContext from "../../../../../context/portfolio-context";
 import "./PortfolioTransactionsTable.css"
-import {FaCheckSquare, FaPlus, FaTrashAlt, FaMoneyBillWave, FaBan} from "react-icons/fa";
+import {FaSearch, FaPlus, FaTrashAlt, FaMoneyBillWave, FaBan} from "react-icons/fa";
 import CardHeader from "../../../../../components/Card/CardHeader";
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
 const PortfolioTransactionsTable = () => {
     const server = useContext(ServerContext).server;
-    const transactions = useContext(TransactionContext).transactions;
+    const {transactions, saveShowFilter, showFilter} = useContext(TransactionContext);
 
     const [showEntryModal, setShowEntryModal] = useState(false);
     const [showCashModal, setShowCashModal] = useState(false);
@@ -147,6 +147,9 @@ const PortfolioTransactionsTable = () => {
         </button>
         <button className={'icon-button'} onClick={() => deleteTransaction()} title="Delete Selected">
             <FaTrashAlt size={20}/>
+        </button>
+        <button className={'icon-button'} onClick={() => saveShowFilter(!showFilter)} title="Search">
+            <FaSearch size={20}/>
         </button>
         <CSVLink filename="transactions.csv" data={data}>
             <BsArrowBarDown size={20} className={'icon-button'}/>
