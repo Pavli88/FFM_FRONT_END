@@ -73,6 +73,21 @@ export const BarChart = ({ labels, values }) => {
         dataLabels: {
             enabled: false,
         },
+        colors: [function (value) {
+                return value["value"] < 0 ? '#ee7d8b' : '#00a59a';
+            }],
+        xaxis: {
+            categories: labels,
+            labels: {
+                show: false, // Hides x-axis labels
+            },
+            axisTicks: {
+                show: false, // Hides x-axis ticks
+            },
+            axisBorder: {
+                show: false, // Hides x-axis border
+            },
+        },
         yaxis: {
             labels: {
                 formatter: function (val) {
@@ -120,11 +135,15 @@ export const BarChartSorted = ({ labels, values }) => {
             data: sortedValues, // Use sorted values
         }],
         xaxis: {
-            categories: sortedLabels, // Use sorted labels
+            categories: sortedLabels,
         },
+        colors: [function (value) {
+                return value["value"] < 0 ? '#ee7d8b' : '#00a59a';
+            }],
         dataLabels: {
             enabled: false,
         },
+
         yaxis: {
             labels: {
                 formatter: function (val) {
@@ -153,7 +172,7 @@ export const BarChartSorted = ({ labels, values }) => {
     );
 };
 
-export const StackedBarChart = ( { labels, data, yName} ) => {
+export const StackedBarChart = ({ labels, data, yName = '', title }) => {
     const options = {
         chart: {
             type: 'bar',
@@ -166,24 +185,44 @@ export const StackedBarChart = ( { labels, data, yName} ) => {
                     enabled: false, // Hides the data labels on the bars
                 },
             },
-
         },
         dataLabels: {
             enabled: false, // Global setting to disable data labels
         },
         xaxis: {
             categories: labels,
+            labels: {
+                show: false, // Hides x-axis labels
+            },
+            axisTicks: {
+                show: false, // Hides x-axis ticks
+            },
+            axisBorder: {
+                show: false, // Hides x-axis border
+            },
+        },
+        grid: {
+            borderColor: "#ccc", // Grid line color
+            strokeDashArray: 1,  // Dashed grid lines (set to 0 for solid lines)
+            xaxis: {
+                lines: {
+                    show: false, // Hide vertical grid lines
+                },
+            },
+            yaxis: {
+                lines: {
+                    show: true, // Show horizontal grid lines
+                },
+            },
         },
         yaxis: {
-            title: {
-                text: yName,
-            },
+            ...(yName ? { title: { text: yName } } : {}), // Conditionally show y-axis title
             labels: {
                 formatter: (value) => value.toFixed(2), // Formats y-axis values to two decimal places
             },
         },
         legend: {
-            position: 'top', // Legend position
+            position: 'bottom', // Legend position
         },
         fill: {
             opacity: 1,
@@ -198,13 +237,19 @@ export const StackedBarChart = ( { labels, data, yName} ) => {
     const series = data;
 
     return (
-        <div>
-            <Chart
+        <div className={'card'} style={{paddingBottom: 20}}>
+            <div className={'card-header'}>
+                <label>{title}</label>
+            </div>
+            <div style={{height: '100%'}}>
+                 <Chart
                 options={options}
                 series={series}
                 type="bar"
-                height={350}
+                height={'100%'}
             />
+            </div>
+
         </div>
     );
-}
+};

@@ -108,7 +108,7 @@ const PortfolioTransactionPnl = ( {unrealized, realized} ) => {
                             Realized
                         </div>
                         <span style={{
-                            color: lastRel < 0 ? 'red' : 'green',
+                            color: lastRel < 0 ? '#ee7d8b' : '#00a59a',
                             paddingLeft: 10,
                             paddingRight: 10
                         }}>{lastRel}</span>
@@ -116,7 +116,7 @@ const PortfolioTransactionPnl = ( {unrealized, realized} ) => {
                             Unrealized
                         </div>
                         <span style={{
-                            color: lastUnrel < 0 ? 'red' : 'green',
+                            color: lastUnrel < 0 ? '#ee7d8b' : '#00a59a',
                             paddingLeft: 10,
                             paddingRight: 10
                         }}>{lastUnrel}</span>
@@ -124,7 +124,7 @@ const PortfolioTransactionPnl = ( {unrealized, realized} ) => {
                             Total
                         </div>
                         <span style={{
-                            color: lastTotal < 0 ? 'red' : 'green',
+                            color: lastTotal < 0 ? '#ee7d8b' : '#00a59a',
                             paddingLeft: 10
                         }}>{lastTotal}</span>
                     </div>

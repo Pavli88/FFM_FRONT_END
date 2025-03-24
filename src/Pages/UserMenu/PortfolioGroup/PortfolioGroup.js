@@ -1,8 +1,6 @@
-import {BsDash, BsPlus} from "react-icons/bs";
+import {BsDash, BsPlus, BsTrash, BsArrowRepeat} from "react-icons/bs";
 import {useContext, useEffect, useRef, useState} from "react";
-import ServerContext from "../../../context/server-context";
 import DashboardContext from "../../../context/dashboard-context";
-import axios from "axios";
 import Modal from "react-bootstrap/Modal";
 import fetchAPI from "../../../config files/api";
 
@@ -48,9 +46,10 @@ const AddModal = (props) => {
     )
 };
 
-const TreeNode = ({ node, onRightClick }) => {
+const TreeNode = ({ node, onRightClick, onDelete, onAddChild }) => {
     const [expanded, setExpanded] = useState(true);
     const hasChildren = node.children && node.children.length > 0;
+    const { setPortGroup } = useContext(DashboardContext);
 
     const handleRightClick = (event) => {
         event.preventDefault();
@@ -58,33 +57,44 @@ const TreeNode = ({ node, onRightClick }) => {
         onRightClick(event, node);
     };
 
+    const borderColor = node.portfolio_type === "Business" ? "green" :
+                        node.portfolio_type === "Portfolio Group" ? "orange" :
+                        node.portfolio_type === "Portfolio" ? "blue" : "#ccc";
+
     return (
-        <div
-            style={{ marginLeft: 10, marginTop: 5 }}
-            onContextMenu={handleRightClick}
-            className={
-                node.portfolio_type === "Business" || node.portfolio_type === "Portfolio Group"
-                    ? "tree-node-parent"
-                    : "tree-node-child"
-            }
-        >
-            <div onClick={() => setExpanded(!expanded)} style={{display: "flex", alignItems: "center"}}>
-                <div style={{width: 20, textAlign: "center"}}>
-                    {hasChildren && (expanded ? <BsDash/> : <BsPlus/>)}
-                </div>
-                <div style={{flex: 1, paddingLeft: 10}}>{node.name}</div>
-                <div style={{flex: 1, paddingLeft: 10, fontSize: "0.9em", color: "#555"}}>
-                    {node.portfolio_code}
-                </div>
-                <div style={{flex: 1, paddingLeft: 20, fontSize: "0.9em", color: "#555"}}>
-                    {node.portfolio_type}
+        <div style={{ marginLeft: 10, marginTop: 5 }} onContextMenu={handleRightClick}>
+            <div style={{ padding: "2px", backgroundColor: "#f1f1f1", borderRight: `2px solid ${borderColor}`, borderRadius: 5 }}>
+                <div onClick={() => setExpanded(!expanded)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+                        <div style={{ width: 20, textAlign: "center" }}>
+                            {hasChildren && (expanded ? <BsDash/> : <BsPlus/>)}
+                        </div>
+                        <label style={{ flex: 2, paddingLeft: 10 }}>{node.name}</label>
+                        <div style={{ flex: 1, paddingLeft: 10, fontSize: "0.9em", color: "#555" }}>{node.currency}</div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <button className={'icon-button'}>
+                            <BsArrowRepeat style={{ cursor: 'pointer', fontSize: 20 }} onClick={() => setPortGroup(node.portfolio_code)}/>
+                        </button>
+
+                        {node.portfolio_type === "Business" || node.portfolio_type === "Portfolio Group" ? (
+                            <button className={'icon-button'}>
+                                 <BsPlus style={{ cursor: 'pointer', fontSize: 20 }} onClick={() => onAddChild(node)} />
+                            </button>
+
+                        ) : (
+                            <button className={'icon-button'}>
+                                 <BsTrash style={{ cursor: 'pointer', fontSize: 20 }} onClick={() => onDelete(node)} />
+                            </button>
+
+                        )}
+                    </div>
                 </div>
             </div>
-
             {hasChildren && expanded && (
-                <div>
+                <div style={{ marginLeft: 20, borderLeft: "1px solid #ccc", paddingLeft: "10px" }}>
                     {node.children.map((child) => (
-                        <TreeNode key={child.id} node={child} onRightClick={onRightClick} />
+                        <TreeNode key={child.id} node={child} onRightClick={onRightClick} onDelete={onDelete} onAddChild={onAddChild} />
                     ))}
                 </div>
             )}
@@ -96,68 +106,29 @@ const TreeView = ({ data, update, allowSelect = false }) => {
     const [contextMenu, setContextMenu] = useState(null);
     const [selectedNode, setSelectedNode] = useState(null);
     const [addModalShow, setAddModalShow] = useState(false);
-    const { setPortGroup } = useContext(DashboardContext);
+
     const handleRightClick = (event, node) => {
         event.preventDefault();
         setSelectedNode(node);
         setContextMenu({ visible: true, x: event.clientX, y: event.clientY });
     };
 
-    const handleMenuClick = async (action) => {
-        if (action === "delete") {
-            const response = await fetchAPI.post("portfolios/delete/port_group/",
-                {id: selectedNode.id});
-            if (response.data.success) update(selectedNode.id);
-            else alert(response.data.message);
-        } else if (action === "add-child") {
-            setAddModalShow(true);
-        } else if (action === "load") {
-            setPortGroup(selectedNode.portfolio_code)
-            // alert(`Loading portfolio: ${selectedNode.portfolio_code}`); // Placeholder for load functionality
-        }
-        setContextMenu(null);
+    const handleDelete = async (node) => {
+        const response = await fetchAPI.post("portfolios/delete/port_group/", { id: node.id });
+        if (response.data.success) update(node.id);
+        else alert(response.data.message);
     };
 
-    const handleOutsideClick = () => setContextMenu(null);
+    const handleAddChild = (node) => {
+        setSelectedNode(node);
+        setAddModalShow(true);
+    };
 
     return (
-        <div onClick={handleOutsideClick} style={{ position: "relative", height: "100%" }}>
-            {/*<div style={{ display: "flex", paddingBottom: 10, fontWeight: "bold", borderBottom: "1px solid #ccc" }}>*/}
-            {/*    <div style={{ flex: 1 }}>Portfolio Name</div>*/}
-            {/*    <div style={{ flex: 1, paddingLeft: 20 }}>Portfolio Code</div>*/}
-            {/*</div>*/}
-
+        <div onClick={() => setContextMenu(null)} style={{ position: "relative", height: "100%", padding: "10px", backgroundColor: "#fff", borderRadius: "8px", boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}>
             {data.map((node) => (
-                <TreeNode key={node.id} node={node} onRightClick={handleRightClick} />
+                <TreeNode key={node.id} node={node} onRightClick={handleRightClick} onDelete={handleDelete} onAddChild={handleAddChild} />
             ))}
-
-            {contextMenu?.visible && (
-                <ul
-                    style={{
-                        position: "absolute",
-                        top: `${contextMenu.y}px`,
-                        left: `${contextMenu.x}px`,
-                        backgroundColor: "white",
-                        border: "1px solid #ccc",
-                        padding: "10px",
-                        listStyleType: "none",
-                        zIndex: 100,
-                        borderRadius: 10,
-                        boxShadow: "0px 2px 6px rgba(0,0,0,0.2)",
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    {allowSelect && <li onClick={() => handleMenuClick("load")}>Load</li>}
-                    {(selectedNode?.portfolio_type === "Business" || selectedNode?.portfolio_type === "Portfolio Group") && (
-                        <>
-
-                            <li onClick={() => handleMenuClick("add-child")}>Add Child</li>
-                        </>
-                    )}
-                    <li onClick={() => handleMenuClick("delete")}>Delete Node</li>
-                </ul>
-            )}
-
             {selectedNode !== null && (
                 <AddModal
                     show={addModalShow}
@@ -194,13 +165,14 @@ const PortfolioGroup = ({ allowSelect = false }) => {
     const treeData = buildTree(portGroupData);
 
     return (
-        <div className={"card"}>
-            <div className={"card-header"}>Portfolios Structure</div>
-            <div style={{ overflow: "scroll", height: "100%" }}>
-                <TreeView data={treeData} update={(e) => setNode(e)} allowSelect={allowSelect}/>
+        <div className="card" style={{ padding: "15px", borderRadius: "10px", boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)" }}>
+            <div className="card-header" style={{ fontSize: "1.2em", fontWeight: "bold", paddingBottom: "10px", borderBottom: "2px solid #ccc" }}>Portfolios Structure</div>
+            <div style={{ overflowY: "auto", height: "100%" }}>
+                <TreeView data={treeData} update={(e) => setNode(e)} allowSelect={allowSelect} />
             </div>
         </div>
     );
 };
+
 
 export default PortfolioGroup;

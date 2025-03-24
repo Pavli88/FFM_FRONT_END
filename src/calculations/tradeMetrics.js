@@ -48,7 +48,7 @@ const TradingMetrics = ({ profits, maxUnrealized }) => {
 
         const isPositive = value > 0;
         const isNegative = value < 0;
-        const color = isPositive ? 'green' : isNegative ? 'red' : 'black';
+        const color = isPositive ? '#00a59a' : isNegative ? '#ee7d8b' : 'black';
         const Icon = isPositive ? BsCaretUpFill : isNegative ? BsCaretDownFill : null;
 
         return (

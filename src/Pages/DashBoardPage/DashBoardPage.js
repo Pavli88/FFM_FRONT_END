@@ -232,12 +232,12 @@ const DashBoardPage = () => {
 
 
             <div style={{display: "flex", height: 350, marginTop: 5}}>
-                <div className={'card'} style={{flex: 2}}>
-                    <StackedBarChart data={data} labels={labels} yName={'NAV'}/>
+                <div style={{flex: 2}}>
+                    <StackedBarChart data={data} labels={labels} title={'NAV History'}/>
                 </div>
 
-                <div className={'card'} style={{flex: 2, marginRight: 5, marginLeft: 5}}>
-                    <StackedBarChart data={summedData} labels={labels} yName={'NAV'}/>
+                <div style={{flex: 2, marginRight: 5, marginLeft: 5}}>
+                    <StackedBarChart data={summedData} labels={labels} title={'NAV Decomposition'}/>
                 </div>
                 <div className={'card'} style={{height: '100%', flex: 1}}>
                     <PieChart values={navValues} labels={portfolios}/>
@@ -258,8 +258,8 @@ const DashBoardPage = () => {
 
             </div>
             <div style={{display: "flex", height: 350, marginTop: 5}}>
-                <div className={'card'} style={{flex: 1, marginRight: 5}}>
-                    <StackedBarChart data={summedPnl} labels={labels} yName={'Profit & Loss'}/>
+                <div style={{flex: 1, marginRight: 5}}>
+                    <StackedBarChart data={summedPnl} labels={labels} title={'Profit History'}/>
                 </div>
 
                 <div style={{flex: 1, height: 350, marginRight: 5}}>
