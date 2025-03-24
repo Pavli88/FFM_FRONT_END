@@ -88,7 +88,7 @@ const UnitModal = (props) => {
 
 const OpenTransactions = ( {openTransactions} ) => {
     const { fetchTransactions } = useContext(TradeContext);
-    const [grouping, setGrouping] = useState(["portfolio_code", "name"]); // Default grouping
+    const [grouping, setGrouping] = useState(["portfolio_code"]); // Default grouping
 
     const closeTransactions = async (selectedIDs) => {
         const response = await fetchAPI.post('trade_page/trade/close/', {
@@ -118,8 +118,8 @@ const OpenTransactions = ( {openTransactions} ) => {
             },
             { Header: "Quantity", accessor: "quantity", aggregate: "sum", disableGroupBy: true },
             { Header: "Trade Price", accessor: "price", disableGroupBy: true },
-            { Header: "Market Value", accessor: "mv", aggregate: "sum", disableGroupBy: true },
-            { Header: "Margin", accessor: "margin_balance", aggregate: "sum", disableGroupBy: true },
+            { Header: "Market Value", accessor: "mv", aggregate: "sum", disableGroupBy: true, Cell: ({value}) => (value.toFixed(2)) },
+            { Header: "Margin", accessor: "margin_balance", aggregate: "sum", disableGroupBy: true, Cell: ({value}) => (value.toFixed(2)) },
             { Header: "Transaction ID", accessor: "id", disableGroupBy: true },
             { Header: "Account ID", accessor: "account_id", disableGroupBy: true },
             { Header: "Broker", accessor: "broker", disableGroupBy: true },
@@ -129,7 +129,11 @@ const OpenTransactions = ( {openTransactions} ) => {
     );
 
     const tableInstance = useTable(
-        { columns, data },
+        {
+            columns,
+            data,
+            initialState: { groupBy: grouping }
+        },
         useGroupBy,
         useExpanded
     );
@@ -210,37 +214,61 @@ const OpenTransactions = ( {openTransactions} ) => {
                         ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                        {rows.map((row) => {
-                            prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()} style={{ cursor: row.isGrouped ? "" : "pointer" }}>
-                                    {row.cells.map((cell) => (
-                                        <td {...cell.getCellProps()} style={{ fontWeight: cell.isGrouped ? "bold" : "normal" }}>
-                                            {cell.isGrouped ? (
-                                                <>
-                                                    <span {...row.getToggleRowExpandedProps()}>
-                                                        {row.isExpanded ? <BsCaretUpFill /> : <BsCaretDownFill />}
-                                                    </span>{" "}
-                                                    {cell.render("Cell")}
-                                                    <span className="counter-badge">{row.subRows.length}</span>
-                                                </>
-                                            ) : cell.isAggregated ? (
-                                                cell.render("Aggregated")
-                                            ) : cell.isPlaceholder ? null : (
-                                                cell.render("Cell")
-                                            )}
-                                        </td>
-                                    ))}
+                    {rows.map((row) => {
+                        prepareRow(row);
+                        return (
+                            <tr {...row.getRowProps()} style={{cursor: row.isGrouped ? "" : "pointer"}}>
+                                {row.cells.map((cell) => (
+                                    <td {...cell.getCellProps()}
+                                        style={{fontWeight: cell.isGrouped ? "bold" : "normal"}}>
+                                        {cell.isGrouped ? (
+                                            <div style={{display: "flex", alignItems: "center", position: "relative"}}>
+                                                {/* Top-right badge */}
+                                                <label
+                                                    style={{
+                                                        position: "absolute",
+                                                        top: -6,
+                                                        right: -2,
+                                                        backgroundColor: "red",
+                                                        color: "white",
+                                                        fontSize: "0.7rem",
+                                                        borderRadius: "50%",
+                                                        padding: "2px 5px",
+                                                        lineHeight: 1,
+                                                    }}
+                                                >
+                                                    {row.subRows.length}
+                                                </label>
 
-                                    {/* Fixed Actions Column */}
-                                    <td style={{
-                                        position: "sticky",
-                                        right: 0,
-                                        background: "#fff",
-                                        zIndex: 1,
-                                        minWidth: "180px",
-                                        textAlign: "center"
-                                    }}>
+                                                {/* Expand/collapse icon */}
+                                                <div style={{marginRight: 6}}>
+            <span {...row.getToggleRowExpandedProps()}>
+                {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
+            </span>
+                                                </div>
+
+                                                {/* Grouped cell label */}
+                                                {cell.render("Cell")}
+                                            </div>
+
+
+                                        ) : cell.isAggregated ? (
+                                            cell.render("Aggregated")
+                                        ) : cell.isPlaceholder ? null : (
+                                            cell.render("Cell")
+                                        )}
+                                    </td>
+                                ))}
+
+                                {/* Fixed Actions Column */}
+                                <td style={{
+                                    position: "sticky",
+                                    right: 0,
+                                    background: "#fff",
+                                    zIndex: 1,
+                                    minWidth: "180px",
+                                    textAlign: "center"
+                                }}>
                                         {row.isGrouped && row.groupByID === "portfolio_code" && (
                                             <button style={{ backgroundColor: "#ee7d8b", color: "white" }} onClick={() => handleLiquidate(row)}>
                                                 Liquidate

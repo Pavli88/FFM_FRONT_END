@@ -16,6 +16,9 @@ import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { BsCaretUpFill, BsCaretDownFill } from 'react-icons/bs';
 import HoldingTable from "../../components/Tables/HoldingTable";
 import fetchAPI from "../../config files/api";
+import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
+import ValueChange from "../../components/Layout/ValueChange/ValueChange";
+
 // Custom hook for fetching dashboard data
 const useDashboardData = (server, currentDate, portCodes) => {
     const [data, setData] = useState({
@@ -197,216 +200,103 @@ const DashBoardPage = () => {
     const secondTotalCash = secondLastRecord.map((n) => n.cash_val).reduce((acc, curr) => acc + curr, 0).toFixed(2)
     const navChange = totalNav - totalSecondNav
     const cashChange = totalCash - secondTotalCash
-    return (
-        <div >
-            {/* Side Menu */}
-            <div style={{
-                width: isMenuOpen ? "500px" : "50px",
-                transition: "width 0.3s ease",
-                backgroundColor: "#eeeeee",
-                height: "100vh",
-                position: "fixed",
-                zIndex: 2,
-                top: 0,
-                left: 0,
-                overflow: "hidden",
-                boxShadow: isMenuOpen ? "2px 0px 5px rgba(0, 0, 0, 0.1)" : "none",
-                paddingTop: "80px",
-                paddingLeft: isMenuOpen ? 20 : 0,
-                paddingRight: 50,
-            }}>
-                {/* Portfolio Group Widget inside the menu */}
-                <div style={{
-                    visibility: isMenuOpen ? "visible" : "hidden",
-                    opacity: isMenuOpen ? 1 : 0,
-                    transition: "visibility 0.3s, opacity 0.3s ease",
-                    height: '400px'
-                }}>
-                    <PortfolioGroup allowSelect={true}/>
-                </div>
 
-                <div style={{
-                    visibility: isMenuOpen ? "visible" : "hidden",
-                    opacity: isMenuOpen ? 1 : 0,
-                    transition: "visibility 0.3s, opacity 0.3s ease",
-                    height: '400px'
-                }}>
-                    <input type={'date'} onChange={(e) => setStartDate(e.target.value)} defaultValue={startDate}/>
-                </div>
+    const panel = <div>
+        <PortfolioGroup allowSelect={true}/>
+        <div>
+            <input type={'date'} onChange={(e) => setStartDate(e.target.value)} defaultValue={startDate}/>
+        </div>
+    </div>
 
-                {/* Open/Close Button */}
-                <div
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    style={{
-                        position: "absolute",
-                        right: "5px",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        cursor: "pointer",
-                        fontSize: "16px",
-                        backgroundColor: "#fff",
-                        borderRadius: "80%",
-                        padding: "10px",
-                        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
-                        zIndex: 3,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    {isMenuOpen ? <BsChevronLeft/> : <BsChevronRight/>}
+    const mainArea = <div>
+        <div className={'card'} style={{padding: 5}}>
+            <label style={{fontWeight: "bold"}}>{portGroup}</label>
+        </div>
+
+        <div style={{padding: 5}}>
+
+            <div className="card">
+
+                {/* Right side */}
+                <div style={{display: "flex", alignItems: "center", gap: "15px"}}>
+
+                     <label style={{fontSize: "1.2rem", fontWeight: "bold"}}>
+                        Net Asset Value
+                    </label>
+
+                    <ValueChange mainValue={totalNav} change={navChange} label={'Total'}/>
+                    <ValueChange mainValue={totalCash} change={cashChange} label={'Cash'}/>
+
                 </div>
             </div>
 
-            {/* Main Content */}
-            <div style={{
-                marginLeft: isMenuOpen ? "500px" : "50px",
-                transition: "margin-left 0.3s ease",
-                flex: 1,
-                padding: 10,
-            }}>
-                <div style={{padding: 10}}>
-                    {/* Portfolio Info */}
-                    <div style={{
-                        borderTop: "1px solid #e5e8e8",
-                        borderBottom: "1px solid #e5e8e8",
-                        padding: "5px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center"
-                    }}>
-                        <span style={{fontWeight: "bold"}}>{portGroup}</span>
-                    </div>
+
+            <div style={{display: "flex", height: 350, marginTop: 5}}>
+                <div className={'card'} style={{flex: 2}}>
+                    <StackedBarChart data={data} labels={labels} yName={'NAV'}/>
                 </div>
 
+                <div className={'card'} style={{flex: 2, marginRight: 5, marginLeft: 5}}>
+                    <StackedBarChart data={summedData} labels={labels} yName={'NAV'}/>
+                </div>
+                <div className={'card'} style={{height: '100%', flex: 1}}>
+                    <PieChart values={navValues} labels={portfolios}/>
+                </div>
+            </div>
+        </div>
 
-                <div style={{padding: 10}}>
-                    <div style={{
-                        // borderTop: "1px solid  #e5e8e8 ",
-                        // borderBottom: "1px solid  #e5e8e8 ",
-                        padding: "5px",
-                        display: "flex",
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                    }}>
-                        <span className="input-label"
-                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Net Asset Value</span>
-                        <div>
-                            <span style={{fontWeight: "bold", marginRight: 10}}>Total</span>
-                            <span style={{fontWeight: "bold", marginRight: 10, color: totalNav > 0 ? "green" : "red"}}>
-                {totalNav > 0 ? "+" : ""}{totalNav}
-                                {navChange !== 0 && (
-                                    <span style={{fontSize: "0.8em", opacity: 0.7, marginLeft: 5}}>
-                        <span style={{
-                            color: navChange > 0 ? "green" : "red",
-                            display: "inline-flex",
-                            alignItems: "center"
-                        }}>
-                            {navChange > 0 ? <BsCaretUpFill/> : <BsCaretDownFill/>}
-                            {navChange > 0 ? "+" : "-"}{Math.abs(navChange)}
-                        </span>
-                    </span>
-                                )}
-            </span>
+        <HoldingTable portfolioCode={childPortfolios}/>
 
-                            <span style={{fontWeight: "bold", marginRight: 10}}>Cash</span>
-                            <span style={{fontWeight: "bold", color: totalNav > 0 ? "green" : "red"}}>
-                {totalNav > 0 ? "+" : ""}{totalCash}
-                                {cashChange !== 0 && (
-                                    <span style={{fontSize: "0.8em", opacity: 0.7, marginLeft: 5}}>
-                        <span style={{
-                            color: cashChange > 0 ? "green" : "red",
-                            display: "inline-flex",
-                            alignItems: "center"
-                        }}>
-                            {cashChange > 0 ? <BsCaretUpFill/> : <BsCaretDownFill/>}
-                            {cashChange > 0 ? "+" : "-"}{Math.abs(cashChange)}
-                        </span>
-                    </span>
-                                )}
-            </span>
-                        </div>
+        {/* Position Exposures */}
+        <PositionExposures portfolioCodes={childPortfolios} server={server}/>
 
-                    </div>
-                    <div style={{display: "flex", height: 350, marginTop: 10}}>
-                        <div className={'card'} style={{flex: 2, marginRight: 5}}>
-                            <StackedBarChart data={data} labels={labels} yName={'NAV'}/>
-                        </div>
+        {/*pnl*/}
+        <div >
+            <div className={'card'}>
+                        <label
+                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Profit and Loss</label>
 
-                        <div className={'card'} style={{flex: 2, marginRight: 5, marginLeft: 5}}>
-                            <StackedBarChart data={summedData} labels={labels} yName={'NAV'}/>
-                        </div>
-                        <div className={'card'} style={{height: '100%', flex: 1, marginLeft: 5}}>
-                            <PieChart values={navValues} labels={portfolios}/>
-                        </div>
-                    </div>
+            </div>
+            <div style={{display: "flex", height: 350, marginTop: 5}}>
+                <div className={'card'} style={{flex: 1, marginRight: 5}}>
+                    <StackedBarChart data={summedPnl} labels={labels} yName={'Profit & Loss'}/>
                 </div>
 
-                {/* Position Exposures */}
-                <PositionExposures portfolioCodes={childPortfolios} server={server}/>
-
-                {/*pnl*/}
-                <div style={{padding: 10}}>
-                    <div style={{
-                        // borderTop: "1px solid  #e5e8e8 ",
-                        // borderBottom: "1px solid  #e5e8e8 ",
-                        padding: "5px",
-                        display: "flex",
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                    }}>
-                        <span className="input-label"
-                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Profit and Loss</span>
-
-                    </div>
-                    <div style={{display: "flex", height: 350, marginTop: 10}}>
-                        <div className={'card'} style={{flex: 1, marginRight: 5}}>
-                            <StackedBarChart data={summedPnl} labels={labels} yName={'Profit & Loss'}/>
-                        </div>
-
-                        <div style={{flex: 1, height: 350, marginLeft: 10}}>
-                            <PortfolioTransactionPnl
-                                unrealized={cumulativeSum(unrealizedPnl)}
-                                realized={cumulativeSum(realizedPnl)}
-                            />
-                        </div>
-                        <div style={{height: 350, marginLeft: 10, width: 300}}>
-                            <TradingMetrics profits={realizedPnl}
-                                            maxUnrealized={Math.min(...cumulativeSum(unrealizedPnl))}/>
-                        </div>
-
-                    </div>
+                <div style={{flex: 1, height: 350, marginRight: 5}}>
+                    <PortfolioTransactionPnl
+                        unrealized={cumulativeSum(unrealizedPnl)}
+                        realized={cumulativeSum(realizedPnl)}
+                    />
                 </div>
-
-                {/* Performance Section */}
-                <div style={{padding: 10}}>
-                    <div style={{
-                        // borderTop: "1px solid #e5e8e8",
-                        // borderBottom: "1px solid #e5e8e8",
-                        padding: "5px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center"
-                    }}>
-                        <span className="input-label"
-                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Performance</span>
-                    </div>
-
-                    <div style={{display: "flex", height: 500, marginTop: 10}}>
-                        <div className={'card'} style={{flex: 1, marginRight: 5}}>
-                            <DailyReturns
-                                returns={totalReturns.map(d => d.total_return)}
-                                dates={totalReturns.map(d => d.end_date)}
-                                changeReturnType={(value) => setReturnsTypes(value.value)}
-                            />
-                        </div>
-                    </div>
+                <div style={{height: 350, width: 300}}>
+                    <TradingMetrics profits={realizedPnl}
+                                    maxUnrealized={Math.min(...cumulativeSum(unrealizedPnl))}/>
                 </div>
-
-                <HoldingTable portfolioCode={childPortfolios}/>
 
             </div>
         </div>
+
+        {/* Performance Section */}
+        <div style={{padding: 5}}>
+            <div className={'card'}>
+                        <label
+                              style={{fontSize: "1.2rem", fontWeight: "bold"}}>Performance</label>
+            </div>
+
+            <div style={{display: "flex", height: 500, marginTop: 5}}>
+                <div className={'card'} style={{flex: 1, marginRight: 5}}>
+                    <DailyReturns
+                        returns={totalReturns.map(d => d.total_return)}
+                        dates={totalReturns.map(d => d.end_date)}
+                        changeReturnType={(value) => setReturnsTypes(value.value)}
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    return (
+        <ContainerWithSideMenu panel={panel} mainArea={mainArea} sidebarWidth={"500px"}/>
     );
 };
 

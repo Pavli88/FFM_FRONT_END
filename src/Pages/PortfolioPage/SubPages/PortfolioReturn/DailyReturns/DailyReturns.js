@@ -1,136 +1,111 @@
-import Card from "react-bootstrap/Card";
-import {CSVLink} from "react-csv";
-import Chart from "react-apexcharts";
-import Select from "react-select";
+import React, { useState } from 'react';
+import Chart from 'react-apexcharts';
 
-const DailyReturns = ( {returns, dates, changeReturnType} ) => {
-    // const returns = props.data.map((data) => data.period_return * 100)
-    // const dates = props.data.map((data) => data.date)
+const returnOptions = [
+    { value: 'dtd', label: 'DTD' },
+    { value: 'mtd', label: 'MTD' },
+    { value: 'qtd', label: 'QTD' },
+    { value: 'qtd', label: 'YTD' },
+    { value: '1m', label: '1M' },
+     { value: '3m', label: '3M' },
+     { value: '6m', label: '6M' },
+    { value: 'si', label: 'SI' },
+
+];
+
+const DailyReturns = ({ returns, dates, changeReturnType }) => {
+    const [selectedReturnType, setSelectedReturnType] = useState('dtd');
+
+    const handleButtonClick = (value) => {
+        setSelectedReturnType(value);
+        changeReturnType({ value }); // Mimic select onChange shape
+    };
+
     const x = {
         options: {
             chart: {
                 toolbar: {
                     show: true,
                     tools: {
-                        download: true, // Enables the download button
-                    }
+                        download: true,
+                    },
                 },
                 type: 'bar',
-                // zoom: {
-                //     enabled: true,
-                //     type: 'x',
-                //     autoScaleYaxis: false,
-                //     zoomedArea: {
-                //         fill: {
-                //             color: '#90CAF9',
-                //             opacity: 0.4
-                //         },
-                //         stroke: {
-                //             color: '#0D47A1',
-                //             opacity: 0.4,
-                //             width: 1
-                //         }
-                //     }
-                // }
             },
-            colors: [function(value){
-                if (value["value"] < 0){
-                    return '#E32227'
-                }else {
-                    return '#007500'
-                }
+            colors: [function (value) {
+                return value["value"] < 0 ? '#ee7d8b' : '#00a59a';
             }],
             xaxis: {
                 categories: dates,
                 type: 'date',
                 labels: {
                     show: false,
-                    // formatter: function (value) {
-                    //     return value.toFixed(2) + "%"; // Format x-axis labels as percentages
-                    // }
                 },
                 axisBorder: {
                     show: false,
-                    color: '#78909C',
-                    height: 1,
-                    width: '100%',
-                    offsetX: 0,
-                    offsetY: 0
                 },
                 axisTicks: {
                     show: false,
-                    borderType: 'solid',
-                    color: '#78909C',
-                    height: 10,
-                    offsetX: 0,
-                    offsetY: 0
                 },
             },
-            yaxis: [
-                {
-                    labels: {
-                        formatter: function (val) {
-                            return val.toFixed(2) + "%";
-                        }
-                    },
+            yaxis: [{
+                labels: {
+                    formatter: (val) => val.toFixed(2) + "%",
                 },
-            ],
+            }],
             dataLabels: {
-                enabled: false
+                enabled: false,
             },
             fill: {
-                opacity: 1
+                opacity: 1,
             },
-            // legend: {
-            //     position: 'right',
-            //     offsetY: 40
-            // },
             tooltip: {
                 y: {
-                    formatter: function (val) {
-                        return val.toFixed(2) + "%"; // Display tooltip values as percentages
-                    }
-                }
-            }
-        },
-        series: [
-            {
-                name: 'Performance',
-                data: returns.map((d) => d*100),
+                    formatter: (val) => val.toFixed(2) + "%",
+                },
             },
-        ]
-    }
-    return(
-        <div className="card" style={{height: '100%', width: '100%', margin: '0px'}}>
-            <div className={'card-header'}>
+        },
+        series: [{
+            name: 'Performance',
+            data: returns.map((d) => d * 100),
+        }],
+    };
 
-
+    return (
+        <div className="card" style={{ height: '100%', width: '100%', margin: '0px' }}>
+            <div className="card-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>Total Returns</span>
-                {/*<CSVLink data={props.data} style={{paddingLeft: 15}}>Download</CSVLink>*/}
 
-                <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
-                    <Select
-                        options={[
-                            {value: 'dtd', label: 'Day to Date'},
-                            {value: 'mtd', label: 'Month to Date'},
-                            {value: 'qtd', label: 'Quarter to Date'},
-                            {value: 'si', label: 'Inception to Date'},
-                            {value: '1m', label: '1 Month'}
-                        ]}
-                        onChange={changeReturnType}
-                        defaultValue={{value: 'dtd', label: 'Day to Date'}}
-                    />
+                <div style={{ display: 'flex', gap: '8px' }}>
+                    {returnOptions.map((option) => (
+                        <button
+                            key={option.value}
+                            onClick={() => handleButtonClick(option.value)}
+                            style={{
+                                padding: '6px 12px',
+                                borderRadius: '6px',
+                                border: '1px solid #ccc',
+                                backgroundColor: selectedReturnType === option.value ? '#007BFF' : '#fff',
+                                color: selectedReturnType === option.value ? '#fff' : '#000',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            {option.label}
+                        </button>
+                    ))}
                 </div>
             </div>
-            <div style={{height: '100%'}}>
+            <div style={{ height: '100%' }}>
                 <Chart
                     options={x.options}
                     series={x.series}
-                    type={'bar'}
+                    type="bar"
                     width="100%"
-                    height="100%"/>
+                    height="100%"
+                />
             </div>
         </div>
-    )
+    );
 };
+
 export default DailyReturns;

@@ -7,7 +7,6 @@ import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu
 import InstrumentBrokerTickers from "./InstrumentBrokerTickers/InstrumentBrokerTickers";
 import UserContext from "../../context/user-context";
 
-
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
     const [selectedInstrument, setSelectedInstrument] = useState({});

@@ -1,4 +1,4 @@
-import {useMemo, useEffect, useState, useContext, useCallback} from 'react';
+import React, {useMemo, useEffect, useState, useContext, useCallback} from 'react';
 import { useTable, useGroupBy, useExpanded, useSortBy } from 'react-table';
 import { FaArrowUp, FaArrowDown, FaTimes, FaPencilAlt } from 'react-icons/fa';
 import {BsCaretDownFill, BsCaretUpFill} from "react-icons/bs";
@@ -10,6 +10,8 @@ import DateContext from "../../context/date-context";
 import {DateSelect} from "../Dates/DateWidgets";
 import PortfolioTransactionsTable
     from "../../Pages/PortfolioPage/SubPages/PortfolioTransactions/PortfolioTransactionsTable/PortfolioTransactionsTable";
+import CustomModal from "../Modals/Modals";
+import fetchAPI from "../../config files/api";
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
@@ -21,7 +23,52 @@ const HoldingsTable = ( {portfolioCode} ) => {
     const [groupBy, setGroupBy] = useState(["name"]);
     const [showOnlyGrouped, setShowOnlyGrouped] = useState(false);
     const [showActions, setShowActions] = useState(false);
+    const [showTransactions, setShowTransactions] = useState(false);
+    const [transactionData, setTransactionData] = useState([]);
     // const [selectedRows, setSelectedRows] = useState({});
+
+    const fetchTransactions = async(value) => {
+        const response = await fetchAPI.post('portfolios/get/transactions/', {
+            id: value,
+            transaction_link_code: value
+        })
+        setTransactionData(response.data)
+        setShowTransactions(!showTransactions);
+    };
+
+    const renderTransactionTable = () => {
+        if (!transactionData.length) {
+            return <p>No transactions found.</p>;
+        }
+
+        const keys = Object.keys(transactionData[0]);
+
+        return (
+            <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                <thead>
+                <tr>
+                    {keys.map((key) => (
+                        <th key={key} style={{borderBottom: '1px solid #ccc', textAlign: 'left', padding: '8px'}}>
+                            {key}
+                        </th>
+                    ))}
+                </tr>
+                </thead>
+                <tbody>
+                {transactionData.map((row, index) => (
+                    <tr key={index}>
+                        {keys.map((key) => (
+                            <td key={key} style={{padding: '8px', borderBottom: '1px solid #eee'}}>
+                                {row[key]}
+                            </td>
+                        ))}
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        );
+    };
+
 
     const columns = useMemo(() => {
     const baseColumns = [
@@ -50,7 +97,7 @@ const HoldingsTable = ( {portfolioCode} ) => {
 
                 // Make clickable link for non-grouped rows
                 return (
-                    <a href={`#trd/${value}`} style={{color: 'blue', textDecoration: 'underline', cursor: 'pointer'}}>
+                    <a onClick={() => fetchTransactions(value)} style={{color: 'blue', textDecoration: 'underline', cursor: 'pointer'}}>
                         {value}
                     </a>
                 );
@@ -92,12 +139,12 @@ const HoldingsTable = ( {portfolioCode} ) => {
             disableGroupBy: true,
             sortType: 'basic',
             Aggregated: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
                     {formatFloat(value)}
                 </span>
             ),
             Cell: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
                     {formatFloat(value)}
                 </span>
             ),
@@ -109,12 +156,12 @@ const HoldingsTable = ( {portfolioCode} ) => {
             disableGroupBy: true,
             sortType: 'basic',
             Aggregated: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
                     {formatFloat(value)}
                 </span>
             ),
             Cell: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
                     {formatFloat(value)}
                 </span>
             ),
@@ -126,13 +173,13 @@ const HoldingsTable = ( {portfolioCode} ) => {
             disableGroupBy: true,
             sortType: 'basic',
             Aggregated: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
                     {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
                     {formatFloat(value)}
                 </span>
             ),
             Cell: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
                     {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
                     {formatFloat(value)}
                 </span>
@@ -145,26 +192,44 @@ const HoldingsTable = ( {portfolioCode} ) => {
             disableGroupBy: true,
             sortType: 'basic',
             Aggregated: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
                     {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
                     {formatFloat(value)}
                 </span>
             ),
             Cell: ({ value }) => (
-                <span style={{ color: value < 0 ? 'red' : 'green', display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
                     {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
                     {formatFloat(value)}
                 </span>
             ),
         },
         {
-            Header: 'Weight',
-            accessor: 'weight',
+            Header: 'Net Weight',
+            accessor: 'net_weight',
             aggregate: 'sum',
             disableGroupBy: true,
             sortType: 'basic',
-            Aggregated: ({ value }) => `${formatFloat(value)}%`,
-            Cell: ({ value }) => `${formatFloat(value)}%`,
+            Aggregated: ({value}) => `${((formatFloat(value) / 10) * 100).toFixed(2)}%`,
+            Cell: ({value}) => `${((formatFloat(value) / 10) * 100).toFixed(2)}%`,
+        },
+        {
+            Header: 'Gross Weight',
+            accessor: 'gross_weight',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({value}) => `${((formatFloat(value) / 10) * 1000).toFixed(2)}%`,
+            Cell: ({value}) => `${((formatFloat(value) / 10) * 1000).toFixed(2)}%`,
+        },
+        {
+            Header: 'Abs Weight',
+            accessor: 'abs_weight',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({value}) => `${((formatFloat(value) / 10) * 1000).toFixed(2)}%`,
+            Cell: ({value}) => `${((formatFloat(value) / 10) * 1000).toFixed(2)}%`,
         },
         {
             Header: 'Leverage',
@@ -172,8 +237,8 @@ const HoldingsTable = ( {portfolioCode} ) => {
             aggregate: 'sum',
             disableGroupBy: true,
             sortType: 'basic',
-            Aggregated: ({ value }) => `${formatFloat(value)}%`,
-            Cell: ({ value }) => `${formatFloat(value)}%`,
+            Aggregated: ({ value }) => `${formatFloat(value)}x`,
+            Cell: ({ value }) => `${formatFloat(value)}x`,
         },
     ];
 
@@ -366,6 +431,13 @@ const HoldingsTable = ( {portfolioCode} ) => {
                     </tbody>
                 </table>
             </div>
+
+            <CustomModal show={showTransactions} onClose={() => setShowTransactions(!showTransactions)}
+                         title={'Transactions'} width={'1500px'}>
+                <div style={{maxHeight: '60vh', overflowY: 'auto'}}>
+                    {renderTransactionTable()}
+                </div>
+            </CustomModal>
 
             {/*<div>*/}
             {/*    <PortfolioTransactionsTable data={{}} server={server} fetch={fetch} updateSelected={(e) => console.log(e)}/>*/}

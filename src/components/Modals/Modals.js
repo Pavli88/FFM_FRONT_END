@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Tooltip from "../Tooltips/Tooltip";
 import "./Modals.css"; // Import the CSS file
 
-const CustomModal = ({ show, onClose, title, children, tooltip, footer }) => {
+const CustomModal = ({ show, onClose, title, children, tooltip, footer, width='500px' }) => {
     return (
         <AnimatePresence>
             {show && (
@@ -13,6 +13,7 @@ const CustomModal = ({ show, onClose, title, children, tooltip, footer }) => {
                         exit={{ opacity: 0, y: -50 }}
                         transition={{ duration: 0.3 }}
                         className="modal-container"
+                        style={{width:width}}
                         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
                     >
                         {/* Header */}
