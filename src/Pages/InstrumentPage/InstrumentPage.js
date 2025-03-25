@@ -10,7 +10,7 @@ import UserContext from "../../context/user-context";
 const InstrumentPage = () => {
     const [instrumentSearchResults, setInstrumentSearchResults] = useState([{}]);
     const [selectedInstrument, setSelectedInstrument] = useState({});
-    const userData = useContext(UserContext);
+    const userData = useContext(UserContext).userData;
 
     const panel = <div style={{width: '100%', paddingTop: 20}}>
 

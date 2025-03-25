@@ -4,7 +4,7 @@ import fetchAPI from "../../../config files/api";
 import UserContext from "../../../context/user-context";
 
 const InstrumentNew = ({ show, close }) => {
-    const userData = useContext(UserContext);
+    const userData = useContext(UserContext).userData;
 
     const [formData, setFormData] = useState({
         name: '',

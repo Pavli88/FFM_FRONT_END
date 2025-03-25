@@ -185,7 +185,7 @@ const HoldingsTable = ( {portfolioCode} ) => {
             ),
         },
         {
-            Header: 'Realized P&L',
+            Header: 'Trade P&L',
             accessor: 'rgl',
             aggregate: 'sum',
             disableGroupBy: true,
