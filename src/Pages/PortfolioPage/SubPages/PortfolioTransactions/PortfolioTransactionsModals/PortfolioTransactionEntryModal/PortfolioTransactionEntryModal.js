@@ -96,11 +96,12 @@ const PortfolioTransactionEntryModal = ({ show, close }) => {
             broker: formData.broker,
             optional: {
                 ...formData.optional,
-                account_id: formData.account_id || undefined // Include only if selected
+                account_id: formData.account_id || undefined,
+                is_active: formData.active
             }
         };
 
-        console.log(parameters);
+        // console.log(parameters);
         const response = await fetchAPI.post('portfolios/transactions/new/', parameters);
 
         if (response.data.success) {

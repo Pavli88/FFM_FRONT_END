@@ -29,7 +29,6 @@ const HoldingsTable = ( {portfolioCode} ) => {
 
     const fetchTransactions = async(value) => {
         const response = await fetchAPI.post('portfolios/get/transactions/', {
-            id: value,
             transaction_link_code: value
         })
         setTransactionData(response.data)
@@ -167,8 +166,8 @@ const HoldingsTable = ( {portfolioCode} ) => {
             ),
         },
         {
-            Header: 'Unrealized P&L',
-            accessor: 'ugl',
+            Header: 'Price P&L',
+            accessor: 'price_pnl',
             aggregate: 'sum',
             disableGroupBy: true,
             sortType: 'basic',
@@ -188,6 +187,25 @@ const HoldingsTable = ( {portfolioCode} ) => {
         {
             Header: 'Realized P&L',
             accessor: 'rgl',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
+                    {value < 0 ? <FaArrowDown style={{ marginRight: 5 }} /> : <FaArrowUp style={{ marginRight: 5 }} />}
+                    {formatFloat(value)}
+                </span>
+            ),
+        },
+        {
+            Header: 'Total P&L',
+            accessor: 'total_pnl',
             aggregate: 'sum',
             disableGroupBy: true,
             sortType: 'basic',

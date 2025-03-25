@@ -1,5 +1,4 @@
 import {useContext, useEffect, useMemo, useState} from "react";
-import axios from "axios";
 import {BsArrowBarDown, BsPencil, BsPlusLg, BsArrowLeftRight } from "react-icons/bs";
 import {useExpanded, useGroupBy, useSortBy, useTable} from "react-table";
 import ServerContext from "../../../../../context/server-context";
@@ -12,11 +11,13 @@ import PortfolioContext from "../../../../../context/portfolio-context";
 import "./PortfolioTransactionsTable.css"
 import {FaSearch, FaPlus, FaTrashAlt, FaMoneyBillWave, FaBan} from "react-icons/fa";
 import CardHeader from "../../../../../components/Card/CardHeader";
+import PortfolioLinkedTransactionModal
+    from "../PortfolioTransactionsModals/PortfolioLinkedTransactionModal/PortfolioLinkedTransactionModal";
+import fetchAPI from "../../../../../config files/api";
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
 const PortfolioTransactionsTable = () => {
-    const server = useContext(ServerContext).server;
     const {transactions, saveShowFilter, showFilter} = useContext(TransactionContext);
 
     const [showEntryModal, setShowEntryModal] = useState(false);
@@ -26,7 +27,7 @@ const PortfolioTransactionsTable = () => {
 
     const [selectedIds, setSelectedIds] = useState([]);
     const [selectedTransaction, setSelectedTransaction] = useState({});
-    const [linkedTransaction, setLinkedTransaction] = useState({});
+    const [linkedTransactionID, setLinkedTransactionID] = useState(null);
 
     const data = useMemo(() => transactions, [transactions]);
 
@@ -112,19 +113,19 @@ const PortfolioTransactionsTable = () => {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
     const onAddTransaction = (transaction) => {
-        setLinkedTransaction({
-            ...transaction,
-            transaction_link_code: transaction.id,
-            open_status: "Close",
-            is_active: 0,
-        });
-        setShowLinkedModal(true);
+        setLinkedTransactionID(transaction.id);
     };
+
+    useEffect(() => {
+    if (linkedTransactionID) {
+        setShowLinkedModal(true);
+    }
+}, [linkedTransactionID]);
 
     const deleteTransaction = async () => {
         if (selectedIds.length === 0) return;
         try {
-            const response = await axios.post(`${server}portfolios/delete/transaction/`, { ids: selectedIds });
+            const response = await fetchAPI.post('portfolios/delete/transaction/', { ids: selectedIds });
             if (response.data.success) {
                 setSelectedIds([]);
             }
@@ -197,6 +198,12 @@ const PortfolioTransactionsTable = () => {
             />
             <PortfolioTransactionEntryModal show={showEntryModal}
                                             close={() => setShowEntryModal(!showEntryModal)}
+            />
+
+            <PortfolioLinkedTransactionModal show={showLinkedModal}
+                                            close={() => setShowLinkedModal(!showLinkedModal)}
+
+                                             parentID={linkedTransactionID}
             />
         </div>
     );

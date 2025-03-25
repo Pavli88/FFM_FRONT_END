@@ -30,7 +30,7 @@ const PortfolioTransactionsFilter = () => {
         trade_date__gte: "",
         trade_date__lte: "",
         transaction_type: [],
-        is_active: false,
+        is_active: null,
         transaction_link_code: "",
         security_id: "",
     });
@@ -91,12 +91,12 @@ const PortfolioTransactionsFilter = () => {
                 <div style={{paddingTop: 10, paddingBottom: 10}}>
                     <ToogleSwitch
                         label="Active"
-                        isChecked={formData.is_active}
+                        isChecked={formData.is_active === true} // Ensures it's only true, not null
                         onToggle={() => handleInputChange({
                             target: {
                                 name: 'is_active',
                                 type: 'checkbox',
-                                checked: !formData.is_active
+                                checked: formData.is_active ? null : true // Set to null when unchecked
                             }
                         })}
                     />
