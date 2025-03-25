@@ -1,68 +1,144 @@
-.avatar-upload {
-    position: relative;
-    height: 150px;
-    width: 150px;
-    background: #D3BEA3;
-    border-radius: 10px;
+.page-container {
+    padding: 80px; /* Increased padding around the entire page */
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
 }
 
-.avatar {
+.header {
     width: 100%;
-    height: 70%;
-    color: #F1F2F0;
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 50px;
+    margin-bottom: 20px;
 }
 
 .avatar-section {
-    align-items: center;
-    justify-content: center;
-}
-
-.container {
-    width: 1000px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 60px; /* Increased space between avatar and user info */
 }
 
-.container-body {
+.avatar {
+    width: 100px; /* Increased avatar size */
+    height: 100px;
+    border-radius: 50%;
+}
+
+.user-info {
     display: flex;
-    gap: 30px; /* Space between two sections */
+    flex-direction: column;
+    gap: 5px;
+}
+
+.username {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.follower-following {
+    display: flex;
+    gap: 30px; /* Increased gap between followers and following */
+    margin-bottom: 10px;
+}
+
+.follower-following .followers,
+.follower-following .following {
+    font-size: 1rem;
+}
+
+.joined-info {
+    font-size: 1rem;
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+}
+
+.joined-info strong {
+    margin-right: 10px; /* Add space between the label and the date */
+}
+
+.joined-info span {
+    font-size: 1rem;
+}
+
+.info-container {
+    display: flex;
     width: 100%;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 30px; /* Increased gap between sections */
 }
 
-.container-section {
+.public-info,
+.private-info {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+    padding: 25px; /* Increased padding inside each section */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.form-section {
-    width: 100%;
+.private-info {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
+    gap: 20px; /* Space between sections */
 }
 
-.form-group {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+
+.section-header {
+    font-size: 1.5rem;
+    font-weight: bold;
     margin-bottom: 15px;
 }
 
-.form-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
+.avatar-upload-section {
+    margin-top: 20px;
 }
 
-.form-buttons button:first-child {
-    margin-right: 15px;
+.avatar-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
 }
+
+.avatar-info {
+    margin-left: 20px;
+    gap: 15px;
+    display: flex;
+    width: 300px;
+}
+
+.small-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.change-password-section {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    gap: 10px; /* Add space between the label and the button */
+}
+
+
+.change-password-section button {
+    width: 150px;
+}
+
+.edit-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.edit-buttons button {
+    margin: 0 10px;
+}
+

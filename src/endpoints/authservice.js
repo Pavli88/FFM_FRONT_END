@@ -121,6 +121,26 @@ export const changePassword = async (oldPassword, newPassword, token) => {
     }
 };
 
+export const changeEmail = async (email) => {
+    try {
+        const response = await fetchAPI.post("user/change_email/", { email });
+
+        if (response.data && response.data.detail) {
+            return { success: true, message: response.data.detail };
+        } else {
+            return { success: false, message: "Unexpected response from server." };
+        }
+    } catch (error) {
+        if (error.response) {
+            return { success: false, message: error.response.data.error || "Failed to update email." };
+        } else if (error.request) {
+            return { success: false, message: "Network error, please try again later." };
+        } else {
+            return { success: false, message: "An unexpected error occurred. Please try again." };
+        }
+    }
+};
+
 // Logout function
 export const logout = async () => {
     try {

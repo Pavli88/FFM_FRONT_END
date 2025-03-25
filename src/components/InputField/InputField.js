@@ -14,7 +14,8 @@ const InputField = ({
   error,
   readOnly = false,
   min, // Added min prop
-  defaultValue, // Added defaultValue prop
+  defaultValue,
+  disabled = false
 }) => {
   return (
     <div className="input-group">
@@ -26,16 +27,17 @@ const InputField = ({
       )}
 
       <input
-        id={id}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={required}
-        autoComplete="off"
-        readOnly={readOnly}
-        min={min} // Applied min
-        defaultValue={defaultValue} // Applied defaultValue
+          id={id}
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          required={required}
+          autoComplete="off"
+          readOnly={readOnly}
+          min={min}
+          defaultValue={defaultValue}
+          disabled={disabled}
       />
 
       {error && <p className="error-message">{error}</p>}
