@@ -82,11 +82,19 @@ const MainApplication = ({config}) => {
     const fetchUserData = async () => {
         try {
             const response = await fetchAPI.get('user/get/data/');
-            setUserData(response.data);
+
+            // Append timestamp to avoid cache issues
+            let updatedUserData = {
+                ...response.data,
+                image_url: response.data.image_url ? `${response.data.image_url}?t=${Date.now()}` : null,
+            };
+
+            setUserData(updatedUserData);
         } catch (error) {
             console.error("Error fetching user data:", error.response?.data || error.message);
         }
     };
+
 
     const fetchAccountData = async () => {
         try {
@@ -168,10 +176,12 @@ const MainApplication = ({config}) => {
                             apiSupportedBrokers: apiSupportedBroker,
                             apiNotSupportedBrokers: apiNotSupportedBroker
                         }}>
-                            <UserContext.Provider value={userData}>
+                            <UserContext.Provider value={
+                                {userData, fetchUserData}
+                            }>
                                 <DashboardContext.Provider value={{
                                     portGroup: portGroup,
-                                    setPortGroup: setPortGroup
+                                    setPortGroup: setPortGroup,
                                 }}>
                                     <ReactNotification/>
 

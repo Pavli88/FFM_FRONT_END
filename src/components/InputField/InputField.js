@@ -16,10 +16,11 @@ const InputField = ({
                         readOnly = false,
                         min, // Added min prop
                         defaultValue,
+                        disabled = false,
                         horizontal = false
                     }) => {
     return (
-        <div className={horizontal ? "input-group-horizontal":"input-group"}>
+        <div className={horizontal ? "input-group-horizontal" : "input-group"}>
             {label && (
                 <div className="label-container">
                     <label htmlFor={id}>{label}</label>
@@ -38,7 +39,8 @@ const InputField = ({
                 autoComplete="off"
                 readOnly={readOnly}
                 min={min} // Applied min
-                defaultValue={defaultValue} // Applied defaultValue
+                defaultValue={defaultValue}
+                disabled={disabled}
             />
 
             {error && <p className="error-message">{error}</p>}
