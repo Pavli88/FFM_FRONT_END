@@ -1,16 +1,28 @@
-import { FaUserCircle } from "react-icons/fa";
-import React, { useContext, useState, useEffect, useRef } from "react";
-import UserContext from "../../../context/user-context";
-import ChangePasswordModal from "./ChangePasswordModal";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import { FaUserCircle} from "react-icons/fa";
 import "./UserProfile.css";
-import { changePassword } from "../../../endpoints/authservice";
 import InputField from "../../../components/InputField/InputField";
+import UserContext from "../../../context/user-context";
 import fetchAPI from "../../../config files/api";
+import ChangePasswordModal from "./ChangePasswordModal";
+import {changePassword} from "../../../endpoints/authservice";
 import ChangeEmailModal from "./ChangeEmailModal";
 
-const UserProfile = () => {
-    const { username, email, first_name, last_name, date_joined, image_url, followers, following } = useContext(UserContext).userData;
-    const { fetchUserData } = useContext(UserContext);
+export default function UserProfile() {
+    const [coverPhoto, setCoverPhoto] = useState(null);
+    const [activeTab, setActiveTab] = useState("public");
+
+    const {
+        username,
+        email,
+        first_name,
+        last_name,
+        date_joined,
+        image_url,
+        followers,
+        following
+    } = useContext(UserContext).userData;
+    const {fetchUserData} = useContext(UserContext);
 
     const [profileImage, setProfileImage] = useState(image_url || null);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
@@ -18,6 +30,8 @@ const UserProfile = () => {
     const [loading, setLoading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [isEditable, setIsEditable] = useState(false);
+
+    const defaultCoverPhoto = "https://t4.ftcdn.net/jpg/03/84/11/51/240_F_384115163_mmVA7l40gCr4GdJm2TMYHVsgYecqU7Y6.jpg"
 
     const [userData, setUserData] = useState({
         "username": username,
@@ -36,6 +50,13 @@ const UserProfile = () => {
             "last_name": last_name,
         });
     }, [username, email, first_name, last_name]);
+
+    const handleCoverPhotoChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setCoverPhoto(URL.createObjectURL(file));
+        }
+    };
 
     const handleFileChange = (event) => {
         setSelectedFile(event.target.files[0]);
@@ -93,7 +114,6 @@ const UserProfile = () => {
     };
 
 
-
     const handleChange = (key, value) => {
         setUserData(prev => ({
             ...prev,
@@ -118,61 +138,82 @@ const UserProfile = () => {
         }
     };
 
-    return (
-        <div className="page-container">
-            <div className="header">
-                <div className="avatar-section">
-                    {profileImage ? (
-                        <img src={profileImage} alt="Profile" className="avatar" />
-                    ) : (
-                        <FaUserCircle className="avatar" />
-                    )}
-                </div>
-                <div className="user-info">
-                    <h2 className="username">{username}</h2>
-                    <div className="follower-following">
-                        <div className="followers">
-                            <strong>Followers</strong>
-                            <span>{followers}</span>
-                        </div>
-                        <div className="following">
-                            <strong>Following</strong>
-                            <span>{following}</span>
-                        </div>
-                    </div>
-                    <div className="joined-info">
-                        <strong>Joined</strong>
-                        <span>{new Date(date_joined).toLocaleDateString()}</span>
-                    </div>
-                </div>
-            </div>
+  return (
+      <div className="user-page">
 
-            <div className="info-container">
-                <div className="public-info">
-                    <h3 className="section-header">Public Info</h3>
-                    <InputField id="username" type="text" value={userData.username} label="Username" readOnly={true} disabled={true} />
-                    <div className="avatar-upload-section">
-                        <label>Avatar</label>
-                        <div className="avatar-wrapper">
-                            {profileImage ? <img src={profileImage} alt="Profile" className="small-avatar" /> : <FaUserCircle className="small-avatar" />}
-                            <div className="avatar-info">
-                                <button onClick={handleUploadClick}>Upload Photo</button>
-                                <button onClick={handleDelete}>Delete Photo</button>
+          <div className="cover-photo" style={{
+              backgroundImage: `url(${coverPhoto || defaultCoverPhoto})`
+          }}>
+              {/*<label className="cover-photo-btn">*/}
+              {/*    Cover Photo*/}
+              {/*    <input type="file" accept="image/*" onChange={handleCoverPhotoChange} hidden/>*/}
+              {/*</label>*/}
+          </div>
+
+      <div className="content-container">
+
+          <div className="left-panel">
+              <div className="avatar-section">
+                  {profileImage ? (
+                      <img src={profileImage} alt="Profile" className="avatar"/>
+                  ) : (
+                      <FaUserCircle className="avatar"/>
+                  )}
+              </div>
+              <h2 className="username">{username}</h2>
+              <div className="joined-info">
+                  <strong>Joined</strong>
+                  <span>{new Date(date_joined).toLocaleDateString()}</span>
+              </div>
+          <div className="user-stats">
+            <span>Followers</span>
+            <span>Following</span>
+            <span>Posts</span>
+          </div>
+          <button className="public-profile-btn">View Public Profile</button>
+        </div>
+
+        <div className="right-panel">
+          <div className="nav-menu">
+            <span className={activeTab === "public" ? "active" : ""} onClick={() => setActiveTab("public")}>
+              Public Info
+            </span>
+            <span className={activeTab === "private" ? "active" : ""} onClick={() => setActiveTab("private")}>
+              Private Info
+            </span>
+          </div>
+
+            <div className="tab-content">
+                {activeTab === "public" ? (
+                    <div className="public-info">
+                        <InputField id="username" type="text" value={userData.username} label="Username" readOnly={true}
+                                    disabled={true}/>
+                        <div className="avatar-upload-section">
+                            <label>Avatar</label>
+                            <div className="avatar-wrapper">
+                                {profileImage ? <img src={profileImage} alt="Profile" className="small-avatar"/> :
+                                    <FaUserCircle className="small-avatar"/>}
+                                <div className="avatar-info">
+                                    <button onClick={handleUploadClick}>Upload Photo</button>
+                                    <button onClick={handleDelete}>Delete Photo</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <InputField id="email" type="text" value={userData.email} label="Email" readOnly={!isEditable} onChange={(e) => handleChange('email', e.target.value)} />
-                    <InputField id="firstName" type="text" value={userData.first_name} label="First Name" readOnly={!isEditable} onChange={(e) => handleChange('first_name', e.target.value)} />
-                    <InputField id="lastName" type="text" value={userData.last_name} label="Last Name" readOnly={!isEditable} onChange={(e) => handleChange('last_name', e.target.value)} />
+                        <InputField id="email" type="text" value={userData.email} label="Email" readOnly={!isEditable}
+                                    onChange={(e) => handleChange('email', e.target.value)}/>
+                        <InputField id="firstName" type="text" value={userData.first_name} label="First Name"
+                                    readOnly={!isEditable}
+                                    onChange={(e) => handleChange('first_name', e.target.value)}/>
+                        <InputField id="lastName" type="text" value={userData.last_name} label="Last Name"
+                                    readOnly={!isEditable} onChange={(e) => handleChange('last_name', e.target.value)}/>
 
-                    <div className="edit-buttons">
-                        <button onClick={handleEditToggle}>{isEditable ? "Cancel" : "Edit"}</button>
-                        {isEditable && <button onClick={handleSaveChanges} disabled={loading}>Save Changes</button>}
+                        <div className="edit-buttons">
+                            <button onClick={handleEditToggle}>{isEditable ? "Cancel" : "Edit"}</button>
+                            {isEditable && <button onClick={handleSaveChanges} disabled={loading}>Save Changes</button>}
+                        </div>
                     </div>
-                </div>
-
-                <div className="private-info">
-                    <h3 className="section-header">Private Info</h3>
+            ) : (
+              <div className="private-info">
                     <div className="change-password-section">
                         <label>Password</label>
                         <button onClick={() => setShowChangePasswordModal(true)}>Change Password</button>
@@ -181,10 +222,9 @@ const UserProfile = () => {
                         <label>Email</label>
                         <button onClick={() => setShowEmailModal(true)}>Change Email</button>
                     </div>
-                </div>
-            </div>
-
-            {showChangePasswordModal && (
+              </div>
+            )}
+                      {showChangePasswordModal && (
                 <ChangePasswordModal show={showChangePasswordModal} close={() => setShowChangePasswordModal(false)} onChangePassword={changePassword} />
             )}
             {showEmailModal && (
@@ -193,8 +233,9 @@ const UserProfile = () => {
             )}
 
             <input type="file" ref={fileInputRef} accept="image/*" style={{ display: "none" }} onChange={handleFileChange} />
+          </div>
         </div>
-    );
-};
-
-export default UserProfile;
+      </div>
+    </div>
+  );
+}
