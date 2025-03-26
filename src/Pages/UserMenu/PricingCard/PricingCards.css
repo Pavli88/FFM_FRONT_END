@@ -1,0 +1,88 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* Centers cards */
+  gap: 20px;
+  flex-wrap: nowrap; /* Prevents wrapping */
+  overflow-x: auto; /* Allows horizontal scrolling if needed */
+  max-width: 1200px; /* Ensures cards fit within a max width */
+}
+
+.features {
+    list-style: none;
+    flex-grow: 1;
+}
+
+.card-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 280px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    flex: 1;
+    height: 100%;
+}
+
+.btn {
+    width: 100%;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    height: 50px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 20px;
+    background-color: #f1f1f1;
+    color: #494f54;
+    transition: transform 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #494f54;
+    color: white;
+    border: 1px solid #494f54;
+}
+
+.price-details{
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+.price-details .price{
+  font-size: 65px;
+  font-weight: 600;
+  position: relative;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.price-details .price::before,
+.price-details .price::after{
+  position: absolute;
+  font-weight: 400;
+  font-family: "Poppins", sans-serif;
+}
+
+.price-details .price::before{
+  content: "$";
+  left: -13px;
+  top: 17px;
+  font-size: 20px;
+}
+
+.price-details .price::after{
+  content: "/mon";
+  right: -33px;
+  bottom: 17px;
+  font-size: 13px;
+}
