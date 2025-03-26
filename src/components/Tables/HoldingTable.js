@@ -106,6 +106,14 @@ const HoldingsTable = ( {portfolioCode} ) => {
         { Header: 'Trade Date', accessor: 'trade_date', disableGroupBy: true },
         { Header: 'Trade Type', accessor: 'trade_type', disableGroupBy: true },
         {
+            Header: 'Beg Quantity',
+            accessor: 'beg_quantity',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => formatFloat(value),
+        },
+        {
             Header: 'Quantity',
             accessor: 'quantity',
             aggregate: 'sum',
@@ -120,6 +128,12 @@ const HoldingsTable = ( {portfolioCode} ) => {
             Cell: ({ value }) => formatFloat(value),
         },
         {
+            Header: 'Beg Market Price',
+            accessor: 'beg_market_price',
+            disableGroupBy: true,
+            Cell: ({ value }) => formatFloat(value),
+        },
+        {
             Header: 'Market Price',
             accessor: 'market_price',
             disableGroupBy: true,
@@ -130,6 +144,23 @@ const HoldingsTable = ( {portfolioCode} ) => {
             accessor: 'fx_rate',
             disableGroupBy: true,
             Cell: ({ value }) => formatFloat(value),
+        },
+         {
+            Header: 'Beg Book Value',
+            accessor: 'beg_bv',
+            aggregate: 'sum',
+            disableGroupBy: true,
+            sortType: 'basic',
+            Aggregated: ({ value }) => (
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            ),
+            Cell: ({ value }) => (
+                <span style={{ color: value < 0 ? '#ee7d8b' : '#00a59a', display: 'flex', alignItems: 'center' }}>
+                    {formatFloat(value)}
+                </span>
+            ),
         },
         {
             Header: 'Book Value',
@@ -167,7 +198,7 @@ const HoldingsTable = ( {portfolioCode} ) => {
         },
         {
             Header: 'Price P&L',
-            accessor: 'price_pnl',
+            accessor: 'ugl',
             aggregate: 'sum',
             disableGroupBy: true,
             sortType: 'basic',
@@ -186,7 +217,7 @@ const HoldingsTable = ( {portfolioCode} ) => {
         },
         {
             Header: 'Trade P&L',
-            accessor: 'rgl',
+            accessor: 'trd_pnl',
             aggregate: 'sum',
             disableGroupBy: true,
             sortType: 'basic',
@@ -342,11 +373,24 @@ const HoldingsTable = ( {portfolioCode} ) => {
     }, [portfolioCode, holdingDate])
 
     const buttonDict = {
-        "Portfolio": () => tableSetGroupBy(["portfolio_code"]),
-        "Security": () => tableSetGroupBy(["name"]),
-        "Group": () => tableSetGroupBy(["group"]),
-        "Type": () => tableSetGroupBy(["type"]),
-    };
+    "Portfolio": () => {
+        setGroupBy(["portfolio_code"]);
+        tableSetGroupBy(["portfolio_code"]);
+    },
+    "Security": () => {
+        setGroupBy(["name"]);
+        tableSetGroupBy(["name"]);
+    },
+    "Group": () => {
+        setGroupBy(["group"]);
+        tableSetGroupBy(["group"]);
+    },
+    "Type": () => {
+        setGroupBy(["type"]);
+        tableSetGroupBy(["type"]);
+    },
+};
+
 
     // Filter rows: Show only grouped rows when checkbox is checked
     const displayedRows = showOnlyGrouped ? rows.filter(row => row.isGrouped) : rows;

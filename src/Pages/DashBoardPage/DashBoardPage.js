@@ -248,7 +248,7 @@ const DashBoardPage = () => {
         <HoldingTable portfolioCode={childPortfolios}/>
 
         {/* Position Exposures */}
-        <PositionExposures portfolioCodes={childPortfolios} server={server}/>
+        {/*<PositionExposures portfolioCodes={childPortfolios} server={server}/>*/}
 
         {/*pnl*/}
         <div >
