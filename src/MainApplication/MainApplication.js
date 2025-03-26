@@ -22,6 +22,7 @@ import axios from "axios";
 import BrokerAccountsPage from "../Pages/UserMenu/BrokerAccounts/BrokerAccountsPage";
 import ResetPassword from "../Pages/MainPage/ResetPassword";
 import fetchAPI from "../config files/api";
+import Subscriptions from "../Pages/UserMenu/Subscriptions";
 
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
@@ -229,6 +230,9 @@ const MainApplication = ({config}) => {
                                             </Route>
                                             <Route path="/profile">
                                                 <UserProfile/>
+                                            </Route>
+                                            <Route path="/subscriptions">
+                                                <Subscriptions/>
                                             </Route>
                                             <Route path="/myPortfolios">
                                                 <MyPortfoliosPage/>
