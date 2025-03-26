@@ -14,15 +14,14 @@ import PortfolioPage from "../Pages/PortfolioPage/PortfolioPage";
 import CalculationsPage from "../Pages/CalculationsPage/CalculationsPage";
 import InstrumentPage from "../Pages/InstrumentPage/InstrumentPage";
 import DashBoardPage from "../Pages/DashBoardPage/DashBoardPage";
-import UserProfile from "../Pages/UserMenu/UserProfile/UserProfile";
 import MyPortfoliosPage from "../Pages/UserMenu/MyPortfolios/MyPortfoliosPage";
 import DataPage from "../Pages/DataPage/DataPage";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import BrokerAccountsPage from "../Pages/UserMenu/BrokerAccounts/BrokerAccountsPage";
-import ResetPassword from "../Pages/MainPage/ResetPassword";
 import fetchAPI from "../config files/api";
 import Subscriptions from "../Pages/UserMenu/Subscriptions";
+import UserProfile from "../Pages/UserMenu/UserProfile/UserProfile";
 
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
