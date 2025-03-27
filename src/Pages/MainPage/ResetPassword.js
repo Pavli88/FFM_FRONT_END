@@ -52,7 +52,7 @@ const handleResetPassword = async (e) => {
 
   return (
       <div className="modal-overlay">
-          <div className="modal-container" style={{padding: "20px"}}>
+          <div className="modal-container" style={{padding: "20px", width: "500px"}}>
               <h2 className="modal-title" style={{marginBottom: "20px"}}>Reset Your Password</h2>
               {error && <p style={{color: 'red'}}>{error}</p>}
               {success && <p style={{color: 'green'}}>{success}</p>}
