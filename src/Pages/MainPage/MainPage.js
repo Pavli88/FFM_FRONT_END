@@ -30,7 +30,7 @@ const MainPage = (props) => {
                                 setAuthFormType("signup");
                                 setShowModal(true);
                             }}>
-                            Create Account
+                            Sign Up
                         </button>
                     </div>
                     <div style={{ margin: 5, height: 40 }}>
@@ -39,7 +39,7 @@ const MainPage = (props) => {
                                 setAuthFormType("login");
                                 setShowModal(true);
                             }}>
-                            Login
+                            Sign In
                         </button>
                     </div>
                 </div>
