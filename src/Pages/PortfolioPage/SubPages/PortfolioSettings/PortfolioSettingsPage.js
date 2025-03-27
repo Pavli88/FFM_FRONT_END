@@ -6,6 +6,7 @@ import PortfolioContext from "../../../../context/portfolio-context";
 import Tabs from "../../../../components/Tabs/Tabs"
 import PortfolioTradeRouting from "./PortfolioTradeRouting/PortfolioTradeRouting";
 import fetchAPI from "../../../../config files/api";
+
 const EditPortfolioWidget = ({ portfolioData }) => {
     const [portfolio, setPortfolio] = useState(portfolioData);
 

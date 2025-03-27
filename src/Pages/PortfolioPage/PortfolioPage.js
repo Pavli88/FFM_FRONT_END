@@ -9,8 +9,6 @@ import PortfolioPageContext from "./context/portfolio-page-context";
 import {PortfolioSidebarData} from "./PortfolioSidebarData";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import './PortfolioPage.css'
-import Modal from "react-bootstrap/Modal";
-import axios from "axios";
 import DateContext from "../../context/date-context";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
 import PortfolioSearch from "./PortfolioSearch/PortfolioSearch";

@@ -1,6 +1,6 @@
 .instrument-search-container {
     position: relative;
-    width: 20rem; /* w-80 equivalent */
+    width: 100%;
 }
 
 .loading-text {

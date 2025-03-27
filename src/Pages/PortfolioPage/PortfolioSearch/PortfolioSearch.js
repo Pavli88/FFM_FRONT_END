@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import PortfolioContext from "../../../context/portfolio-context";
 
 const PortfolioSearch = () => {
-  const { portfolios, selectPortfolio } = useContext(PortfolioContext); // Get portfolios from context
+  const { portfolios, selectPortfolio, selectedPortfolio } = useContext(PortfolioContext);
   const [search, setSearch] = useState("");
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
   // const [selectedPortfolioCode, setSelectedPortfolioCode] = useState("");
@@ -36,6 +36,7 @@ const PortfolioSearch = () => {
 
   return (
     <div className={'card'}>
+      {selectedPortfolio.portfolio_name}
       <input
         type="text"
         placeholder="Search Portfolio..."
