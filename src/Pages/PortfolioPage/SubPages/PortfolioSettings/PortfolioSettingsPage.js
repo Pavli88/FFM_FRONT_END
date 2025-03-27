@@ -1,20 +1,13 @@
-import {useContext, useEffect, useState} from "react";
-import ServerContext from "../../../../context/server-context";
+import {useContext, useState} from "react";
 import './PortfolioSettingsPage.css'
 import {Nav} from "react-bootstrap";
 import Form from 'react-bootstrap/Form'
-import axios from "axios";
-import Select from "react-select";
-import PortfolioProcessWidget from "./PortfolioProcessWidget/PortfolioProcessWidget";
 import PortfolioContext from "../../../../context/portfolio-context";
 import Tabs from "../../../../components/Tabs/Tabs"
 import PortfolioTradeRouting from "./PortfolioTradeRouting/PortfolioTradeRouting";
-
+import fetchAPI from "../../../../config files/api";
 const EditPortfolioWidget = ({ portfolioData }) => {
-    const server = useContext(ServerContext).server;
     const [portfolio, setPortfolio] = useState(portfolioData);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -55,9 +48,7 @@ const EditPortfolioWidget = ({ portfolioData }) => {
 };
 
 const PortfolioSettingsPage = (props) => {
-    const server = useContext(ServerContext)['server'];
     const portfolioData = useContext(PortfolioContext).selectedPortfolio;
-    console.log(portfolioData)
 
     const InputField = (props) => {
         return (
@@ -80,7 +71,8 @@ const PortfolioSettingsPage = (props) => {
     };
 
     const savePortfolioData = () => {
-        axios.post(server + 'portfolios/update/portfolio/', portfolioData)
+        fetchAPI(
+        ).post('portfolios/update/portfolio/', portfolioData)
             .then(data => alert(data.data.response))
             .catch((error) => {
                 console.error('Error Message:', error);

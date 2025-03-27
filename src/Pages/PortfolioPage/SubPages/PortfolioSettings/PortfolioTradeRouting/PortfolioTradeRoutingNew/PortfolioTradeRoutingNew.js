@@ -1,117 +1,101 @@
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
-import axios from "axios";
-import {useState, useRef, useContext} from "react";
+import {useState, useContext, useMemo} from "react";
 import './PortfolioTradeRoutingNew.css'
+import fetchAPI from "../../../../../../config files/api";
+import InstrumentSearch from "../../../../../../components/Search/InstrumentSearch/InstrumentSearch";
+import CustomModal from "../../../../../../components/Modals/Modals";
+import BrokerContext from "../../../../../../context/broker-context";
 import PortfolioPageContext from "../../../../context/portfolio-page-context";
-import ServerContext from "../../../../../../context/server-context";
 
-const PortfolioTradeRoutingNew = (props) => {
-    const server = useContext(ServerContext)['server'];
-    const portfolioCode = useContext(PortfolioPageContext).portfolioCode;
-    const [tickerData, setTickerData] = useState([]);
-    const [selectedTicker, setSelectedTicker] = useState();
-    const [accountData, setAccountData] = useState([]);
-    const [selectedAccount, setSelectedAccount] = useState({});
-    const instCodeRef = useRef();
-    const tickers = tickerData.map((data) => <tr key={data['id']} style={{cursor: "pointer"}} onClick={() => {
-        setSelectedTicker(data['id'])
-        getAccounts(data['source'])
-    }}>
-        <td>
-            {data['source_ticker']}
-        </td>
-        <td>
-            {data['source']}
-        </td>
-    </tr>)
+const PortfolioTradeRoutingNew = ({ show, close }) => {
+    const { accounts, apiSupportedBrokers } = useContext(BrokerContext);
+    const { portfolioCode } = useContext(PortfolioPageContext);
 
-    const accountRows = accountData.map((data) => <tr key={data.id} onClick={() => setSelectedAccount(data)} style={{cursor: 'pointer'}}>
-        <td>{data.account_name}</td>
-        <td>{data.account_number}</td>
-        <td>{data.env}</td>
-        <td>{data.currency}</td>
-    </tr>)
+    const [formData, setFormData] = useState({
+        portfolioCode: portfolioCode,
+        selectedBroker: null,
+        selectedAccount: null,
+        selectedInstrument: null,
+    });
+
+    const brokerOptions = useMemo(
+        () =>
+            apiSupportedBrokers.map((data) => (
+                <option key={data.broker_code} value={data.broker_code}>
+                    {data.broker}
+                </option>
+            )),
+        [apiSupportedBrokers]
+    );
+
+    const accountOptions = accounts.map((account) => (
+        <option key={account.id} value={account.id}>
+            {account.account_name} - {account.account_number} ({account.env}, {account.currency})
+        </option>
+    ));
+
+    const handleBrokerChange = (e) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            selectedBroker: e.target.value,
+        }));
+    };
+
+    const handleAccountChange = (e) => {
+        const selectedId = e.target.value;
+        const selectedAccount = accounts.find((acc) => acc.id.toString() === selectedId);
+        setFormData((prevState) => ({
+            ...prevState,
+            selectedAccount: selectedAccount || null,
+        }));
+    };
+
+    const handleInstrumentSelect = (instrument) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            selectedInstrument: instrument.id,
+        }));
+    };
 
     const submitHandler = (event) => {
         event.preventDefault();
-        axios.post(server + 'portfolios/new/trade_routing/', {
-            portfolio_code: portfolioCode,
-            inst_id: instCodeRef.current.value,
-            ticker_id: selectedTicker,
-            broker_account_id: selectedAccount['id'],
-        })
-            .then(data=>alert(data.data.response))
+        fetchAPI
+            .post('portfolios/new/trade_routing/', formData)
+            .then((data) => alert(data.data.response))
             .catch((error) => {
                 console.error('Error Message:', error);
             });
     };
 
-    const getTickers = async() => {
-        const response = await axios.get(server + 'instruments/get/broker/tickers/', {
-            params: {
-                inst_code: instCodeRef.current.value
-            }
-        })
-        setTickerData(response.data)
-
-    };
-
-    const getAccounts = async(broker) => {
-        const response = await axios.get(server + 'accounts/get/accounts/', {
-            params: {
-                broker_name: broker
-            }
-        })
-        setAccountData(response.data)
-    };
-
-    const handleClose = () => {
-        setTickerData([]);
-        setSelectedTicker();
-        setAccountData([]);
-        setSelectedAccount({});
-        props.hide();
-    };
-
+    const footer = (
+        <button className={'normal-button'} onClick={submitHandler}>
+            Save
+        </button>
+    );
 
     return (
-        <Modal show={props.show} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>New Instrument Routing</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+        <CustomModal show={show} onClose={close} title={'New Trade Routing'} footer={footer}>
+            <div className={'block'}>
+                <label>Instrument</label>
+                <InstrumentSearch onSelect={handleInstrumentSelect} />
+            </div>
 
-                <Form.Label style={{fontWeight: "bold"}}>Instrument ID</Form.Label>
-                <div style={{display: "flex", paddingBottom: 15, width: '100%'}}>
-                    <div style={{width: '100%'}}>
-                        <input min={0} ref={instCodeRef} type="number" required  onChange={() => getTickers()}/>
-                    </div>
-                </div>
+            <div className="block">
+                <label className="input-label">Broker</label>
+                <select name="broker" value={formData.selectedBroker} onChange={handleBrokerChange}>
+                    <option value="">Select Broker</option>
+                    {brokerOptions}
+                </select>
+            </div>
 
-                <Form.Label style={{fontWeight: "bold"}}>Broker Tickers</Form.Label>
-                <div style={{overflow: "scroll", height: '300px', paddingBottom: 15, paddingLeft: 15, paddingRight: 15, width: '100%'}}>
-                    <table>
-                        <tbody>
-                        {tickers}
-                        </tbody>
-                    </table>
-                </div>
+            <div className="block">
+                <label className="input-label">Account</label>
+                <select name="account" value={formData.selectedAccount?.id || ''} onChange={handleAccountChange}>
+                    <option value="">Select Account</option>
+                    {accountOptions}
+                </select>
+            </div>
+        </CustomModal>
+    );
+};
 
-                <Form.Label style={{fontWeight: "bold"}}>Accounts</Form.Label>
-                <div style={{overflow: "scroll", height: '300px', paddingBottom: 15, paddingLeft: 15, paddingRight: 15, width: '100%'}}>
-                    <table>
-                        <tbody>
-                        {accountRows}
-                        </tbody>
-                    </table>
-                </div>
-
-            </Modal.Body>
-            <Modal.Footer>
-                <button className={'normal-button'} onClick={submitHandler}>Save</button>
-            </Modal.Footer>
-        </Modal>
-    )
-}
 export default PortfolioTradeRoutingNew;
