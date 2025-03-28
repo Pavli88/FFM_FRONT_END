@@ -7,9 +7,9 @@
 }
 
 .portfolio-settings-page-container {
-    width: 1200px;
+    width: 1800px;
     max-width: 100%;
-    margin: 0 auto; /* Középre igazítás */
+    margin: 0 auto;
     height: 855px;
     padding: 15px;
     box-sizing: border-box;

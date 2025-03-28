@@ -7,6 +7,7 @@ import Tabs from "../../../../components/Tabs/Tabs"
 import PortfolioTradeRouting from "./PortfolioTradeRouting/PortfolioTradeRouting";
 import fetchAPI from "../../../../config files/api";
 import PortfolioSettingsGeneral from "./PortfolioSettingsGeneral/PortfolioSettingsGeneral";
+import PortfolioProcessWidget from "./PortfolioProcessWidget/PortfolioProcessWidget";
 
 const PortfolioSettingsPage = (props) => {
     const portfolioData = useContext(PortfolioContext).selectedPortfolio;
@@ -155,22 +156,15 @@ const PortfolioSettingsPage = (props) => {
 
     const tabs = [
         {
-            id: 1, label: "General", content: <div style={{display: 'flex', width: '100%', height: '800px'}}>
-                <div style={{width: '500px', margin: 10}}>
-                    <PortfolioSettingsGeneral portfolioData={portfolioData}/>
-                </div>
-                <div style={{width: '100%', margin: 10}}>
-                    {/*<BrokerAccounts parameters={{...generalParameters}}/>*/}
-                </div>
-            </div>
+            id: 1,
+            label: "General",
+            content: (
+                <PortfolioSettingsGeneral portfolioData={portfolioData}/>
+            )
         },
         {
-            id: 2, label: "Processes", content: <div style={{display: 'flex', width: '100%', height: '800px'}}>
-                <div style={{width: '40%', height: '100%', margin: 10}}>
-                   {/*<PortfolioProcessWidget valuation={valuationParameters} performance={performanceParameters}/>*/}
-                </div>
-
-            </div>
+            id: 2, label: "Processes", content:
+                <PortfolioProcessWidget/>
         },
         {
             id: 3, label: "Trade Routing", content: <div style={{display: 'flex', width: '100%'}}>

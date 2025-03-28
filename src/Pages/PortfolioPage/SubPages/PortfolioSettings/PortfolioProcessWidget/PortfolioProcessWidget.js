@@ -1,28 +1,42 @@
-import Tabs from 'react-bootstrap/Tabs';
-import Tab from 'react-bootstrap/Tab';
-import PortfolioTradeRouting from "../PortfolioTradeRouting/PortfolioTradeRouting";
-import Card from "react-bootstrap/Card";
-const PortfolioProcessWidget = (props) => {
+import "./PortfolioProcessWidget.css";
+import InputField from "../../../../../components/InputField/InputField";
+import ToogleSwitch from "../../../../../components/Buttons/SliderButton/ToogleSwitch";
+
+const PortfolioProcessWidget = () => {
     return (
-        <div className={'card'}>
+        <div className="widget-container">
+            <div className="form-grid">
 
-            <Card.Body>
-                <Tabs defaultActiveKey="valuation">
-                    <Tab eventKey="valuation" title="Valuation">
-                        {props.valuation}
-                    </Tab>
-                    <Tab eventKey="total_return" title="Total Return">
-                        {props.performance}
-                    </Tab>
-                    <Tab eventKey="attribution" title="Attribution">
+                <div className="card portfolio-settings-card card-valuation">
+                    <h3 className="widget-title">Valuation</h3>
+                    <InputField label="Teszt"/>
+                    <InputField label="Teszt"/>
+                    <InputField label="Teszt"/>
+                    <ToogleSwitch label="Teszt"/>
+                </div>
 
-                    </Tab>
-                    <Tab eventKey="trade_routing" title="Trade Routing">
-                        <PortfolioTradeRouting/>
-                    </Tab>
-                </Tabs>
-            </Card.Body>
+                <div className="card portfolio-settings-card card-totalreturn">
+                    <h3 className="widget-title">Total return</h3>
+                    <InputField label="Teszt"/>
+                    <InputField label="Teszt"/>
+                    <InputField label="Teszt"/>
+                    <ToogleSwitch label="Teszt"/>
+                </div>
+
+                <div className="card portfolio-settings-card">
+                    <h3 className="widget-title">Attribution</h3>
+                    <InputField label="Teszt"/>
+                    <InputField label="Teszt"/>
+                    <InputField label="Teszt"/>
+                    <ToogleSwitch label="Teszt"/>
+                </div>
+
+            </div>
+
+
+            <button className="save-button">Save Changes</button>
         </div>
-    )
+    );
 };
+
 export default PortfolioProcessWidget;

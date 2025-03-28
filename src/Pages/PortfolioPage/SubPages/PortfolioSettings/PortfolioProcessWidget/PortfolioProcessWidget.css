@@ -1,0 +1,19 @@
+.widget-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-rows: min-content;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.portfolio-settings-card {
+  width: 450px;
+}
+

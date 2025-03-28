@@ -44,7 +44,6 @@ const PortfolioPage = () => {
                 paddingTop: 10,
                 paddingBottom: 10
             }}>
-                <PortfolioSearch/>
             </div>
 
             <div style={{
@@ -57,20 +56,24 @@ const PortfolioPage = () => {
             </div>
         </div>
 
-    const mainArea = <Switch>
-        <Route path="/portfolio/overview">
-            <PortfolioOverview/>
-        </Route>
-        <Route path="/portfolio/holdings">
-            <PortfolioHoldingsPage/>
-        </Route>
-        <Route path="/portfolio/transactions">
-            <PortfolioTransactionsPage/>
-        </Route>
-        <Route path="/portfolio/settings">
-            <PortfolioSettingsPage/>
-        </Route>
-    </Switch>
+    const mainArea =
+        <div>
+            <PortfolioSearch/>
+            <Switch>
+                <Route path="/portfolio/overview">
+                    <PortfolioOverview/>
+                </Route>
+                <Route path="/portfolio/holdings">
+                    <PortfolioHoldingsPage/>
+                </Route>
+                <Route path="/portfolio/transactions">
+                    <PortfolioTransactionsPage/>
+                </Route>
+                <Route path="/portfolio/settings">
+                    <PortfolioSettingsPage/>
+                </Route>
+            </Switch>
+        </div>
 
     return (
         <PortfolioPageContext.Provider value={{
