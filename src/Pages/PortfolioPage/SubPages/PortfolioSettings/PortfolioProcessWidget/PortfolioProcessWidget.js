@@ -9,26 +9,32 @@ const PortfolioProcessWidget = () => {
 
                 <div className="card portfolio-settings-card card-valuation">
                     <h3 className="widget-title">Valuation</h3>
-                    <InputField label="Teszt"/>
-                    <InputField label="Teszt"/>
-                    <InputField label="Teszt"/>
-                    <ToogleSwitch label="Teszt"/>
+                    <div className="widget-body">
+                        <InputField label="Teszt"/>
+                        <InputField label="Teszt"/>
+                        <InputField label="Teszt"/>
+                        <ToogleSwitch label="Teszt"/>
+                    </div>
                 </div>
 
                 <div className="card portfolio-settings-card card-totalreturn">
                     <h3 className="widget-title">Total return</h3>
-                    <InputField label="Teszt"/>
-                    <InputField label="Teszt"/>
-                    <InputField label="Teszt"/>
-                    <ToogleSwitch label="Teszt"/>
+                    <div className="widget-body">
+                        <InputField label="Teszt"/>
+                        <InputField label="Teszt"/>
+                        <InputField label="Teszt"/>
+                        <ToogleSwitch label="Teszt"/>
+                    </div>
                 </div>
 
                 <div className="card portfolio-settings-card">
                     <h3 className="widget-title">Attribution</h3>
-                    <InputField label="Teszt"/>
-                    <InputField label="Teszt"/>
-                    <InputField label="Teszt"/>
-                    <ToogleSwitch label="Teszt"/>
+                    <div className="widget-body">
+                        <InputField label="Teszt"/>
+                        <InputField label="Teszt"/>
+                        <InputField label="Teszt"/>
+                        <ToogleSwitch label="Teszt"/>
+                    </div>
                 </div>
 
             </div>

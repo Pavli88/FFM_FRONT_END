@@ -5,11 +5,20 @@
   padding: 2rem;
   font-family: sans-serif;
 }
+.widget-body {
+  margin-top: 20px;
+}
 
 .widget-title {
-  font-size: 2rem;
+  font-size: 20px;
+  font-weight: bold;
   color: #494f54;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #d3d3d3;
+  border-radius: 8px 8px 0 0;
+  text-align: left;
 }
+
 
 .form-grid {
   display: grid;

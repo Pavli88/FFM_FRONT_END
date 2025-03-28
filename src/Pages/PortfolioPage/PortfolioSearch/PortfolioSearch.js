@@ -1,13 +1,12 @@
 import { useState, useContext } from "react";
 import PortfolioContext from "../../../context/portfolio-context";
+import "./PortfolioSearch.css";
 
 const PortfolioSearch = () => {
   const { portfolios, selectPortfolio, selectedPortfolio } = useContext(PortfolioContext);
   const [search, setSearch] = useState("");
   const [filteredPortfolios, setFilteredPortfolios] = useState([]);
-  // const [selectedPortfolioCode, setSelectedPortfolioCode] = useState("");
-  // console.log(selectedPortfolioCode)
-  // Handle input change and filter portfolios
+
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearch(query);
@@ -27,47 +26,46 @@ const PortfolioSearch = () => {
     setFilteredPortfolios(matches);
   };
 
-  // Handle selecting a portfolio from the list
   const handleSelect = (portfolio) => {
-    setSearch(portfolio.portfolio_name); // Set input field to selected name
-    selectPortfolio(portfolio); // Store portfolio_code
-    setFilteredPortfolios([]); // Hide suggestions
+    setSearch(portfolio.portfolio_name);
+    selectPortfolio(portfolio);
+    setFilteredPortfolios([]);
   };
 
   return (
-    <div className={'card'}>
-      {selectedPortfolio.portfolio_name}
-      <input
-        type="text"
-        placeholder="Search Portfolio..."
-        value={search}
-        onChange={handleSearch}
-        style={{ padding: '8px 8px', border: 'none', outline: 'none', width: '100%', background: '#f1f1f1' }}
-      />
+   <div className="portfolio-search-container">
+  <div className="portfolio-search-row">
+    <input
+      type="text"
+      placeholder="Search Portfolio..."
+      value={search}
+      onChange={handleSearch}
+      className="portfolio-search-input"
+    />
 
-      {/* Show filtered results */}
-      {filteredPortfolios.length > 0 && (
-        <ul style={{ listStyle: "none", padding: 0, border: "1px solid #ccc", maxWidth: "250px" }}>
-          {filteredPortfolios.map((portfolio) => (
-            <li
-              key={portfolio.id}
-              onClick={() => handleSelect(portfolio)}
-              style={{
-                padding: "8px",
-                cursor: "pointer",
-                backgroundColor: "#f9f9f9",
-                borderBottom: "1px solid #ddd"
-              }}
-            >
-              {portfolio.portfolio_name} ({portfolio.portfolio_code})
-            </li>
-          ))}
-        </ul>
-      )}
+    {selectedPortfolio?.portfolio_name && (
+        <div className="selected-portfolio-inline">
+          📌 <strong>{selectedPortfolio.portfolio_name}</strong>
+        </div>
+    )}
+  </div>
 
-      {/* Display selected portfolio code */}
-      {/*{selectedPortfolioCode && <p>Selected Portfolio Code: <strong>{selectedPortfolioCode}</strong></p>}*/}
-    </div>
+     {filteredPortfolios.length > 0 && (
+         <ul className="portfolio-suggestion-list">
+           {filteredPortfolios.map((portfolio) => (
+               <li
+                   key={portfolio.id}
+                   onClick={() => handleSelect(portfolio)}
+                   className="portfolio-suggestion-item"
+               >
+                 {portfolio.portfolio_name} ({portfolio.portfolio_code})
+               </li>
+           ))}
+         </ul>
+     )}
+   </div>
+
+
   );
 };
 

@@ -13,36 +13,44 @@ const PortfolioSettingsGeneral = ({portfolioId}) => {
                 {/* General Info */}
                 <div className="card portfolio-settings-card card-general">
                     <h3 className="widget-title">Portfolio Info</h3>
-                    <InputField label="Portfolio Name"/>
-                    <InputField label="Portfolio Code"/>
-                    <InputField label="Portfolio Type"/>
-                    <InputField label="Currency"/>
-                    <InputField label="Status"/>
-                    <ToogleSwitch label="Terminated"/>
+                    <div className="widget-body">
+                        <InputField label="Portfolio Name"/>
+                        <InputField label="Portfolio Code"/>
+                        <InputField label="Portfolio Type"/>
+                        <InputField label="Currency"/>
+                        <InputField label="Status"/>
+                        <ToogleSwitch label="Terminated"/>
+                    </div>
                 </div>
 
                  {/* Ownership & Admin */}
                 <div className="card portfolio-settings-card card-ownership">
                     <h3 className="widget-title">Ownership & Public Status</h3>
-                    <InputField label="Owner"/>
-                    <InputField label="Manager"/>
-                     <ToogleSwitch label="Public"/>
+                    <div className="widget-body">
+                        <InputField label="Owner"/>
+                        <InputField label="Manager"/>
+                        <ToogleSwitch label="Public"/>
+                    </div>
                 </div>
 
                 {/* Dates */}
                 <div className="card portfolio-settings-card">
                     <h3 className="widget-title">Dates</h3>
-                    <InputField label="Creation Date" type="date"/>
-                    <InputField label="Inception Date" type="date"/>
-                    <InputField label="Termination Date" type="date"/>
-                    <InputField label="Performance Start Date" type="date"/>
+                    <div className="widget-body">
+                        <InputField label="Creation Date" type="date"/>
+                        <InputField label="Inception Date" type="date"/>
+                        <InputField label="Termination Date" type="date"/>
+                        <InputField label="Performance Start Date" type="date"/>
+                    </div>
                 </div>
 
                 {/* Functional Settings */}
                 <div className="card portfolio-settings-card card-functional">
                     <h3 className="widget-title">Trade Settings</h3>
-                    <ToogleSwitch label="Trading Allowed"/>
-                    <ToogleSwitch label="Multicurrency Allowed"/>
+                    <div className="widget-body">
+                        <ToogleSwitch label="Trading Allowed"/>
+                        <ToogleSwitch label="Multicurrency Allowed"/>
+                    </div>
                 </div>
 
 
