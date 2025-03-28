@@ -85,7 +85,7 @@ const InstrumentResults = ({ data }) => {
     });
 
     return (
-        <div className="card" style={{ padding: 15 }}>
+        <div className="card">
             <div className="card-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <label>Instruments</label>
                 <button

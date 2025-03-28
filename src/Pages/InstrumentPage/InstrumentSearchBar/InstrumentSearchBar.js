@@ -84,7 +84,7 @@ const InstrumentSearchBar = () => {
     };
 
     return (
-        <div className={'card'} style={{padding: 10, width: '100%'}}>
+        <div className={'card'}>
             <div style={{display: "flex", height: '100%'}}>
                 <div className='vertical-box'>
                     <label>Name</label>

@@ -126,23 +126,24 @@ const TradePage = () => {
         );
     };
 
-    const panel = <div style={{overflow: "scroll", height: '100%'}}>
-        <div style={{padding:10, display: "flex"}}>
-            <div style={{width:'50%', paddingRight: 15}}>
+    const panel = <div style={{overflow: "scroll", height: '100%', width: '100%'}}>
+
+        <div style={{display: "flex", gap: 5, height: 650, paddingRight: 5}}>
+            <div style={{flex: 1}}>
                 <PortfolioTable portfolios={allowedForTradePortfolios}/>
             </div>
-            <div style={{width:'50%'}}>
+            <div style={{flex: 2}}>
                 <TradeTerminal portfolioCode={selectedPortfolioCode}/>
             </div>
         </div>
-        <div style={{padding:10, height: 500}}>
-            <TradeSignals server={server}/>
-        </div>
     </div>
 
-    const mainArea = <div style={{padding: 30}}>
-
+    const mainArea = <div style={{padding: 5}}>
         <OpenTransactions server={server} openTransactions={openTransactionsData}/>
+        <div style={{paddingTop: 5}}>
+            <TradeSignals server={server}/>
+        </div>
+
     </div>
 
     return (

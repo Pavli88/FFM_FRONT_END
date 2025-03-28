@@ -2,8 +2,8 @@ import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare, BsTrash} fro
 import './TradeSignals.css'
 import {useEffect, useMemo, useState} from "react";
 import axios from "axios";
-import Card from "react-bootstrap/Card";
 import {useExpanded, useGroupBy, useSortBy, useTable} from "react-table";
+import CardHeader from "../../../components/Card/CardHeader";
 
 const TradeSignals = (props) => {
     const [signalData, setSignalData] = useState([])
@@ -140,22 +140,15 @@ const TradeSignals = (props) => {
         fetchTradeMessages()
     };
 
-    return(
-        <Card style={{height: '100%'}}>
-            <Card.Header style={{border: "none"}}>
-                <div>
-                    <div style={{display: 'flex', width: '100%'}}>
-                        <div style={{width: '300px'}}>
-                            Signals
-                        </div>
-                        <div style={{position: 'absolute', right: 10, margin: 0, padding: 0}}>
-                            <button style={{padding: 0, width: 20}} className={'delete-button'} onClick={deleteSignals}>
-                                <BsTrash/></button>
-                        </div>
-                    </div>
-                </div>
-            </Card.Header>
+    const headerContent = <button
+        style={{padding: 0, width: 20}}
+        className={'delete-button'}
+        onClick={deleteSignals}>
+        <BsTrash size={20}/></button>
 
+    return(
+        <div className={'card'}>
+            <CardHeader title={'Signals'} content={headerContent}/>
             <div style={{height: '100%', overflowY: 'scroll'}}>
                 <table {...getTableProps()}>
                     <thead>
@@ -184,7 +177,7 @@ const TradeSignals = (props) => {
                 </table>
             </div>
 
-        </Card>
+        </div>
     )
 };
 export default TradeSignals;

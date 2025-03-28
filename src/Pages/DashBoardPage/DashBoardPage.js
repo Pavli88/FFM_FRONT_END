@@ -296,7 +296,7 @@ const DashBoardPage = () => {
     </div>
 
     return (
-        <ContainerWithSideMenu panel={panel} mainArea={mainArea} sidebarWidth={"500px"}/>
+        <ContainerWithSideMenu panel={panel} mainArea={mainArea} sidebarWidth={"600px"}/>
     );
 };
 

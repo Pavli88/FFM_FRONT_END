@@ -22,12 +22,12 @@ const InstrumentPage = () => {
         }
     </div>
 
-    const mainArea = <div style={{padding: 20}}>
+    const mainArea = <div style={{padding: 5}}>
         <div style={{width: '100%'}}>
             <InstrumentSearchBar/>
         </div>
 
-        <div style={{width: '100%', paddingTop: '20px'}}>
+        <div style={{width: '100%', paddingTop: 5}}>
             <InstrumentResuts data={instrumentSearchResults}/>
         </div>
     </div>

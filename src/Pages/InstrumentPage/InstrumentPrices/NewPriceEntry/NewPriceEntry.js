@@ -3,11 +3,10 @@ import Select from "react-select";
 import {useContext, useRef, useState} from "react";
 import ServerContext from "../../../../context/server-context";
 import DateContext from "../../../../context/date-context";
-import axios from "axios";
+import fetchAPI from "../../../../config files/api";
 import InstrumentSearchContext from "../../InstrumentPageContext/instrument-search-context";
 
 const NewPriceEntry = ({show, close, refreshPrices}) => {
-    const server = useContext(ServerContext).server;
     const currentDate = useContext(DateContext).currentDate;
     const [priceSource, setPriceSource] = useState();
     const dateRef = useRef();
@@ -18,8 +17,6 @@ const NewPriceEntry = ({show, close, refreshPrices}) => {
         event.preventDefault();
 
         try {
-            const token = localStorage.getItem("access");  // Get token for authentication
-
             // Construct request data
             const requestData = {
                 instrument_id: selectedInstrument.id,
@@ -29,12 +26,7 @@ const NewPriceEntry = ({show, close, refreshPrices}) => {
             };
 
             // Send the POST request
-            const response = await axios.post(`${server}instruments/new/price/`, requestData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,  // Include token in headers
-                    "Content-Type": "application/json",  // Ensure correct content type
-                },
-            });
+            const response = await fetchAPI.post('instruments/new/price/', requestData);
 
             // Show success message
             alert(response.data.message || "Instrument saved successfully!");

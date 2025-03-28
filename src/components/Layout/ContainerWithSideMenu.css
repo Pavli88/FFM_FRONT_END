@@ -1,7 +1,7 @@
 /* Sidebar styles */
 .sidebar {
     height: 100vh;
-    /*background-color: #eeeeee;*/
+    background-color: white;
     position: fixed;
     top: 0;
     left: 0;
@@ -11,19 +11,24 @@
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
     padding-top: 80px;
     padding-left: 0;
-    padding-right: 50px;
+    padding-right: 0px;
 }
 
 /* When menu is open */
 .sidebar.open {
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-    padding-left: 20px;
+    padding-left: 0px;
+    /*padding-right: 20px;*/
+}
+
+.button-bar{
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Toggle button */
 .toggle-button {
     position: absolute;
-    right: 5px;
+    left: 5px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
@@ -45,9 +50,11 @@
     height: 100%;
     transition: margin-left 0.3s ease;
     margin-left: 40px;
+    padding: 15px;
+    padding-top: 0px;
     padding-right: 40px;
 }
 
 .main-content.open {
-    margin-left: 300px; /* Shift when menu is open */
+    /*margin-left: 300px; !* Shift when menu is open *!*/
 }

@@ -165,7 +165,7 @@ const PortfolioGroup = ({ allowSelect = false }) => {
     const treeData = buildTree(portGroupData);
 
     return (
-        <div className="card" style={{ padding: "15px", borderRadius: "10px", boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)" }}>
+        <div style={{padding: 20, width: '100%'}}>
             <div className="card-header" style={{ fontSize: "1.2em", fontWeight: "bold", paddingBottom: "10px", borderBottom: "2px solid #ccc" }}>Portfolios Structure</div>
             <div style={{ overflowY: "auto", height: "100%" }}>
                 <TreeView data={treeData} update={(e) => setNode(e)} allowSelect={allowSelect} />
