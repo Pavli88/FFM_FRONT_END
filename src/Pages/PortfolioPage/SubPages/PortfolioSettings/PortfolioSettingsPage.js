@@ -6,46 +6,7 @@ import PortfolioContext from "../../../../context/portfolio-context";
 import Tabs from "../../../../components/Tabs/Tabs"
 import PortfolioTradeRouting from "./PortfolioTradeRouting/PortfolioTradeRouting";
 import fetchAPI from "../../../../config files/api";
-const EditPortfolioWidget = ({ portfolioData }) => {
-    const [portfolio, setPortfolio] = useState(portfolioData);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setPortfolio({ ...portfolio, [name]: value });
-    };
-
-    const handleSubmit = async () => {
-        // try {
-        //     await axios.put(`${server}/portfolio/${portfolioId}/`, portfolio);
-        //     alert("Portfolio updated successfully!");
-        // } catch (err) {
-        //     alert("Error updating portfolio.");
-        // }
-    };
-
-    // if (loading) return <p>Loading...</p>;
-    // if (error) return <p>{error}</p>;
-
-    return (
-        <div className={'card'}>
-            <div>
-                <h2 className="text-xl font-bold mb-4">Edit Portfolio</h2>
-                {Object.keys(portfolio).map((key) => (
-                    <div key={key} className="mb-2">
-                        <label className="block text-sm font-medium capitalize">{key.replace("_", " ")}</label>
-                        <input
-                            type="text"
-                            name={key}
-                            value={portfolio[key] || ""}
-                            onChange={handleChange}
-                        />
-                    </div>
-                ))}
-                <button onClick={handleSubmit} className="mt-4 w-full">Save Changes</button>
-            </div>
-        </div>
-    );
-};
+import PortfolioSettingsGeneral from "./PortfolioSettingsGeneral/PortfolioSettingsGeneral";
 
 const PortfolioSettingsPage = (props) => {
     const portfolioData = useContext(PortfolioContext).selectedPortfolio;
@@ -196,7 +157,7 @@ const PortfolioSettingsPage = (props) => {
         {
             id: 1, label: "General", content: <div style={{display: 'flex', width: '100%', height: '800px'}}>
                 <div style={{width: '500px', margin: 10}}>
-                    <EditPortfolioWidget portfolioData={portfolioData}/>
+                    <PortfolioSettingsGeneral portfolioData={portfolioData}/>
                 </div>
                 <div style={{width: '100%', margin: 10}}>
                     {/*<BrokerAccounts parameters={{...generalParameters}}/>*/}
@@ -222,8 +183,10 @@ const PortfolioSettingsPage = (props) => {
 
 
     return (
-        <div style={{padding: 20}}>
-            <Tabs tabs={tabs}/>
+        <div className="page-wrapper">
+            <div className="portfolio-settings-page-container" style={{padding: 20}}>
+                <Tabs tabs={tabs}/>
+            </div>
         </div>
     );
 };

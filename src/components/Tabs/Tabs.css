@@ -1,51 +1,53 @@
 .tab-container {
     width: 100%;
-    /*max-width: 600px;*/
     margin: auto;
     font-family: Arial, sans-serif;
+    background-color: #fff; /* fehér háttér */
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 16px; /* nagyobb padding */
 }
 
 .tab-buttons {
     display: flex;
-    border-bottom: 2px solid #ddd;
+    justify-content: center; /* középre helyezés */
+    border-bottom: 1px solid #ddd;
+    padding: 12px;
 }
 
 .tab-button {
-    flex: 1;
-    padding: 10px 15px;
-    cursor: pointer;
-    background: #f9f9f9;
+    background: transparent;
     border: none;
-    outline: none;
+    cursor: pointer;
     font-size: 16px;
+    color: #007bff; /* alap szín a tab címeknek */
+    margin: 0 15px; /* egyenlő távolságok */
+    padding: 8px 16px;
     transition: all 0.3s ease-in-out;
-    border-bottom: 3px solid transparent;
-    color: #333; /* Ensure unselected tabs have dark text */
+    border-radius: 4px;
 }
 
 .tab-button:hover {
-    background: #e0e0e0;
+    background: rgba(0, 123, 255, 0.1);
 }
 
 .tab-button.active {
-    background: #fff;
+    background: #007bff; /* téglalap alakú kijelölés */
+    color: #fff; /* fehér szöveg aktív állapotban */
     font-weight: bold;
-    border-bottom: 3px solid #007bff;
-    color: #007bff;
+    border-bottom: none;
+    border-radius: 8px; /* lekerekített szélek */
 }
 
 .tab-content {
     padding: 20px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-top: none;
 }
 
 .tab-panel {
     animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Simple fade-in animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
