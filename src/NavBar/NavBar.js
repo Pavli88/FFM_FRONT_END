@@ -5,16 +5,16 @@ import ServerContext from "../context/server-context";
 import AuthContext from "../context/AuthProvider";
 import UserContext from "../context/user-context";
 import { logout } from "../endpoints/authservice";
-import UserMenu from './UserMenu';  // Import the new UserMenu component
-import { FaSearch } from 'react-icons/fa';
+import UserMenu from './UserMenu';
+import SearchBar from "../components/Search/CustomSearch/SearchBar";
 
 const Navbar = () => {
     const server = useContext(ServerContext)['server'];
     const { user, email } = useContext(UserContext);
-    const { setAuth } = useContext(AuthContext);
+    const {setAuth} = useContext(AuthContext);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [searchType, setSearchType] = useState("user");
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchType, setSearchType] = useState('user');
     const history = useHistory();
 
     // Define dropdownRef to detect clicks outside the dropdown
@@ -52,25 +52,12 @@ const Navbar = () => {
                 <Link className="menu-button" to="/calculations">Calculations</Link>
                 <Link className="menu-button" to="/data">Data</Link>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', borderRadius: '20px', overflow: 'hidden', border: '1px solid #ccc', padding: '5px', background: '#fff', height: 45 }}>
-                <FaSearch size={26} style={{ marginLeft: '10px', color: '#888', width: 50 }} />
-                <input
-                    type="text"
-                    placeholder={`Search ${searchType}`}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ flex: 1, padding: '8px 12px', border: 'none', outline: 'none', width: 200 }}
-                />
-                <select
-                    value={searchType}
-                    onChange={(e) => setSearchType(e.target.value)}
-                    className="search-dropdown"
-                    style={{ padding: '8px', border: 'none', background: '#f8f8f8', cursor: 'pointer' }}
-                >
-                    <option value="user">User</option>
-                    <option value="portfolio">Portfolio</option>
-                </select>
-            </div>
+            <SearchBar
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                searchType={searchType}
+                setSearchType={setSearchType}
+            />
             <div className="nav-notifications">
                 <Notifications server={server} />
             </div>

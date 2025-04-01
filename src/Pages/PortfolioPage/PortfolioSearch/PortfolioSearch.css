@@ -77,3 +77,22 @@
   border-radius: 6px;
   color: #333;
 }
+
+.portfolio-search-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.portfolio-clear-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.portfolio-clear-icon:hover {
+  color: #555;
+}
