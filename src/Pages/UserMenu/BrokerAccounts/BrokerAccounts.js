@@ -1,43 +1,36 @@
 import BrokerContext from "../../../context/broker-context";
 import {useContext, useState} from "react";
 import {BsPencil, BsTrash} from "react-icons/bs";
-import axios from "axios";
-import ServerContext from "../../../context/server-context";
-import './BrokerAccounts.css'
-import {ButtonGroupVertical} from "../../../components/Buttons/ButtonGroups";
 import NewBrokerAccount from "./NewBrokerAccount";
 import NewCounterParty from "./NewCounterParty";
+import fetchAPI from "../../../config files/api";
+import AccountContext from "../context/account-context";
+import EditAccount from "./EditAccount";
 
 const BrokerAccounts = () => {
-    const server = useContext(ServerContext).server;
     const { apiNotSupportedBrokers, fetchAccounts, fetchBrokers, accounts } = useContext(BrokerContext);
+    const { saveSelectedAccount } = useContext(AccountContext);
     const [showNewAccountModal, setShowNewAccountModal] = useState(false);
     const [showCounterPartyModal, setShowCounterPartyModal] = useState(false);
-    const [editingId, setEditingId] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     const deleteAccount = (id) => {
-        const token = localStorage.getItem("access");
-        axios.post(`${server}accounts/delete/`, { id }, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
+        fetchAPI.post('accounts/delete/', { id })
             .then(() => {
                 fetchAccounts()})
             .catch((error) => console.error("Error:", error));
     };
 
     const deleteBroker = (id) => {
-        const token = localStorage.getItem("access");
-        axios.post(`${server}accounts/delete/broker/`, { id }, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
+        fetchAPI.post('accounts/delete/broker/', { id })
             .then(() => {
                 fetchBrokers()})
             .catch((error) => console.error("Error:", error));
     };
 
-    const editAccount = (id) => {
-        setEditingId(id);
-        console.log(`Editing account with ID: ${id}`);
+    const editAccount = (accountData) => {
+        saveSelectedAccount(accountData);
+        setShowEditModal(!showEditModal)
     };
 
     return (
@@ -69,11 +62,11 @@ const BrokerAccounts = () => {
                                 <td>{data.broker_code}</td>
                                 <td>{data.type}</td>
                                 <td className="action-buttons">
-                                    <button className=" edit-button" onClick={() => editAccount(data.id)}>
-                                        <BsPencil/>
+                                    <button className="icon-button" title={'Edit'}>
+                                        <BsPencil size={20}/>
                                     </button>
-                                    <button className=" delete-button" onClick={() => deleteBroker(data.id)}>
-                                        <BsTrash/>
+                                    <button className="icon-button" onClick={() => deleteBroker(data.id)} title={'Delete'}>
+                                        <BsTrash size={20}/>
                                     </button>
                                 </td>
                             </tr>
@@ -113,11 +106,11 @@ const BrokerAccounts = () => {
                                 <td>{data.currency}</td>
                                 <td>{data.env}</td>
                                 <td className="action-buttons">
-                                    <button className=" edit-button" onClick={() => editAccount(data.id)}>
-                                        <BsPencil/>
+                                    <button className="icon-button" onClick={() => editAccount(data)}>
+                                        <BsPencil size={20}/>
                                     </button>
-                                    <button className=" delete-button" onClick={() => deleteAccount(data.id)}>
-                                        <BsTrash/>
+                                    <button className="icon-button" onClick={() => deleteAccount(data.id)}>
+                                        <BsTrash size={20}/>
                                     </button>
                                 </td>
                             </tr>
@@ -129,6 +122,7 @@ const BrokerAccounts = () => {
 
             <NewBrokerAccount show={showNewAccountModal} close={() => setShowNewAccountModal(!showNewAccountModal)}/>
             <NewCounterParty show={showCounterPartyModal} close={() => setShowCounterPartyModal(!showCounterPartyModal)}/>
+            <EditAccount show={showEditModal} close={() => setShowEditModal(!showEditModal)}/>
         </div>
     );
 };

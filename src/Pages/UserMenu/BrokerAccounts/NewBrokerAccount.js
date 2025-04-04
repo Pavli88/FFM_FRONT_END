@@ -1,11 +1,9 @@
 import {useState, useRef, useContext} from "react";
-import axios from "axios";
 import BrokerContext from "../../../context/broker-context";
-import ServerContext from "../../../context/server-context";
 import CustomModal from "../../../components/Modals/Modals";
+import fetchAPI from "../../../config files/api";
 
 const NewBrokerAccount = ({ show, close }) => {
-    const server = useContext(ServerContext).server;
     const { apiSupportedBrokers, fetchAccounts } = useContext(BrokerContext);
     const [env, setEnv] = useState('live');
     const [currency, setCurrency] = useState('USD');
@@ -38,16 +36,13 @@ const NewBrokerAccount = ({ show, close }) => {
             alert("Broker has to be selected.");
             return;
         }
-        const token = localStorage.getItem("access");
-        axios.post(`${server}accounts/new_account/`, {
+        fetchAPI.post('accounts/new_account/', {
             broker_name: brokerName,  // Use the selected broker
             account_number: accountNumberRef.current.value,
             account_name: accountNameRef.current.value,
             env: env,
             token: tokenRef.current.value,
             currency: currency,
-        }, {
-            headers: {Authorization: `Bearer ${token}`}
         })
             .then(() => fetchAccounts())
             .catch((error) => {

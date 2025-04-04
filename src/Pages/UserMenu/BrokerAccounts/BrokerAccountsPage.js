@@ -1,24 +1,20 @@
-import NewBrokerAccount from "./NewBrokerAccount";
 import BrokerAccounts from "./BrokerAccounts";
-import {useContext} from "react";
-import UserContext from "../../../context/user-context";
-import ServerContext from "../../../context/server-context";
+import AccountContext from "../context/account-context";
+import {useState} from "react";
 
 const BrokerAccountsPage = () => {
-        const generalParameters = {
-        user: useContext(UserContext).user,
-        server: useContext(ServerContext).server
-    };
-
+    const [selectedAccount, setSelectedAccount] = useState(null);
     return (
-        <div style={{display: 'flex', width: '100%', height: '800px'}}>
-            {/*<div style={{width: '500px', margin: 10}}>*/}
-            {/*    <NewBrokerAccount parameters={{...generalParameters}}/>*/}
-            {/*</div>*/}
-            <div style={{width: '100%', margin: 10}}>
-                <BrokerAccounts parameters={{...generalParameters}}/>
+        <AccountContext.Provider value={{
+            selectedAccount: selectedAccount,
+            saveSelectedAccount: setSelectedAccount
+        }}>
+            <div style={{display: 'flex', width: '100%', height: '800px'}}>
+                <div style={{width: '100%', margin: 10}}>
+                    <BrokerAccounts/>
+                </div>
             </div>
-        </div>
+        </AccountContext.Provider>
     )
 };
 
