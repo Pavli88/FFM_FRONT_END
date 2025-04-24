@@ -114,7 +114,10 @@ const TreeView = ({ data, update, allowSelect = false }) => {
     };
 
     const handleDelete = async (node) => {
-        const response = await fetchAPI.post("portfolios/delete/port_group/", { id: node.id });
+        const response = await fetchAPI.post("portfolios/delete/port_group/", {
+            parent_id: node.parent_id,
+            child_id: node.id
+        });
         if (response.data.success) update(node.id);
         else alert(response.data.message);
     };
@@ -163,7 +166,7 @@ const PortfolioGroup = ({ allowSelect = false }) => {
     };
 
     const treeData = buildTree(portGroupData);
-
+    console.log(portGroupData)
     return (
         <div style={{padding: 20, width: '100%'}}>
             <div className="card-header" style={{ fontSize: "1.2em", fontWeight: "bold", paddingBottom: "10px", borderBottom: "2px solid #ccc" }}>Portfolios Structure</div>

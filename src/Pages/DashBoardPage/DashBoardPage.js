@@ -52,25 +52,30 @@ const useDashboardData = (server, currentDate, portCodes) => {
 
 const transformPortfolioData = (dateRecords) => {
     const portfolioMap = {};
+    const allDates = [];
 
-    dateRecords.forEach(({ records }) => {
+    // First, extract all dates and initialize structure
+    dateRecords.forEach((dateEntry, index) => {
+        allDates.push(index); // Use index as a date reference (or replace with actual date)
+        const { records } = dateEntry;
+
         records.forEach(({ portfolio_code, holding_nav }) => {
-            // Replace null or NaN values with 0
             const validNav = holding_nav == null || isNaN(holding_nav) ? 0 : holding_nav;
 
-            // If portfolio_code is not in the map, initialize it
+            // Initialize array for all dates if not already
             if (!portfolioMap[portfolio_code]) {
-                portfolioMap[portfolio_code] = [];
+                portfolioMap[portfolio_code] = Array(dateRecords.length).fill(0);
             }
 
-            // Push the valid holding_nav value to the portfolio's data array
-            portfolioMap[portfolio_code].push(validNav);
+            // Set NAV at correct date index
+            portfolioMap[portfolio_code][index] = validNav;
         });
     });
 
-    // Convert the map to the desired array format
+    // Convert to desired format
     return Object.entries(portfolioMap).map(([name, data]) => ({ name, data }));
 };
+
 
 const transformSummedData = (dateRecords, fieldMapping) => {
     const fieldMap = {};
@@ -119,9 +124,9 @@ const DashBoardPage = () => {
     const [returnTypes, setReturnsTypes] = useState('dtd');
     const [portfolioNavData, setPortfolioNavData] = useState([]);
     const [startDate, setStartDate] = useState(firstDayOfYear);
-    console.log(typeof portfolioNavData)
-    console.log(portfolioNavData)
-    console.log(childPortfolios, portGroup)
+
+    // console.log(portfolioNavData)
+
 
     // Fetch child portfolios whenever portGroup changes
     useEffect(() => {
@@ -176,7 +181,7 @@ const DashBoardPage = () => {
     }, [childPortfolios, startDate])
 
     const data = transformPortfolioData(portfolioNavData)
-
+    // console.log(data)
     const summedData = transformSummedData(portfolioNavData, {
         labels: ['Positions', 'Cash', 'Margin'],
         values: ['pos_val', 'cash_val', 'margin']

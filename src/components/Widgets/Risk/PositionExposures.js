@@ -6,6 +6,7 @@ import {PieChart, PieChartSorted} from "../../Charts/PieCharts";
 import {Heatmap} from "../../Charts/Heatmaps";
 import {LineChart} from "../../Charts/LineCharts";
 import ValueChange from "../../Layout/ValueChange/ValueChange";
+import fetchAPI from "../../../config files/api";
 
 export const PositionExposures = ({ portfolioCodes, server }) => {
     const currentDate = useContext(DateContext)?.currentDate;
@@ -22,7 +23,7 @@ export const PositionExposures = ({ portfolioCodes, server }) => {
 
     const fetchExposures = async () => {
         try {
-            const response = await axios.post(`${server}portfolios/get/position_exposures/`, {
+            const response = await fetchAPI.post('portfolios/get/position_exposures/', {
                 portfolio_code: portfolioCodes,
                 period: correlPeriod,
                 date: currentDate,
@@ -108,7 +109,7 @@ export const PositionExposures = ({ portfolioCodes, server }) => {
             <div style={{ display: "flex", marginTop: 5 }}>
                 <div className={'card'} style={{ flex: 1, height: 400, marginRight: 5 }}>
                     <div className={'card-header'}><span>Risk History</span></div>
-                    <LineChart data={[{ name: "Total Risk", data: std_hist }, { name: "Lev Free Risk", data: normalRisks }]} labels={std_dates} />
+                    <LineChart data={[{ name: "Total Risk", data: std_hist }]} labels={std_dates} />
                 </div>
                 <div className={'card'} style={{ flex: 1, height: 400, marginRight: 5 }}>
                     <div className={'card-header'}><span>Net Exposure History</span></div>
