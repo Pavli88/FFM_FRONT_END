@@ -44,7 +44,7 @@ const PortfolioCashEntryModal = ({ show, close }) => {
             .catch((error) => console.error('Error Message:', error));
 
         if (selectedPortfolio.status === 'Not Funded') {
-            fetchAPI.post('portfolios/update/portfolio/', {
+            fetchAPI.put('portfolios/update/portfolio/', {
                 id: selectedPortfolio.id,
                 status: "Funded"
             })
