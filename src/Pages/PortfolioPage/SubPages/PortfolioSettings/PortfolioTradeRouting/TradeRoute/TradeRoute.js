@@ -5,18 +5,20 @@ import {BsArrowRepeat, BsFillCaretRightFill, BsFillPauseFill, BsTrash} from "rea
 import './TradeRoute.css';
 import PortfolioContext from "../../../../../../context/portfolio-context";
 
-const TradeRoute = ({ data, fetch }) => {
-    const { selectedPortfolio } = useContext(PortfolioContext);
+const TradeRoute = ({data, fetch}) => {
+    const {selectedPortfolio} = useContext(PortfolioContext);
+    const [status, setStatus] = useState(''); // '', 'success', or 'error'
+
     const [formData, setData] = useState({
         id: data.id,
-        portfolio_code : selectedPortfolio.portfolio_code,
+        portfolio_code: selectedPortfolio.portfolio_code,
         name: data.name,
         source: data.source,
         quantity: parseFloat(data.quantity),
         is_active: data.is_active,
         broker_account_id: parseFloat(data.broker_account_id)
     });
-    const { accounts, apiSupportedBrokers } = useContext(BrokerContext);
+    const {accounts, apiSupportedBrokers} = useContext(BrokerContext);
 
     const brokerOptions = apiSupportedBrokers.map(broker => (
         <option key={broker.broker_code} value={broker.id}>
@@ -31,16 +33,25 @@ const TradeRoute = ({ data, fetch }) => {
     ));
 
     const updateRouting = async () => {
-        // await fetchAPI.post('portfolios/update/trade_routing/', formData);
+        try {
+            const res = await fetchAPI.put('portfolios/update/trade_routing/', formData);
+            setStatus('success');
+            setTimeout(() => setStatus(''), 2000); // Clear status after 2s
+        } catch (err) {
+            setStatus('error');
+            setTimeout(() => setStatus(''), 2000);
+        }
     };
 
+
     const deleteRouting = async (id) => {
-        await fetchAPI.post('portfolios/delete/trade_routing/', { id });
+        await fetchAPI.post('portfolios/delete/trade_routing/', {id});
         fetch();
     };
 
     return (
-        <tr className="trade-row">
+        <tr className={`trade-row ${status === 'success' ? 'highlight-success' : ''} ${status === 'error' ? 'highlight-error' : ''}`}>
+
             <td className="trade-cell"><label>{formData.name}</label></td>
 
             <td className="trade-cell">
@@ -48,7 +59,7 @@ const TradeRoute = ({ data, fetch }) => {
                     <select
                         className="styled-select"
                         value={formData.source || ''}
-                        onChange={(e) => setData(prev => ({ ...prev, broker_account_id: e.target.value }))}
+                        onChange={(e) => setData(prev => ({...prev, broker_account_id: e.target.value}))}
                     >
                         {brokerOptions}
                     </select>

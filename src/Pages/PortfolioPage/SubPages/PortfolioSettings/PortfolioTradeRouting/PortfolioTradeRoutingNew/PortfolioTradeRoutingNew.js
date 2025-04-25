@@ -6,10 +6,10 @@ import CustomModal from "../../../../../../components/Modals/Modals";
 import BrokerContext from "../../../../../../context/broker-context";
 import PortfolioContext from "../../../../../../context/portfolio-context";
 
-const PortfolioTradeRoutingNew = ({ show, close, fetch }) => {
-    const { accounts, apiSupportedBrokers } = useContext(BrokerContext);
-    const { selectedPortfolio } = useContext(PortfolioContext);
-
+const PortfolioTradeRoutingNew = ({show, close, fetch}) => {
+    const {accounts, apiSupportedBrokers} = useContext(BrokerContext);
+    const {selectedPortfolio} = useContext(PortfolioContext);
+    const [instName, setInstName] = useState('');
     const [formData, setFormData] = useState({
         portfolio_code: selectedPortfolio.portfolio_code,
         source: '',
@@ -40,24 +40,43 @@ const PortfolioTradeRoutingNew = ({ show, close, fetch }) => {
     ));
 
     const handleBrokerChange = (e) => {
+        const value = e.target.value;
         setFormData((prev) => ({
             ...prev,
-            source: e.target.value,
+            source: value,
         }));
+
+        // Reset error for broker
+        if (value) {
+            setFormErrors((prev) => ({...prev, source: false}));
+        }
     };
 
     const handleAccountChange = (e) => {
+        const value = e.target.value;
         setFormData((prev) => ({
             ...prev,
-            broker_account_id: e.target.value,
+            broker_account_id: value,
         }));
+
+        // Reset error for account
+        if (value) {
+            setFormErrors((prev) => ({...prev, broker_account_id: false}));
+        }
     };
 
     const handleInstrumentSelect = (instrument) => {
+        setInstName(instrument?.name || '');
+        const instId = instrument?.id || '';
         setFormData((prev) => ({
             ...prev,
-            inst_id: instrument?.id || '',
+            inst_id: instId,
         }));
+
+        // Reset error for instrument
+        if (instId) {
+            setFormErrors((prev) => ({...prev, inst_id: false}));
+        }
     };
 
     const submitHandler = async () => {
@@ -72,14 +91,18 @@ const PortfolioTradeRoutingNew = ({ show, close, fetch }) => {
         const hasErrors = Object.values(errors).some((val) => val);
         if (hasErrors) return;
 
-        // Submit if valid
-        console.log('Submitting:', formData);
-
         try {
             const response = await fetchAPI.post('portfolios/new/trade_routing/', formData);
             fetch();
             alert(response.data.msg);
             close();
+            setFormData({
+                portfolio_code: selectedPortfolio.portfolio_code,
+                source: '',
+                broker_account_id: '',
+                inst_id: '',
+            });
+            setInstName('');
         } catch (error) {
             console.error('Error Message:', error);
             alert("Something went wrong. Please try again.");
@@ -97,8 +120,11 @@ const PortfolioTradeRoutingNew = ({ show, close, fetch }) => {
         <CustomModal show={show} onClose={close} title={'New Trade Routing'} footer={footer}>
             <div className="block">
                 <label className="input-label">Instrument</label>
-                <InstrumentSearch onSelect={handleInstrumentSelect} />
-                {formErrors.inst_id && <p style={{ color: 'red' }}>Instrument is required</p>}
+                <div style={{display: "flex", gap: 10, alignItems: "center"}}>
+                    <InstrumentSearch onSelect={handleInstrumentSelect}/>
+                    <label style={{color: 'grey', fontSize: 20}}>{instName}</label>
+                </div>
+                {formErrors.inst_id && <p style={{color: 'red'}}>Instrument is required</p>}
             </div>
 
             <div className="block">
@@ -107,12 +133,12 @@ const PortfolioTradeRoutingNew = ({ show, close, fetch }) => {
                     name="broker"
                     value={formData.source}
                     onChange={handleBrokerChange}
-                    style={{ borderColor: formErrors.source ? 'red' : undefined }}
+                    style={{borderColor: formErrors.source ? 'red' : undefined}}
                 >
-                    {/*<option value="">Select Broker</option>*/}
+                    <option value="">Select Broker</option>
                     {brokerOptions}
                 </select>
-                {formErrors.source && <p style={{ color: 'red' }}>Broker is required</p>}
+                {formErrors.source && <p style={{color: 'red'}}>Broker is required</p>}
             </div>
 
             <div className="block">
@@ -121,12 +147,12 @@ const PortfolioTradeRoutingNew = ({ show, close, fetch }) => {
                     name="account"
                     value={formData.broker_account_id}
                     onChange={handleAccountChange}
-                    style={{ borderColor: formErrors.broker_account_id ? 'red' : undefined }}
+                    style={{borderColor: formErrors.broker_account_id ? 'red' : undefined}}
                 >
                     <option value="">Select Account</option>
                     {accountOptions}
                 </select>
-                {formErrors.broker_account_id && <p style={{ color: 'red' }}>Account is required</p>}
+                {formErrors.broker_account_id && <p style={{color: 'red'}}>Account is required</p>}
             </div>
         </CustomModal>
     );

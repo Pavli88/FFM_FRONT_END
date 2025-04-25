@@ -1,6 +1,6 @@
 .trade-row {
     background-color: #fff;
-    transition: background 0.3s ease;
+    transition: background-color 1s ease, border 1s ease;
     margin: 5px;
 }
 
@@ -77,4 +77,17 @@
 
 .icon-button.danger:hover {
     background-color: #f87171;
+}
+
+.highlight-success {
+    /*border: 2px solid #00c851;*/
+    background-color: rgba(0, 200, 81, 0.1);
+    /*border-radius: 8px;*/
+}
+
+/* Error styling */
+.highlight-error {
+    /*border: 2px solid #ff4444;*/
+    background-color: rgba(255, 68, 68, 0.1);
+    /*border-radius: 8px;*/
 }
