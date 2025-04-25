@@ -245,7 +245,7 @@ const DashBoardPage = () => {
                     <StackedBarChart data={summedData} labels={labels} title={'NAV Decomposition'}/>
                 </div>
                 <div className={'card'} style={{height: '100%', flex: 1}}>
-                    <PieChart values={navValues} labels={portfolios}/>
+                    <PieChart values={navValues} labels={portfolios} title={'Portfolio Decomposition'}/>
                 </div>
             </div>
         </div>

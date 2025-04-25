@@ -44,7 +44,7 @@ export const PieChartGrouped = ({ data, groupBy, value }) => {
     );
 }
 
-export const PieChart = ({ labels, values }) => {
+export const PieChart = ({ labels, values, title }) => {
     const chartOptions = {
         chart: {
             type: 'pie',
@@ -68,19 +68,18 @@ export const PieChart = ({ labels, values }) => {
     };
 
     return (
-        <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            flexDirection: 'column'
-        }}>
-            <Chart options={chartOptions} series={values} type="pie" width="100%" height="90%"/>
+        <div className={'card'} style={{paddingBottom: 20}}>
+            <div className={'card-header'}>
+                <label>{title}</label>
+            </div>
+            <div style={{height: '100%'}}>
+                <Chart options={chartOptions} series={values} type="pie" width="100%" height="90%"/>
+            </div>
         </div>
     );
 }
 
-export const PieChartSorted = ({ labels, values }) => {
+export const PieChartSorted = ({ labels, values, title }) => {
     // Combine labels and values into an array of objects for sorting
     const data = labels.map((label, index) => ({
         label: label,
@@ -126,6 +125,9 @@ export const PieChartSorted = ({ labels, values }) => {
             height: '100%',
             flexDirection: 'column'
         }}>
+            <div className={'card-header'}>
+                <label>{title}</label>
+            </div>
             <Chart options={chartOptions} series={sortedValues} type="pie" width="100%" height="90%" />
         </div>
     );

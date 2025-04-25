@@ -12,6 +12,7 @@ import PortfolioTransactionsTable
     from "../../Pages/PortfolioPage/SubPages/PortfolioTransactions/PortfolioTransactionsTable/PortfolioTransactionsTable";
 import CustomModal from "../Modals/Modals";
 import fetchAPI from "../../config files/api";
+import {BarChart} from "../../components/Charts/BarCharts"
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
@@ -25,7 +26,12 @@ const HoldingsTable = ( {portfolioCode} ) => {
     const [showActions, setShowActions] = useState(false);
     const [showTransactions, setShowTransactions] = useState(false);
     const [transactionData, setTransactionData] = useState([]);
-    // const [selectedRows, setSelectedRows] = useState({});
+    const [barLabels, setBarLabels] = useState([]);
+    const [barValues, setBarValues] = useState([]);
+    const [barLabels2, setBarLabels2] = useState([]);
+    const [barValues2, setBarValues2] = useState([]);
+    const [selectedChartColumn, setSelectedChartColumn] = useState("total_pnl");
+    const [selectedChartColumn2, setSelectedChartColumn2] = useState("mv");
 
     const fetchTransactions = async(value) => {
         const response = await fetchAPI.post('portfolios/get/transactions/', {
@@ -335,6 +341,19 @@ const HoldingsTable = ( {portfolioCode} ) => {
         cursor: 'pointer'
     };
 
+    const numericColumnOptions = columns.filter(col =>
+        [
+           'ugl', 'trd_pnl', 'total_pnl',
+            'net_weight', 'gross_weight', 'abs_weight', 'pos_lev'
+        ].includes(col.accessor)
+    ).map(col => ({ label: col.Header, value: col.accessor }));
+
+    const numericColumnOptions2 = columns.filter(col =>
+        [
+            'beg_quantity', 'quantity', 'beg_bv', 'bv', 'mv', 'net_weight', 'gross_weight', 'abs_weight', 'pos_lev'
+        ].includes(col.accessor)
+    ).map(col => ({ label: col.Header, value: col.accessor }));
+
     const handleClose = (row) => {
         console.log("Close clicked for", row);
         // Add close logic here
@@ -349,7 +368,15 @@ const HoldingsTable = ( {portfolioCode} ) => {
         {
             columns,
             data: Array.isArray(holdingData) ? holdingData : [],
-            initialState: {groupBy}
+            initialState: {
+                groupBy,
+                sortBy: [
+                {
+                    id: 'mv',     // <-- the accessor id you want to sort by
+                    desc: true    // true = descending, false = ascending
+                }
+            ]
+            }
         },
         useGroupBy,
         useSortBy,
@@ -395,104 +422,199 @@ const HoldingsTable = ( {portfolioCode} ) => {
     // Filter rows: Show only grouped rows when checkbox is checked
     const displayedRows = showOnlyGrouped ? rows.filter(row => row.isGrouped) : rows;
 
+    useEffect(() => {
+        if (!selectedChartColumn || !groupBy.length) return;
+
+        const labels = [];
+        const values = [];
+
+        displayedRows.forEach(row => {
+            labels.push(row.groupByVal);
+            values.push(row.values[selectedChartColumn]);
+
+        });
+        setBarLabels(labels);
+        setBarValues(values);
+    }, [selectedChartColumn, displayedRows, groupBy]);
+
+    useEffect(() => {
+        if (!selectedChartColumn2 || !groupBy.length) return;
+
+        const labels = [];
+        const values = [];
+
+        displayedRows.forEach(row => {
+            labels.push(row.groupByVal);
+            values.push(row.values[selectedChartColumn2]);
+
+        });
+        setBarLabels2(labels);
+        setBarValues2(values);
+    }, [selectedChartColumn2, displayedRows, groupBy]);
+
     return (
         <div className='card'
-             style={{padding: '15px', borderRadius: '8px', overflow: 'hidden'}}>
-            <div style={{display: "flex", height: 60, alignItems: "center"}}>
-                <ButtonGroupVertical buttonDict={buttonDict}/>
+             style={{
+                 padding: '25px',
+                 borderRadius: '8px',
+                 overflow: 'hidden',
+                 maxHeight: 1200,
 
-                <div style={{width: 300}}>
-                    <DateSelect onDateChange={setHoldingDate}/>
-                </div>
+             }}>
+            <label style={{fontSize: "1.2rem", fontWeight: "bold"}}>Holdings Overview</label>
+            <div>
+                <div style={{flex: 2, overflowX: 'auto', maxHeight: 600}}>
+                    <div style={{display: "flex", height: 60, alignItems: "center"}}>
+                        <ButtonGroupVertical buttonDict={buttonDict}/>
 
-                <div style={{
-                    width: 300,
-                    display: "flex",        // Enables flexbox
-                    justifyContent: "center", // Centers horizontally
-                    alignItems: "center",    // Centers vertically
-                    textAlign: "center"     // Ensures text is centered
-                }}>
-                    <label style={{display: "flex", alignItems: "center", cursor: "pointer", whiteSpace: "nowrap"}}>
-                        <input
-                            type="checkbox"
-                            checked={showActions}
-                            onChange={() => setShowActions(prev => !prev)}
-                            style={{marginRight: "5px"}}
-                        />
-                        Eneable Trading
-                    </label>
-                </div>
+                        <div style={{width: 300}}>
+                            <DateSelect onDateChange={setHoldingDate}/>
+                        </div>
 
-                <div style={{
-                    paddingLeft: 15,
-                    width: 200,
-                    display: "flex",        // Enables flexbox
-                    justifyContent: "center", // Centers horizontally
-                    alignItems: "center",    // Centers vertically
-                    textAlign: "center"     // Ensures text is centered
-                }}>
-                <CSVLink
-                        data={holdingData}
-                        className="download-link"
-                        style={{
-                            textDecoration: "none",
-                            color: "#007bff",
-                            fontWeight: "bold"
-                        }}
-                    >
-                        Download CSV
-                    </CSVLink>
-                </div>
+                        <div style={{
+                            width: 300,
+                            display: "flex",        // Enables flexbox
+                            justifyContent: "center", // Centers horizontally
+                            alignItems: "center",    // Centers vertically
+                            textAlign: "center"     // Ensures text is centered
+                        }}>
+                            <label style={{
+                                display: "flex",
+                                alignItems: "center",
+                                cursor: "pointer",
+                                whiteSpace: "nowrap"
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    checked={showActions}
+                                    onChange={() => setShowActions(prev => !prev)}
+                                    style={{marginRight: "5px"}}
+                                />
+                                Eneable Trading
+                            </label>
+                        </div>
 
-            </div>
+                        <div style={{
+                            paddingLeft: 15,
+                            width: 200,
+                            display: "flex",        // Enables flexbox
+                            justifyContent: "center", // Centers horizontally
+                            alignItems: "center",    // Centers vertically
+                            textAlign: "center"     // Ensures text is centered
+                        }}>
+                            <CSVLink
+                                data={holdingData}
+                                className="download-link"
+                                style={{
+                                    textDecoration: "none",
+                                    color: "#007bff",
+                                    fontWeight: "bold"
+                                }}
+                            >
+                                Download CSV
+                            </CSVLink>
+                        </div>
 
-            <div style={{overflowX: 'auto'}}>
-                <table {...getTableProps()} style={{width: '100%', borderCollapse: 'collapse', minWidth: '600px'}}>
-                    <thead>
-                    {headerGroups.map(headerGroup => (
-                        <tr {...headerGroup.getHeaderGroupProps()}
-                            style={{backgroundColor: '#eeeeee', fontWeight: 'bold'}}>
-                        {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps(column.getSortByToggleProps())} className={column.Header === 'Actions' ? 'sticky-column' : ''}>
-                                    {column.render('Header')}
-                                    {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
-                                </th>
+                    </div>
+
+                    <div style={{overflowX: 'auto'}}>
+                        <table {...getTableProps()}
+                               style={{width: '100%', borderCollapse: 'collapse', minWidth: '600px'}}>
+                            <thead>
+                            {headerGroups.map(headerGroup => (
+                                <tr {...headerGroup.getHeaderGroupProps()}
+                                    style={{backgroundColor: '#eeeeee', fontWeight: 'bold'}}>
+                                    {headerGroup.headers.map(column => (
+                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}
+                                            className={column.Header === 'Actions' ? 'sticky-column' : ''}>
+                                            {column.render('Header')}
+                                            {column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}
+                                        </th>
+                                    ))}
+                                </tr>
                             ))}
-                        </tr>
-                    ))}
-                    </thead>
+                            </thead>
 
-                    <tbody {...getTableBodyProps()}>
-                    {displayedRows.map(row => {
-                        prepareRow(row);
-                        return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map(cell => (
-                                    <td {...cell.getCellProps()}
-                                        style={row.isGrouped ? {backgroundColor: 'white'} : {}} className={cell.column.Header === 'Actions' ? 'sticky-column' : ''}>
-                                        {cell.isGrouped ? (
-                                            <>
-                                                {!showOnlyGrouped && (
-                                                    <span {...row.getToggleRowExpandedProps()}>
+                            <tbody {...getTableBodyProps()}>
+                            {displayedRows.map(row => {
+                                prepareRow(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map(cell => (
+                                            <td {...cell.getCellProps()}
+                                                style={row.isGrouped ? {backgroundColor: 'white'} : {}}
+                                                className={cell.column.Header === 'Actions' ? 'sticky-column' : ''}>
+                                                {cell.isGrouped ? (
+                                                    <>
+                                                        {!showOnlyGrouped && (
+                                                            <span {...row.getToggleRowExpandedProps()}>
                                                             {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
                                                         </span>
+                                                        )}
+                                                        {' '}
+                                                        {cell.render('Cell')} ({row.subRows.length})
+                                                    </>
+                                                ) : cell.isAggregated ? (
+                                                    cell.render('Aggregated')
+                                                ) : (
+                                                    cell.render('Cell')
                                                 )}
-                                                {' '}
-                                                {cell.render('Cell')} ({row.subRows.length})
-                                            </>
-                                        ) : cell.isAggregated ? (
-                                            cell.render('Aggregated')
-                                        ) : (
-                                            cell.render('Cell')
-                                        )}
-                                    </td>
+                                            </td>
+                                        ))}
+                                    </tr>
+                                );
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div style={{display: "flex", gap: "20px", paddingBottom: 40}}>
+                    <div style={{flex: 1, height: 400 }}>
+
+                        <div style={{marginTop: 10, marginBottom: 10}}>
+                            <select
+                                value={selectedChartColumn2}
+                                onChange={e => setSelectedChartColumn2(e.target.value)}
+                                style={{padding: '5px', borderRadius: '5px'}}
+                            >
+                                <option value="">Select Column</option>
+                                {numericColumnOptions2.map(option => (
+                                    <option key={option.value} value={option.value}>{option.label}</option>
                                 ))}
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
+                            </select>
+                        </div>
+                        <BarChart
+                            labels={barLabels2}
+                            values={barValues2}
+                            showLabel={true}
+                            showInPercent={false}
+                        />
+                    </div>
+                    <div style={{flex: 1, height: 400 }}>
+
+                        <div style={{marginTop: 10, marginBottom: 10}}>
+                            <select
+                                value={selectedChartColumn}
+                                onChange={e => setSelectedChartColumn(e.target.value)}
+                                style={{padding: '5px', borderRadius: '5px'}}
+                            >
+                                <option value="">Select Column</option>
+                                {numericColumnOptions.map(option => (
+                                    <option key={option.value} value={option.value}>{option.label}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <BarChart
+                            labels={barLabels}
+                            values={barValues}
+                            showLabel={true}
+                            showInPercent={false}
+                        />
+                    </div>
+                </div>
+
             </div>
+
 
             <CustomModal show={showTransactions} onClose={() => setShowTransactions(!showTransactions)}
                          title={'Transactions'} width={'1500px'}>

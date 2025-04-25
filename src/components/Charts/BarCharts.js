@@ -59,7 +59,7 @@ export const BarChartGrouped = ({ data, groupBy, value }) => {
     );
 }
 
-export const BarChart = ({ labels, values }) => {
+export const BarChart = ({ labels, values, showLabel=false, showInPercent=true }) => {
 
     const chartOptions = {
         chart: {
@@ -79,7 +79,7 @@ export const BarChart = ({ labels, values }) => {
         xaxis: {
             categories: labels,
             labels: {
-                show: false, // Hides x-axis labels
+                show: showLabel, // Hides x-axis labels
             },
             axisTicks: {
                 show: false, // Hides x-axis ticks
@@ -92,7 +92,13 @@ export const BarChart = ({ labels, values }) => {
             labels: {
                 formatter: function (val) {
                     // Convert to percentage format
-                    return (val * 100).toFixed(2) + '%';
+                    if (showInPercent == true) {
+                        return (val * 100).toFixed(2) + '%';
+                    }
+                    else {
+                        return (val).toFixed(2);
+                    }
+
                 }
             },
         },
