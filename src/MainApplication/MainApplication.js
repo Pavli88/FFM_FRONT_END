@@ -22,6 +22,7 @@ import BrokerAccountsPage from "../Pages/UserMenu/BrokerAccounts/BrokerAccountsP
 import fetchAPI from "../config files/api";
 import Subscriptions from "../Pages/UserMenu/Subscriptions";
 import UserProfile from "../Pages/UserMenu/UserProfile/UserProfile";
+import PublicProfile from "../Pages/PublicProfile/PublicProfile";
 
 const Notifications = () => {
         const [messages, setMessages] = useState([]);
@@ -238,6 +239,9 @@ const MainApplication = ({config}) => {
                                             </Route>
                                             <Route path="/brokerAccounts">
                                                 <BrokerAccountsPage/>
+                                            </Route>
+                                            <Route path="/user/:username">
+                                                <PublicProfile />
                                             </Route>
                                             <Route path='*' element={<Redirect to='/dashboard'/>}/>
                                         </Switch>
