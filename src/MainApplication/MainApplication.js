@@ -63,6 +63,7 @@ const MainApplication = ({config}) => {
 
     // Broker Data
     const [brokerData, setBrokerData] = useState([{}]);
+    const [brokerCredentials, setBrokerCredentials] = useState(null);
     const [accounts, setAccounts] = useState([]);
     const [newAccount, setNewAccount] = useState(0)
 
@@ -118,6 +119,16 @@ const MainApplication = ({config}) => {
         }
     };
 
+    const fetchBrokersCredentials = async () => {
+        try {
+            const response = await fetchAPI.get('accounts/credentials');
+            setBrokerCredentials(response.data);
+        } catch (error) {
+            setBrokerCredentials(null);
+            console.error("Error fetching user data:", error.response?.data || error.message);
+        }
+    };
+
     const fetchPortfolios = async () => {
         try {
             const response = await fetchAPI.get('portfolios/get/portfolios/');
@@ -134,6 +145,7 @@ const MainApplication = ({config}) => {
 
     useEffect(() => {
         fetchBrokers();
+        fetchBrokersCredentials();
     }, []);
 
     useEffect(() => {
@@ -171,6 +183,8 @@ const MainApplication = ({config}) => {
                         <BrokerContext.Provider value={{
                             brokerData: brokerData,
                             accounts: accounts,
+                            brokerCredentials: brokerCredentials,
+                            fetchBrokersCredentials: fetchBrokersCredentials,
                             fetchAccounts: fetchAccountData,
                             fetchBrokers: fetchBrokers,
                             apiSupportedBrokers: apiSupportedBroker,
