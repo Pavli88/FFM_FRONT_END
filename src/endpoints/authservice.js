@@ -155,11 +155,24 @@ export const logout = async () => {
 export const refreshToken = async () => {
     try {
         const response = await fetchAPI.post('token/refresh/');
-        console.log(response)
         return response.data.access;
     } catch (error) {
-        logout(); // Logout if refresh token fails
+        console.error("Refresh token invalid or expired:", error.response?.data || error.message);
+        await logout();
         throw "Session expired. Please login again.";
+    }
+};
+
+export const initializeAuth = async (setAuth) => {
+    try {
+        const newAccessToken = await refreshToken();
+        if (newAccessToken) {
+            console.log('New access token obtained on init');
+            setAuth({ userAllowedToLogin: true });
+        }
+    } catch (error) {
+        console.error("No valid session found or refresh failed.");
+        setAuth({ userAllowedToLogin: false });
     }
 };
 //
