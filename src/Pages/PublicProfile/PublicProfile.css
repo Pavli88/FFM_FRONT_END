@@ -1,0 +1,31 @@
+.public-profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.profile-header {
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.follow-buttons button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.stats {
+    margin-top: 20px;
+}

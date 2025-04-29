@@ -3,6 +3,7 @@ import { FaSearch } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
 import { searchUsers, searchPortfolios } from '../../../utils/SearchHandlers';
 import './SearchBar.css';
+import {useHistory} from "react-router-dom";
 
 const SearchBar = ({ searchTerm, setSearchTerm, searchType, setSearchType }) => {
   const [suggestions, setSuggestions] = useState([]);
@@ -10,6 +11,7 @@ const SearchBar = ({ searchTerm, setSearchTerm, searchType, setSearchType }) => 
   const [showSuggestions, setShowSuggestions] = useState(false);
   const skipNextSearch = useRef(false);
   const inputRef = useRef();
+  const history = useHistory();
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -47,15 +49,16 @@ const SearchBar = ({ searchTerm, setSearchTerm, searchType, setSearchType }) => 
     return () => clearTimeout(debounce);
   }, [searchTerm, searchType]);
 
-  const handleSelectSuggestion = (item) => {
+const handleSelectSuggestion = (item) => {
     skipNextSearch.current = true;
     if (searchType === 'user') {
-      setSearchTerm(item.username);
+        setSearchTerm(item.username);
+        history.push(`/user/${item.username}`);
     } else if (searchType === 'portfolio') {
-      setSearchTerm(item.portfolio_name);
+        setSearchTerm(item.portfolio_name);
     }
     setShowSuggestions(false);
-  };
+};
 
   const handleClearSearch = () => {
     setSearchTerm('');

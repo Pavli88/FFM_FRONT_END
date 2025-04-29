@@ -7,7 +7,8 @@ import fetchAPI from "../../../config files/api";
 import ChangePasswordModal from "./ChangePasswordModal";
 import { changePassword } from "../../../endpoints/authservice";
 import ChangeEmailModal from "./ChangeEmailModal";
-import Tabs from "../../../components/Tabs/Tabs"; // Beimportáljuk a Tabs komponenst
+import Tabs from "../../../components/Tabs/Tabs";
+import {useHistory} from "react-router-dom";
 
 export default function UserProfile() {
     const [coverPhoto, setCoverPhoto] = useState(null);
@@ -18,10 +19,12 @@ export default function UserProfile() {
         last_name,
         date_joined,
         image_url,
-        followers,
-        following
+        followers_count,
+        following_count
     } = useContext(UserContext).userData;
     const { fetchUserData } = useContext(UserContext);
+
+    const history = useHistory();
 
     const [profileImage, setProfileImage] = useState(image_url || null);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
@@ -207,11 +210,17 @@ export default function UserProfile() {
                         <span>{new Date(date_joined).toLocaleDateString()}</span>
                     </div>
                     <div className="user-stats">
-                        <span>Followers</span>
-                        <span>Following</span>
-                        <span>Posts</span>
+                        <div>
+                            <strong>Followers:</strong> {followers_count}
+                        </div>
+                        <div>
+                            <strong>Following:</strong> {following_count}
+                        </div>
+                        <div>
+                            <strong>Posts:</strong>
+                        </div>
                     </div>
-                    <button className="public-profile-btn">View Public Profile</button>
+                    <button className="public-profile-btn" onClick={() => history.push(`/user/${username}`)}>View Public Profile</button>
                 </div>
 
                 <div className="right-panel">
