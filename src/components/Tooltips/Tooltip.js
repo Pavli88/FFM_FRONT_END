@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { FiInfo } from "react-icons/fi";
-import {useState} from "react";
 import "./Tooltip.css";
 
 const Tooltip = ({ text }) => {
@@ -12,8 +12,9 @@ const Tooltip = ({ text }) => {
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
             />
-            {showTooltip && <div className="tooltip">{text}</div>}
+            {showTooltip && <div className="tooltip-visible">{text}</div>}
         </div>
     );
 };
+
 export default Tooltip;

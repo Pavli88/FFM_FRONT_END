@@ -80,7 +80,7 @@ export default function UserProfile() {
 
         try {
             setLoading(true);
-            const response = await fetchAPI.post('/upload-profile-picture/', formData, {
+            const response = await fetchAPI.post('/upload_profile_picture/', formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -100,7 +100,7 @@ export default function UserProfile() {
     const handleDelete = async () => {
         try {
             setLoading(true);
-            await fetchAPI.delete('/delete-profile-picture/', {});
+            await fetchAPI.delete('/delete_profile_picture/', {});
             setProfileImage(null);
             await fetchUserData();
         } catch (error) {
@@ -124,7 +124,7 @@ export default function UserProfile() {
     const handleSaveChanges = async () => {
         try {
             setLoading(true);
-            await fetchAPI.post('/update-user-profile/', userData);
+            await fetchAPI.post('/update_user_profile/', userData);
             setIsEditable(false);
             fetchUserData();
         } catch (error) {
