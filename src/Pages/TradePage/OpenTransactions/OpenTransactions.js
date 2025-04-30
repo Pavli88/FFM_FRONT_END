@@ -282,7 +282,7 @@ const OpenTransactions = ( {openTransactions} ) => {
                                         {!row.isGrouped && (
                                             <>
                                                 <button style={{ backgroundColor: "#1697ea", color: "white", width: 80 }} onClick={() => handleClose(row.original.id)}>Close</button>
-                                                <button style={{ backgroundColor: "#1697ea", color: "white", width: 80, marginLeft: 8 }} onClick={() => handleCloseOut(row.original.id)}>Close Out</button>
+                                                {/*<button style={{ backgroundColor: "#1697ea", color: "white", width: 80, marginLeft: 8 }} onClick={() => handleCloseOut(row.original.id)}>Close Out</button>*/}
                                             </>
                                         )}
                                     </td>

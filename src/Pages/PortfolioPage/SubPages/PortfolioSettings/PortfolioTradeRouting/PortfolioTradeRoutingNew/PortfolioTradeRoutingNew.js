@@ -10,6 +10,7 @@ const PortfolioTradeRoutingNew = ({show, close, fetch}) => {
     const {accounts, apiSupportedBrokers} = useContext(BrokerContext);
     const {selectedPortfolio} = useContext(PortfolioContext);
     const [instName, setInstName] = useState('');
+
     const [formData, setFormData] = useState({
         portfolio_code: selectedPortfolio.portfolio_code,
         source: '',
@@ -23,6 +24,7 @@ const PortfolioTradeRoutingNew = ({show, close, fetch}) => {
         inst_id: false,
     });
 
+    //# ez alapjan fog tickert választani
     const brokerOptions = useMemo(
         () =>
             apiSupportedBrokers.map((data) => (

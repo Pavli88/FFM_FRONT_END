@@ -1,19 +1,29 @@
 import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import {useContext, useRef} from "react";
-import axios from "axios";
+import {useContext, useRef, useState} from "react";
+import fetchAPI from "../../../config files/api";
 import BrokerContext from "../../../context/broker-context";
+import InstrumentSearchContext from "../InstrumentPageContext/instrument-search-context";
+import CustomModal from "../../../components/Modals/Modals";
 
+const InstrumentNewBrokerTicker = ({show, close}) => {
+    const selectedInstrument = useContext(InstrumentSearchContext).selectedInstrument;
+    const {apiSupportedBrokers} = useContext(BrokerContext);
 
-const InstrumentNewBrokerTicker = (props) => {
     const brokerRef = useRef();
     const tickerRef = useRef();
     const marginRef = useRef();
+
+    // const [formData, setFormData] = useState({
+    //     inst_code: null,
+    //     source: null,
+    //     source_ticker: null,
+    //     margin: null,
+    // });
+
     const submitHandler = (event) => {
         event.preventDefault();
-        axios.post(props.server + 'instruments/new/ticker/', {
-            inst_code: props.id,
+        fetchAPI.post('instruments/new/ticker/', {
+            inst_code: selectedInstrument.id,
             source: brokerRef.current.value,
             source_ticker: tickerRef.current.value,
             margin: marginRef.current.value,
@@ -22,49 +32,38 @@ const InstrumentNewBrokerTicker = (props) => {
             .catch((error) => {
                 console.error('Error Message:', error);
             });
-        props.hide();
+        close();
     };
 
-    const brokers = useContext(BrokerContext).brokerData.map((data) =>
+    const brokers = apiSupportedBrokers.map((data) =>
         <option key={data.id} value={data.broker_code}>{data.broker}</option>
     )
 
-    return(
-        <Modal show={props.show} onHide={() => props.hide()} animation={false}>
-            <Modal.Header closeButton>
-                <Modal.Title>New Broker Ticker - {props.id}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={submitHandler} style={{width: '100%'}}>
+    return (
+        <CustomModal show={show} onClose={() => close()}
+                     footer={<button variant="primary" onClick={submitHandler}>
+                         Save
+                     </button>}>
 
-                    <Form.Group>
-                        <Form.Label>Broker</Form.Label>
-                        <Form.Control ref={brokerRef} as="select">
-                            {brokers}
-                        </Form.Control>
-                    </Form.Group>
+            <Modal.Title>New Broker Ticker - {selectedInstrument.id}</Modal.Title>
 
-                    <Form.Group>
-                        <Form.Label>Ticker</Form.Label>
-                        <Form.Control ref={tickerRef}></Form.Control>
-                    </Form.Group>
+            <div>
+                <label>Broker</label>
+                <select ref={brokerRef}>
+                    {brokers}
+                </select>
+            </div>
 
-                    <Form.Group>
-                        <Form.Label>Margin %</Form.Label>
-                        <Form.Control ref={marginRef} min={0.0} step={0.05} type={'number'}></Form.Control>
-                    </Form.Group>
+            <div>
+                <label>Ticker</label>
+                <input ref={tickerRef}></input>
+            </div>
 
-                </Form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={() => props.hide()}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={submitHandler}>
-                    Save
-                </Button>
-            </Modal.Footer>
-        </Modal>
+            <div>
+                <label>Margin %</label>
+                <input ref={marginRef} min={0.0} step={0.05} type={'number'}></input>
+            </div>
+        </CustomModal>
     )
 };
 export default InstrumentNewBrokerTicker;

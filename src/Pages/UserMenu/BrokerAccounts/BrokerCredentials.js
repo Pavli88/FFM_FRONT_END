@@ -1,11 +1,11 @@
-import { BsEye, BsEyeSlash, BsPencil, BsTrash, BsPlus } from 'react-icons/bs';
+import { BsEye, BsEyeSlash, BsPencil, BsTrash, BsPlus, BsArrowRepeat } from 'react-icons/bs';
 import NewBrokerCredentials from "./NewBrokerCredentials";
 import {useContext, useState} from "react";
 import fetchAPI from "../../../config files/api";
 import BrokerContext from "../../../context/broker-context";
 
 const BrokerCredentials = () => {
-    const {brokerCredentials, fetchBrokersCredentials} = useContext(BrokerContext);
+    const {brokerCredentials, fetchBrokersCredentials, fetchAccounts} = useContext(BrokerContext);
     const [showModal, setShowModal] = useState(false);
     const [visiblePasswords, setVisiblePasswords] = useState({});
 
@@ -29,6 +29,11 @@ const BrokerCredentials = () => {
     const editCrendential = (accountData) => {
         setShowModal(!showModal)
     };
+
+    const importBrokerAccounts = async(data) => {
+        const response = await fetchAPI.post('accounts/sync', data)
+        fetchAccounts()
+    }
 
     return (
         <div className="table-container" style={{width: '100%'}}>
@@ -56,41 +61,48 @@ const BrokerCredentials = () => {
                 </tr>
                 </thead>
                 <tbody>
-               {brokerCredentials && brokerCredentials.length > 0 ? (
-                        brokerCredentials.map((data) => (
-                            <tr key={data.id}>
-                                <td hidden>{data.id}</td>
-                                <td>{data.broker?.broker || data.broker_name}</td>
-                                <td>{data.environment}</td>
-                                <td>{data.api_token}</td>
-                                <td>{data.email}</td>
+                {brokerCredentials && brokerCredentials.length > 0 ? (
+                    brokerCredentials.map((data) => (
+                        <tr key={data.id}>
+                            <td hidden>{data.id}</td>
+                            <td>{data.broker?.broker || data.broker_name}</td>
+                            <td>{data.environment}</td>
+                            <td>{data.api_token}</td>
+                            <td>{data.email}</td>
 
-                                <td>
-                                    {visiblePasswords[data.id] ? data.password : '••••••••'}
-                                    <button
-                                        onClick={() => togglePasswordVisibility(data.id)}
-                                        style={{ marginLeft: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
-                                    >
-                                        {visiblePasswords[data.id] ? <BsEyeSlash size={20} /> : <BsEye size={20} />}
-                                    </button>
-                                </td>
+                            <td>
+                                {visiblePasswords[data.id] ? data.password : '••••••••'}
+                                <button
+                                    onClick={() => togglePasswordVisibility(data.id)}
+                                    style={{marginLeft: '8px', background: 'none', border: 'none', cursor: 'pointer'}}
+                                >
+                                    {visiblePasswords[data.id] ? <BsEyeSlash size={20}/> : <BsEye size={20}/>}
+                                </button>
+                            </td>
 
-                                <td>{data.expiry_date}</td>
-                                <td className="action-buttons">
-                                    <button className="icon-button" onClick={() => editCrendential(data)}>
-                                        <BsPencil size={20} />
-                                    </button>
-                                    <button className="icon-button" onClick={() => deleteCredential(data.id)}>
-                                        <BsTrash size={20} />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="7" style={{ textAlign: "center" }}>No broker credentials available.</td>
+                            <td>{data.expiry_date}</td>
+                            <td className="action-buttons">
+                                <button className="icon-button"
+                                        onClick={() => console.log('Sync action for', data)}
+                                        title={'Import Broker Accounts'}
+                                >
+                                    <BsArrowRepeat size={20} onClick={() => importBrokerAccounts(data)}/>
+                                </button>
+                                <button className="icon-button" title={'Edit'} onClick={() => editCrendential(data)}>
+                                    <BsPencil size={20}/>
+                                </button>
+                                <button className="icon-button" title={'Delete'}
+                                        onClick={() => deleteCredential(data.id)}>
+                                    <BsTrash size={20}/>
+                                </button>
+                            </td>
                         </tr>
-                    )}
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan="7" style={{textAlign: "center"}}>No broker credentials available.</td>
+                    </tr>
+                )}
                 </tbody>
             </table>
             <NewBrokerCredentials show={showModal} close={() => setShowModal(!showModal)}/>

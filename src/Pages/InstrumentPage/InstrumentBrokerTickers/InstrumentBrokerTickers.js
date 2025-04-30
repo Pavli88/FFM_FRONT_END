@@ -1,13 +1,12 @@
 import {useContext, useEffect, useRef, useState} from "react";
-import axios from "axios";
-import ServerContext from "../../../context/server-context";
 import {ButtonGroupVertical} from "../../../components/Buttons/ButtonGroups";
 import InstrumentSearchContext from "../InstrumentPageContext/instrument-search-context";
+import fetchAPI from "../../../config files/api";
+import InstrumentNewBrokerTicker from "./InstrumentNewBrokerTicker";
 
 const InstrumentBrokerTickers = () => {
-    const server = useContext(ServerContext).server;
     const selectedInstrument = useContext(InstrumentSearchContext).selectedInstrument;
-    const [showNewTickerModal, c] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [tickers, setTickers] = useState([]);
     const [selectedTicker, setSelectedTicker] = useState();
     const isMounted = useRef(false);
@@ -20,7 +19,7 @@ const InstrumentBrokerTickers = () => {
 
     useEffect(() => {
         if (isMounted.current) {
-            axios.get(`${server}instruments/get/broker/tickers/`, {
+            fetchAPI.get('instruments/get/broker/tickers/', {
                 params: {
                     inst_code: selectedInstrument.id
                 }
@@ -36,7 +35,7 @@ const InstrumentBrokerTickers = () => {
     );
 
     const deleteTicker = () => {
-        axios.post(`${server}instruments/delete/broker/ticker/`, {
+        fetchAPI.post('instruments/delete/broker/ticker/', {
             id: selectedTicker,
         })
             .then(response => alert(response['data']))
@@ -46,7 +45,7 @@ const InstrumentBrokerTickers = () => {
     };
 
     const buttonDict = {
-        "New": () => selectedInstrument(!showNewTickerModal),
+        "New": () => setShowModal(!showModal),
         "Delete": () => deleteTicker()
     };
 
@@ -70,10 +69,9 @@ const InstrumentBrokerTickers = () => {
                         </tbody>
                     </table>
                 </div>
-                {/*<InstrumentNewBrokerTicker id={id}*/}
-                {/*                           server={server}*/}
-                {/*                           show={showNewTickerModal}*/}
-                {/*                           hide={() => setShowNewTickerModal(false)}/>*/}
+                <InstrumentNewBrokerTicker
+                    show={showModal}
+                    close={() => setShowModal(!showModal)}/>
             </div>
         </div>
     )

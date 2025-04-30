@@ -84,7 +84,7 @@ const TradeTerminal = ({portfolioCode}) => {
 
     const [prices, setPrices] = useState(null);
     const [brokerTicker, setBrokerTicker] = useState(null);
-    const selectedAccounts = accounts.filter(data => data['broker_name'] === panelParameters.selectedBroker)
+    const selectedAccounts = accounts.filter(data => data['broker_id'] === panelParameters.selectedBroker)
 
     const handleInstrumentSelect = (instrument) => {
         setPanelParameters(prevState => ({
@@ -148,7 +148,7 @@ const TradeTerminal = ({portfolioCode}) => {
     }, [panelParameters.selectedInstrument, panelParameters.selectedBroker]);
 
     const brokers = apiSupportedBrokers.map((data) =>
-        <option key={data.id} value={data.broker_code}>{data.broker}</option>
+        <option key={data.id} value={data.id}>{data.broker}</option>
     )
 
     const accountOptions = selectedAccounts.map((data) =>
@@ -205,7 +205,8 @@ const TradeTerminal = ({portfolioCode}) => {
                     <label>Brokers</label>
                     <select onChange={(e) => setPanelParameters(prevState => ({
                         ...prevState,
-                        selectedBroker: e.target.value
+                        selectedBroker: e.target.value ? parseInt(e.target.value) : null,
+                        selectedAccount: null
                     }))}>
                         <option value={null}>Select Broker</option>
                         {brokers}

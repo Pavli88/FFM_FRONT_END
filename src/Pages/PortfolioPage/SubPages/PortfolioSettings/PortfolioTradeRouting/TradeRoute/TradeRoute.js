@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import BrokerContext from "../../../../../../context/broker-context";
 import fetchAPI from "../../../../../../config files/api";
 import {BsArrowRepeat, BsFillCaretRightFill, BsFillPauseFill, BsTrash} from "react-icons/bs";
@@ -25,8 +25,14 @@ const TradeRoute = ({data, fetch}) => {
             {broker.broker}
         </option>
     ));
+    console.log(formData);
 
-    const accountOptions = accounts.map(account => (
+    const selectedAccounts = accounts.filter(data => data['broker_id'] === formData.broker_account_id)
+
+    useEffect(() => {
+
+    }, []);
+    const accountOptions = selectedAccounts.map(account => (
         <option key={account.id} value={account.id}>
             {account.account_name} - {account.account_number} ({account.env}, {account.currency})
         </option>
@@ -58,8 +64,8 @@ const TradeRoute = ({data, fetch}) => {
                 <div className="select-wrapper">
                     <select
                         className="styled-select"
-                        value={formData.source || ''}
-                        onChange={(e) => setData(prev => ({...prev, broker_account_id: e.target.value}))}
+                        // value={formData.source || ''}
+                        onChange={(e) => setData(prev => ({...prev, broker_account_id: parseInt(e.target.value)}))}
                     >
                         {brokerOptions}
                     </select>
