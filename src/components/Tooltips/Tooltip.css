@@ -1,38 +1,26 @@
-/* Tooltip container for positioning */
 .tooltip-container {
     position: relative;
     display: inline-block;
     margin-left: 12px;
 }
 
-/* Tooltip box styling */
-.tooltip {
+.tooltip-visible {
     position: absolute;
-    top: 100%; /* Position below the icon */
+    top: 100%;
     left: 50%;
-    transform: translate(-50%, 5px);  /* Fine-tune position */
+    transform: translate(-70%, 5px);
     background-color: #f1f1f1;
     color: #494f54;
     padding: 8px;
     border-radius: 5px;
     font-size: 12px;
-    width: 300px; /* Fixed width */
-    white-space: normal; /* Allow text wrapping */
-    word-wrap: break-word; /* Ensure words wrap properly */
-    text-align: left;
-    z-index: 10;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease-in-out;
+    width: 300px;
+    white-space: normal;
+    /*word-wrap: break-word;*/
+    z-index: 100;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
 }
 
-/* Show tooltip when hovering */
-.tooltip-container:hover .tooltip {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Info icon styling */
 .info-icon {
     cursor: pointer;
     color: #555;

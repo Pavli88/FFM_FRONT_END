@@ -14,7 +14,7 @@ export default function PublicProfile() {
 
     const fetchProfile = async () => {
         try {
-            const response = await fetchAPI.get(`/public-user-profile/${username}/`);
+            const response = await fetchAPI.get(`/public_user_profile/${username}/`);
             setUserData(response.data);
         } catch (error) {
             console.error(error);
@@ -23,7 +23,7 @@ export default function PublicProfile() {
 
     const checkFollowingStatus = async () => {
         try {
-            const response = await fetchAPI.get(`/check-following/${username}/`);
+            const response = await fetchAPI.get(`/check_following/${username}/`);
             setIsFollowing(response.data.is_following);
         } catch (error) {
             console.error(error);

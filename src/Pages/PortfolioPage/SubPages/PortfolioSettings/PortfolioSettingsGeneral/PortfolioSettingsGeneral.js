@@ -15,7 +15,7 @@ const PortfolioSettingsGeneral = ({portfolioData}) => {
         setFormData(portfolioData);
     }, [portfolioData])
 
-
+    console.log(portfolioData.is_terminated)
 
     const updatePortfolio = async () => {
         console.log(formData)
@@ -46,30 +46,48 @@ const PortfolioSettingsGeneral = ({portfolioData}) => {
         <div className="widget-container">
             <div className="form-grid">
                 {/* General Info */}
-                <div className="card portfolio-settings-card card-general">
+                <div className=" portfolio-settings-card card-general">
                     <h3 className="widget-title">Portfolio Info</h3>
                     <div className="widget-body">
-                        <InputField label="Portfolio Name"/>
-                        <InputField label="Portfolio Code"/>
-                        <InputField label="Portfolio Type"/>
-                        <InputField label="Currency"/>
-                        <InputField label="Status"/>
-                        <ToogleSwitch label="Terminated"/>
+                        <InputField label="Portfolio Name" value={formData.portfolio_name}/>
+                        <InputField label="Portfolio Code" value={formData.portfolio_code}/>
+                        <InputField label="Portfolio Type" value={formData.portfolio_type}/>
+                        <InputField label="Currency" value={formData.currency}/>
+                        <InputField label="ID" value={formData.id}/>
+                        <InputField label="Status" value={formData.status}/>
                     </div>
                 </div>
 
                  {/* Ownership & Admin */}
-                <div className="card portfolio-settings-card card-ownership">
+                <div className=" portfolio-settings-card card-ownership">
                     <h3 className="widget-title">Ownership & Public Status</h3>
                     <div className="widget-body">
-                        <InputField label="Owner"/>
-                        <InputField label="Manager"/>
-                        <ToogleSwitch label="Public"/>
+                        <InputField label="Owner" value={formData.owner}/>
+                        <InputField label="User ID" value={formData.user_id}/>
+                        <InputField label="Manager" value={formData.manager}/>
+                        <ToogleSwitch label="Terminated"
+                                      isChecked={formData.is_terminated === true} // Ensures it's only true, not null
+                                      onToggle={() => handleInputChange({
+                                          target: {
+                                              name: 'is_terminated',
+                                              type: 'checkbox',
+                                              checked: !formData.is_terminated // Set to null when unchecked
+                                          }
+                                      })}/>
+                        <ToogleSwitch label="Public"
+                                      isChecked={formData.public === true} // Ensures it's only true, not null
+                                      onToggle={() => handleInputChange({
+                                          target: {
+                                              name: 'public',
+                                              type: 'checkbox',
+                                              checked: !formData.public // Set to null when unchecked
+                                          }
+                                      })}/>
                     </div>
                 </div>
 
                 {/* Dates */}
-                <div className="card portfolio-settings-card">
+                <div className=" portfolio-settings-card">
                     <h3 className="widget-title">Dates</h3>
                     <div className="widget-body">
 
@@ -109,9 +127,10 @@ const PortfolioSettingsGeneral = ({portfolioData}) => {
                 </div>
 
                 {/* Functional Settings */}
-                <div className="card portfolio-settings-card card-functional">
+                <div className=" portfolio-settings-card card-functional">
                     <h3 className="widget-title">Trade Settings</h3>
                     <div className="widget-body">
+                        <InputField label="Pricing tolerance" value={formData.pricing_tolerance}/>
                         <ToogleSwitch
                             label="Trading Allowed"
                             isChecked={formData.trading_allowed === true} // Ensures it's only true, not null

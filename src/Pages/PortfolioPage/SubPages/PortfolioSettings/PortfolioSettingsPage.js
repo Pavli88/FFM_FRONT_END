@@ -164,7 +164,7 @@ const PortfolioSettingsPage = (props) => {
         },
         {
             id: 2, label: "Processes", content:
-                <PortfolioProcessWidget/>
+                <PortfolioProcessWidget portfolioData={portfolioData}/>
         },
         {
             id: 3, label: "Trade Routing", content: <div style={{display: 'flex', width: '100%'}}>

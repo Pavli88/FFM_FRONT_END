@@ -10,28 +10,23 @@ export const registerUser = async (username, email, password) => {
         let errors = {};
 
         if (error.response) {
-            // ✅ Backend responded with an error (Validation, Server issue)
             const errorData = error.response.data;
 
-            if (typeof errorData === "object") {
-                Object.keys(errorData).forEach((field) => {
-                    errors[field] = errorData[field].join(" ");
-                });
+            // 👉 Új backend logika: csak 1 hibaüzenet jön { error: "..." }
+            if (typeof errorData.error === "string") {
+                errors.general = errorData.error;
             } else {
                 errors.general = "An unexpected error occurred. Please try again.";
             }
         } else if (error.request) {
-            // ✅ No response from the server (Network issue)
             errors.general = "Unable to connect to the server. Please check your internet connection.";
         } else {
-            // ✅ Other unexpected errors
             errors.general = "Something went wrong. Please try again.";
         }
 
         return { success: false, errors };
     }
 };
-
 
 // Login function
 export const login = async (username, password) => {
@@ -83,7 +78,8 @@ export const forgotPassword = async (email) => {
 };
 
 //Change password function
-export const changePassword = async (oldPassword, newPassword, token) => {
+export const changePassword = async ({ oldPassword, newPassword }) => {
+    console.log(oldPassword, newPassword)
     try {
         const response = await fetchAPI.post('user/change_password/',{old_password: oldPassword, new_password: newPassword});
 

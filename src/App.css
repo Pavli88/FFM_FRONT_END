@@ -407,11 +407,10 @@ ul li:hover {
     font-size: 16px;
 }
 
-.card{
+.card {
     border-radius: 8px;
     background: white;
     height: 100%;
-    border-radius: 12px;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.1);
 }
 

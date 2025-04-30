@@ -186,7 +186,6 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
                         }}
                         placeholder="Enter username"
                         required
-                        error={errors.username}
                     />
                 </div>
                 <div className="field input-field">
@@ -200,7 +199,6 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
                         }}
                         placeholder="Enter email"
                         required
-                        error={errors.email}
                     />
                 </div>
                 <div className="field input-field password-tooltip-container">
@@ -213,7 +211,6 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
                             setErrors({});
                         }}
                         placeholder="Enter password"
-                        error={errors.password}
                     />
                     <Tooltip text={passwordPolicyText}/>
                 </div>
@@ -221,7 +218,7 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
                     <button onClick={handleRegister}>Signup</button>
                 </div>
                 {errors.general && (
-                    <p style={{marginBottom: "-10px"}}>{errors.general}</p>
+                    <p className="error-message">{errors.general}</p>
                 )}
 
                 <div className="form-link">
