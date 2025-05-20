@@ -15,10 +15,7 @@ const PortfolioSettingsGeneral = ({portfolioData}) => {
         setFormData(portfolioData);
     }, [portfolioData])
 
-    console.log(portfolioData.is_terminated)
-
     const updatePortfolio = async () => {
-        console.log(formData)
         try {
             const response = await fetchAPI.put('portfolios/update/portfolio/', formData);
             setStatus('success');
@@ -139,6 +136,18 @@ const PortfolioSettingsGeneral = ({portfolioData}) => {
                                     name: 'trading_allowed',
                                     type: 'checkbox',
                                     checked: !formData.trading_allowed // Set to null when unchecked
+                                }
+                            })}
+                        />
+
+                        <ToogleSwitch
+                            label="External Signals Allowed"
+                            isChecked={formData.allow_external_signals === true} // Ensures it's only true, not null
+                            onToggle={() => handleInputChange({
+                                target: {
+                                    name: 'allow_external_signals',
+                                    type: 'checkbox',
+                                    checked: !formData.allow_external_signals // Set to null when unchecked
                                 }
                             })}
                         />

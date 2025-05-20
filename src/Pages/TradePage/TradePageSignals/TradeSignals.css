@@ -1,17 +1,27 @@
-.time{
-    font-size: 10px;
-    font-style: italic;
+.signal-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
-.robot{
-    font-size: 14px;
-    font-weight: bold;
+.signal-row:hover {
+  background-color: #f3f4f6; /* világosszürke hover */
 }
 
-.message{
-    font-size: 12px;
+.signal-row.selected {
+  background-color: #dbeafe; /* kékes kiemelés */
 }
 
-.sub-message{
-    font-size: 10px;
+.status.pending {
+  color: purple;
+  font-weight: 600;
+}
+
+.status.executed {
+  color: green;
+  font-weight: 600;
+}
+
+.status.failed {
+  color: red;
+  font-weight: 600;
 }

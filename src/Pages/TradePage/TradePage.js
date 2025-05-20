@@ -9,6 +9,7 @@ import PortfolioContext from "../../context/portfolio-context";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
 import TradeTerminal from "./TradeTerminal/TradeTerminal";
 import fetchAPI from "../../config files/api";
+import TradeOrders from "./TradePageOrders/TradeOrders";
 
 const TradePage = () => {
     const server = useContext(ServerContext)['server'];
@@ -16,6 +17,7 @@ const TradePage = () => {
     const [openTransactionsData, setOpenTransactionsData] = useState([]);
     const [newTransactionID, setNewTransactionID] = useState(0);
     const [selectedPortfolioCode, setSelectedPortfolioCode] = useState(null);
+    const [selectedSignal, setSelectedSignal] = useState(null);
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const MINUTE_MS = 10000;
@@ -141,7 +143,10 @@ const TradePage = () => {
     const mainArea = <div style={{padding: 5}}>
         <OpenTransactions server={server} openTransactions={openTransactionsData}/>
         <div style={{paddingTop: 5}}>
-            <TradeSignals server={server}/>
+            <TradeSignals/>
+        </div>
+        <div style={{paddingTop: 5}}>
+            <TradeOrders/>
         </div>
 
     </div>
@@ -150,7 +155,9 @@ const TradePage = () => {
         <TradeContext.Provider value={{
             newTransactionID: newTransactionID,
             saveNewTrnsactionID: setNewTransactionID,
-            fetchTransactions: fetchTransactions
+            fetchTransactions: fetchTransactions,
+            selectedSignal: selectedSignal,
+            saveSelectedSignal: setSelectedSignal,
         }}>
             <ContainerWithSideMenu panel={panel} mainArea={mainArea} sidebarWidth={'800px'}/>
         </TradeContext.Provider>

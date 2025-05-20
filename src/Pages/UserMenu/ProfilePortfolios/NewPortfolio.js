@@ -10,7 +10,6 @@ const NewPortfolio = ({show, close, parameters}) => {
     const server = useContext(ServerContext).server;
     const { fetchPortfolios } = useContext(PortfolioContext);
     const portNameRef = useRef();
-    const portCodeRef = useRef();
     const currencyRef = useRef();
     const portTypeRef = useRef();
     const dateRef = useRef();
@@ -19,7 +18,6 @@ const NewPortfolio = ({show, close, parameters}) => {
         event.preventDefault();
         fetchAPI.post(`${server}portfolios/new/portfolio/`, {
             port_name: portNameRef.current.value,
-            port_code: portCodeRef.current.value,
             port_type: portTypeRef.current.value,
             currency: currencyRef.current.value,
             inception_date: dateRef.current.value,
@@ -72,11 +70,6 @@ const NewPortfolio = ({show, close, parameters}) => {
                 <div className="block">
                     <label>Portfolio Name</label>
                     <input ref={portNameRef} type="text" required/>
-                </div>
-
-                <div className="block">
-                    <label>Portfolio Code</label>
-                    <input ref={portCodeRef} type="text" required/>
                 </div>
 
                 <div className="block">

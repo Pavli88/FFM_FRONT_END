@@ -91,7 +91,7 @@ const OpenTransactions = ( {openTransactions} ) => {
     const [grouping, setGrouping] = useState(["portfolio_code"]); // Default grouping
 
     const closeTransactions = async (selectedIDs) => {
-        const response = await fetchAPI.post('trade_page/trade/close/', {
+        const response = await fetchAPI.post('trade_page/trade/', {
             ids: selectedIDs
         })
         fetchTransactions();

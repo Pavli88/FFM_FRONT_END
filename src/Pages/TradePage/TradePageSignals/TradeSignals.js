@@ -1,183 +1,87 @@
-import {BsCaretDownFill, BsCaretUpFill, BsDashSquare, BsPlusSquare, BsTrash} from "react-icons/bs";
+import fetchAPI from "../../../config files/api";
+import {useState, useEffect, useContext} from "react";
+import TradeContext from "../context/trade-context";
 import './TradeSignals.css'
-import {useEffect, useMemo, useState} from "react";
-import axios from "axios";
-import {useExpanded, useGroupBy, useSortBy, useTable} from "react-table";
-import CardHeader from "../../../components/Card/CardHeader";
 
-const TradeSignals = (props) => {
-    const [signalData, setSignalData] = useState([])
-    const MINUTE_MS = 10000;
+const TadeSignals = ({ portfolioCode }) => {
+  const [signals, setSignals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { saveSelectedSignal, selectedSignal } = useContext(TradeContext);
 
-    const data = useMemo(
-        () => signalData,
-        [signalData]
-    )
-    const columns = useMemo(
-        () => [
-            {
-                Header: 'Portfolio',
-                accessor: 'portfolio_code',
-            },
-            {
-                Header: 'Security',
-                accessor: 'security',
-            },
-            {
-                Header: 'Broker',
-                accessor: 'broker_name',
-            },
-            {
-                Header: 'Status',
-                accessor: 'sub_message',
-            },
-            {
-                Header: 'Date',
-                accessor: 'date',
-            },
-            {
-                Header: 'Message',
-                accessor: 'message',
-                disableGroupBy: true,
-            },
-            {
-                Header: 'Time',
-                accessor: 'time',
-                disableGroupBy: true,
-            },
-        ],
-        []
-    )
-    const tableInstance = useTable(
-        {
-            columns,
-            data,
-            initialState: {
-                sortBy: [
-                    {
-                        id: 'sensitivity',
-                        desc: true,
-                    }
-                ],
-                groupBy: [{
-                    id: 'portfolio_code'
-                }]
-            }
-        },
-        useGroupBy,
-        useSortBy,
-        useExpanded)
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        setGroupBy,
-        prepareRow,
-    } = tableInstance
+  useEffect(() => {
+    const fetchSignals = async () => {
+      try {
+        const response = await fetchAPI.get('trade_page/signals/');
+        setSignals(response.data.signals);
+      } catch (error) {
+        console.error('Hiba a szignálok lekérdezésekor:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const TableRow = (props) => {
-        prepareRow(props.row)
-        return (
-            <tr {...props.row.getRowProps()}
-                style={{
-                    cursor: props.row.isGrouped ? '' : 'pointer',
-                    // color: props.row['original']['sub_message'] === 'Executed' ? "green": 'red'
-                    // background: row.isGrouped ? '#f2f4f4' : 'white'
-                }}
-            >
+    fetchSignals();
+  }, [portfolioCode]);
 
-                {props.row.cells.map(cell => {
-                        return (
-                            <td
-                                {...cell.getCellProps()}
-                                style={{
-                                    color: cell.value === "Executed" ? "green": "black"
+  const renderTransactionText = (rawData) => {
+    if (!rawData || !rawData.transaction_type) return '-';
+    const { transaction_type, quantity } = rawData;
 
-                                }}
-                            >
-                                {cell.isGrouped ? (
-                                    <>
-                                        <span {...props.row.getToggleRowExpandedProps()}>
-                            {props.row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
-                          </span>{' '}
-                                        {cell.render('Cell')} ({props.row.subRows.length})
-                                    </>
-                                ) : cell.isAggregated ?
-                                    // If the cell is aggregated, use the Aggregated
-                                    // console.log(cell)
-                                    cell.render('Aggregated')
-                                    : cell.isPlaceholder ? null :
-                                        cell.render('Cell')
-                                }
-                            </td>
-                        )
-                    }
-                )
-                }
+    if (transaction_type === 'Purchase') return `BUY @ ${quantity}`;
+    if (transaction_type === 'Sale') return `SELL @ ${quantity}`;
+    return transaction_type;
+  };
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div className="card">
+      <div className="card-header">
+        <span>Signals</span>
+      </div>
+      <div className="table-container">
+        <table className="signals-table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Portfolio</th>
+              <th>Type</th>
+              <th>Transaction</th>
+              <th>Instrument</th>
+              <th>Status</th>
+              <th>Time</th>
+              <th>Executed</th>
+              <th>Error</th>
             </tr>
-        )
-    };
-
-    const tableRow = rows.map((row) => <TableRow row={row}/>)
-
-    useEffect(() => {
-        fetchTradeMessages();
-        // const interval = setInterval(() => {
-        //     fetchTradeMessages();
-        // }, MINUTE_MS);
-        // return () => clearInterval(interval);
-    }, [])
-
-    const fetchTradeMessages = async() => {
-        const response = await axios.get(props.server + "trade_page/notifications/trade_signals/")
-        setSignalData(response.data)
-    };
-
-    const deleteSignals = async() => {
-        const response = await axios.get(props.server + "trade_page/delete/signals/")
-        alert(response.data.response)
-        fetchTradeMessages()
-    };
-
-    const headerContent = <button
-        style={{padding: 0, width: 20}}
-        className={'delete-button'}
-        onClick={deleteSignals}>
-        <BsTrash size={20}/></button>
-
-    return(
-        <div className={'card'}>
-            <CardHeader title={'Signals'} content={headerContent}/>
-            <div style={{height: '100%', overflowY: 'scroll'}}>
-                <table {...getTableProps()}>
-                    <thead>
-                    {
-                        headerGroups.map(headerGroup => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {
-                                    headerGroup.headers.map(column => (
-                                        <th {...column.getHeaderProps()}>
-                                            {column.canGroupBy ? (
-                                                // If the column can be grouped, let's add a toggle
-                                                <span {...column.getGroupByToggleProps()}
-                                                      style={{paddingRight: 5}}>
-                      {column.isGrouped ? <BsDashSquare/> : <BsPlusSquare/>}
-                    </span>
-                                            ) : null}
-                                            {column.render('Header')}
-                                        </th>
-                                    ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                    {tableRow}
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    )
+          </thead>
+          <tbody>
+            {signals.map((signal) => (
+              <tr
+                key={signal.id}
+                className={`signal-row ${selectedSignal === signal.id ? 'selected' : ''}`}
+                onClick={() => saveSelectedSignal(signal.id)}
+              >
+                <td>{signal.source}</td>
+                <td>{signal.portfolio_code || '-'}</td>
+                <td>{signal.type}</td>
+                <td>{renderTransactionText(signal.raw_data)}</td>
+                <td>{signal.instrument_name}</td>
+                <td className={`status ${signal.status.toLowerCase()}`}>{signal.status}</td>
+                <td>
+                  {signal.executed_at
+                    ? new Date(signal.executed_at).toLocaleString()
+                    : new Date(signal.created_at).toLocaleString()}
+                </td>
+                <td>{signal.executed_at ? new Date(signal.executed_at).toLocaleString() : '-'}</td>
+                <td>{signal.error_message || '-'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 };
-export default TradeSignals;
+
+export default TadeSignals;
+

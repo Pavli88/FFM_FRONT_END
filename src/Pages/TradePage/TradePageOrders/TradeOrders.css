@@ -1,0 +1,9 @@
+.order.executed {
+  color: green;
+  font-weight: 600;
+}
+
+.order.failed {
+  color: red;
+  font-weight: 600;
+}

@@ -116,9 +116,9 @@ const TradeTerminal = ({portfolioCode}) => {
         }
 
         console.log("Submitting request with parameters:", requestParameters);
-
+        
         try {
-            const response = await fetchAPI.post('trade_page/new/signal/', requestParameters);
+            const response = await fetchAPI.post('trade_page/trade/', requestParameters);
             console.log("Trade submitted successfully:", response.data);
             fetchTransactions()
         } catch (error) {
