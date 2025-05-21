@@ -142,7 +142,7 @@ const TradePage = () => {
 
     const mainArea = <div style={{padding: 5}}>
         <OpenTransactions server={server} openTransactions={openTransactionsData}/>
-        <div style={{paddingTop: 5}}>
+        <div style={{height: 300,paddingTop: 5}}>
             <TradeSignals/>
         </div>
         <div style={{paddingTop: 5}}>

@@ -1,7 +1,9 @@
 import fetchAPI from "../../../config files/api";
-import {useState, useEffect, useContext} from "react";
+import {useState, useEffect, useContext, useMemo} from "react";
 import TradeContext from "../context/trade-context";
 import './TradeSignals.css'
+import { useTable, useGroupBy, useExpanded } from "react-table";
+import { BsCaretDownFill, BsCaretUpFill } from "react-icons/bs";
 
 const TadeSignals = ({ portfolioCode }) => {
   const [signals, setSignals] = useState([]);
@@ -11,26 +13,72 @@ const TadeSignals = ({ portfolioCode }) => {
   useEffect(() => {
     const fetchSignals = async () => {
       try {
-        const response = await fetchAPI.get('trade_page/signals/');
+        const response = await fetchAPI.get("trade_page/signals/");
         setSignals(response.data.signals);
       } catch (error) {
-        console.error('Hiba a szignálok lekérdezésekor:', error);
+        console.error("Hiba a szignálok lekérdezésekor:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchSignals();
   }, [portfolioCode]);
 
-  const renderTransactionText = (rawData) => {
-    if (!rawData || !rawData.transaction_type) return '-';
-    const { transaction_type, quantity } = rawData;
+  const columns = useMemo(
+    () => [
+      { Header: "Portfolio", accessor: "portfolio_code" },
+      { Header: "Source", accessor: "source" },
+      { Header: "Type", accessor: "type" },
+      {
+        Header: "Transaction",
+        accessor: (row) => {
+          const data = row.raw_data;
+          if (!data?.transaction_type) return "-";
+          if (data.transaction_type === "Purchase") return `BUY @ ${data.quantity}`;
+          if (data.transaction_type === "Sale") return `SELL @ ${data.quantity}`;
+          return data.transaction_type;
+        },
+      },
+      { Header: "Instrument", accessor: "instrument_name" },
+      {
+        Header: "Status",
+        accessor: "status",
+        Cell: ({ value }) => <span className={`status ${value?.toLowerCase()}`}>{value}</span>,
+      },
+      {
+        Header: "Time",
+        accessor: (row) =>
+          row.executed_at
+            ? new Date(row.executed_at).toLocaleString()
+            : new Date(row.created_at).toLocaleString(),
+      },
+      {
+        Header: "Executed",
+        accessor: (row) =>
+          row.executed_at ? new Date(row.executed_at).toLocaleString() : "-",
+      },
+      { Header: "Error", accessor: (row) => row.error_message || "-" },
+    ],
+    []
+  );
 
-    if (transaction_type === 'Purchase') return `BUY @ ${quantity}`;
-    if (transaction_type === 'Sale') return `SELL @ ${quantity}`;
-    return transaction_type;
-  };
+  const tableInstance = useTable(
+    {
+      columns,
+      data: signals,
+      initialState: { groupBy: ["portfolio_code"] },
+    },
+    useGroupBy,
+    useExpanded
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = tableInstance;
 
   if (loading) return <div>Loading...</div>;
 
@@ -39,43 +87,40 @@ const TadeSignals = ({ portfolioCode }) => {
       <div className="card-header">
         <span>Signals</span>
       </div>
-      <div className="table-container">
-        <table className="signals-table">
+      <div className="table-container" style={{ maxHeight: "500px", overflowY: "auto" }}>
+        <table {...getTableProps()} className="signals-table">
           <thead>
-            <tr>
-              <th>Source</th>
-              <th>Portfolio</th>
-              <th>Type</th>
-              <th>Transaction</th>
-              <th>Instrument</th>
-              <th>Status</th>
-              <th>Time</th>
-              <th>Executed</th>
-              <th>Error</th>
-            </tr>
-          </thead>
-          <tbody>
-            {signals.map((signal) => (
-              <tr
-                key={signal.id}
-                className={`signal-row ${selectedSignal === signal.id ? 'selected' : ''}`}
-                onClick={() => saveSelectedSignal(signal.id)}
-              >
-                <td>{signal.source}</td>
-                <td>{signal.portfolio_code || '-'}</td>
-                <td>{signal.type}</td>
-                <td>{renderTransactionText(signal.raw_data)}</td>
-                <td>{signal.instrument_name}</td>
-                <td className={`status ${signal.status.toLowerCase()}`}>{signal.status}</td>
-                <td>
-                  {signal.executed_at
-                    ? new Date(signal.executed_at).toLocaleString()
-                    : new Date(signal.created_at).toLocaleString()}
-                </td>
-                <td>{signal.executed_at ? new Date(signal.executed_at).toLocaleString() : '-'}</td>
-                <td>{signal.error_message || '-'}</td>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps()}>{column.render("Header")}</th>
+                ))}
               </tr>
             ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  className={`signal-row ${selectedSignal === row.original?.id ? "selected" : ""}`}
+                  onClick={() => row.original && saveSelectedSignal(row.original.id)}
+                >
+                  {row.cells.map((cell) => (
+                    <td {...cell.getCellProps()}>
+                      {cell.isGrouped ? (
+                        <span {...row.getToggleRowExpandedProps()}>
+                          {row.isExpanded ? <BsCaretUpFill /> : <BsCaretDownFill />} {cell.render("Cell")} ({row.subRows.length})
+                        </span>
+                      ) : (
+                        cell.render("Cell")
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

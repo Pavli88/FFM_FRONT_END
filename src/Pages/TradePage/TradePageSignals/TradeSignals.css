@@ -25,3 +25,15 @@
   color: red;
   font-weight: 600;
 }
+
+.table-body {
+  max-height: 400px; /* vagy tetszőleges magasság */
+  overflow-y: auto;
+}
+
+.signals-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: white; /* vagy a háttérszíned */
+  z-index: 2;
+}
