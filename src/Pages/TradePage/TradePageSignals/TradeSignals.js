@@ -32,14 +32,19 @@ const TadeSignals = ({ portfolioCode }) => {
     fetchSignals();
   }, [portfolioCode, selectedDate]);
 
-  const columns = useMemo(
-    () => [
-      { Header: "Portfolio", accessor: "portfolio_code" },
-      { Header: "Source", accessor: "source" },
-      { Header: "Type", accessor: "type" },
-      {
-        Header: "Transaction",
-        accessor: (row) => {
+    const columns = useMemo(
+        () => [
+            {Header: "Portfolio", accessor: "portfolio_code"},
+            {
+                Header: "Status",
+                accessor: "status",
+                Cell: ({value}) => <span className={`status ${value?.toLowerCase()}`}>{value}</span>,
+            },
+            {Header: "Source", accessor: "source"},
+            {Header: "Type", accessor: "type"},
+            {
+                Header: "Transaction",
+                accessor: (row) => {
           const data = row.raw_data;
           if (!data?.transaction_type) return "-";
           if (data.transaction_type === "Purchase") return `BUY @ ${data.quantity}`;
@@ -48,11 +53,6 @@ const TadeSignals = ({ portfolioCode }) => {
         },
       },
       { Header: "Instrument", accessor: "instrument_name" },
-      {
-        Header: "Status",
-        accessor: "status",
-        Cell: ({ value }) => <span className={`status ${value?.toLowerCase()}`}>{value}</span>,
-      },
       {
         Header: "Time",
         accessor: (row) =>

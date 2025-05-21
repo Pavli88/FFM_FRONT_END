@@ -1,9 +1,25 @@
 .order.executed {
-  color: green;
+  color: #00a59a;
   font-weight: 600;
 }
 
 .order.failed {
+  color: #ee7d8b;
+  font-weight: 600;
+}
+
+.order.rejected {
+  color: rgb(255, 165, 0);
+  font-weight: 600;
+}
+
+.order.buy {
+  color: #00a59a;
+  font-weight: 600;
+}
+
+.order.sell {
   color: red;
   font-weight: 600;
 }
+

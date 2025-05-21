@@ -12,17 +12,22 @@
 }
 
 .status.pending {
-  color: purple;
+  color: #cf6ecf;
   font-weight: 600;
 }
 
 .status.executed {
-  color: green;
+  color: #00a59a;
+  font-weight: 600;
+}
+
+.status.buy {
+  color: #00a59a;
   font-weight: 600;
 }
 
 .status.failed {
-  color: red;
+  color: #ee7d8b;
   font-weight: 600;
 }
 

@@ -56,13 +56,13 @@ const TadeOrders = ({ portfolioCode }) => {
             {orders.map((order) => (
               <tr key={order.id} className="text-sm">
                 <td>{order.portfolio_code}</td>
+                <td className={`order ${order.status.toLowerCase()}`}>{order.status}</td>
                 <td>{order.symbol}</td>
                 <td>{order.instrument_name}</td>
-                <td>{order.side}</td>
+                <td className={`order ${order.side.toLowerCase()}`}>{order.side}</td>
                 <td>{order.quantity}</td>
                 <td>{order.executed_price || '-'}</td>
                 <td>{order.fx_rate || '-'}</td>
-                <td className={`order ${order.status.toLowerCase()}`}>{order.status}</td>
                 <td>{order.broker_order_id || '-'}</td>
                 <td>{new Date(order.created_at).toLocaleString()}</td>
                 <td>{order.executed_at ? new Date(order.executed_at).toLocaleString() : '-'}</td>
