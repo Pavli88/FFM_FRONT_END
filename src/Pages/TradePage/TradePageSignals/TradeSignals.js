@@ -4,16 +4,22 @@ import TradeContext from "../context/trade-context";
 import './TradeSignals.css'
 import { useTable, useGroupBy, useExpanded } from "react-table";
 import { BsCaretDownFill, BsCaretUpFill } from "react-icons/bs";
+import DateContext from "../../../context/date-context";
 
 const TadeSignals = ({ portfolioCode }) => {
   const [signals, setSignals] = useState([]);
   const [loading, setLoading] = useState(true);
   const { saveSelectedSignal, selectedSignal } = useContext(TradeContext);
+  const {currentDate} = useContext(DateContext);
+  const [selectedDate, setSelectedDate] = useState(currentDate);
 
-  useEffect(() => {
-    const fetchSignals = async () => {
+  const fetchSignals = async () => {
       try {
-        const response = await fetchAPI.get("trade_page/signals/");
+        const response = await fetchAPI.get("trade_page/signals/", {
+            params: {
+                date: selectedDate,
+            }
+        });
         setSignals(response.data.signals);
       } catch (error) {
         console.error("Hiba a szignálok lekérdezésekor:", error);
@@ -21,8 +27,10 @@ const TadeSignals = ({ portfolioCode }) => {
         setLoading(false);
       }
     };
+
+  useEffect(() => {
     fetchSignals();
-  }, [portfolioCode]);
+  }, [portfolioCode, selectedDate]);
 
   const columns = useMemo(
     () => [
@@ -84,9 +92,14 @@ const TadeSignals = ({ portfolioCode }) => {
 
   return (
     <div className="card">
-      <div className="card-header">
-        <span>Signals</span>
-      </div>
+        <div className="card-header">
+            <label>Signals</label>
+            <input
+                type="date"
+                style={{width: 200, marginLeft: 10}}
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}/>
+        </div>
       <div className="table-container" style={{ maxHeight: "500px", overflowY: "auto" }}>
         <table {...getTableProps()} className="signals-table">
           <thead>

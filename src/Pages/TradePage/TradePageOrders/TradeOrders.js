@@ -32,7 +32,7 @@ const TadeOrders = ({ portfolioCode }) => {
   return (
     <div className="card">
       <div className="card-header">
-        <span>Orders</span>
+        <label>Orders</label>
       </div>
       <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
         <table className="w-full table-auto border-collapse">
