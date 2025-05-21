@@ -21,6 +21,16 @@
   font-weight: 600;
 }
 
+.status.rejected {
+  color: rgb(255, 165, 0);
+  font-weight: 600;
+}
+
+.status.partially-executed {
+  color: rgb(244, 103, 60);
+  font-weight: 600;
+}
+
 .status.buy {
   color: #00a59a;
   font-weight: 600;

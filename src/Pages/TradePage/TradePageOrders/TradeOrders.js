@@ -39,13 +39,13 @@ const TadeOrders = ({ portfolioCode }) => {
           <thead className="sticky top-0 bg-white">
             <tr>
               <th>Portfolio</th>
+              <th>Status</th>
               <th>Symbol</th>
               <th>Instrument</th>
               <th>Side</th>
               <th>Quantity</th>
               <th>Executed Price</th>
               <th>FX Rate</th>
-              <th>Status</th>
               <th>Broker ID</th>
               <th>Created</th>
               <th>Executed</th>
