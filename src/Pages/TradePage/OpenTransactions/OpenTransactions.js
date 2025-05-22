@@ -90,10 +90,8 @@ const OpenTransactions = ( {openTransactions} ) => {
     const { fetchTransactions } = useContext(TradeContext);
     const [grouping, setGrouping] = useState(["portfolio_code"]); // Default grouping
 
-    const closeTransactions = async (selectedIDs) => {
-        const response = await fetchAPI.post('trade_page/trade/', {
-            ids: selectedIDs
-        })
+    const closeTransactions = async (signal) => {
+        const response = await fetchAPI.post('trade_page/trade/', signal)
         fetchTransactions();
         console.log(response.data)
     }
@@ -160,21 +158,32 @@ const OpenTransactions = ( {openTransactions} ) => {
 
     const handleLiquidate = useCallback((row) => {
         const transactionIds = row.subRows.map((subRow) => subRow.original.id);
-        console.log(`Liquidating Portfolio: ${row.values.portfolio_code}`);
-        console.log("Transactions to Liquidate:", transactionIds);
         closeTransactions(transactionIds)
     }, []);
 
     const handleCloseAll = useCallback((row) => {
-        const transactionIds = row.subRows.map((subRow) => subRow.original.id);
-        console.log(`Closing All Trades for Security: ${row.values.name}`);
-        console.log("Transactions to Close All:", transactionIds);
-        closeTransactions(transactionIds)
+        const signalData = {
+            'transaction_type': 'Close All',
+            'portfolio_code': row.subRows[0].original.portfolio_code,
+            'quantity': 0,
+            'security_id': row.subRows[0].original.security_id,
+            'account_id': row.subRows[0].original.account_id,
+        }
+        closeTransactions(signalData)
     }, []);
 
-    const handleClose = useCallback((transactionId) => {
-        closeTransactions([transactionId])
-        console.log(`Closing Transaction ID: ${transactionId}`);
+    const handleClose = useCallback((row) => {
+        const signalData = {
+            'transaction_type': 'Close',
+            'portfolio_code': row.original.portfolio_code,
+            'quantity': 0,
+            'security_id': row.original.security_id,
+            'account_id': row.original.account_id,
+            'id':  row.original.id,
+        }
+        console.log(row)
+        closeTransactions(signalData)
+
     }, []);
 
     const handleCloseOut = useCallback((transactionId) => {
@@ -281,7 +290,7 @@ const OpenTransactions = ( {openTransactions} ) => {
                                         )}
                                         {!row.isGrouped && (
                                             <>
-                                                <button style={{ backgroundColor: "#1697ea", color: "white", width: 80 }} onClick={() => handleClose(row.original.id)}>Close</button>
+                                                <button style={{ backgroundColor: "#1697ea", color: "white", width: 80 }} onClick={() => handleClose(row)}>Close</button>
                                                 {/*<button style={{ backgroundColor: "#1697ea", color: "white", width: 80, marginLeft: 8 }} onClick={() => handleCloseOut(row.original.id)}>Close Out</button>*/}
                                             </>
                                         )}
