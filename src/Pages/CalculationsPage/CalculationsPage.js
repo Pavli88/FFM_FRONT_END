@@ -1,6 +1,6 @@
 import CalculationOptions from "./CalculationOptions/CalculationOptions";
-import CalculationPortfoliosTable from "./CalculationPortfoliosTable/CalculationPortfoliosTable";
-import CalculationResponseTable from "./CalculationResponseTable/CalculationResponseTable";
+import PortfolioSelection from "./CalculationPortfoliosTable/PortfolioSelection";
+import ExceptionsTable from "./ExceptionsTable/ExceptionsTable";
 import ServerContext from "../../context/server-context";
 import CalculationContext from "./CalculationPageContext/calculation-context";
 import DateContext from "../../context/date-context";
@@ -10,6 +10,9 @@ import Modal from "react-bootstrap/Modal";
 import Spinner from "react-bootstrap/Spinner";
 import PortfolioContext from "../../context/portfolio-context";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
+import ProcessAudit from "./ProcessAudit/ProcessAudit";
+import fetchAPI from "../../config files/api";
+import './CalculationPage.css'
 
 const TaskComponent = () => {
     const server = useContext(ServerContext)['server'];
@@ -97,6 +100,8 @@ const CalculationsPage = () => {
     const [selectedPortfolios, setSelectedPortfolios] = useState([]);
     const [calcResponse, setCalcResponse] = useState([{}]);
     const [showModal, setShowModal] = useState(false);
+    const [selectedAuditIds, setSelectedAuditIds] = useState([]);
+    const [exceptions, setExceptions] = useState([]);
 
     const runCalculation = async (parameters) => {
         console.log(parameters)
@@ -118,21 +123,64 @@ const CalculationsPage = () => {
         }
     };
 
-    const panel = <div>
-        <CalculationPortfoliosTable data={portfolios}/>
-    </div>
+    const fetchExceptions = async () => {
+        try {
+            const response = await fetchAPI.post('/calculate/exceptions/',
+                {
+                    ids: selectedAuditIds
+                });
+            setExceptions(response.data.data);
+        } catch (err) {
+            console.error('Failed to fetch exception records:', err);
+        }
+    };
 
+    useEffect(() => {
+        fetchExceptions()
+    }, [selectedAuditIds]);
+
+
+    const panel = <div>
+        <PortfolioSelection data={portfolios}/>
+    </div>
+    console.log(selectedPortfolios)
     const mainArea = <div style={{padding: 20}}>
-        <CalculationOptions run={runCalculation}/>
+
+        <div className="card">
+            <div className={'card-header'} style={{padding: 10}}>
+                  <label style={{fontSize: "1.2rem", fontWeight: "bold"}}>Selected Portfolios</label>
+            <div className="portfolio-tags-wrapper">
+                {selectedPortfolios.map((code) => (
+                    <span key={code} className="portfolio-tag">
+        {code}
+      </span>
+                ))}
+            </div>
+            </div>
+        </div>
+
+        <div style={{paddingTop: 10}}>
+            <CalculationOptions run={runCalculation}/>
+        </div>
+
         {/*<TaskComponent/>*/}
         {/*<CeleryStatus/>*/}
-        <div >
-            <CalculationResponseTable data={calcResponse}/>
+
+        <div style={{paddingTop: 10}}>
+             <ProcessAudit portfolioCodes={selectedPortfolios}/>
         </div>
+
+        <div style={{paddingTop: 10}}>
+            <ExceptionsTable data={exceptions}/>
+        </div>
+
+
     </div>
 
     return (
         <CalculationContext.Provider value={{
+            selectedAuditIds: selectedAuditIds,
+            saveSelectedAuditIds: setSelectedAuditIds,
             selectedPortfolios: selectedPortfolios,
             saveSelectedPortfolios: setSelectedPortfolios,
             startDate: startDate,
@@ -140,7 +188,7 @@ const CalculationsPage = () => {
             endDate: endDate,
             saveEndDate: setEndDate,
         }}>
-            <ContainerWithSideMenu panel={panel} mainArea={mainArea} sidebarWidth={"500px"}/>
+            <ContainerWithSideMenu panel={panel} mainArea={mainArea} sidebarWidth={"600px"}/>
         </CalculationContext.Provider>
     );
 };

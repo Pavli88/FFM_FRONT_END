@@ -131,7 +131,7 @@ const ValuationSection = (props) => {
 
     return (
         <div style={{display: 'flex', alignItems: 'center', paddingLeft: 5}}>
-            <span className="input-label" style={{width: 100}}>Start Date</span>
+            <label style={{width: 100}}>Start Date</label>
             <input
                 type="date"
                 value={parameters.start_date}
@@ -158,13 +158,10 @@ const CalculationOptions = (props) => {
     }
 
     return (
-        <div style={{padding: 15}}>
-            <div className={'card'}>
+        <div className={'card'}>
                 <div style={{display: "flex", paddingLeft: 15, paddingTop: 5, paddingBottom: 5, paddingRight: 15}}>
                     <div style={{paddingTop: 0}}>
-                        <span className={'input-label'} style={{textAlign: "left"}}>
-                            Process
-                        </span>
+                        <label style={{textAlign: "left"}}>Process</label>
                     </div>
                     <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
                         <Select
@@ -181,8 +178,6 @@ const CalculationOptions = (props) => {
                     {process === 'total_return' && <TotalReturnSection run={(e) => props.run(e)}/>}
                 </div>
             </div>
-        </div>
-
     );
 };
 export default CalculationOptions;
