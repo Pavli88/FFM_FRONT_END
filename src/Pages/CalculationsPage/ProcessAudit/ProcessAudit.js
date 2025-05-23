@@ -70,64 +70,66 @@ const ProcessAudit = ({ portfolioCodes }) => {
   };
 
   return (
-    <div className="card" style={{ paddingBottom: 5 }}>
-      <div className="card-header" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <label>Process Audit</label>
-          <div style={{ display: 'flex', gap: '10px' }}>
-              <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-        />
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Search..."
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="audit-search"
-        />
-        <button onClick={handleExportCSV} className="audit-export">
-          Export CSV
-        </button>
-          </div>
-
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Portfolio</th>
-            <th>Process</th>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Run At</th>
-            <th>Message</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((row, i) => (
-            <tr
-              key={row.id}
-              className={`${i % 2 === 0 ? 'even' : 'odd'} ${selectedAuditIds.includes(row.id) ? 'selected' : ''}`}
-              style={{ cursor: 'pointer' }}
-              onClick={() => handleRowClick(row.id)}
-            >
-              <td>{row.portfolio_name} ({row.portfolio_code})</td>
-              <td>{row.process}</td>
-              <td>{row.valuation_date}</td>
-              <td className={`status-${row.status.toLowerCase()}`}>{row.status}</td>
-              <td>{row.run_at}</td>
-              <td>{row.message}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+ <div className="card" style={{ paddingBottom: 5 }}>
+  <div className="card-header" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+    <label>Process Audit</label>
+    <div style={{ display: 'flex', gap: '10px' }}>
+      <input
+        type="date"
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
+      />
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Search..."
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        className="audit-search"
+      />
+      <button onClick={handleExportCSV} className="audit-export">
+        Export CSV
+      </button>
     </div>
+  </div>
+
+  {/* Scrollable table container with fixed height */}
+  <div style={{ height: '500px', overflowY: 'auto' }}>
+    <table style={{ width: '100%' }}>
+      <thead>
+        <tr>
+          <th style={{ padding: '8px' }}>Portfolio</th>
+          <th style={{ padding: '8px' }}>Process</th>
+          <th style={{ padding: '8px' }}>Date</th>
+          <th style={{ padding: '8px' }}>Run At</th>
+          <th style={{ padding: '8px' }}>Status</th>
+          <th style={{ padding: '8px' }}>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        {filteredData.map((row, i) => (
+          <tr
+            key={row.id}
+            className={`${i % 2 === 0 ? 'even' : 'odd'} ${selectedAuditIds.includes(row.id) ? 'selected' : ''}`}
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleRowClick(row.id)}
+          >
+            <td style={{ padding: '8px' }}>{row.portfolio_name} ({row.portfolio_code})</td>
+            <td style={{ padding: '8px' }}>{row.process}</td>
+            <td style={{ padding: '8px' }}>{row.valuation_date}</td>
+            <td style={{ padding: '8px' }}>{row.run_at}</td>
+            <td style={{ padding: '8px' }} className={`status-${row.status.toLowerCase()}`}>{row.status}</td>
+            <td style={{ padding: '8px' }} className={`status-${row.status.toLowerCase()}`}>{row.message}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
   );
 };
 
