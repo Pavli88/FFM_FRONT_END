@@ -76,7 +76,7 @@ const ProcessAudit = ({ portfolioCodes }) => {
     <div style={{ display: 'flex', gap: '10px' }}>
       <input
         type="date"
-        value={startDate}
+        value={endDate}
         onChange={(e) => setStartDate(e.target.value)}
       />
       <input

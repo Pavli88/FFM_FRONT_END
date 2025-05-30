@@ -2,24 +2,30 @@ import { Link } from 'react-router-dom';
 import { FaUserCircle, FaUser, FaClipboardList, FaRegHandshake, FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { useContext } from 'react';
 import UserContext from "../context/user-context";
+import WsContext from "../context/ws-context";
 import "./UserMenu.css";
 
 const UserMenu = ({ dropdownOpen, setDropdownOpen, userLogout, dropdownRef }) => {
     const {userData} = useContext(UserContext);
+    const {wsConnection} = useContext(WsContext);
     const profileImage = userData.image_url || null;
-
+    console.log(wsConnection)
     // Function to handle menu item click
     const handleItemClick = () => {
         setDropdownOpen(false); // Close dropdown when an item is clicked
     };
 
     return (
-        <div className="nav-user-menu" style={{ position: 'relative' }} ref={dropdownRef}>
-            <button className="icon-button" onClick={() => setDropdownOpen(!dropdownOpen)}>
+        <div className="nav-user-menu" style={{position: 'relative'}} ref={dropdownRef}>
+            <button className="icon-button" onClick={() => setDropdownOpen(!dropdownOpen)} style={{
+                border: `2px solid ${wsConnection ? 'lightgreen' : 'red'}`,
+                borderRadius: '50%', // hogy kör legyen
+                padding: 4 // opcionális: kicsit beljebb tolja az ikont
+            }}>
                 {profileImage ? (
-                    <img src={profileImage} alt="Profile" className="nav-avatar" />
+                    <img src={profileImage} alt="Profile" className="nav-avatar"/>
                 ) : (
-                    <FaUserCircle size={24} />
+                    <FaUserCircle size={24}/>
                 )}
             </button>
             {dropdownOpen && (

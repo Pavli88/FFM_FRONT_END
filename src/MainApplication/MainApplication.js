@@ -4,6 +4,7 @@ import DateContext from "../context/date-context";
 import UserContext from "../context/user-context";
 import BrokerContext from "../context/broker-context";
 import DashboardContext from "../context/dashboard-context";
+import WsContext from "../context/ws-context";
 import ReactNotification from "react-notifications-component";
 import Navigation from "../NavBar/NavBar";
 import {Route, Switch, Redirect } from "react-router-dom";
@@ -21,37 +22,6 @@ import fetchAPI from "../config files/api";
 import Subscriptions from "../Pages/UserMenu/Subscriptions";
 import UserProfile from "../Pages/UserMenu/UserProfile/UserProfile";
 import PublicProfile from "../Pages/PublicProfile/PublicProfile";
-
-const Notifications = () => {
-        const [messages, setMessages] = useState([]);
-        console.log(messages)
-        useEffect(() => {
-            const socket = new WebSocket('ws://127.0.0.1:8000/ws/notifications/');
-
-            socket.onmessage = function (event) {
-                const data = JSON.parse(event.data);
-                setMessages((prevMessages) => [...prevMessages, data.message]);
-            };
-
-            socket.onclose = function (e) {
-                console.error('WebSocket closed unexpectedly');
-            };
-
-            return () => socket.close();
-        }, []);
-
-        return (
-            <div>
-                <p>test</p>
-                <h2>Notifications</h2>
-                <ul>
-                    {messages.map((message, index) => (
-                        <li key={index}>{message}</li>
-                    ))}
-                </ul>
-            </div>
-        );
-    }
 
 const MainApplication = ({config}) => {
     const { server, currentDate, fistDayOfCurrentYear } = config;
@@ -78,6 +48,38 @@ const MainApplication = ({config}) => {
 
     // Dashboard Context
     const [portGroup, setPortGroup] = useState(null);
+
+    // WS Connection
+    const [wsConnection, setWsConnection] = useState(false);
+
+    // Websocket Connection
+    useEffect(() => {
+        const socket = new WebSocket(process.env.REACT_APP_WS_URL + `connection/`);
+
+        socket.onopen = () => {
+            console.log("✅ WebSocket connected!");
+            setWsConnection(true);
+            // Itt küldhetsz akár egy kezdeti üzenetet is, ha kell
+        };
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === "process.completed") {
+                alert(data.message); // vagy toast.success(data.message)
+            }
+        };
+
+        socket.onerror = (error) => {
+            console.error("❗ WebSocket error:", error);
+        };
+
+        socket.onclose = (event) => {
+            console.log("🛑 WebSocket disconnected:", event.code, event.reason);
+            setWsConnection(false);
+        };
+
+        return () => socket.close();
+    }, []);
 
     const fetchUserData = async () => {
         try {
@@ -162,109 +164,113 @@ const MainApplication = ({config}) => {
 
     return (
         <div style={{background: '#FBFAFA', padding: 0}}>
-            <ServerContext.Provider value={{
-                server: server,
-            }}>
-                <PortfolioContext.Provider value={{
-                    portfolios: portfolios,
-                    selectedPortfolio: selectedPortfolio,
-                    selectPortfolio: setSelectedPortfolio,
-                    fetchPortfolios: fetchPortfolios,
+            <WsContext.Provider value={{
+                    wsConnection: wsConnection,
                 }}>
-                    <DateContext.Provider value={{
-                        startDate: startDate,
-                        endDate: endDate,
-                        saveStartDate: setStartDate,
-                        saveEndDate: setEndDate,
-                        currentDate: currentDate,
-                        firstDayOfCurrentYear: fistDayOfCurrentYear
+                <ServerContext.Provider value={{
+                    server: server,
+                }}>
+                    <PortfolioContext.Provider value={{
+                        portfolios: portfolios,
+                        selectedPortfolio: selectedPortfolio,
+                        selectPortfolio: setSelectedPortfolio,
+                        fetchPortfolios: fetchPortfolios,
                     }}>
-                        <BrokerContext.Provider value={{
-                            brokerData: brokerData,
-                            accounts: accounts,
-                            brokerCredentials: brokerCredentials,
-                            fetchBrokersCredentials: fetchBrokersCredentials,
-                            fetchAccounts: fetchAccountData,
-                            fetchBrokers: fetchBrokers,
-                            apiSupportedBrokers: apiSupportedBroker,
-                            apiNotSupportedBrokers: apiNotSupportedBroker
+                        <DateContext.Provider value={{
+                            startDate: startDate,
+                            endDate: endDate,
+                            saveStartDate: setStartDate,
+                            saveEndDate: setEndDate,
+                            currentDate: currentDate,
+                            firstDayOfCurrentYear: fistDayOfCurrentYear
                         }}>
-                            <UserContext.Provider value={
-                                {userData, fetchUserData}
-                            }>
-                                <DashboardContext.Provider value={{
-                                    portGroup: portGroup,
-                                    setPortGroup: setPortGroup,
-                                }}>
-                                    <ReactNotification/>
-
-                                    <div style={{
-                                        position: "fixed",
-                                        top: 0,
-                                        left: 0,
-                                        right: 0,
-                                        // border: '1px solid grey',
-                                        background: 'grey',
-                                        zIndex: 1000
+                            <BrokerContext.Provider value={{
+                                brokerData: brokerData,
+                                accounts: accounts,
+                                brokerCredentials: brokerCredentials,
+                                fetchBrokersCredentials: fetchBrokersCredentials,
+                                fetchAccounts: fetchAccountData,
+                                fetchBrokers: fetchBrokers,
+                                apiSupportedBrokers: apiSupportedBroker,
+                                apiNotSupportedBrokers: apiNotSupportedBroker
+                            }}>
+                                <UserContext.Provider value={
+                                    {userData, fetchUserData}
+                                }>
+                                    <DashboardContext.Provider value={{
+                                        portGroup: portGroup,
+                                        setPortGroup: setPortGroup,
                                     }}>
-                                        <Navigation user={userData.username}/>
-                                    </div>
+                                        <ReactNotification/>
 
-                                    <div  style={{
-                                        marginTop: 85,
-                                        height: 'calc(100vh - 60px)',
-                                        width: '100%',
-                                    }}>
-                                        <Switch>
-                                            {/*<Route path="/risk">*/}
-                                            {/*    <RiskPage/>*/}
-                                            {/*</Route>*/}
-                                            <Route path="/dashboard">
-                                                <DashBoardPage/>
-                                            </Route>
-                                            <Route path="/home">
-                                                <HomePage/>
-                                            </Route>
-                                            <Route path="/trade">
-                                                <TradePage/>
-                                            </Route>
-                                            <Route path="/data">
-                                                <DataPage/>
-                                            </Route>
-                                            <Route path="/portfolio">
-                                                <PortfolioPage/>
-                                            </Route>
-                                            <Route path="/calculations">
-                                                <CalculationsPage/>
-                                            </Route>
-                                            <Route path="/instruments">
-                                                <InstrumentPage/>
-                                            </Route>
-                                            <Route path="/profile">
-                                                <UserProfile/>
-                                            </Route>
-                                            <Route path="/subscriptions">
-                                                <Subscriptions/>
-                                            </Route>
-                                            <Route path="/myPortfolios">
-                                                <MyPortfoliosPage/>
-                                            </Route>
-                                            <Route path="/brokerAccounts">
-                                                <BrokerAccountsPage/>
-                                            </Route>
-                                            <Route path="/user/:username">
-                                                <PublicProfile />
-                                            </Route>
-                                            <Route path='*' element={<Redirect to='/dashboard'/>}/>
-                                        </Switch>
-                                    </div>
-                                </DashboardContext.Provider>
-                            </UserContext.Provider>
-                        </BrokerContext.Provider>
-                    </DateContext.Provider>
-                </PortfolioContext.Provider>
+                                        <div style={{
+                                            position: "fixed",
+                                            top: 0,
+                                            left: 0,
+                                            right: 0,
+                                            // border: '1px solid grey',
+                                            background: 'grey',
+                                            zIndex: 1000
+                                        }}>
+                                            <Navigation user={userData.username}/>
+                                        </div>
 
-            </ServerContext.Provider>
+                                        <div style={{
+                                            marginTop: 85,
+                                            height: 'calc(100vh - 60px)',
+                                            width: '100%',
+                                        }}>
+                                            <Switch>
+                                                {/*<Route path="/risk">*/}
+                                                {/*    <RiskPage/>*/}
+                                                {/*</Route>*/}
+                                                <Route path="/dashboard">
+                                                    <DashBoardPage/>
+                                                </Route>
+                                                <Route path="/home">
+                                                    <HomePage/>
+                                                </Route>
+                                                <Route path="/trade">
+                                                    <TradePage/>
+                                                </Route>
+                                                <Route path="/data">
+                                                    <DataPage/>
+                                                </Route>
+                                                <Route path="/portfolio">
+                                                    <PortfolioPage/>
+                                                </Route>
+                                                <Route path="/calculations">
+                                                    <CalculationsPage/>
+                                                </Route>
+                                                <Route path="/instruments">
+                                                    <InstrumentPage/>
+                                                </Route>
+                                                <Route path="/profile">
+                                                    <UserProfile/>
+                                                </Route>
+                                                <Route path="/subscriptions">
+                                                    <Subscriptions/>
+                                                </Route>
+                                                <Route path="/myPortfolios">
+                                                    <MyPortfoliosPage/>
+                                                </Route>
+                                                <Route path="/brokerAccounts">
+                                                    <BrokerAccountsPage/>
+                                                </Route>
+                                                <Route path="/user/:username">
+                                                    <PublicProfile/>
+                                                </Route>
+                                                <Route path='*' element={<Redirect to='/dashboard'/>}/>
+                                            </Switch>
+                                        </div>
+                                    </DashboardContext.Provider>
+                                </UserContext.Provider>
+                            </BrokerContext.Provider>
+                        </DateContext.Provider>
+                    </PortfolioContext.Provider>
+
+                </ServerContext.Provider>
+            </WsContext.Provider>
         </div>
     );
 };
