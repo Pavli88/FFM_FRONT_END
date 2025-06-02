@@ -17,7 +17,7 @@ const UserMenu = ({ dropdownOpen, setDropdownOpen, userLogout, dropdownRef }) =>
 
     return (
         <div className="nav-user-menu" style={{position: 'relative'}} ref={dropdownRef}>
-            <button className="icon-button" onClick={() => setDropdownOpen(!dropdownOpen)} style={{
+            <button className="user-button" onClick={() => setDropdownOpen(!dropdownOpen)} style={{
                 border: `2px solid ${wsConnection ? 'lightgreen' : 'red'}`,
                 borderRadius: '50%', // hogy kör legyen
                 padding: 4 // opcionális: kicsit beljebb tolja az ikont

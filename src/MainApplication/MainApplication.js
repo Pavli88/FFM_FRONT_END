@@ -4,7 +4,8 @@ import DateContext from "../context/date-context";
 import UserContext from "../context/user-context";
 import BrokerContext from "../context/broker-context";
 import DashboardContext from "../context/dashboard-context";
-import WsContext from "../context/ws-context";
+import {WsProvider} from "../context/ws-context";
+
 import ReactNotification from "react-notifications-component";
 import Navigation from "../NavBar/NavBar";
 import {Route, Switch, Redirect } from "react-router-dom";
@@ -48,38 +49,6 @@ const MainApplication = ({config}) => {
 
     // Dashboard Context
     const [portGroup, setPortGroup] = useState(null);
-
-    // WS Connection
-    const [wsConnection, setWsConnection] = useState(false);
-
-    // Websocket Connection
-    useEffect(() => {
-        const socket = new WebSocket(process.env.REACT_APP_WS_URL + `connection/`);
-
-        socket.onopen = () => {
-            console.log("✅ WebSocket connected!");
-            setWsConnection(true);
-            // Itt küldhetsz akár egy kezdeti üzenetet is, ha kell
-        };
-
-        socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === "process.completed") {
-                alert(data.message); // vagy toast.success(data.message)
-            }
-        };
-
-        socket.onerror = (error) => {
-            console.error("❗ WebSocket error:", error);
-        };
-
-        socket.onclose = (event) => {
-            console.log("🛑 WebSocket disconnected:", event.code, event.reason);
-            setWsConnection(false);
-        };
-
-        return () => socket.close();
-    }, []);
 
     const fetchUserData = async () => {
         try {
@@ -164,9 +133,7 @@ const MainApplication = ({config}) => {
 
     return (
         <div style={{background: '#FBFAFA', padding: 0}}>
-            <WsContext.Provider value={{
-                    wsConnection: wsConnection,
-                }}>
+            <WsProvider>
                 <ServerContext.Provider value={{
                     server: server,
                 }}>
@@ -270,7 +237,7 @@ const MainApplication = ({config}) => {
                     </PortfolioContext.Provider>
 
                 </ServerContext.Provider>
-            </WsContext.Provider>
+            </WsProvider>
         </div>
     );
 };

@@ -1,6 +1,8 @@
 import DateContext from "../../../context/date-context";
 import {useContext, useState, useEffect} from "react";
 import Select from "react-select";
+import WsContext from "../../../context/ws-context";
+import { Oval } from 'react-loader-spinner';
 
 const TotalReturnSection = (props) => {
     const [calcType, setCalcType] = useState('multiple');
@@ -45,7 +47,7 @@ const TotalReturnSection = (props) => {
             }));
         }
     };
-    console.log(periods)
+
     return (
         <div style={{display: 'flex', alignItems: 'center'}}>
 
@@ -150,6 +152,7 @@ const ValuationSection = (props) => {
 };
 
 const CalculationOptions = (props) => {
+    const {processRunning} = useContext(WsContext);
     const [process, setProcess] = useState();
     const urls = {
         'valuation': 'calculate/valuation/',
@@ -159,25 +162,51 @@ const CalculationOptions = (props) => {
 
     return (
         <div className={'card'}>
-                <div style={{display: "flex", paddingLeft: 15, paddingTop: 5, paddingBottom: 5, paddingRight: 15}}>
-                    <div style={{paddingTop: 0}}>
-                        <label style={{textAlign: "left"}}>Process</label>
-                    </div>
-                    <div style={{paddingLeft: 15, paddingTop: 0, width: 200}}>
-                        <Select
-                            options={[
-                                {value: 'valuation', label: 'Valuation'},
-                                {value: 'total_return', label: 'Total Return'},
-                                {value: 'attribution', label: 'Attribution'}
-                            ]}
-                            isClearable
-                            onChange={(e) => setProcess(e.value)}
-                        />
-                    </div>
-                    {process === 'valuation' && <ValuationSection run={(e) => props.run(e)}/>}
-                    {process === 'total_return' && <TotalReturnSection run={(e) => props.run(e)}/>}
-                </div>
-            </div>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '5px 15px'
+      }}
+    >
+      {/* Bal oldal - process select és szekciók */}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <label>Process</label>
+        <div style={{ paddingLeft: 15, width: 200 }}>
+          <select
+            value={process || ''}
+            onChange={(e) => setProcess(e.target.value)}
+            style={{ width: '100%', padding: '6px' }}
+          >
+            <option value="" disabled>Select a process</option>
+            <option value="valuation">Valuation</option>
+            <option value="total_return">Total Return</option>
+            <option value="attribution">Attribution</option>
+          </select>
+        </div>
+
+        {process === 'valuation' && <ValuationSection run={(e) => props.run(e)} />}
+        {process === 'total_return' && <TotalReturnSection run={(e) => props.run(e)} />}
+      </div>
+
+      {processRunning && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Oval
+            height={30}
+            width={30}
+            color="#007bff"
+            secondaryColor="#ccc"
+            strokeWidth={3}
+            strokeWidthSecondary={2}
+            ariaLabel="oval-loading"
+            visible={true}
+          />
+          <span style={{ fontWeight: 'bold', color: '#007bff' }}>Calculating...</span>
+        </div>
+      )}
+    </div>
+  </div>
     );
 };
 export default CalculationOptions;
