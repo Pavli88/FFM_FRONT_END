@@ -176,10 +176,11 @@ button {
     height: 100%;
     border: 1px solid #f1f1f1;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 16px;
+    font-family: "Inter", Helvetica;
     cursor: pointer;
-    background-color: #f1f1f1;
-    color: #494f54;
+    background-color: #0e1d32;
+    color: #ffffff;
     padding: 5px;
 }
 
@@ -192,12 +193,12 @@ button {
 }
 
 button:hover {
-    background-color: #494f54;
-    color: white;
+   background: linear-gradient(90deg, #204373 0%, #0E1D32 50%, #2B5898 100%);
+    color: #ffffff;
     border: 1px solid #494f54;
 }
 button:disabled {
-    background: #aaa;
+    background: #204373;
     cursor: not-allowed;
 }
 

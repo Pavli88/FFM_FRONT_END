@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router-dom";
 import ResetPassword from "./ResetPassword";
 import AuthForms from "./AuthForms/AuthForms";
 import LandingPage from "../LandingPage/LandingPage";
-
+import Login from "../SignInPage/src/screens/Login/Login"
 const MainPage = (props) => {
     const [showModal, setShowModal] = useState(false);
     const [authFormType, setAuthFormType] = useState("login");
@@ -33,14 +33,13 @@ const MainPage = (props) => {
                 </div>
 
             </div>
-            <LandingPage/>
-
+            {/*<LandingPage/>*/}
             <Switch>
                 <Route path="/reset_password/:reset_token">
                     <ResetPassword />
                 </Route>
             </Switch>
-            <AuthForms
+            <Login
                 show={showModal}
                 onClose={() => setShowModal(false)}
                 initialForm={authFormType}
