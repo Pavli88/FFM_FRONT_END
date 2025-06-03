@@ -1,1 +1,0 @@
-export { LoginAsVariant } from "./LoginAsVariant";

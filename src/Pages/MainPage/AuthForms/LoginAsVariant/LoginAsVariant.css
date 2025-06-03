@@ -60,6 +60,15 @@
   top: 23px;
 }
 
+.login-as-title {
+  font-family: "Inter", Helvetica;
+  font-size: 24px;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 24px; /* 👈 korábbi 12px helyett */
+  text-align: center;
+}
+
 /*.login-as-variant .cancel {*/
 /*  background-image: url(../../../static/img/group-6.png);*/
 /*  background-size: 100% 100%;*/
