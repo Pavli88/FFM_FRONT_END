@@ -2,8 +2,10 @@ import fetchAPI from "../../../config files/api";
 import {useState, useEffect, useContext, useMemo} from "react";
 import './ProcessAudit.css'
 import CalculationContext from "../CalculationPageContext/calculation-context";
+import WsContext from "../../../context/ws-context";
 
 const ProcessAudit = ({ portfolioCodes }) => {
+  const { processRunning } = useContext(WsContext);
   const { selectedAuditIds, saveSelectedAuditIds } = useContext(CalculationContext);
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState('');
@@ -12,7 +14,7 @@ const ProcessAudit = ({ portfolioCodes }) => {
   const today = new Date();
   const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-  const [startDate, setStartDate] = useState(firstOfMonth.toISOString().split('T')[0]);
+  const [startDate, setStartDate] = useState(today.toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState(today.toISOString().split('T')[0]);
 
   const fetchAuditRecords = async () => {
@@ -29,10 +31,14 @@ const ProcessAudit = ({ portfolioCodes }) => {
   };
 
   useEffect(() => {
-    if (portfolioCodes.length) {
+    fetchAuditRecords();
+  }, [portfolioCodes, startDate, endDate]);
+
+  useEffect(() => {
+    if (!processRunning && portfolioCodes.length) {
       fetchAuditRecords();
     }
-  }, [portfolioCodes, startDate, endDate]);
+  }, [processRunning]);
 
   const handleExportCSV = () => {
     const header = ['Portfolio', 'Process', 'Date', 'Status', 'Run At', 'Message'];

@@ -45,7 +45,9 @@
     border: 2px solid #ddd; /* Optional border for styling */
 }
 
-.icon-button {
+.user-button {
+    width: 46px;
+    height: 46px;
     background: none;
     border: none;
     cursor: pointer;

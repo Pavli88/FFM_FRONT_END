@@ -58,10 +58,11 @@ const Navbar = () => {
                 searchType={searchType}
                 setSearchType={setSearchType}
             />
-            <div className="nav-notifications">
+            <div style={{display: "flex"}}>
                 <Notifications server={server} />
+                <UserMenu dropdownRef={dropdownRef} dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen} userLogout={userLogout} />
             </div>
-            <UserMenu dropdownRef={dropdownRef} dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen} userLogout={userLogout} />
+
         </div>
     );
 };

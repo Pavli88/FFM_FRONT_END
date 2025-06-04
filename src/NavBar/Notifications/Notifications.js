@@ -1,100 +1,95 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useRef, useContext} from "react";
 import axios from "axios";
-import {store} from "react-notifications-component";
-import { BsGraphDown, BsBell, BsCpu, BsExclamationTriangle} from 'react-icons/bs';
+import NotificationDropdown from "./NotificationDropDown/NotificationDropDown";
+import {
+  BsExclamationTriangleFill,
+  BsCpuFill,
+  BsBellFill
+} from 'react-icons/bs';
+import './Notifications.css'
+import WsContext from "../../context/ws-context";
 
-const Notifications = (props) => {
-    const startDate = new Date().toISOString().substr(0,10);
-    const [date, setDate] = useState(startDate)
-    const [messages, setMessages] = useState([]);
-    const [riskNotifications, setRiskNotifications] = useState([])
-    const [processNotifications, setProcessNotifications] = useState([])
-    const tradeMessages = []
-    const processMessages = []
+const Notifications = ({ server }) => {
+  const { processNotifications } = useContext(WsContext);
+  const [messages, setMessages] = useState([{
+    id: 123,
+    msg_type: 'Process',         // <- EZ az, amit figyelsz
+    msg_sub_type: 'Completed',
+    msg: 'Valuation calculation finished.',
+    timestamp: '2025-06-02T12:34:56Z'
+  }]);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const wrapperRef = useRef();
 
-    messages.forEach(function (item) {
-        if (item['msg_type'] === 'Process') {
-            processMessages.push(item)
-        }
-        if (item['msg_type'] === 'Trade') {
-            tradeMessages.push(item)
-        }
-    })
+  const riskNotifications = messages.filter(m => m.msg_type === 'Risk');
+  // const processNotifications = processNotifications.filter(m => m.msg_type === 'Process');
+  const tradeMessages = messages.filter(m => m.msg_type === 'Trade');
 
+  const toggleDropdown = (type) => {
+    setActiveDropdown(prev => (prev === type ? null : type));
+  };
 
-    // WS connection to handle websockets
-    // useEffect(() => {
-    //     const socket = new WebSocket('ws://127.0.0.1:8000/ws/notifications/');
-    //
-    //         socket.onmessage = function (event) {
-    //             const data = JSON.parse(event.data);
-    //             setMessages((prevMessages) => [...prevMessages, data.message]);
-    //         };
-    //
-    //         socket.onclose = function (e) {
-    //             console.error('WebSocket closed unexpectedly');
-    //         };
-    //
-    //         return () => socket.close();
-    // }, [])
+  const removeMsg = (msgId) => {
+    axios.get(`${server}home/verify_sys_msg/${msgId}`)
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err));
+  };
 
-    const removeMsg = (msg) => {
-        axios.get(props.server + 'home/verify_sys_msg/' + msg)
-            .then(response => console.log(response['data']))
-            .catch((error) => {
-                console.error('Error Message:', error);
-            });
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setActiveDropdown(null);
+      }
     };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-    const procNotHandler = () => {
-        processMessages.forEach(function (item) {
-            store.addNotification({
-                title: item['msg_type'] + ' - ' + item['msg_sub_type'],
-                message: item['msg'],
-                type: "success",
-                insert: "top",
-                container: "top-right",
-                animationIn: ["animate__animated", "animate__fadeIn"],
-                animationOut: ["animate__animated", "animate__fadeOut"],
-                onRemoval: () => {
-                    removeMsg(item['id']);
-                }
-            })
-        })
-    };
+  return (
+    <div className="notifications-wrapper" ref={wrapperRef}>
+      <button className="notification-button" onClick={() => toggleDropdown('risk')}>
+        <BsExclamationTriangleFill className="notification-icon" />
+        {riskNotifications.length > 0 && (
+          <span className="notification-badge">{riskNotifications.length}</span>
+        )}
+      </button>
+      {activeDropdown === 'risk' && (
+        <NotificationDropdown
+          title="Risk Notifications"
+          items={riskNotifications}
+          emptyText="No risk alerts"
+        />
+      )}
 
-    return (
-        <div style={{display: "flex", marginRight: 15}}>
-            <div className="notification-container">
-                <button className="notification-button" onClick="toggleNotifications()">
-                    <span className="notification-icon"><BsExclamationTriangle/></span>
-                    <span className="notification-badge"
-                          id="notification-badge">{riskNotifications.length}</span>
-                </button>
-            </div>
-            <div className="notification-container">
-                <button className="notification-button" onClick="toggleNotifications()">
-                    <span className="notification-icon"><BsGraphDown/></span>
-                    <span className="notification-badge"
-                          id="notification-badge">34</span>
-                </button>
-            </div>
-            <div className="notification-container">
-                <button className="notification-button" onClick="toggleNotifications()">
-                    <span className="notification-icon"><BsCpu/></span>
-                    <span className="notification-badge"
-                          id="notification-badge">{processNotifications.length}</span>
-                </button>
-            </div>
-            <div className="notification-container">
-                <button className="notification-button" onClick="toggleNotifications()">
-                    <span className="notification-icon"><BsBell/></span>
-                    <span className="notification-badge"
-                          id="notification-badge">3</span>
-                </button>
-            </div>
-        </div>
-    );
+      <button className="notification-button" onClick={() => toggleDropdown('process')}>
+        <BsCpuFill className="notification-icon" />
+        {processNotifications.length > 0 && (
+          <span className="notification-badge">{processNotifications.length}</span>
+        )}
+      </button>
+      {activeDropdown === 'process' && (
+        <NotificationDropdown
+          title="Process Notifications"
+          items={processNotifications}
+          emptyText="No process alerts"
+        />
+      )}
+
+      <button className="notification-button" onClick={() => toggleDropdown('general')}>
+        <BsBellFill className="notification-icon" />
+        {messages.length > 0 && (
+          <span className="notification-badge">{messages.length}</span>
+        )}
+      </button>
+      {activeDropdown === 'general' && (
+        <NotificationDropdown
+          title="All Notifications"
+          items={messages}
+          emptyText="No notifications"
+        />
+      )}
+    </div>
+  );
 };
 
 export default Notifications
