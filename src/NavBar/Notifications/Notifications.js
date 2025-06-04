@@ -10,20 +10,10 @@ import './Notifications.css'
 import WsContext from "../../context/ws-context";
 
 const Notifications = ({ server }) => {
-  const { processNotifications } = useContext(WsContext);
-  const [messages, setMessages] = useState([{
-    id: 123,
-    msg_type: 'Process',         // <- EZ az, amit figyelsz
-    msg_sub_type: 'Completed',
-    msg: 'Valuation calculation finished.',
-    timestamp: '2025-06-02T12:34:56Z'
-  }]);
+  const { processNotifications, errorNotifications } = useContext(WsContext);
+
   const [activeDropdown, setActiveDropdown] = useState(null);
   const wrapperRef = useRef();
-
-  const riskNotifications = messages.filter(m => m.msg_type === 'Risk');
-  // const processNotifications = processNotifications.filter(m => m.msg_type === 'Process');
-  const tradeMessages = messages.filter(m => m.msg_type === 'Trade');
 
   const toggleDropdown = (type) => {
     setActiveDropdown(prev => (prev === type ? null : type));
@@ -47,17 +37,18 @@ const Notifications = ({ server }) => {
 
   return (
     <div className="notifications-wrapper" ref={wrapperRef}>
-      <button className="notification-button" onClick={() => toggleDropdown('risk')}>
+
+      <button className="notification-button" onClick={() => toggleDropdown('error')}>
         <BsExclamationTriangleFill className="notification-icon" />
-        {riskNotifications.length > 0 && (
-          <span className="notification-badge">{riskNotifications.length}</span>
+        {errorNotifications.length > 0 && (
+          <span className="notification-badge">{errorNotifications.length}</span>
         )}
       </button>
-      {activeDropdown === 'risk' && (
+      {activeDropdown === 'error' && (
         <NotificationDropdown
-          title="Risk Notifications"
-          items={riskNotifications}
-          emptyText="No risk alerts"
+          title="All Error Notifications"
+          items={errorNotifications}
+          emptyText="No notifications"
         />
       )}
 
@@ -77,17 +68,18 @@ const Notifications = ({ server }) => {
 
       <button className="notification-button" onClick={() => toggleDropdown('general')}>
         <BsBellFill className="notification-icon" />
-        {messages.length > 0 && (
-          <span className="notification-badge">{messages.length}</span>
+        {processNotifications.length > 0 && (
+          <span className="notification-badge">{processNotifications.length}</span>
         )}
       </button>
       {activeDropdown === 'general' && (
         <NotificationDropdown
           title="All Notifications"
-          items={messages}
+          items={processNotifications}
           emptyText="No notifications"
         />
       )}
+
     </div>
   );
 };

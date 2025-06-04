@@ -9,18 +9,21 @@ const NotificationDropdown = ({ title, items = [], emptyText = 'No notifications
       ) : (
         items.map((item, idx) => (
           <div key={idx} className="notification-item">
-            <div><strong>Portfolio:</strong> {item.portfolio_code}</div>
-            <div><strong>Process:</strong> {item.process}</div>
-            <div><strong>Status:</strong> {item.status}</div>
-            <div><strong>Exception:</strong> {item.exception}</div>
-            <div><strong>Comment:</strong> {item.comment}</div>
-            <div><strong>Date:</strong> {new Date(item.date).toLocaleDateString()}</div>
+            {Object.entries(item).map(([key, value]) => (
+              <div key={key}>
+                <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{' '}
+                {key.toLowerCase().includes('date') && value
+                  ? new Date(value).toLocaleString()
+                  : String(value)}
+              </div>
+            ))}
           </div>
         ))
       )}
     </div>
   );
 };
+
 
 
 export default NotificationDropdown;
