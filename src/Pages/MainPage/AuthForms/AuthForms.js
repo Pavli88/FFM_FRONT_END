@@ -1,277 +1,307 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./AuthForms.css";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { BsFacebook } from "react-icons/bs";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../../../context/AuthProvider";
 import { forgotPassword, login, registerUser } from "../../../endpoints/authservice";
 import InputField from "../../../components/InputField/InputField";
 import CustomModal from "../../../components/Modals/Modals";
 import { passwordPolicyText } from "../../../config files/constants";
+import { SocialButtonFacebookVariant1 } from "./icons/SocialButtonFacebookVariant1";
+import { SocialButtonAppleVariant1 } from "./icons/SocialButtonAppleVariant1";
+import { SocialButtonFacebookVariant } from "./icons/SocialButtonFacebookVariant";
+import { SocialButtonAppleVariant } from "./icons/SocialButtonAppleVariant";
+import { AuthButton } from "./AuthButton/AuthButton";
+import { LoginAsVariant } from "./LoginAsVariant/LoginAsVariant";
 import Tooltip from "../../../components/Tooltips/Tooltip";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const AuthForms = ({ onClose, show, initialForm = "login" }) => {
-    const [showSignup, setShowSignup] = useState(initialForm === "signup");
-    const [showPassword, setShowPassword] = useState(false);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [errors, setErrors] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [showForgotPassword, setShowForgotPassword] = useState(false);
-    const [email, setEmail] = useState("");
-    const [resetMessage, setResetMessage] = useState("");
-    const history = useHistory();
+  const [showSignup, setShowSignup] = useState(initialForm === "signup");
+  const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [resetMessage, setResetMessage] = useState("");
+  const history = useHistory();
+  const { setAuth } = useContext(AuthContext);
 
-    const { setAuth } = useContext(AuthContext);
+  const clearFormErrors = () => {
+    setError("");
+    setErrors({});
+    setResetMessage("");
+  };
 
-    useEffect(() => {
-        setShowSignup(initialForm === "signup");
-    }, [initialForm]);
+  const resetFormFields = () => {
+    setUsername("");
+    setPassword("");
+    setEmail("");
+  };
 
-    const handleRegister = async (e) => {
-        setErrors({});
-        const response = await registerUser(username, email, password);
-        if (!response.success) {
-            setErrors(response.errors);
-            return;
-        }
+  const handleClose = () => {
+    resetFormFields();
+    clearFormErrors();
+    onClose();
+  };
 
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        alert("Registration successful!");
-        setShowSignup(false);
-    };
+  useEffect(() => {
+    if (show) {
+      setShowSignup(initialForm === "signup");
+      clearFormErrors();
+      resetFormFields();
+    }
+  }, [show, initialForm]);
 
-    const handleLogin = async () => {
-        setError("");
-        setLoading(true);
-        try {
-            await login(username, password);
-            alert("Login successful!");
-            setAuth({ userAllowedToLogin: true });
-            onClose();
-            history.push("/");
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+  useEffect(() => {
+    clearFormErrors();
+  }, [showSignup, showForgotPassword]);
 
-    const handleForgotPassword = async () => {
-        setResetMessage("");
-        setError("");
-        setLoading(true);
-        try {
-            const response = await forgotPassword(email);
-            setResetMessage(response);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+  const handleRegister = async () => {
+    setErrors({});
+    const response = await registerUser(username, email, password);
+    if (!response.success) {
+      setErrors(response.errors);
+      return;
+    }
+    resetFormFields();
+    // 🔔 Replace with toast: toast.success("Registration successful!");
+    alert("Registration successful!");
+    setShowSignup(false);
+  };
 
-    const forgotPasswordForm = (
-        <div>
-            <InputField
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => {
-                    setEmail(e.target.value);
-                    setError("");
-                    setResetMessage("");
+  const handleLogin = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await login(username, password);
+      // 🔔 Replace with toast: toast.success("Login successful!");
+      alert("Login successful!");
+      setAuth({ userAllowedToLogin: true });
+      handleClose();
+      history.push("/");
+    } catch (err) {
+      setError(err?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    setResetMessage("");
+    setError("");
+    setLoading(true);
+    try {
+      const response = await forgotPassword(email);
+      setResetMessage(response);
+    } catch (err) {
+      setError(err?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const forgotPasswordForm = (
+    <CustomModal show={show} onClose={handleClose} title={<h2>Reset Password</h2>}>
+      <InputField
+        id="email"
+        type="email"
+        value={email}
+        onChange={(e) => {
+          setEmail(e.target.value);
+          setError("");
+          setResetMessage("");
+        }}
+        placeholder="Enter your email"
+        label="Enter your email"
+        required
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+      />
+      <div className="button-group">
+        <button onClick={handleForgotPassword}>
+          {loading ? "Sending..." : "Send Reset Link"}
+        </button>
+        <button onClick={() => {
+          setShowForgotPassword(false);
+          clearFormErrors();
+        }}>
+          Back to Login
+        </button>
+      </div>
+      {resetMessage && <p className="success-message">{resetMessage}</p>}
+      {error && <p className="error-message">{error}</p>}
+    </CustomModal>
+  );
+
+  const authFormLayout = (formType) => (
+    <div className="auth-wrapper">
+      <img className="auth-logo" alt="Logo" src="sign_in/img/logo-1.png" />
+
+      <div
+        onClick={handleClose}
+        className="auth-background"
+        style={{ backgroundImage: `url("/sign_in/img/background-1.png")` }}
+      ></div>
+
+      {!showSignup && !showForgotPassword && (
+        <div className="login-as-positioned">
+          <LoginAsVariant />
+        </div>
+      )}
+
+      <div className="auth-container">
+        <div className="auth-box">
+          <div className="auth-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <p className="auth-title" style={{ margin: 0 }}>
+              <span className="auth-span">
+                {formType === "login" ? "Welcome to " : "Join "}
+              </span>
+              <span className="auth-highlight">Fractal Portfolios</span>
+            </p>
+            <p className="auth-switch" style={{ margin: 0, textAlign: "right" }}>
+              <span className="auth-muted">
+                {formType === "login" ? "No account?\n" : "Already have an account?\n"}
+              </span>
+              <span
+                className="auth-link"
+                onClick={() => {
+                  setShowSignup(formType === "login");
+                  resetFormFields();
+                  clearFormErrors();
                 }}
-                placeholder="Enter your email"
-                label="Enter your email"
-                required
-            />
-            <div className="button-group">
-                <button onClick={handleForgotPassword} disabled={loading}>
-                    {loading ? "Sending..." : "Send Reset Link"}
-                </button>
-                <button onClick={() => {
-                    setShowForgotPassword(false);
+              >
+                {formType === "login" ? "Sign up" : "Sign in"}
+              </span>
+            </p>
+          </div>
+
+          <div className="auth-form-title">
+            {formType === "login" ? "Sign In" : "Sign Up"}
+          </div>
+
+          <div className="auth-form-content">
+            <div className="auth-input-group">
+              <label className="auth-label">
+                {formType === "login" ? "Enter your username" : "Choose a username"}
+              </label>
+              <div className="auth-input-wrapper">
+                <InputField
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
                     setError("");
-                    setResetMessage("");
-                }}>
-                    Back to Login
-                </button>
-            </div>
-            {resetMessage && <p className="success-message">{resetMessage}</p>}
-            {error && <p className="error-message">{error}</p>}
-        </div>
-    );
-
-    const loginForm = (
-        <div className="form-content">
-
-            <div className="field input-field">
-                <InputField
-                    id="username"
-                    type="text"
-                    value={username}
-                    onChange={(e) => {
-                        setUsername(e.target.value);
-                        setError("");
-                    }}
-                    placeholder="Enter username"
-                    required
+                    setErrors({});
+                  }}
+                  placeholder="Enter username"
+                  required
                 />
+              </div>
             </div>
-            <div className="field input-field">
-                <InputField
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
+
+            {formType === "signup" && (
+              <div className="auth-input-group">
+                <label className="auth-label">Enter your email</label>
+                <div className="auth-input-wrapper">
+                  <InputField
+                    id="email"
+                    type="email"
+                    value={email}
                     onChange={(e) => {
-                        setPassword(e.target.value);
-                        setError("");
+                      setEmail(e.target.value);
+                      setErrors({});
                     }}
-                    placeholder="Enter password"
+                    placeholder="Enter email"
                     required
-                />
-                <i onClick={() => setShowPassword(!showPassword)} className="eye-icon">
-                    {showPassword ? <FaEyeSlash/> : <FaEye/>}
-                </i>
-            </div>
-            <div className="form-link">
-                <a
-                    href="#"
-                    className="forgot-pass"
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setShowForgotPassword(true);
-                        setError("");
-                        setResetMessage("");
-                    }}
-                >
-                    Forgot password?
-                </a>
-            </div>
-            <div className="field button-field">
-                <button onClick={handleLogin} disabled={loading}>
-                    {loading ? "Logging in..." : "Login"}
-                </button>
-            </div>
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                  />
+                </div>
+              </div>
+            )}
 
-            {error && <p className="error-message">{error}</p>}
-            <div className="form-link">
-                <span>
-                    Don't have an account?
-                    <a onClick={(e) => {
-                        setShowSignup(true);
-                        setError("");
-                        setResetMessage("");
-                    }} className="link signup-link"> Signup</a>
-                </span>
-            </div>
-        </div>
-    );
-
-    const signupForm = (
-        <div className="form signup">
-            <div className="form-content">
-                <div className="field input-field">
-                    <InputField
-                        id="username"
-                        type="text"
-                        value={username}
-                        onChange={(e) => {
-                            setUsername(e.target.value);
-                            setErrors({});
-                        }}
-                        placeholder="Enter username"
-                        required
-                    />
-                </div>
-                <div className="field input-field">
-                    <InputField
-                        id="email"
-                        type="text"
-                        value={email}
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                            setErrors({});
-                        }}
-                        placeholder="Enter email"
-                        required
-                    />
-                </div>
-                <div className="field input-field password-tooltip-container">
-                    <InputField
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            setErrors({});
-                        }}
-                        placeholder="Enter password"
-                    />
-                    <Tooltip text={passwordPolicyText}/>
-                </div>
-                <div className="field button-field" >
-                    <button onClick={handleRegister}>Signup</button>
-                </div>
-                {errors.general && (
-                    <p className="error-message">{errors.general}</p>
-                )}
-
-                <div className="form-link">
-                    <span>
-                        Already have an account?
-                        <a onClick={(e) => {
-                            setShowSignup(false);
-                            setErrors({});
-                            setResetMessage("");
-                        }} className="link login-link"> Login</a>
-                    </span>
-                </div>
-            </div>
-            <div className="line"></div>
-            <div className="media-options">
-                <a href="#" className="field facebook">
-                    <BsFacebook className="facebook-icon"/>
-                    <span>Login with Facebook</span>
-                </a>
-            </div>
-        </div>
-    );
-
-    return (
-        <CustomModal
-            show={show}
-            onClose={onClose}
-            title={
-                <h2 className="modal-title">
-                    {showForgotPassword ? "Reset Password" : showSignup ? "Signup" : "Login"}
-                </h2>
-            }
-        >
-            <section className={`container forms ${showSignup ? "show-signup" : ""}`}>
-                {showForgotPassword ? (
-                    forgotPasswordForm
-                ) : showSignup ? (
-                    signupForm
-                ) : (
-                    <div className="form login">
-                        {loginForm}
-                        <div className="line"></div>
-                        <div className="media-options">
-                            <a href="#" className="field facebook">
-                                <BsFacebook className="facebook-icon" />
-                                <span>Login with Facebook</span>
-                            </a>
-                        </div>
+            <div className="auth-input-group">
+              <div className="auth-label-with-tooltip">
+                <label className="auth-label">
+                  {formType === "login" ? "Enter your password" : "Create a password"}
+                </label>
+                {formType === "signup" && (
+                    <div className="tooltip-inline-icon">
+                      <Tooltip text={passwordPolicyText}/>
                     </div>
                 )}
-            </section>
-        </CustomModal>
-    );
+              </div>
+              <div className="auth-password-wrapper">
+                <InputField
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError("");
+                    setErrors({});
+                  }}
+                  placeholder="Enter password"
+                  required
+                />
+                <i onClick={() => setShowPassword(!showPassword)} className="eye-icon">
+                  {showPassword ? <FaEyeSlash/> : <FaEye/>}
+                </i>
+              </div>
+            </div>
+
+            {formType === "login" && (
+              <div style={{ textAlign: "right", marginBottom: "8px" }}>
+                <button
+                  className="auth-link"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowForgotPassword(true);
+                    clearFormErrors();
+                  }}
+                >
+                  Forgot password?
+                </button>
+              </div>
+            )}
+
+            <div className="auth-social-wrapper">
+              <button className="auth-social" style={{ backgroundColor: "#fff", border: "1px solid #000" }}>
+                <img className="social-icon" alt="Google icon" src="sign_in/img/social-icon-1.svg" />
+                <span className="social-text" style={{ color: "#000" }}>
+                  {formType === "login" ? "Sign in with Google" : "Sign up with Google"}
+                </span>
+              </button>
+              <div className="auth-social-icon">
+                {formType === "login" ? <SocialButtonFacebookVariant1 /> : <SocialButtonFacebookVariant />}
+              </div>
+              <div className="auth-social-icon">
+                {formType === "login" ? <SocialButtonAppleVariant1 /> : <SocialButtonAppleVariant />}
+              </div>
+            </div>
+
+            <AuthButton
+              className="auth-submit-button"
+              handleLogin={formType === "login" ? handleLogin : handleRegister}
+              loading={loading}
+              error={formType === "login" ? error : errors.general}
+              label={formType === "login" ? "Sign In" : "Sign Up"}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return show ? (
+    <div className="modal-backdrop" onClick={handleClose}>
+      <div className="login-modal" onClick={(e) => e.stopPropagation()}>
+        {showForgotPassword ? forgotPasswordForm : authFormLayout(showSignup ? "signup" : "login")}
+      </div>
+    </div>
+  ) : null;
 };
 
 export default AuthForms;

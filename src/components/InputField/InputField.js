@@ -20,7 +20,7 @@ const InputField = ({
                         horizontal = false
                     }) => {
     return (
-        <div className={horizontal ? "input-group-horizontal" : "input-group"}>
+        <div className={`${horizontal ? "input-group-horizontal" : "input-group"}`}>
             {label && (
                 <div className="label-container">
                     <label htmlFor={id}>{label}</label>

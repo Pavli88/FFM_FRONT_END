@@ -37,25 +37,22 @@ export const login = async (username, password) => {
         let message = "Login failed";
 
         if (error.response && error.response.data && error.response.data.code === "token_not_valid") {
-            // // If the token is expired or invalid, try to refresh the token
             try {
-                const newAccessToken = await refreshToken(); // Call refreshToken to get a new access token
-                // Optionally, you can store the new access token here (e.g., in cookies or localStorage)
-                // After getting the new token, retry the login or proceed with the session
+                const newAccessToken = await refreshToken();
                 return { access_token: newAccessToken };
             } catch (refreshError) {
-                // Handle error when refresh token fails (e.g., session expired, user needs to log in again)
-                throw "Session expired. Please login again.";
+                throw new Error("Session expired. Please login again.");
             }
-            console.log('EXPIRED TOKEN')
         }
 
         if (error.response && error.response.data) {
             message = error.response.data.detail || "Something went wrong";
         }
-        throw message;
+
+        throw new Error(message); // ✅ Always throw an Error object
     }
 };
+
 
 //Forgot password function
 export const forgotPassword = async (email) => {
@@ -150,8 +147,8 @@ export const logout = async () => {
 // Refresh token if access token expires
 export const refreshToken = async () => {
     try {
-        const response = await fetchAPI.post('token/refresh/');
-        return response.data.access;
+        await fetchAPI.post('token/refresh/');
+        return true;
     } catch (error) {
         console.error("Refresh token invalid or expired:", error.response?.data || error.message);
         await logout();

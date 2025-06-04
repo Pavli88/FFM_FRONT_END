@@ -1,0 +1,37 @@
+.sign-in-button {
+  border-radius: 10px;
+  box-shadow: 0px 4px 19px #7793414c;
+  height: 54px;
+  position: relative;
+  width: 451px;
+}
+
+/* scoped gomb */
+.sign-in-button button {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #f1f1f1;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: "Inter", Helvetica;
+  cursor: pointer;
+  background-color: #0e1d32;
+  color: #ffffff;
+  padding: 5px;
+}
+
+.sign-in-button button:hover {
+  background: linear-gradient(90deg, #204373 0%, #0E1D32 50%, #2B5898 100%);
+  color: #ffffff;
+  border: 1px solid #494f54;
+}
+
+.sign-in-button button:disabled {
+  background: #204373;
+  cursor: not-allowed;
+}
+
+.errors {
+  display: flex;
+  justify-content: center;
+}

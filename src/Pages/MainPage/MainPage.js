@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import ResetPassword from "./ResetPassword";
-import AuthForms from "./AuthForms/AuthForms";
 import LandingPage from "../LandingPage/LandingPage";
+import AuthForms from "./AuthForms/AuthForms";
 
 const MainPage = (props) => {
     const [showModal, setShowModal] = useState(false);
@@ -33,8 +33,7 @@ const MainPage = (props) => {
                 </div>
 
             </div>
-            <LandingPage/>
-
+            {/*<LandingPage/>*/}
             <Switch>
                 <Route path="/reset_password/:reset_token">
                     <ResetPassword />
