@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import ResetPassword from "./ResetPassword";
 import LandingPage from "../LandingPage/LandingPage";
 import AuthForms from "./AuthForms/AuthForms";
+import LoginPage from "./LoginPage/LoginPage";
+import SignUpPage from "./SignUpPage/SignUpPage";
+
 
 const MainPage = (props) => {
     const [showModal, setShowModal] = useState(false);
@@ -30,13 +33,24 @@ const MainPage = (props) => {
                             Sign In
                         </button>
                     </div>
+
                 </div>
 
             </div>
             {/*<LandingPage/>*/}
             <Switch>
+                <Route exact path="/">
+                    <LoginPage />
+                    {/*<LandingPage />*/}
+                </Route>
                 <Route path="/reset_password/:reset_token">
                     <ResetPassword />
+                </Route>
+                <Route path="/login/">
+                    <LoginPage />
+                </Route>
+                <Route path="/sign_up/">
+                    <SignUpPage/>
                 </Route>
             </Switch>
             <AuthForms
