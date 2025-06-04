@@ -1,4 +1,4 @@
-import {useEffect, useState, useRef} from "react";
+import {useEffect, useState, useRef, useContext} from "react";
 import axios from "axios";
 import NotificationDropdown from "./NotificationDropDown/NotificationDropDown";
 import {
@@ -7,8 +7,10 @@ import {
   BsBellFill
 } from 'react-icons/bs';
 import './Notifications.css'
+import WsContext from "../../context/ws-context";
 
 const Notifications = ({ server }) => {
+  const { processNotifications } = useContext(WsContext);
   const [messages, setMessages] = useState([{
     id: 123,
     msg_type: 'Process',         // <- EZ az, amit figyelsz
@@ -20,7 +22,7 @@ const Notifications = ({ server }) => {
   const wrapperRef = useRef();
 
   const riskNotifications = messages.filter(m => m.msg_type === 'Risk');
-  const processNotifications = messages.filter(m => m.msg_type === 'Process');
+  // const processNotifications = processNotifications.filter(m => m.msg_type === 'Process');
   const tradeMessages = messages.filter(m => m.msg_type === 'Trade');
 
   const toggleDropdown = (type) => {

@@ -2,7 +2,9 @@
   position: absolute;
   top: 74px;
   right: 0;
-  width: 260px;
+  width: 360px;
+  max-height: 600px;
+  overflow-y: auto;
   background-color: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -18,9 +20,15 @@
 }
 
 .notification-item {
-  font-size: 13px;
-  padding: 6px 0;
-  border-bottom: 1px solid #eee;
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+.notification-item div {
+  font-size: 0.9rem;
+  margin-bottom: 2px;
 }
 
 .notification-item:last-child {

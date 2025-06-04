@@ -7,7 +7,8 @@ export const WsProvider = ({ children }) => {
     const [lastMessage, setLastMessage] = useState(null);
     const [socket, setSocket] = useState(null);
     const [processRunning, setProcessRunning] = useState(false);
-
+    const [processNotifications, setProcessNotifications] = useState([]);
+    console.log(processNotifications)
     useEffect(() => {
         const ws = new WebSocket(process.env.REACT_APP_WS_URL + "connection/");
         setSocket(ws);
@@ -35,6 +36,10 @@ export const WsProvider = ({ children }) => {
                 case "trade.confirmed":
                     console.log("💸 Trade confirmed!");
                     break;
+                case "process.notification":
+                    // console.log(payload);
+                    setProcessNotifications((prev) => [...prev, ...payload.exceptions])
+                    break;
                 default:
                     console.warn("Unknown WS message type:", type);
             }
@@ -53,7 +58,14 @@ export const WsProvider = ({ children }) => {
     }, []);
 
     return (
-        <WsContext.Provider value={{ wsConnection, socket, lastMessage, processRunning, setProcessRunning}}>
+        <WsContext.Provider value={{
+            wsConnection,
+            socket,
+            lastMessage,
+            processRunning,
+            setProcessRunning,
+            processNotifications
+        }}>
             {children}
         </WsContext.Provider>
     );
