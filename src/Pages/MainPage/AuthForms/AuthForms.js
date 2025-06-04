@@ -12,6 +12,8 @@ import { SocialButtonFacebookVariant } from "./icons/SocialButtonFacebookVariant
 import { SocialButtonAppleVariant } from "./icons/SocialButtonAppleVariant";
 import { AuthButton } from "./AuthButton/AuthButton";
 import { LoginAsVariant } from "./LoginAsVariant/LoginAsVariant";
+import Tooltip from "../../../components/Tooltips/Tooltip";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const AuthForms = ({ onClose, show, initialForm = "login" }) => {
   const [showSignup, setShowSignup] = useState(initialForm === "signup");
@@ -33,10 +35,23 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
     setResetMessage("");
   };
 
+  const resetFormFields = () => {
+    setUsername("");
+    setPassword("");
+    setEmail("");
+  };
+
+  const handleClose = () => {
+    resetFormFields();
+    clearFormErrors();
+    onClose();
+  };
+
   useEffect(() => {
     if (show) {
       setShowSignup(initialForm === "signup");
       clearFormErrors();
+      resetFormFields();
     }
   }, [show, initialForm]);
 
@@ -51,9 +66,8 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
       setErrors(response.errors);
       return;
     }
-    setUsername("");
-    setEmail("");
-    setPassword("");
+    resetFormFields();
+    // 🔔 Replace with toast: toast.success("Registration successful!");
     alert("Registration successful!");
     setShowSignup(false);
   };
@@ -63,9 +77,10 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
     setLoading(true);
     try {
       await login(username, password);
+      // 🔔 Replace with toast: toast.success("Login successful!");
       alert("Login successful!");
       setAuth({ userAllowedToLogin: true });
-      onClose();
+      handleClose();
       history.push("/");
     } catch (err) {
       setError(err?.message || "Login failed");
@@ -89,7 +104,7 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
   };
 
   const forgotPasswordForm = (
-    <CustomModal show={show} onClose={onClose} title={<h2>Reset Password</h2>}>
+    <CustomModal show={show} onClose={handleClose} title={<h2>Reset Password</h2>}>
       <InputField
         id="email"
         type="email"
@@ -102,17 +117,16 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
         placeholder="Enter your email"
         label="Enter your email"
         required
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
       />
       <div className="button-group">
         <button onClick={handleForgotPassword}>
           {loading ? "Sending..." : "Send Reset Link"}
         </button>
-        <button
-          onClick={() => {
-            setShowForgotPassword(false);
-            clearFormErrors();
-          }}
-        >
+        <button onClick={() => {
+          setShowForgotPassword(false);
+          clearFormErrors();
+        }}>
           Back to Login
         </button>
       </div>
@@ -126,14 +140,11 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
       <img className="auth-logo" alt="Logo" src="sign_in/img/logo-1.png" />
 
       <div
-        onClick={onClose}
+        onClick={handleClose}
         className="auth-background"
-        style={{
-          backgroundImage: `url("/sign_in/img/background-1.png")`,
-        }}
+        style={{ backgroundImage: `url("/sign_in/img/background-1.png")` }}
       ></div>
 
-      {/* 🔥 Csak login nézetben jelenik meg */}
       {!showSignup && !showForgotPassword && (
         <div className="login-as-positioned">
           <LoginAsVariant />
@@ -142,7 +153,6 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
 
       <div className="auth-container">
         <div className="auth-box">
-          {/* 🔽 Tartalom változatlan */}
           <div className="auth-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <p className="auth-title" style={{ margin: 0 }}>
               <span className="auth-span">
@@ -158,6 +168,7 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
                 className="auth-link"
                 onClick={() => {
                   setShowSignup(formType === "login");
+                  resetFormFields();
                   clearFormErrors();
                 }}
               >
@@ -205,16 +216,24 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
                     }}
                     placeholder="Enter email"
                     required
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   />
                 </div>
               </div>
             )}
 
             <div className="auth-input-group">
-              <label className="auth-label">
-                {formType === "login" ? "Enter your password" : "Create a password"}
-              </label>
-              <div className="auth-input-wrapper">
+              <div className="auth-label-with-tooltip">
+                <label className="auth-label">
+                  {formType === "login" ? "Enter your password" : "Create a password"}
+                </label>
+                {formType === "signup" && (
+                    <div className="tooltip-inline-icon">
+                      <Tooltip text={passwordPolicyText}/>
+                    </div>
+                )}
+              </div>
+              <div className="auth-password-wrapper">
                 <InputField
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -225,16 +244,17 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
                     setErrors({});
                   }}
                   placeholder="Enter password"
-                  tooltipText={formType === "signup" ? passwordPolicyText : undefined}
                   required
                 />
+                <i onClick={() => setShowPassword(!showPassword)} className="eye-icon">
+                  {showPassword ? <FaEyeSlash/> : <FaEye/>}
+                </i>
               </div>
             </div>
 
             {formType === "login" && (
               <div style={{ textAlign: "right", marginBottom: "8px" }}>
-                <a
-                  href="#"
+                <button
                   className="auth-link"
                   onClick={(e) => {
                     e.preventDefault();
@@ -243,15 +263,12 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
                   }}
                 >
                   Forgot password?
-                </a>
+                </button>
               </div>
             )}
 
             <div className="auth-social-wrapper">
-              <button
-                className="auth-social"
-                style={{ backgroundColor: "#fff", border: "1px solid #000" }}
-              >
+              <button className="auth-social" style={{ backgroundColor: "#fff", border: "1px solid #000" }}>
                 <img className="social-icon" alt="Google icon" src="sign_in/img/social-icon-1.svg" />
                 <span className="social-text" style={{ color: "#000" }}>
                   {formType === "login" ? "Sign in with Google" : "Sign up with Google"}
@@ -279,11 +296,9 @@ const AuthForms = ({ onClose, show, initialForm = "login" }) => {
   );
 
   return show ? (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-backdrop" onClick={handleClose}>
       <div className="login-modal" onClick={(e) => e.stopPropagation()}>
-        {showForgotPassword
-          ? forgotPasswordForm
-          : authFormLayout(showSignup ? "signup" : "login")}
+        {showForgotPassword ? forgotPasswordForm : authFormLayout(showSignup ? "signup" : "login")}
       </div>
     </div>
   ) : null;

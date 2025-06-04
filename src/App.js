@@ -12,7 +12,7 @@ function App(props) {
 
     useEffect(() => {
         initializeAuth(setAuth);
-    }, [setAuth]);
+    }, []);
 
     if (!auth.userAllowedToLogin) {
         return <MainPage server={props.server}/>

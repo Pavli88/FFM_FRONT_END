@@ -147,8 +147,8 @@ export const logout = async () => {
 // Refresh token if access token expires
 export const refreshToken = async () => {
     try {
-        const response = await fetchAPI.post('token/refresh/');
-        return response.data.access;
+        await fetchAPI.post('token/refresh/');
+        return true;
     } catch (error) {
         console.error("Refresh token invalid or expired:", error.response?.data || error.message);
         await logout();
