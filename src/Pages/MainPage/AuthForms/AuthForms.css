@@ -126,6 +126,7 @@
   background-color: #0e1d32;
   color: #ffffff;
   width: 150px;
+  margin-top: 2px; /* vagy amennyire kell */
 }
 
 .auth-link:hover {

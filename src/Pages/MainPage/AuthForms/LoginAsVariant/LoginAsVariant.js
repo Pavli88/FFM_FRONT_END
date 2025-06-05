@@ -8,7 +8,7 @@ export const LoginAsVariant = ({ className }) => {
 
       <div className="overlap-group-2">
         <div className="group">
-          <img className="ellipse" alt="Ellipse" src="sign_in/img/ellipse-3-3.svg" />
+          <img className="ellipse" alt="Ellipse" src="/sign_in/img/ellipse-3-3.svg" />
 
           <div className="group-2">
             <div className="text-wrapper-3">Username</div>

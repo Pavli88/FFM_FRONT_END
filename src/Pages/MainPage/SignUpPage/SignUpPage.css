@@ -1,0 +1,9 @@
+.auth-error-message {
+  color: #d32f2f;
+  font-size: 0.9rem;
+  margin-top: 4px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
