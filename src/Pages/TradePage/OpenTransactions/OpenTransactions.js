@@ -102,10 +102,56 @@ const OpenTransactions = ({openTransactions}) => {
         () => [
             {Header: "Portfolio Code", accessor: "portfolio_code"},
             {Header: "Security", accessor: "name"},
-            {Header: "Security ID", accessor: "security_id"},
-            {Header: "Group", accessor: "sec_group"},
-            {Header: "Currency", accessor: "currency"},
             {
+                Header: "Quantity",
+                accessor: "quantity",
+                aggregate: "sum",
+                disableGroupBy: true,
+            },
+        {
+  Header: "Trade Price",
+  accessor: "price",
+  disableGroupBy: true,
+  aggregate: () => null, // ne számoljon aggregált értéket itt
+  Aggregated: ({ row }) => {
+    // Csak akkor számolunk, ha ez a csoport a "name" mezőre vonatkozik
+    if (row.groupByID !== "name" || !row.subRows?.length) return "-";
+
+    let totalQuantity = 0;
+    let weightedSum = 0;
+
+    row.subRows.forEach(sub => {
+      const original = sub.original;
+      if (!original) return;
+
+      const q = original.quantity ?? 0;
+      const p = original.price ?? 0;
+
+      totalQuantity += q;
+      weightedSum += q * p;
+    });
+
+    if (totalQuantity === 0) return "-";
+
+    const weightedAvg = weightedSum / totalQuantity;
+    return weightedAvg.toFixed(2);
+  },
+},
+             {
+                Header: "Market Value",
+                accessor: "mv",
+                aggregate: "sum",
+                disableGroupBy: true,
+                Cell: ({value}) => value.toFixed(2),
+            },
+            {
+                Header: "Margin",
+                accessor: "margin_balance",
+                aggregate: "sum",
+                disableGroupBy: true,
+                Cell: ({value}) => value.toFixed(2),
+            },
+             {
                 Header: "Tran Type",
                 accessor: "transaction_type",
                 Cell: ({value}) => (
@@ -127,31 +173,8 @@ const OpenTransactions = ({openTransactions}) => {
           </span>
                 ),
             },
-            {
-                Header: "Quantity",
-                accessor: "quantity",
-                aggregate: "sum",
-                disableGroupBy: true,
-            },
-            {
-                Header: "Trade Price",
-                accessor: "price",
-                disableGroupBy: true,
-            },
-            {
-                Header: "Market Value",
-                accessor: "mv",
-                aggregate: "sum",
-                disableGroupBy: true,
-                Cell: ({value}) => value.toFixed(2),
-            },
-            {
-                Header: "Margin",
-                accessor: "margin_balance",
-                aggregate: "sum",
-                disableGroupBy: true,
-                Cell: ({value}) => value.toFixed(2),
-            },
+            {Header: "Group", accessor: "sec_group"},
+            {Header: "Currency", accessor: "currency"},
             {Header: "Transaction ID", accessor: "id", disableGroupBy: true},
             {Header: "Account ID", accessor: "account_id", disableGroupBy: true},
             {Header: "Broker", accessor: "broker", disableGroupBy: true},
@@ -220,7 +243,7 @@ const OpenTransactions = ({openTransactions}) => {
                 </div>
 
                 <div className="grouping-controls">
-                    <label htmlFor="group-select" className="grouping-label">Group by:</label>
+                    <label htmlFor="group-select" className="grouping-label">Group by</label>
 
                     <select
                         id="group-select"
@@ -327,8 +350,17 @@ const OpenTransactions = ({openTransactions}) => {
                                 {row.cells.map((cell) => (
                                     <td
                                         {...cell.getCellProps()}
+                                        className={
+                                            row.depth > 0 &&
+                                            groupBy.length >= row.depth &&
+                                            cell.column.id === groupBy[row.depth - 1]
+                                                ? "tree-line-cell"
+                                                : ""
+                                        }
                                         style={{
                                             fontWeight: cell.isGrouped ? "bold" : "normal",
+                                            position: "relative",
+                                            paddingLeft: "20px", // Hely a vonalnak
                                         }}
                                     >
                                         {cell.isGrouped ? (

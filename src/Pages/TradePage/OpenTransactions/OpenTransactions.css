@@ -84,6 +84,38 @@
     width: 100px;
 }
 
+.tree-line-cell {
+  position: relative;
+  padding-left: 0;
+  text-indent: 20px;
+}
+
+/* Függőleges vonal: csak a közepéig (odáig, ahol a vízszintes csatlakozik) */
+.tree-line-cell::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 50%; /* csak a cella közepéig! */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background-color: #ccc;
+  z-index: 1;
+  border-left: 2px dotted #999;
+}
+
+/* Vízszintes vonal: a közepétől jobbra, pontozott */
+.tree-line-cell::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%);
+  width: calc(100% - 50% - 8px); /* jobbra indul a középponttól */
+  height: 0;
+  border-top: 2px dotted #999;
+  z-index: 0;
+}
 /*.clear-all-button:hover {*/
 /*  background-color: #f8f8f8;*/
 /*}*/

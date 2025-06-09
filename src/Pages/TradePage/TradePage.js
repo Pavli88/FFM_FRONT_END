@@ -1,28 +1,54 @@
 import TradeSignals from "./TradePageSignals/TradeSignals";
 import OpenTransactions from "./OpenTransactions/OpenTransactions";
 import React, {useEffect} from "react";
-import {useContext, useState} from "react";
-import ServerContext from "../../context/server-context";
+import {useContext, useState, useRef} from "react";
 import TradeContext from "./context/trade-context";
-import {BsChevronLeft, BsChevronRight} from "react-icons/bs";
 import PortfolioContext from "../../context/portfolio-context";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
 import TradeTerminal from "./TradeTerminal/TradeTerminal";
 import fetchAPI from "../../config files/api";
 import TradeOrders from "./TradePageOrders/TradeOrders";
+import './TradePage.css'
 
 const TradePage = () => {
-    const server = useContext(ServerContext)['server'];
     const portfolios = useContext(PortfolioContext).portfolios;
     const [openTransactionsData, setOpenTransactionsData] = useState([]);
     const [newTransactionID, setNewTransactionID] = useState(0);
     const [selectedPortfolioCode, setSelectedPortfolioCode] = useState(null);
     const [selectedSignal, setSelectedSignal] = useState(null);
-
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const MINUTE_MS = 10000;
-
     const allowedForTradePortfolios = portfolios.filter(data => data['trading_allowed'] === true)
+
+    const containerRef = useRef(null);
+
+    const [heightTop, setHeightTop] = useState(400);     // OpenTransactions
+    const [heightMiddle, setHeightMiddle] = useState(300); // TradeSignals
+
+    const isDraggingTop = useRef(false);
+    const isDraggingMiddle = useRef(false);
+
+    const handleMouseDownTop = () => {
+        isDraggingTop.current = true;
+    };
+    const handleMouseDownMiddle = () => {
+        isDraggingMiddle.current = true;
+    };
+
+    const handleMouseMove = (e) => {
+        const containerTop = containerRef.current.getBoundingClientRect().top;
+
+        if (isDraggingTop.current) {
+            const newHeightTop = e.clientY - containerTop;
+            setHeightTop(newHeightTop);
+        } else if (isDraggingMiddle.current) {
+            const newHeightMiddle = e.clientY - containerTop - heightTop - 5; // subtract top + divider
+            setHeightMiddle(newHeightMiddle);
+        }
+    };
+
+    const stopDragging = () => {
+        isDraggingTop.current = false;
+        isDraggingMiddle.current = false;
+    };
 
     const fetchTransactions = async () => {
         const response = await fetchAPI.get("portfolios/get/open_transactions/");
@@ -33,66 +59,6 @@ const TradePage = () => {
         fetchTransactions();
     }, []);
 
-    // const url = "https://stream-fxtrade.oanda.com/v3/accounts/001-004-2840244-004/pricing/stream?instruments=EUR_USD"
-    // const token = 'acc56198776d1ce7917137567b23f9a1-c5f7a43c7c6ef8563d0ebdd4a3b496ac'
-    // const params = {
-    //     headers: {
-    //     'Authorization' : 'Bearer ' + token
-    //     },
-    //     params: {
-    //         instruments: 'XAG_USD'
-    //     }
-    // }
-
-    // const pricingStream = async() => {
-        // console.log('Pricing stream')
-        // const response = await axios.get(" https://api-fxtrade.oanda.com/v3/accounts/001-004-2840244-004/pricing", params)
-        // console.log(response.data)
-        // const stream = response.data;
-        // console.log(stream)
-        // stream.on('data', data => {
-        //     console.log(data);
-        // });
-        //
-        // stream.on('end', () => {
-        //     console.log("stream done");
-        // });
-    // };
-
-
-    // useEffect(async() => {
-    //     console.log('Live request')
-        // axios.get("https://stream-fxtrade.oanda.com/v3/accounts/001-004-2840244-006/pricing/stream", params)
-        //     .then(response => setX(response.data))
-        //     .catch((error) => {
-        //         console.error('Error Message:', error);
-        //     });
-
-        // const eventSource = new EventSource("http://stream-fxtrade.oanda.com/v3/accounts/001-004-2840244-006/pricing/stream", params);
-        //
-        // eventSource.onmessage = result => {
-        //     const data = JSON.parse(result.data);
-        //     console.log('Data: ', data);
-        // };
-        //
-        // eventSource.onerror = err => {
-        //     console.log('EventSource error: ', err);
-        // };
-
-        // const url2 = 'wss://streamer.finance.yahoo.com'
-        // const ws = new WebSocket(url2, )
-        // ws.onopen = function open() {
-        //     console.log('connected')
-        //     ws.send(JSON.stringify({
-        //         subscribe: ['MSFT']
-        //     }))
-        // }
-        //
-        // ws.onmessage = function incoming(data) {
-        //     console.log('Coming message')
-        //     console.log(typeof data.data)
-        // }
-    // }, [])
 
     const PortfolioTable = ({portfolios}) => {
         return (
@@ -140,15 +106,28 @@ const TradePage = () => {
         </div>
     </div>
 
-    const mainArea = <div style={{padding: 5}}>
-        <OpenTransactions server={server} openTransactions={openTransactionsData}/>
-        <div style={{height: 500,paddingTop: 5}}>
-            <TradeSignals/>
-        </div>
-        <div style={{height: 500, paddingTop: 5}}>
-            <TradeOrders/>
-        </div>
+    const mainArea = <div
+      ref={containerRef}
+      className="main-container"
+      onMouseMove={handleMouseMove}
+      onMouseUp={stopDragging}
+      onMouseLeave={stopDragging}
+    >
+      <div className="section" style={{ height: heightTop }}>
+        <OpenTransactions openTransactions={openTransactionsData} />
+      </div>
 
+      <div className="divider" onMouseDown={handleMouseDownTop} />
+
+      <div className="section" style={{ height: heightMiddle }}>
+        <TradeSignals />
+      </div>
+
+      <div className="divider" onMouseDown={handleMouseDownMiddle} />
+
+      <div className="section section-flex">
+        <TradeOrders />
+      </div>
     </div>
 
     return (

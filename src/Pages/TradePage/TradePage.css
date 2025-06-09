@@ -1,0 +1,21 @@
+.main-container {
+  height: 100vh;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  overflow: auto;
+}
+
+.section-flex {
+  flex: 1;
+  padding-top: 5px;
+}
+
+.divider {
+  height: 5px;
+  background-color: #ccc;
+  cursor: row-resize;
+}
