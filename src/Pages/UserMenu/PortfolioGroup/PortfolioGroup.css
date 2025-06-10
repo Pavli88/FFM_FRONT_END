@@ -1,0 +1,85 @@
+.tree-container {
+  position: relative;
+  height: 100%;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ccc;
+}
+
+.tree-node {
+  margin-left: 10px;
+  margin-top: 5px;
+}
+
+.tree-node-box {
+  padding: 2px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+
+.tree-node-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tree-node-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.tree-node-expand-icon {
+  width: 20px;
+  text-align: center;
+}
+
+.tree-node-label {
+  flex: 2;
+  padding-left: 10px;
+}
+
+.tree-node-currency {
+  flex: 1;
+  padding-left: 10px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.tree-node-children {
+  margin-left: 20px;
+  border-left: 1px solid #ccc;
+  padding-left: 10px;
+}
+
+.message-box {
+  margin-top: 10px;
+  color: red;
+}
+
+.save-button {
+  background-color: #007bff;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}

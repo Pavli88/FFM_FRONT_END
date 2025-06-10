@@ -1,0 +1,91 @@
+.port-group-node {
+  margin-left: 10px;
+  position: relative;
+  /* nincs margin-top, hogy ne legyen függőleges rés */
+}
+
+/* Ne legyen plusz rés két egymás alatti node között */
+.port-group-node + .port-group-node {
+  margin-top: 0;
+}
+
+/* === Doboz, ami a tartalmat fogja === */
+.port-group-node-box {
+  padding: 2px 6px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* === Tartalomrészen belüli sor igazítás === */
+.port-group-node-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* === Bal oldali rész: ikon, címke, currency === */
+.port-group-node-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 6px;
+}
+
+.port-group-node-expand {
+  width: 20px;
+  text-align: center;
+}
+
+.port-group-node-icon {
+  display: flex;
+  align-items: center;
+}
+
+.port-group-node-label {
+  flex: 2;
+  padding-left: 2px;
+}
+
+.port-group-node-currency {
+  flex: 1;
+  font-size: 0.9em;
+  color: #555;
+}
+
+/* === Vonal: gyermekeket összekötő függőleges vonal === */
+.port-group-node-children {
+  margin-left: 20px;
+  padding-left: 10px;
+  position: relative;
+}
+
+.port-group-node-children::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 10px;
+  height: 100%;
+  border-left: 1px dotted #aaa;
+}
+
+/* === Vonal: egy child node bal szélén vízszintes ág jobbra === */
+.port-group-node-child .port-group-node-box::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  width: 10px;
+  border-top: 1px dotted #aaa;
+  transform: translateY(-50%);
+}
+
+/* === Interakciós gombok stílusa === */
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}

@@ -12,7 +12,7 @@ const InstrumentNew = ({ show, close }) => {
         group: '',
         type: '',
         currency: '',
-        user: userData?.is_superuser || userData?.is_staff ? String(userData.id) : userData?.id || null
+        // user: userData?.is_superuser || userData?.is_staff ? String(userData.id) : userData?.id || null
     });
 
     const handleChange = (e) => {
@@ -31,6 +31,7 @@ const InstrumentNew = ({ show, close }) => {
     };
 
     const submitHandler = async (event) => {
+        console.log(formData)
         event.preventDefault();
 
         try {
@@ -59,25 +60,34 @@ const InstrumentNew = ({ show, close }) => {
         { value: 'Cash', label: 'Cash' },
         { value: 'CFD', label: 'CFD' },
         { value: 'Equity', label: 'Equity' },
+        { value: 'FX', label: 'FX' },
     ];
 
     const secGroup = (userData?.is_superuser || userData?.is_staff)
         ? allGroups
-        : allGroups.filter(g => g.value !== 'Cash');
+        : allGroups.filter(g => g.value !== 'Cash' && g.value !== 'CFD');
 
     const types = {
-        Bond: [{ value: 'COR', label: 'Corporate' }, { value: 'GOV', label: 'Government' }],
-        Cash: [{ value: 'Cash', label: 'Cash' }, { value: 'Margin', label: 'Margin' }],
+        Bond: [{value: 'COR', label: 'Corporate'}, {value: 'GOV', label: 'Government'}],
+        Cash: [{value: 'Cash', label: 'Cash'}, {value: 'Margin', label: 'Margin'}],
         CFD: [
-            { value: 'Bond', label: 'Bond' },
-            { value: 'COM', label: 'Commodity' },
-            { value: 'Equity', label: 'Equity' },
-            { value: 'FX', label: 'Fx' }
+            {value: 'Bond', label: 'Bond'},
+            {value: 'COM', label: 'Commodity'},
+            {value: 'Equity', label: 'Equity'},
+            {value: 'FX', label: 'Fx'}
         ],
         Equity: [
-            { value: 'Equity', label: 'Equity' },
-            { value: 'Fund', label: 'Fund' }
-        ]
+            {value: 'Equity', label: 'Equity'},
+            {value: 'Fund', label: 'Fund'}
+        ],
+        FX: (userData?.is_superuser || userData?.is_staff)
+            ? [
+                {value: 'Spot', label: 'Spot'},
+                {value: 'Option', label: 'Option'}
+            ]
+            : [
+                {value: 'Option', label: 'Option'}
+            ]
     };
 
     const currencies = [
