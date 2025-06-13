@@ -1,11 +1,10 @@
-import "./landing-page.css";
-import LandingPageNavBar from "../MainPage/LandingPageNavBar/LandingPageNavBar";
-const LandingPage = () => {
-  return (
-    <div>
-      <LandingPageNavBar/>
-    </div>
-  );
-};
+import {Header} from "./Header/Header";
+import "./LandingPage.css";
 
-export default LandingPage;
+const LandingPage = () => (
+  <>
+    <Header />
+  </>
+)
+
+export default LandingPage

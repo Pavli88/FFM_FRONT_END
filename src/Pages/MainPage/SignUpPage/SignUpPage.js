@@ -1,4 +1,5 @@
 import './SignUpPage.css';
+import '../AuthBase.css';
 import InputField from "../../../components/InputField/InputField";
 import Tooltip from "../../../components/Tooltips/Tooltip";
 import { passwordPolicyText } from "../../../config files/constants";
@@ -62,6 +63,19 @@ const SignUpPage = () => {
                     </div>
 
                     <div className="auth-form-title">Sign Up</div>
+
+                    <div className="auth-social-wrapper">
+                        <div className="auth-social-button">
+                            <img className="social-icon" alt="Google icon" src="/sign_in/img/social-icon-1.svg"/>
+                            <span className="social-text">Sign up with Google</span>
+                        </div>
+                        <div className="auth-social-icon">
+                            <SocialButtonFacebookVariant/>
+                        </div>
+                        <div className="auth-social-icon">
+                            <SocialButtonAppleVariant/>
+                        </div>
+                    </div>
 
                     <div className="auth-form-content">
                         <div className="auth-input-group">
@@ -137,21 +151,6 @@ const SignUpPage = () => {
                             {errors.password && (
                                 <p style={{ maxHeight: 60, overflowY: 'auto' }}>{errors.password}</p>
                             )}
-                        </div>
-
-                        <div className="auth-social-wrapper">
-                            <button className="auth-social" style={{ backgroundColor: "#fff", border: "1px solid #000" }}>
-                                <img className="social-icon" alt="Google icon" src="/sign_in/img/social-icon-1.svg" />
-                                <span className="social-text" style={{ color: "#000" }}>
-                                    Sign up with Google
-                                </span>
-                            </button>
-                            <div className="auth-social-icon">
-                                <SocialButtonFacebookVariant />
-                            </div>
-                            <div className="auth-social-icon">
-                                <SocialButtonAppleVariant />
-                            </div>
                         </div>
 
                         <AuthButton

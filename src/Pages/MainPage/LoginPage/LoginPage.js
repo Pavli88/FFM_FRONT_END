@@ -1,3 +1,4 @@
+import '../AuthBase.css';
 import './LoginPage.css';
 import InputField from "../../../components/InputField/InputField";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -109,7 +110,6 @@ const LoginPage = () => {
     return (
         <div className="auth-wrapper">
             <img className="auth-logo" alt="Logo" src="/main/main_logo.png" />
-
             <div
                 className="auth-background"
                 style={{ backgroundImage: `url("/main/background-1.png")` }}
@@ -129,13 +129,26 @@ const LoginPage = () => {
                         <p className="auth-switch" style={{ margin: 0, textAlign: "right" }}>
                             <span className="auth-muted">
                                 {"No account?"}
-                                 <br />
+                                <br />
                                 <Link className="auth-link" to="/sign_up/">Sign Up</Link>
                             </span>
                         </p>
                     </div>
 
                     <div className="auth-form-title">{"Sign In"}</div>
+
+                    <div className="auth-social-wrapper">
+                        <div className="auth-social-button">
+                            <img className="social-icon" alt="Google icon" src="/sign_in/img/social-icon-1.svg" />
+                            <span className="social-text">Sign in with Google</span>
+                        </div>
+                        <div className="auth-social-icon">
+                            <SocialButtonFacebookVariant1 />
+                        </div>
+                        <div className="auth-social-icon">
+                            <SocialButtonAppleVariant1 />
+                        </div>
+                    </div>
 
                     <div className="auth-form-content">
                         <div className="auth-input-group">
@@ -192,21 +205,6 @@ const LoginPage = () => {
                             </button>
                         </div>
 
-                        <div className="auth-social-wrapper">
-                            <button className="auth-social" style={{ backgroundColor: "#fff", border: "1px solid #000" }}>
-                                <img className="social-icon" alt="Google icon" src="/sign_in/img/social-icon-1.svg" />
-                                <span className="social-text" style={{ color: "#000" }}>
-                                    {"Sign in with Google"}
-                                </span>
-                            </button>
-                            <div className="auth-social-icon">
-                                <SocialButtonFacebookVariant1 />
-                            </div>
-                            <div className="auth-social-icon">
-                                <SocialButtonAppleVariant1 />
-                            </div>
-                        </div>
-
                         <AuthButton
                             className="auth-submit-button"
                             handleLogin={handleLogin}
@@ -215,10 +213,10 @@ const LoginPage = () => {
                             label={"Sign In"}
                         />
                     </div>
+
                 </div>
             </div>
 
-            {/* Render the forgot password modal if active */}
             {forgotPasswordForm}
         </div>
     );
