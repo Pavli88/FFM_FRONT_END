@@ -8,7 +8,7 @@ import fetchAPI from "../../../../../config files/api";
 import InstrumentSearch from "../../../../../components/Search/InstrumentSearch/InstrumentSearch";
 import InputField from "../../../../../components/InputField/InputField";
 import ToogleSwitch from "../../../../../components/Buttons/SliderButton/ToogleSwitch";
-
+import MultiSelect from "../../../../../components/Selects/MultiSelect";
 
 const transactionOptions = [
     { value: "Purchase", label: "Purchase" },
@@ -22,8 +22,7 @@ const transactionOptions = [
 const PortfolioTransactionsFilter = () => {
     const currentDate = useContext(DateContext).currentDate;
     const { selectedPortfolio } = useContext(PortfolioContext);
-    const {saveTransactions, showFilter} = useContext(TransactionContext);
-
+    const { saveTransactions, showFilter } = useContext(TransactionContext);
 
     const [formData, setFormData] = useState({
         portfolio_code: "",
@@ -34,7 +33,7 @@ const PortfolioTransactionsFilter = () => {
         transaction_link_code: "",
         security_id: "",
     });
-
+    console.log(formData)
     useEffect(() => {
         if (selectedPortfolio) {
             setFormData((prev) => ({
@@ -47,12 +46,12 @@ const PortfolioTransactionsFilter = () => {
     }, [selectedPortfolio, currentDate]);
 
     const handleInstrumentSelect = (instrument) => {
-        setFormData(prevState => ({
-            ...prevState,
+        setFormData(prev => ({
+            ...prev,
             security_id: instrument.id
-        }))
+        }));
     };
-    console.log(formData)
+
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData((prev) => ({
@@ -69,10 +68,9 @@ const PortfolioTransactionsFilter = () => {
     };
 
     const fetchTransactionData = () => {
-        // Remove empty fields before sending
         const filteredData = Object.fromEntries(
             Object.entries(formData).filter(
-                ([_, v]) => v !== "" && v !== null && v !== undefined && !(Array.isArray(v) && v.length === 0)
+                ([_, v]) => v !== "" && v !== null && !(Array.isArray(v) && v.length === 0)
             )
         );
 
@@ -81,86 +79,92 @@ const PortfolioTransactionsFilter = () => {
             .then((response) => saveTransactions(response.data))
             .catch((error) => console.error("Error fetching transactions:", error));
     };
-
+    const [selectedOptions, setSelectedOptions] = useState([]);
     return (
-        showFilter &&
-        <div className="card">
+        showFilter && (
+            <div>
+                <div className="filter-row">
 
-            <div style={{display: "flex"}}>
-
-                <div style={{paddingTop: 10, paddingBottom: 10}}>
-                    <ToogleSwitch
-                        label="Active"
-                        isChecked={formData.is_active === true} // Ensures it's only true, not null
-                        onToggle={() => handleInputChange({
-                            target: {
-                                name: 'is_active',
-                                type: 'checkbox',
-                                checked: formData.is_active ? null : true // Set to null when unchecked
-                            }
-                        })}
-                    />
-                </div>
-
-                <div style={{width: 300}}>
-                    <InputField
-                        id="inv_id"
-                        type="number"
-                        name="trade_date__lte"
-                        value={formData.transaction_link_code}
-                        onChange={handleInputChange}
-                        label="Inventory ID"
-                        horizontal={true}
-                        required
-                    />
-                </div>
-
-
-                <div style={{display: "flex", width: 400}}>
-                    <label>Instrument</label>
-                    <InstrumentSearch onSelect={handleInstrumentSelect}/>
-                </div>
-
-                <div style={{display: "flex", width: 400}}>
-                    <label>Transaction Type</label>
-                    <div style={{width: 300}}>
-                        <Select
-                        isMulti
-                        options={transactionOptions}
-                        onChange={handleSelectChange}
-                    />
+                    <div className="filter-item">
+                        <InputField
+                            id="inv_id"
+                            type="number"
+                            name="transaction_link_code"
+                            value={formData.transaction_link_code}
+                            onChange={handleInputChange}
+                            label="Inventory ID"
+                            horizontal={false}
+                        />
                     </div>
 
+                    <div className="filter-item">
+                        <label className="filter-label">Instrument</label>
+                        <InstrumentSearch onSelect={handleInstrumentSelect} />
+                    </div>
+
+                    <div className="filter-item" style={{marginBottom: 5}}>
+                        <label className="filter-label">Transaction Type</label>
+                        <Select
+                            isMulti
+                            options={transactionOptions}
+                            onChange={handleSelectChange}
+                        />
+                    </div>
+
+      {/*              <div className="filter-item" style={{marginBottom: 5}}>*/}
+      {/*                  <label className="filter-label">Transaction Type</label>*/}
+      {/*                  <MultiSelect*/}
+      {/*  options={transactionOptions}*/}
+      {/*  selected={selectedOptions}*/}
+      {/*  onChange={handleSelectChange}*/}
+      {/*/>*/}
+      {/*              </div>*/}
+
+                    <div className="filter-item">
+                        <InputField
+                            id="start_date"
+                            type="date"
+                            name="trade_date__gte"
+                            value={formData.trade_date__lte}
+                            onChange={handleInputChange}
+                            label="Start Date"
+                            horizontal={false}
+                        />
+                    </div>
+
+                    <div className="filter-item">
+                        <InputField
+                            id="end_date"
+                            type="date"
+                            name="trade_date__lte"
+                            value={formData.trade_date__lte}
+                            onChange={handleInputChange}
+                            label="End Date"
+                            horizontal={false}
+                        />
+                    </div>
+
+                     <div style={{marginBottom: 5}}>
+                        <ToogleSwitch
+                            label="Active"
+                            horizontal={false}
+                            isChecked={formData.is_active === true}
+                            onToggle={() => handleInputChange({
+                                target: {
+                                    name: 'is_active',
+                                    type: 'checkbox',
+                                    checked: formData.is_active ? null : true
+                                }
+                            })}
+                        />
+                    </div>
+
+                    <div style={{marginBottom: 20}}>
+                        <button onClick={fetchTransactionData} className="normal-button">Search</button>
+                    </div>
                 </div>
-
-                <InputField
-                    id="end_date"
-                    type="date"
-                    name="trade_date__gte"
-                    value={formData.trade_date__gte}
-                    onChange={handleInputChange}
-                    label="From"
-                    horizontal={true}
-                    required
-                />
-
-                <InputField
-                    id="end_date"
-                    type="date"
-                    name="trade_date__lte"
-                    value={formData.trade_date__lte}
-                    onChange={handleInputChange}
-                    label="To"
-                    horizontal={true}
-                    required
-                />
             </div>
-
-
-
-                <button onClick={fetchTransactionData} className="normal-button">Search</button>
-
-        </div>
+        )
     );
 };
 

@@ -8,11 +8,6 @@ export const PortfolioSidebarData = [
     path: "/portfolio/overview",
     icon: <BsColumns size={20}/>,
   },
-    {
-    title: "Holdings",
-    path: "/portfolio/holdings",
-    icon: <BsColumns size={20}/>,
-  },
   {
     title: "Transactions",
     path: "/portfolio/transactions",

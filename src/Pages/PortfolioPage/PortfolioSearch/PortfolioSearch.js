@@ -43,15 +43,15 @@ const PortfolioSearch = () => {
 
   return (
     <div className="portfolio-search-container">
-      <div className="portfolio-search-row">
-        <div className="portfolio-search-input-wrapper">
+
+
           <input
             ref={inputRef}
             type="text"
             placeholder="Search Portfolio..."
             value={search}
             onChange={handleSearch}
-            className="portfolio-search-input"
+            // className="portfolio-search-input"
           />
           {search && (
             <IoMdClose
@@ -61,14 +61,8 @@ const PortfolioSearch = () => {
               title="Clear"
             />
           )}
-        </div>
 
-        {selectedPortfolio?.portfolio_name && (
-          <div className="selected-portfolio-inline">
-            📌 <strong>{selectedPortfolio.portfolio_name}</strong>
-          </div>
-        )}
-      </div>
+
 
       {filteredPortfolios.length > 0 && (
         <ul className="portfolio-suggestion-list">

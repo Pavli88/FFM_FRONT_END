@@ -11,7 +11,7 @@ import PortfolioProcessWidget from "./PortfolioProcessWidget/PortfolioProcessWid
 
 const PortfolioSettingsPage = (props) => {
     const portfolioData = useContext(PortfolioContext).selectedPortfolio;
-
+    console.log(portfolioData)
     const InputField = (props) => {
         return (
             <div style={{display: 'flex', padding: '5px', width: '100%', height: '50px'}}>

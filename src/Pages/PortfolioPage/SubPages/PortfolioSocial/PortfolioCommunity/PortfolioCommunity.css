@@ -1,0 +1,128 @@
+.portfolio-community {
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-top: 2rem;
+  font-family: sans-serif;
+}
+
+.portfolio-community h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.community-tabs {
+  display: flex;
+  gap: 2rem;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 1.5rem;
+}
+
+.community-tab {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #666;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.community-tab.active {
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.community-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #1a73e8;
+  border-radius: 2px;
+}
+
+.activity-feed {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #444;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+}
+
+.activity-content {
+  flex: 1;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.username {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.activity-time {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 0.2rem;
+}
+
+.reply-link {
+  font-size: 0.85rem;
+  color: #1a73e8;
+  cursor: pointer;
+  margin-top: 0.2rem;
+}
+
+.comment-input {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.comment-input input[type="text"] {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 0.95rem;
+}
+
+.post-button {
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.95rem;
+}

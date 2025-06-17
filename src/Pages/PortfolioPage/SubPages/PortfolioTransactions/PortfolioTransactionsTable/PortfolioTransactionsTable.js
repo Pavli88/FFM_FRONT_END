@@ -1,23 +1,23 @@
 import {useContext, useEffect, useMemo, useState} from "react";
 import {BsArrowBarDown, BsPencil, BsPlusLg, BsArrowLeftRight } from "react-icons/bs";
 import {useExpanded, useGroupBy, useSortBy, useTable} from "react-table";
-import ServerContext from "../../../../../context/server-context";
 import PortfolioTransactionEntryModal from "../PortfolioTransactionsModals/PortfolioTransactionEntryModal/PortfolioTransactionEntryModal";
 import PortfolioCashEntryModal from "../PortfolioTransactionsModals/PortfolioCashEntryModal/PortfolioCashEntryModal";
 import PortfolioUpdateModal from "../PortfolioTransactionsModals/PortfolioUpdateModal/PortfolioUpdateModal";
 import {CSVLink} from "react-csv";
 import TransactionContext from "../context/transaction-context";
-import PortfolioContext from "../../../../../context/portfolio-context";
 import "./PortfolioTransactionsTable.css"
-import {FaSearch, FaPlus, FaTrashAlt, FaMoneyBillWave, FaBan} from "react-icons/fa";
-import CardHeader from "../../../../../components/Card/CardHeader";
+import {FaSearch, FaPlus, FaTrashAlt, FaMoneyBillWave, FaBan, FaExpand, FaCompress} from "react-icons/fa";
 import PortfolioLinkedTransactionModal
     from "../PortfolioTransactionsModals/PortfolioLinkedTransactionModal/PortfolioLinkedTransactionModal";
 import fetchAPI from "../../../../../config files/api";
+import PortfolioTransactionsFilter from "../PortfolioTransactionsFilter/PortfolioTransactionsFilter";
+import PortfolioPageContext from "../../../context/portfolio-page-context";
 
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
 const PortfolioTransactionsTable = () => {
+    const {setIsFullscreenTransactions, isFullscreenTransactions} = useContext(PortfolioPageContext)
     const {transactions, saveShowFilter, showFilter} = useContext(TransactionContext);
 
     const [showEntryModal, setShowEntryModal] = useState(false);
@@ -80,9 +80,7 @@ const PortfolioTransactionsTable = () => {
         },
         {Header: "ID", accessor: "id", sortType: 'basic'},
         {Header: "Linked Transaction", accessor: "transaction_link_code", sortType: 'basic',},
-        {Header: "Portfolio Code", accessor: "portfolio_code", sortType: 'basic'},
         {Header: "Trade Date", accessor: "trade_date", sortType: 'basic'},
-        {Header: "Settlement Date", accessor: "settlement_date", sortType: 'basic'},
         {Header: "Transaction Type", accessor: "transaction_type", sortType: 'basic' },
         { Header: "Security Name", accessor: "name", sortType: 'basic' },
         { Header: "Currency", accessor: "currency", sortType: 'basic' },
@@ -135,6 +133,7 @@ const PortfolioTransactionsTable = () => {
     };
 
     const headerContent = <div style={{display: "flex", gap: "10px"}}>
+
         <button className={'icon-button'} onClick={() => setShowEntryModal(!showEntryModal)}
                 title="New Transaction">
             <FaPlus size={20}/>
@@ -155,12 +154,23 @@ const PortfolioTransactionsTable = () => {
         <CSVLink filename="transactions.csv" data={data}>
             <BsArrowBarDown size={20} className={'icon-button'}/>
         </CSVLink>
+        {/* Fullscreen toggle button */}
+        <button
+            className={'icon-button'}
+            onClick={() => setIsFullscreenTransactions(!isFullscreenTransactions)}
+            title={isFullscreenTransactions ? "Back to Normal Size" : "Full Size"}
+        >
+            {isFullscreenTransactions ? <FaCompress size={20}/> : <FaExpand size={20}/>}
+        </button>
     </div>
 
     return (
-        <div className='card' style={{ padding: '15px', borderRadius: '8px', overflow: 'hidden' }}>
-            <CardHeader title={'Transaction'} content={headerContent}/>
-
+        <div style={{ padding: '15px', borderRadius: '8px', overflow: 'hidden' }}>
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                <label>Transactions</label>
+                {headerContent}
+            </div>
+            <PortfolioTransactionsFilter/>
             <div style={{ overflowX: 'auto' }}>
                 <table {...getTableProps()} style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
                     <thead>

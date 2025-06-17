@@ -1,12 +1,12 @@
 import "./ToogleSwitch.css"
 
-const ToogleSwitch = ({label, isChecked, onToggle}) => {
+const ToogleSwitch = ({ label, isChecked, onToggle, horizontal = false }) => {
     return (
-        <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%"}}>
+        <div className={`input-group ${horizontal ? 'input-group-horizontal' : ''}`}>
             <label className="input-label">{label}</label>
             <label className="switch">
-                <input type="checkbox" checked={isChecked} onChange={onToggle}/>
-                <span className="slider"></span>
+                <input type="checkbox" checked={isChecked} onChange={onToggle} />
+                <span className="slider" />
             </label>
         </div>
     );

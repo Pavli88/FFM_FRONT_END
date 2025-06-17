@@ -9,7 +9,7 @@ const PortfolioTransactionsPage = () => {
     const [parameters, setParameters] = useState();
     const [transactions, setTransactions] = useState([]);
     const [showFilter, setShowFilter] = useState(false);
-    console.log(showFilter)
+
     return (
         <TransactionContext.Provider value={{
             transactions: transactions,
@@ -21,12 +21,9 @@ const PortfolioTransactionsPage = () => {
             showFilter: showFilter,
             saveShowFilter: setShowFilter,
         }}>
-            <div style={{padding: 20}}>
-                <PortfolioTransactionsFilter/>
-
-                <div style={{paddingTop: 15}}>
-                    <PortfolioTransactionsTable/>
-                </div>
+            <div>
+                {/*<PortfolioTransactionsFilter/>*/}
+                <PortfolioTransactionsTable/>
 
             </div>
         </TransactionContext.Provider>
