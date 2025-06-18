@@ -1,0 +1,45 @@
+.group-by-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.group-by-label {
+  font-weight: bold;
+}
+
+.group-by-select-wrapper {
+  min-width: 150px;
+}
+
+.group-by-select {
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.group-by-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.group-by-tag {
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.group-by-remove {
+  background: none;
+  border: none;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #888;
+}

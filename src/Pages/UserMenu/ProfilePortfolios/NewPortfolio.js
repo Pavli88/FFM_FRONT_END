@@ -61,6 +61,7 @@ const NewPortfolio = ({show, close, parameters}) => {
                 <div className="block">
                     <label>Portfolio Type</label>
                     <select ref={portTypeRef}>
+                        <option value={'Benchmark'}>Benchmark</option>
                         <option value={'Business'}>Business</option>
                         <option value={'Portfolio Group'}>Portfolio Group</option>
                         <option value={'Portfolio'}>Portfolio</option>

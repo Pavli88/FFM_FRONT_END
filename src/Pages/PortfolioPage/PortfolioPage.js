@@ -16,6 +16,7 @@ import { FaLock, FaGlobe, FaTimes } from "react-icons/fa";
 import HoldingsTable from "../../components/Tables/HoldingTable";
 import PortfolioCommunity from "./SubPages/PortfolioSocial/PortfolioCommunity/PortfolioCommunity";
 import PortfolioContext from "../../context/portfolio-context";
+import PortfolioSidebarNavigation from "./SubPages/PortfolioSidebarNavigation/PortfolioSidebarNavigation";
 
 const PortfolioPage = () => {
     const { selectedPortfolio } = useContext(PortfolioContext);
@@ -23,11 +24,11 @@ const PortfolioPage = () => {
     const [portfolioCode, setPortfolioCode] = useState();
     const [selectedPortfolioData, setSelectedPortfolioData] = useState([{}]);
     const [currentHolding, setCurrentHolding] = useState({});
-
+    const [activeSection, setActiveSection] = useState("overview");
     const [activeTab, setActiveTab] = useState("Overview");
     const [isPublic, setIsPublic] = useState(true);
 
-    const [isFullscreenTransactions, setIsFullscreenTransactions] = useState(true);
+    const [isFullscreenTransactions, setIsFullscreenTransactions] = useState(false);
 
     const fetchHoldingData = async () => {
         const response = await fetchAPI.post('portfolios/get/holding/', {
@@ -97,7 +98,8 @@ const PortfolioPage = () => {
         }}>
             {/*<ContainerWithSideMenu panel={panel} mainArea={mainArea}/>*/}
 
-            <div className="portfolio-layout">
+            <div className="portfolio-layout" style={{background: "red"}}>
+                <PortfolioSidebarNavigation activeSection={activeSection} setActiveSection={setActiveSection}/>
                 <div className="portfolio-container card">
 
                     <div className="portfolio-header">
@@ -153,11 +155,9 @@ const PortfolioPage = () => {
                     {activeTab === "Holdings" && (
                         <HoldingsTable portfolioCode={portfolioCode}/>
                     )}
-                    {activeTab === "Transactions" && (
-                        <div className={isFullscreenTransactions ? "fullscreen-wrapper" : ""}>
-                        <PortfolioTransactionsPage/>
-                        </div>
-                    )}
+                    {/*{activeTab === "Transactions" && (*/}
+                    {/*   */}
+                    {/*)}*/}
                     {activeTab === "Configuration" && (
                         <PortfolioSettingsPage/>
                     )}
@@ -167,6 +167,11 @@ const PortfolioPage = () => {
 </div>
             </div>
 
+             <HoldingsTable portfolioCode={portfolioCode}/>
+
+             <div className={isFullscreenTransactions ? "fullscreen-wrapper" : ""}>
+                        <PortfolioTransactionsPage/>
+                        </div>
         </PortfolioPageContext.Provider>
     );
 };

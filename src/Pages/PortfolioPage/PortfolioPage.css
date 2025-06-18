@@ -77,9 +77,11 @@
 .portfolio-layout {
   display: flex;
   gap: 2rem;
-  margin: 40px;
+  padding: 20px;
+  padding-bottom: 40px;
   box-sizing: border-box;
   width: 100%;
+  height: 100%;
 }
 
 .portfolio-sidebar {
@@ -168,7 +170,7 @@
 
 .fullscreen-wrapper {
   position: fixed;
-  top: 100px; /* vagy a header magassága */
+  top: 85px; /* vagy a header magassága */
   left: 0;
   right: 0;
   bottom: 0;
@@ -176,8 +178,8 @@
   z-index: 1000;
   /*padding: 1rem;*/
   overflow: auto;
-  border: 1px solid;
-  margin: 5px;
+  /*border: 1px solid;*/
+  /*margin: 5px;*/
 }
 
 .fullscreen-wrapper .portfolio-container {

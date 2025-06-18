@@ -1,0 +1,63 @@
+.profile-portfolios-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.profile-portfolios-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.profile-portfolios-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.table-container {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+.portfolio-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.portfolio-table th,
+.portfolio-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.table-row-all:hover {
+  background-color: #f9f9f9;
+}
+
+.group-row td {
+  font-weight: bold;
+}
+
+.meta-header-row {
+  background-color: transparent;
+}
+
+.meta-header-cell {
+  font-weight: normal;
+  color: #999;
+  font-size: 0.85rem;
+}

@@ -55,3 +55,50 @@
 .group-toggle {
     padding-right: 5px;
 }
+
+.group-line-cell {
+  position: relative;
+}
+
+.group-line {
+  position: absolute;
+  top: -5px;
+  left: 15px;
+  width: 2px;
+  height: calc(100% + 5px);
+  background-color: #999;
+}
+
+.group-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 20px;
+  height: 2px;
+  background-color: #999;
+}
+
+.tree-connector-wrapper {
+  position: relative;
+  padding-left: 20px;
+}
+
+.tree-connector {
+  position: absolute;
+  top: -2px;
+  left: 8px;
+  width: 2px;
+  height: calc(100% + 2px);
+  background-color: #bbb;
+}
+
+.tree-connector::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 14px;
+  height: 2px;
+  background-color: #bbb;
+}

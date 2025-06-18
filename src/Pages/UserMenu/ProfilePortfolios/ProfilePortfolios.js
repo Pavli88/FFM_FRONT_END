@@ -1,114 +1,205 @@
-import {useContext, useState} from "react";
+import {useExpanded, useGroupBy, useSortBy, useTable} from "react-table";
+import React, {useContext, useState, useMemo} from "react";
 import PortfolioContext from "../../../context/portfolio-context";
 import NewPortfolio from "./NewPortfolio";
 import { FaPlus, FaTrashAlt, FaCheckSquare } from "react-icons/fa";
 import fetchAPI from "../../../config files/api";
+import './ProfilePortfolios.css'
 
 const ProfilePortfolios = () => {
-    const portfolioData = useContext(PortfolioContext).portfolios;
-    const { fetchPortfolios } = useContext(PortfolioContext);
-    const [showNewPortModal, setNewPortModal] = useState(false);
-    const [selectedPortfolios, setSelectedPortfolios] = useState([]);
+  const { portfolios: portfolioData, fetchPortfolios } = useContext(PortfolioContext);
+  const [showNewPortModal, setShowNewPortModal] = useState(false);
+  const [selectedIds, setSelectedIds] = useState({});
 
-    const toggleSelection = (id) => {
-        setSelectedPortfolios(prevSelected =>
-            prevSelected.includes(id)
-                ? prevSelected.filter(portId => portId !== id)
-                : [...prevSelected, id]
-        );
-    };
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
-    const deletePortfolios = async () => {
-        try {
-            if (selectedPortfolios.length === 0) {
-                alert("No portfolios selected for deletion.");
-                return;
-            }
+  const deletePortfolios = async () => {
+    const ids = Object.entries(selectedIds)
+      .filter(([_, selected]) => selected)
+      .map(([id]) => id);
 
-            const response = await fetchAPI.post('portfolios/delete/portfolios/', {
-                ids: selectedPortfolios
-            });
+    if (ids.length === 0) {
+      alert("No portfolios selected for deletion.");
+      return;
+    }
 
-            if (response.data.success) {
-                fetchPortfolios();
-                alert(response.data.message);
-            } else {
-                alert("Failed to delete portfolios. Please try again.");
-            }
-        } catch (error) {
-            console.error("Error deleting portfolios:", error);
-            alert("An error occurred while deleting portfolios. Please try again later.");
-        }
-    };
+    try {
+      const response = await fetchAPI.post("portfolios/delete/portfolios/", {
+        ids,
+      });
 
-    const confirmAndDelete = () => {
-        if (window.confirm(
-            "Deleting portfolios will result in deleting all related transactions, holdings, and NAV values! " +
-            "Are you sure you want to delete the selected portfolios?"
-        )) {
-            deletePortfolios();
-        }
-    };
+      if (response.data.success) {
+        fetchPortfolios();
+        alert(response.data.message);
+      } else {
+        alert("Failed to delete portfolios. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting portfolios:", error);
+      alert("An error occurred while deleting portfolios.");
+    }
+  };
 
-    const portfolios = portfolioData.map((data) => (
-        <tr key={data.id} className={'table-row-all'}>
-            <td className={'table-row'}>
-                <input
-                    type="checkbox"
-                    checked={selectedPortfolios.includes(data.id)}
-                    onChange={() => toggleSelection(data.id)}
-                />
-            </td>
-            <td className={'table-row'}>{data.id}</td>
-            <td className={'table-row'}>{data.portfolio_name}</td>
-            <td className={'table-row'} style={{ width: '100%' }}>{data.portfolio_code}</td>
-            <td className={'table-row'} style={{ width: '100%' }}>{data.portfolio_type}</td>
-            <td className={'table-row'} style={{ width: '100%' }}>{data.currency}</td>
-            <td className={'table-row'} style={{
-                width: '100%',
-                color: data.status === 'Not Funded' ? 'red' : data.status === 'Funded' ? 'green' : 'orange'
-            }}>
-                {data.status}
-            </td>
-        </tr>
-    ));
+  const confirmAndDelete = () => {
+    if (
+      window.confirm(
+        "Deleting portfolios will remove all related transactions, holdings, and NAV values. Are you sure?"
+      )
+    ) {
+      deletePortfolios();
+    }
+  };
 
-    return (
-        <div className={'card'}>
-            <div className={'card-header'} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <label>Portfolios</label>
-                <div style={{ display: "flex", gap: "10px" }}>
-                    <button className={'icon-button'} onClick={() => setNewPortModal(true)} title="Add New Portfolio">
-                        <FaPlus size={20} />
-                    </button>
-                    <button className={'icon-button'} title="Terminate Selected">
-                        <FaCheckSquare size={20} />
-                    </button>
-                    <button className={'icon-button'} onClick={() => confirmAndDelete()} title="Delete Selected">
-                        <FaTrashAlt size={20} />
-                    </button>
-                </div>
-            </div>
+  const columns = useMemo(
+    () => [
+      {
+        Header: "ID",
+        accessor: "id",
+      },
+      {
+        Header: "Name",
+        accessor: "portfolio_name",
+      },
+      {
+        Header: "Code",
+        accessor: "portfolio_code",
+      },
+      {
+        Header: "Type",
+        accessor: "portfolio_type",
+      },
+      {
+        Header: "Currency",
+        accessor: "currency",
+      },
+      {
+        Header: "Funded",
+        accessor: "status",
+        Cell: ({ value }) => {
+          const color =
+            value === "Not Funded"
+              ? "red"
+              : value === "Funded"
+              ? "green"
+              : "orange";
+          return <span style={{ color }}>{value}</span>;
+        },
+      },
+        {
+        id: "selection",
+        Header: "",
+        Cell: ({ row }) =>
+          row.canExpand ? null : (
+            <input
+              type="checkbox"
+              checked={!!selectedIds[row.original.id]}
+              onChange={() => toggleSelect(row.original.id)}
+            />
+          ),
+      },
+    ],
+    [selectedIds]
+  );
 
-            <div style={{ height: '100%', overflowY: 'scroll', paddingTop: 10 }}>
-                <table style={{ width: '100%' }}>
-                    <thead style={{ width: '100%' }}>
-                        <tr>
-                            <th></th>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Code</th>
-                            <th>Type</th>
-                            <th>Currency</th>
-                            <th>Funded</th>
-                        </tr>
-                    </thead>
-                    <tbody>{portfolios}</tbody>
-                </table>
-            </div>
-            <NewPortfolio show={showNewPortModal} close={() => setNewPortModal(false)} />
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    visibleColumns,
+  } = useTable(
+    {
+      columns,
+      data: portfolioData,
+      initialState: {
+        groupBy: ["portfolio_type"],
+      },
+    },
+    useGroupBy,
+    useSortBy,
+    useExpanded
+  );
+
+  return (
+    <div className="profile-portfolios-card">
+      <div className="profile-portfolios-header">
+        <label>Portfolios</label>
+        <div className="profile-portfolios-actions">
+          <button
+            className="icon-button"
+            onClick={() => setShowNewPortModal(true)}
+            title="Add New Portfolio"
+          >
+            <FaPlus size={20} />
+          </button>
+          <button className="icon-button" title="Terminate Selected">
+            <FaCheckSquare size={20} />
+          </button>
+          <button
+            className="icon-button"
+            onClick={confirmAndDelete}
+            title="Delete Selected"
+          >
+            <FaTrashAlt size={20} />
+          </button>
         </div>
-    );
+      </div>
+
+      <div className="table-container">
+        <table className="portfolio-table" {...getTableProps()}>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              const isGroupedRow = row.isGrouped;
+
+              return (
+                <React.Fragment key={row.id}>
+                  <tr
+                    {...row.getRowProps()}
+                    className={isGroupedRow ? "group-row" : "table-row-all"}
+                  >
+                    {row.cells.map((cell) => {
+  const isGrouped = cell.isGrouped;
+  const isGroupedRow = row.isGrouped;
+
+  return (
+    <td {...cell.getCellProps()} key={cell.column.id}>
+      {isGrouped ? (
+        <>
+          <span {...row.getToggleRowExpandedProps()}>
+            {row.isExpanded ? "▼" : "▶"}{" "}
+          </span>
+          {cell.render("Cell")} ({row.subRows.length})
+        </>
+      ) : isGroupedRow ? (
+        <span className="meta-header-cell">
+          {cell.column.render("Header")}
+        </span>
+      ) : cell.isAggregated ? (
+        cell.render("Aggregated")
+      ) : cell.isPlaceholder ? null : (
+        cell.render("Cell")
+      )}
+    </td>
+  );
+})}
+                  </tr>
+                </React.Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      <NewPortfolio
+        show={showNewPortModal}
+        close={() => setShowNewPortModal(false)}
+      />
+    </div>
+  );
 };
 
 export default ProfilePortfolios;
