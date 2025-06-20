@@ -1,9 +1,7 @@
-import {BsDash, BsPlus, BsTrash, BsArrowRepeat} from "react-icons/bs";
 import {useContext, useEffect, useRef, useState} from "react";
-import DashboardContext from "../../../context/dashboard-context";
 import Modal from "react-bootstrap/Modal";
 import fetchAPI from "../../../config files/api";
-import PortGroupNode from "./PortGroupNode/PortGroupNode";
+import PortGroupNode from "./PortfolioGroupNode/PortGroupNode";
 import './PortfolioGroup.css'
 
 const AddModal = (props) => {
@@ -74,7 +72,7 @@ const TreeView = ({ data, update, allowSelect = false }) => {
     };
 
     return (
-        <div onClick={() => setContextMenu(null)} style={{ position: "relative", height: "100%", padding: "10px", backgroundColor: "#fff", borderRadius: "8px", boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}>
+        <div onClick={() => setContextMenu(null)} style={{ position: "relative", height: "100%", padding: "10px", borderRadius: "8px", boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)" }}>
             {data.map((node) => (
                 <PortGroupNode key={node.id} node={node} onRightClick={handleRightClick} onDelete={handleDelete} onAddChild={handleAddChild} />
             ))}
@@ -93,34 +91,38 @@ const TreeView = ({ data, update, allowSelect = false }) => {
 };
 
 const PortfolioGroup = ({ allowSelect = false }) => {
-    const [portGroupData, setPortGroupData] = useState([]);
-    const [node, setNode] = useState(null);
+  const [portGroupData, setPortGroupData] = useState([]);
+  const [node, setNode] = useState(null);
 
-    const fetchPortGroupData = async () => {
-        const response = await fetchAPI.get('portfolios/get/port_groups/');
-        setPortGroupData(response.data);
-    };
+  const fetchPortGroupData = async () => {
+    const response = await fetchAPI.get('portfolios/get/port_groups/');
+    setPortGroupData(response.data);
+  };
 
-    useEffect(() => {
-        fetchPortGroupData();
-    }, [node]);
+  useEffect(() => {
+    fetchPortGroupData();
+  }, [node]);
 
-    const buildTree = (data, parentId = 0) => {
-        return data
-            .filter((item) => item.parent_id === parentId)
-            .map((item) => ({ ...item, children: buildTree(data, item.id) }));
-    };
+  const buildTree = (data, parentId = 0) => {
+    return data
+      .filter((item) => item.parent_id === parentId)
+      .map((item) => ({ ...item, children: buildTree(data, item.id) }));
+  };
 
-    const treeData = buildTree(portGroupData);
-    console.log(portGroupData)
-    return (
-        <div style={{padding: 20, width: '100%'}}>
-            <div className="card-header" style={{ fontSize: "1.2em", fontWeight: "bold", paddingBottom: "10px", borderBottom: "2px solid #ccc" }}>Portfolios Structure</div>
-            <div style={{ overflowY: "auto", height: "100%" }}>
-                <TreeView data={treeData} update={(e) => setNode(e)} allowSelect={allowSelect} />
-            </div>
-        </div>
-    );
+  const treeData = buildTree(portGroupData);
+
+  return (
+    <div className="portfolio-group-container">
+      <div className="card-header">Portfolios Structure</div>
+      <div className="tree-scroll-container">
+        <TreeView
+          data={treeData}
+          update={(e) => setNode(e)}
+          allowSelect={allowSelect}
+        />
+      </div>
+    </div>
+  );
 };
 
 

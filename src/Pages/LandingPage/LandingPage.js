@@ -9,7 +9,6 @@ import {Footer} from "./Footer/Footer";
 const LandingPage = () => {
     return (
         <div className="landing-page">
-
             <Header/>
             <HeroSection/>
             <div className="section-divider" />

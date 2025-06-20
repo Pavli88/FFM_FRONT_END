@@ -1,4 +1,4 @@
-import HoldingsTable from "../../../../components/Tables/HoldingTable";
+import HoldingsTable from "../../../../components/Tables/HoldingTable/HoldingTable";
 import {useContext} from "react";
 import PortfolioContext from "../../../../context/portfolio-context";
 

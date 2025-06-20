@@ -2,15 +2,18 @@ import React, {useMemo, useEffect, useState, useContext, useCallback} from 'reac
 import { useTable, useGroupBy, useExpanded, useSortBy } from 'react-table';
 import { FaArrowUp, FaArrowDown, FaTimes, FaPencilAlt } from 'react-icons/fa';
 import {BsCaretDownFill, BsCaretUpFill} from "react-icons/bs";
-import {ButtonGroupVertical} from "../Buttons/ButtonGroups";
+import {ButtonGroupVertical} from "../../Buttons/ButtonGroups";
 import axios from "axios";
-import ServerContext from "../../context/server-context";
+import ServerContext from "../../../context/server-context";
 import {CSVLink} from "react-csv";
-import DateContext from "../../context/date-context";
-import {DateSelect} from "../Dates/DateWidgets";
-import CustomModal from "../Modals/Modals";
-import fetchAPI from "../../config files/api";
-import GroupBySelector from "./GroupBySelector/GroupBySelector";
+import DateContext from "../../../context/date-context";
+import {DateSelect} from "../../Dates/DateWidgets";
+import CustomModal from "../../Modals/Modals";
+import fetchAPI from "../../../config files/api";
+import GroupBySelector from "../GroupBySelector/GroupBySelector";
+import HoldingTimeSeriesModal from "./HoldingTimeSeriesModal/HoldingTimeSeriesModal";
+import HoldingTimeSeriesChart from "./HoldingTimeSeriesChart/HoldingTimeSeriesChart";
+
 const formatFloat = (value) => (value ? parseFloat(value).toFixed(2) : "0.00");
 
 const HoldingsTable = ({portfolioCode}) => {
@@ -19,7 +22,7 @@ const HoldingsTable = ({portfolioCode}) => {
     const [holdingData, setHoldingdata] = useState([]);
     const [holdingDate, setHoldingDate] = useState(currentDate);
     const [groupBy, setGroupBy] = useState(["name"]);
-    const [showOnlyGrouped, setShowOnlyGrouped] = useState(false);
+    const [showOnlyGrouped, setShowOnlyGrouped] = useState(true);
     const [showTransactions, setShowTransactions] = useState(false);
     const [transactionData, setTransactionData] = useState([]);
     const [selectedChartColumn, setSelectedChartColumn] = useState("total_pnl");
@@ -66,23 +69,35 @@ const HoldingsTable = ({portfolioCode}) => {
         );
     };
 
-
     const columns = useMemo(() => {
         const baseColumns = [
             {
                 Header: 'Portfolio', accessor: 'portfolio_code',
                 aggregate: (values) => values[0],
-                Aggregated: ({value}) => <div>{value}</div>
+                Aggregated: ({value}) => <div>{value}</div>,
             },
             {
                 Header: 'Date', accessor: 'date',
                 aggregate: (values) => values[0],
                 Aggregated: ({value}) => <div>{value}</div>
             },
-            {Header: 'Name', accessor: 'name'},
+            {
+                Header: 'Name',
+                accessor: 'name',
+                Cell: ({value, row, column}) => {
+                    const isGroupedColumn = groupBy.includes(column.id);
+                    const isGroupedValue = row.depth >= 0 && row.groupByVal === value;
+
+                    if (isGroupedColumn && isGroupedValue && !row.isGrouped) {
+                        return ''; // Ne jelenjen meg újra a group value
+                    }
+
+                    return value;
+                },
+            },
             {
                 Header: 'Group',
-                accessor: 'group'
+                accessor: 'group',
             },
             {Header: 'Type', accessor: 'type'},
             {Header: 'Currency', accessor: 'currency', disableGroupBy: true},
@@ -339,9 +354,16 @@ const HoldingsTable = ({portfolioCode}) => {
         }
     }, [portfolioCode, holdingDate])
 
-
     // Filter rows: Show only grouped rows when checkbox is checked
-    const displayedRows = showOnlyGrouped ? rows.filter(row => row.isGrouped) : rows;
+    const displayedRows = rows.filter(row => {
+        if (showOnlyGrouped) {
+            // Csak a group header sorokat mutatjuk, de csak a groupBy mélységig
+            return row.isGrouped && row.depth < groupBy.length;
+        } else {
+            // Minden sor (group + adat) mehet
+            return true;
+        }
+    });
 
     useEffect(() => {
         if (!selectedChartColumn || !groupBy.length) return;
@@ -376,7 +398,6 @@ const HoldingsTable = ({portfolioCode}) => {
         {label: "Type", value: "type"},
     ];
 
-
     return (
         <div className='card'
              style={{
@@ -389,7 +410,6 @@ const HoldingsTable = ({portfolioCode}) => {
 
             <div style={{display: "flex", justifyContent: "space-between"}}>
                 <label style={{fontSize: "1.2rem", fontWeight: "bold"}}>Holdings Overview</label>
-
                 <div style={{display: "flex", gap: 20, height: 60, alignItems: "center"}}>
                     <GroupBySelector
                         options={groupByOptions}
@@ -399,6 +419,16 @@ const HoldingsTable = ({portfolioCode}) => {
                             tableSetGroupBy(newGroupBy); // <- fontos!
                         }}
                     />
+
+                    <div style={{display: "flex", alignItems: "center", gap: 10}}>
+                        <input
+                            type="checkbox"
+                            id="showGroupedOnly"
+                            checked={showOnlyGrouped}
+                            onChange={(e) => setShowOnlyGrouped(e.target.checked)}
+                        />
+                        <label htmlFor="showGroupedOnly">Exclude Transactions</label>
+                    </div>
 
                     <div style={{width: 300}}>
                         <DateSelect onDateChange={setHoldingDate}/>
@@ -417,7 +447,6 @@ const HoldingsTable = ({portfolioCode}) => {
 
                 </div>
             </div>
-
 
             <div>
                 <div style={{flex: 2, overflowX: 'auto', maxHeight: 600}}>
@@ -451,10 +480,10 @@ const HoldingsTable = ({portfolioCode}) => {
                                                 className={cell.column.Header === 'Actions' ? 'sticky-column' : ''}>
                                                 {cell.isGrouped ? (
                                                     <>
-                                                        {!showOnlyGrouped && (
+                                                        {row.canExpand && (
                                                             <span {...row.getToggleRowExpandedProps()}>
-                                                            {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
-                                                        </span>
+                {row.isExpanded ? <BsCaretUpFill/> : <BsCaretDownFill/>}
+            </span>
                                                         )}
                                                         {' '}
                                                         {cell.render('Cell')} ({row.subRows.length})
@@ -474,6 +503,11 @@ const HoldingsTable = ({portfolioCode}) => {
                     </div>
                 </div>
             </div>
+
+            <HoldingTimeSeriesChart
+                portfolioCode={portfolioCode}
+                holdingData={holdingData}
+            />
 
             <CustomModal show={showTransactions} onClose={() => setShowTransactions(!showTransactions)}
                          title={'Transactions'} width={'1500px'}>

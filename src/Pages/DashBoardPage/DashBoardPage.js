@@ -7,14 +7,14 @@ import DashboardContext from "../../context/dashboard-context";
 import {BarChartGrouped, StackedBarChart} from "../../components/Charts/BarCharts";
 import {PieChart} from "../../components/Charts/PieCharts";
 import {PositionExposures} from "../../components/Widgets/Risk/PositionExposures";
-import PortfolioGroup from "../UserMenu/PortfolioGroup/PortfolioGroup";
+import PortfolioGroup from "../PortfolioPage/PortfolioGroup/PortfolioGroup";
 import {cumulativeSum} from "../../calculations/cumulative";
 import PortfolioTransactionPnl
     from "../PortfolioPage/SubPages/PortfolioReturn/PortfolioTransactionPnl/PortfolioTransactionPnl";
 import TradingMetrics from "../../calculations/tradeMetrics";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { BsCaretUpFill, BsCaretDownFill } from 'react-icons/bs';
-import HoldingTable from "../../components/Tables/HoldingTable";
+import HoldingTable from "../../components/Tables/HoldingTable/HoldingTable";
 import fetchAPI from "../../config files/api";
 import ContainerWithSideMenu from "../../components/Layout/ContainerWithSideMenu";
 import ValueChange from "../../components/Layout/ValueChange/ValueChange";

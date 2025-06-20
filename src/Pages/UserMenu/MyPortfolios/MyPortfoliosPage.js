@@ -1,4 +1,4 @@
-import PortfolioGroup from "../PortfolioGroup/PortfolioGroup";
+import PortfolioGroup from "../../PortfolioPage/PortfolioGroup/PortfolioGroup";
 import ProfilePortfolios from "../ProfilePortfolios/ProfilePortfolios";
 
 const MyPortfoliosPage = () => {

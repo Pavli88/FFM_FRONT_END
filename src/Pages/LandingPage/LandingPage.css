@@ -7,14 +7,6 @@
   overflow-x: hidden;
 }
 
-.main-content {
-  padding-top: 92px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 120px;
-}
-
 .section-divider {
   height: 30px;
   width: 100%;

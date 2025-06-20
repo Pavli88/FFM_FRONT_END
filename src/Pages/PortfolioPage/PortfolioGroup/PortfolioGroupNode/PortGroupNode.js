@@ -50,9 +50,12 @@ const PortGroupNode = ({ node, onRightClick, onDelete, onAddChild }) => {
               {getNodeIcon()}
             </div>
             <label className="port-group-node-label">{node.name}</label>
-            <div className="port-group-node-currency">{node.currency}</div>
+
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+
+            <div className="port-group-node-currency">{node.currency}</div>
+
             <button className="icon-button">
               <BsArrowRepeat
                 style={{ cursor: 'pointer', fontSize: 20 }}
