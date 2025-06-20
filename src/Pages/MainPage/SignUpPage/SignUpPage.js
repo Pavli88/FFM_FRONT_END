@@ -39,7 +39,7 @@ const SignUpPage = () => {
 
     return (
         <div className="auth-wrapper">
-            <img className="auth-logo" alt="Logo" src="/main/main_logo.png" />
+            <img className="auth-logo" alt="Logo" src="/main/Logo.svg" />
 
             <div
                 className="auth-background"

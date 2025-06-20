@@ -4,30 +4,21 @@ import "./Header.css";
 
 export const Header = () => {
   const history = useHistory();
-
   return (
-    <header>
-      <div className="header-content">
-        <div className="logo-group">
-          <img className="logo" alt="Logo" src="/landing_page/img/logo.png" />
-          <div className="company-name">Fractal Portfolios</div>
-        </div>
-        <nav className="nav-links">
-          <div className="nav-item">FEATURES</div>
-          <div className="nav-item">PRICING</div>
-          <div className="nav-item">BLOG</div>
-          <div className="nav-item">SOCIAL</div>
-          <div className="nav-item">ABOUT</div>
-        </nav>
-        <div className="auth-buttons">
-          <button className="login" onClick={() => history.push("/login/")}>
-            <div className="overlap-group">Log In</div>
-          </button>
-          <button className="sign-up" onClick={() => history.push("/sign_up/")}>
-            <div className="text-wrapper">Sign Up</div>
-          </button>
-        </div>
+    <header className="header">
+      <div className="logo-container">
+        <img className="logo" alt="Logo" src="/main/Logo.svg"/>
+        <span className="company-name">Fractal Portfolios</span>
       </div>
+
+        <div className="header-button-group">
+            <button className="header-button header-button-login" onClick={() => history.push("/login/")}>Log In
+            </button>
+            <button className="header-button header-button-free-trial" onClick={() => {
+                document.getElementById("cta")?.scrollIntoView({behavior: "smooth"});
+            }}>Get early access
+            </button>
+        </div>
     </header>
   );
 };

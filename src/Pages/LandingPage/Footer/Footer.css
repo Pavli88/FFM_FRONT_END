@@ -1,0 +1,134 @@
+.footer {
+  position: relative;
+  background-color: white;
+  overflow: hidden;
+  padding: 100px 20px 40px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  z-index: 0;
+}
+
+.footer-backgrounds {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.footer-img-left,
+.footer-img-right {
+  position: absolute;
+  width: 900px;
+  height: auto;
+  opacity: 0.9;
+  z-index: 0;
+  pointer-events: none;
+  max-width: 100%;
+}
+
+.footer-img-left {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  width: 850px;
+  height: 755px;
+}
+
+.footer-img-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: auto;
+  max-width: 60vw;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.footer-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-title {
+  font-size: 35px;
+  font-weight: 800;
+  letter-spacing: 0;
+  background: linear-gradient(90deg, #4f9cf9, #2f5c93);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 24px;
+}
+
+.footer-news-button {
+  background-color: white;
+  border: 1px solid #043873;
+  border-radius: 6px;
+  padding: 12px 24px;
+  width: 184px;
+  height: 47px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 1px;
+  color: #043873;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 40px;
+}
+
+.footer-news-button:hover {
+  transform: scale(0.95);
+  border: 3px solid #043873;
+  background-color: white;
+  color: #043873;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 80px;
+  margin: 0 240px 40px auto;
+  max-width: 640px;
+  text-align: left;
+}
+
+
+.footer-column h4 {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: #043873;
+  margin-bottom: 12px;
+}
+
+.footer-column p {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 30px;
+  color: #043873;
+  opacity: 0.8;
+  margin: 6px 0;
+}
+
+.footer-icon {
+  margin-bottom: 16px;
+}
+
+.footer-icon img {
+  width: 28px;
+  height: 28px;
+}
+
+.footer-copy {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 14px;
+  color: #043873;
+  opacity: 0.9;
+}

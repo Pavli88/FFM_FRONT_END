@@ -1,0 +1,84 @@
+.cta-section {
+  position: relative;
+  background-color: #fff;
+  padding: 100px 20px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.cta-heading {
+  font-size: 48px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #4f9cf9, #2f5c93);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Inter", sans-serif;
+  margin-bottom: 40px;
+}
+
+.cta-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cta-form input {
+  max-width: 300px;
+  width: 100%;
+  height: 50px;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #326fff;
+  color: #326fff;
+}
+
+.cta-form input::placeholder {
+  color: #326fff;
+}
+
+.cta-form input:focus {
+  border: 3px solid #326fff;
+  outline: none;
+}
+
+.cta-form input:hover {
+  border: 3px solid #326fff;
+}
+
+.cta-button {
+  background-color: #316fff;
+  color: #ffffff;
+  width: 200px;
+  height: 50px;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 32px;
+  font-size: 18px;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #004cff;
+  border: none;
+}
+
+
+.cta-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%; /* Csak az alsó részen */
+  background: radial-gradient(
+    ellipse at bottom center,
+    rgba(134, 173, 255, 0.5),
+    rgba(134, 173, 255, 0) 60%
+  );
+  z-index: 1;
+  pointer-events: none;
+}

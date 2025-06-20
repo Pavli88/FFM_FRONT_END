@@ -109,15 +109,23 @@ const LoginPage = () => {
 
     return (
         <div className="auth-wrapper">
-            <img className="auth-logo" alt="Logo" src="/main/main_logo.png" />
-            <div
-                className="auth-background"
-                style={{ backgroundImage: `url("/main/background-1.png")` }}
-            ></div>
+            <img className="auth-logo" alt="Logo" src="/main/Logo.svg" />
 
-            <div className="login-as-positioned">
-                <LoginAsVariant />
+            {/* Pulzáló SVG háttér bal oldalon */}
+            <div className="auth-background-vector">
+                <img
+                    src="/landing_page/contentSection/img/vector_shape.svg"
+                    alt="decorative network"
+                    className="animated-network"
+                />
             </div>
+
+            <div className="auth-background" style={{ backgroundImage: `url("/main/background-1.png")` }}></div>
+
+            {/*<div className="login-as-wrapper">*/}
+            {/*    <p className="login-as-label">Login as</p>*/}
+            {/*    <LoginAsVariant />*/}
+            {/*</div>*/}
 
             <div className="auth-container">
                 <div className="auth-box">
@@ -213,7 +221,6 @@ const LoginPage = () => {
                             label={"Sign In"}
                         />
                     </div>
-
                 </div>
             </div>
 
