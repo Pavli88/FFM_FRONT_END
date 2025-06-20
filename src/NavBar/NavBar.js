@@ -1,5 +1,5 @@
 import { Link, useHistory } from 'react-router-dom';
-import { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import Notifications from "./Notifications/Notifications";
 import ServerContext from "../context/server-context";
 import AuthContext from "../context/AuthProvider";
@@ -41,8 +41,10 @@ const Navbar = () => {
 
     return (
         <div className="nav-bar fixed-top">
-            <div className="nav-brand">
-                <Link className="menu-button" to="/home">Fractal</Link>
+            <div className="logo-container" style={{width: 300}}>
+                <img className="logo" alt="Logo" src="/main/logo.png"/>
+                <span  >Fractal Portfolios</span>
+
             </div>
             <div className="nav-links">
                 <Link className="menu-button" to="/dashboard">Dashboard</Link>

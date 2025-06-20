@@ -42,6 +42,7 @@ const HoldingTimeSeriesChart = ({portfolioCode, holdingData}) => {
         chart: {
             type: cumulative ? 'area' : 'bar',
             height: 400,
+            stacked: !cumulative,
             toolbar: {show: true}
         },
         plotOptions: {

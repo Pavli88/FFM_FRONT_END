@@ -109,7 +109,7 @@ const LoginPage = () => {
 
     return (
         <div className="auth-wrapper">
-            <img className="auth-logo" alt="Logo" src="/main/Logo.svg" />
+            <img className="logo" alt="Logo" src="/main/logo.png" />
 
             {/* Pulzáló SVG háttér bal oldalon */}
             <div className="auth-background-vector">
@@ -134,13 +134,16 @@ const LoginPage = () => {
                             <span className="auth-span">{"Welcome to "}</span>
                             <span className="auth-highlight">Fractal Portfolios</span>
                         </p>
-                        <p className="auth-switch" style={{ margin: 0, textAlign: "right" }}>
-                            <span className="auth-muted">
-                                {"No account?"}
-                                <br />
-                                <Link className="auth-link" to="/sign_up/">Sign Up</Link>
-                            </span>
-                        </p>
+
+
+                        {/*SIGN IN PAGE*/}
+                        {/*<p className="auth-switch" style={{ margin: 0, textAlign: "right" }}>*/}
+                        {/*    <span className="auth-muted">*/}
+                        {/*        {"No account?"}*/}
+                        {/*        <br />*/}
+                        {/*        <Link className="auth-link" to="/sign_up/">Sign Up</Link>*/}
+                        {/*    </span>*/}
+                        {/*</p>*/}
                     </div>
 
                     <div className="auth-form-title">{"Sign In"}</div>

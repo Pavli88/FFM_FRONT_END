@@ -7,8 +7,9 @@ export const Header = () => {
   return (
     <header className="header">
       <div className="logo-container">
-        <img className="logo" alt="Logo" src="/main/Logo.svg"/>
+        <img className="logo" alt="Logo" src="/main/logo.png"/>
         <span className="company-name">Fractal Portfolios</span>
+
       </div>
 
         <div className="header-button-group">

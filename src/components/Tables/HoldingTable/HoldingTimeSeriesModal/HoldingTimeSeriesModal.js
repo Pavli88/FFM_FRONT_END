@@ -17,6 +17,7 @@ const HoldingTimeSeriesModal = ({show, close, data, portfolioList, setChartData,
         Quantity: [
             {label: "Quantity", value: "quantity"},
             {label: "Begin Quantity", value: "beg_quantity"},
+            {label: "Quantity Change", value: "qty_chg"},
         ],
         NAV: [
             {label: "Market Value", value: "mv"},
